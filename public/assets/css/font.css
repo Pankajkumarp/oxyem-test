@@ -1,0 +1,463 @@
+/*-----------------
+	1. WebFonts
+-----------------------*/
+
+@font-face {
+    font-family: 'Helvetica Now MT Micro Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('../webfonts/Helvetica Now MT Micro Regular'), url('../webfonts/HelveticaNowMTMicro.woff') format('woff');
+    }
+    
+
+    @font-face {
+    font-family: 'Helvetica Now MT Text Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('../webfonts/Helvetica Now MT Text Regular'), url('../webfonts/HelveticaNowMTText.woff') format('woff');
+    }
+    
+
+    @font-face {
+    font-family: 'Helvetica Now MT Disp Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Helvetica Now MT Disp Regular'), url('../webfonts/HelveticaNowMTDisp.woff') format('woff');
+    }
+
+
+
+@font-face {
+    font-family: 'Galeana Compressed Light It';
+    src: url('../webfonts/GaleanaCompressed-LightIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-LightIt.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed';
+    src: url('../webfonts/GaleanaCompressed-Heavy.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-Heavy.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed';
+    src: url('../webfonts/GaleanaCompressed-Bold.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed';
+    src: url('../webfonts/GaleanaCompressed-Regular.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed';
+    src: url('../webfonts/GaleanaCompressed-Black.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed';
+    src: url('../webfonts/GaleanaCompressed-Light.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed Heavy It';
+    src: url('../webfonts/GaleanaCompressed-HeavyIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-HeavyIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed Bold It';
+    src: url('../webfonts/GaleanaCompressed-BoldIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-BoldIt.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed Black It';
+    src: url('../webfonts/GaleanaCompressed-BlackIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-BlackIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed';
+    src: url('../webfonts/GaleanaCompressed-Thin.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended Black It';
+    src: url('../webfonts/GaleanaExtended-BlackIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-BlackIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed Thin It';
+    src: url('../webfonts/GaleanaCondensed-ThinIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-ThinIt.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended';
+    src: url('../webfonts/GaleanaExtended-Bold.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed';
+    src: url('../webfonts/GaleanaCondensed-Light.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed Heavy It';
+    src: url('../webfonts/GaleanaCondensed-HeavyIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-HeavyIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed';
+    src: url('../webfonts/GaleanaCondensed-Thin.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed It';
+    src: url('../webfonts/GaleanaCompressed-RegularIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-RegularIt.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended';
+    src: url('../webfonts/GaleanaExtended-Black.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed Black It';
+    src: url('../webfonts/GaleanaCondensed-BlackIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-BlackIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed';
+    src: url('../webfonts/GaleanaCondensed-Bold.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed It';
+    src: url('../webfonts/GaleanaCondensed-RegularIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-RegularIt.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed Bold It';
+    src: url('../webfonts/GaleanaCondensed-BoldIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-BoldIt.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed';
+    src: url('../webfonts/GaleanaCondensed-Heavy.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-Heavy.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Compressed Thin It';
+    src: url('../webfonts/GaleanaCompressed-ThinIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCompressed-ThinIt.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed Light It';
+    src: url('../webfonts/GaleanaCondensed-LightIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-LightIt.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed';
+    src: url('../webfonts/GaleanaCondensed-Black.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Condensed';
+    src: url('../webfonts/GaleanaCondensed-Regular.woff2') format('woff2'),
+        url('../webfonts/GaleanaCondensed-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended Bold It';
+    src: url('../webfonts/GaleanaExtended-BoldIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-BoldIt.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended Heavy It';
+    src: url('../webfonts/GaleanaExtended-HeavyIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-HeavyIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended';
+    src: url('../webfonts/GaleanaExtended-Heavy.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-Heavy.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Galeana Extended';
+    src: url('../webfonts/GaleanaExtended-Light.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended Light It';
+    src: url('../webfonts/GaleanaExtended-LightIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-LightIt.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended';
+    src: url('../webfonts/GaleanaExtended-Regular.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended';
+    src: url('../webfonts/GaleanaExtended-Thin.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended Thin It';
+    src: url('../webfonts/GaleanaExtended-ThinIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-ThinIt.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard';
+    src: url('../webfonts/GaleanaStandard-Black.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard';
+    src: url('../webfonts/GaleanaStandard-Heavy.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard Black It';
+    src: url('../webfonts/GaleanaStandard-BlackIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-BlackIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard Bold It';
+    src: url('../webfonts/GaleanaStandard-BoldIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-BoldIt.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard';
+    src: url('../webfonts/GaleanaStandard-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Extended It';
+    src: url('../webfonts/GaleanaExtended-RegularIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaExtended-RegularIt.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard Heavy It';
+    src: url('../webfonts/GaleanaStandard-HeavyIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-HeavyIt.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard';
+    src: url('../webfonts/GaleanaStandard-Thin.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard Light It';
+    src: url('../webfonts/GaleanaStandard-LightIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-LightIt.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard';
+    src: url('../webfonts/GaleanaStandard-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard It';
+    src: url('../webfonts/GaleanaStandard-RegularIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-RegularIt.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard Thin It';
+    src: url('../webfonts/GaleanaStandard-ThinIt.woff2') format('woff2'),
+        url('../webfonts/GaleanaStandard-ThinIt.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Galeana Standard';
+    src: url('../webfonts/GaleanaStandard-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'bettina_signatureregular';
+    src: url('../webfonts/BettinaSignatureRegular.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+

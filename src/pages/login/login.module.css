@@ -1,0 +1,109 @@
+.login-wrapper .sk-loginbox {
+    background-color: #fff;
+}
+
+
+.login-wrapper .sk-loginbox .login-header {
+    background-color: #0056A1;
+	height:80px;
+	margin-bottom:50px;
+}
+
+
+.login-wrapper .sk-loginbox .login-header .logo {
+    font-size: 2.25em;
+    font-weight: 900;
+    color: #fff;
+    vertical-align: middle;
+    text-transform: uppercase;
+    line-height: 28px;
+}
+.login-wrapper .sk-loginbox .login-header .sk-logo-container {padding:25px 0 8px 0px;}
+.login-wrapper .sk-loginbox .login-header .logo-text-sk {
+	color:#fff;
+	margin-bottom:0px;
+}
+.login-wrapper .sk-loginbox .nav-tabs.nav-tabs-solid{
+	margin:25px 0;
+}
+
+
+.login-wrapper .sk-loginbox .login-left {
+	align-items: center;
+    flex-direction: column;
+    justify-content: end;
+    display: flex;
+    background-blend-mode: multiply;
+	border-radius: 8px 20px 20px 8px;
+	position: relative;
+	padding:0 0 0 40px;
+	
+}
+.login-wrapper .sk-loginbox .login-left:before {
+	content: "";
+	background-image: url(../../../public/assets/img/login-icon-01.png);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 144px;
+    height: 144px;
+}
+.login-wrapper .sk-loginbox .login-left:after {
+	content: "";
+	background-image: url(../../../public/assets/img/login-icon-02.png);
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 144px;
+    height: 144px;
+}
+.login-wrapper .sk-loginbox .login-right {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+	margin-bottom:2.5rem;
+}
+.login-wrapper .sk-loginbox .login-right .login-right-wrap {
+    max-width: 100%;
+    flex: 0 0 100%;
+}
+.login-wrapper .sk-loginbox .login-right .login-right-wrap .form-group {
+	position: relative;
+	margin-bottom:40px;
+
+}
+.login-wrapper .sk-loginbox .login-right .login-right-wrap .form-group label {
+	font-size: 1em;
+	color: #ABABAB;
+	font-weight: 500;
+	position: absolute;
+    top: -10px;
+    left: 10px;
+    background: #fff;
+    margin-bottom: 0;
+	padding: 0px 5px;
+}
+.login-danger,
+.star-red {
+	color: #FF0000;
+}
+.login-wrapper .sk-loginbox .login-right h1 {
+    font-size: 1.563em;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.login-wrapper .sk-loginbox .login-right .forgotpass {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.login-wrapper .sk-loginbox .login-right .forgotpass a {
+    color: #0056A1;
+    font-size: 0.938em;
+    margin-left: auto;
+}
