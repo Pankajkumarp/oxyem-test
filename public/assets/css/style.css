@@ -13625,3 +13625,7 @@ margin-top: 5px !important;
     justify-content: center;
     padding-right: 5px;
 }
+.apexcharts-legend{
+    top:auto !important;
+    bottom:10px !important;
+}
