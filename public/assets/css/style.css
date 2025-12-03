@@ -13594,5 +13594,34 @@ margin-top: 5px !important;
     border: 1px solid #f1f0f0;
     min-height: 325px;
     margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 5px;
 }
 .top-heading-chart{text-align: center; font-size: 1rem; font-weight: 700;margin-top: 15px;}
+  .oxy_chat_box_new .download-grap-icon{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    z-index: 9;
+    background: transparent;
+    border: none;
+  }
+  .oxy_chat_box_new .download-grap-icon svg{
+    font-size: 1.25rem;
+    color: #fa7e12
+  }
+  .custom-legend{
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin: 0px auto;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 5px;
+}
