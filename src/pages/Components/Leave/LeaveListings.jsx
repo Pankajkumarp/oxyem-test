@@ -2,8 +2,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FaEdit, FaEye } from 'react-icons/fa';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
 export default function LeaveListings({ leavelisting }) {
   //  const history = useHistory();
   const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
