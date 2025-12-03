@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { FaEdit, FaEye } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
 export default function LeaveListings({ leavelisting }) {
@@ -33,10 +34,10 @@ export default function LeaveListings({ leavelisting }) {
               <td>{item.status}</td>
               <td className="text-center">
                 <div className="btn-group-horizontal">
-                  <Link href={`${basepath}/addleave/${item.idLeave}`}><FontAwesomeIcon icon={faEdit} /></Link>
+                  <Link href={`${basepath}/addleave/${item.idLeave}`}><FaEdit /></Link>
 
                   <Link href={`${basepath}/addleave/${item.idLeave}`}>
-                    <FontAwesomeIcon icon={faEye} />
+                    <faEye />
                   </Link>
                 </div>
               </td>
