@@ -29,7 +29,6 @@ export default function RoledepartmentComponent({ label, validations = [], value
         // Extract the department value
         const departmentValue = departmentField.value.value;
         if (!departmentValue) {
-          throw new Error('Department value is missing');
         }
 
         const response = await axiosJWT.get(`${apiUrl}/dropdowns`, { 
