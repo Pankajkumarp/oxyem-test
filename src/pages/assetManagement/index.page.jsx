@@ -417,8 +417,7 @@ useEffect(() => {
                                                                             options={assetCategoryPieChartData.options}
                                                                             series={assetCategoryPieChartData.series}
                                                                             type="pie"
-                                                                            width="100%"
-                                                                            height="90%"
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>
@@ -435,7 +434,7 @@ useEffect(() => {
                                                                             options={assetTypeBarChartData.options}
                                                                             series={assetTypeBarChartData.series}
                                                                             type="bar"
-                                                                            height="90%"
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>
@@ -454,7 +453,7 @@ useEffect(() => {
                                                                             options={assetStatusBarChartData.options}
                                                                             series={assetStatusBarChartData.series}
                                                                             type="bar"
-                                                                             height="90%"
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>
@@ -471,8 +470,7 @@ useEffect(() => {
                                                                             options={assetWarrantyPieChartData.options}
                                                                             series={assetWarrantyPieChartData.series}
                                                                             type="pie"
-                                                                            width="100%"
-                                                                            height="90%"
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>

@@ -656,7 +656,7 @@ useEffect(() => {
                                                                         <h3>Monthly Total</h3>
 
                                                                     </div>
-                                                                    <Chart options={mounthChartData.options} series={mounthChartData.series} type="pie" width={300} height={250} />
+                                                                    <Chart options={mounthChartData.options} series={mounthChartData.series} type="pie" height={330} />
                                                                 </div>
                                                             </div>
                                                             <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -664,7 +664,7 @@ useEffect(() => {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Annual Leave Trend</h3>
                                                                     </div>
-                                                                    <Chart options={annualTrendData.options} series={annualTrendData.series} type="line" height={250} />
+                                                                    <Chart options={annualTrendData.options} series={annualTrendData.series} type="line" height={330} />
                                                                 </div>
                                                             </div>
                                                             <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -672,7 +672,7 @@ useEffect(() => {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Monthly Leave Trend</h3>
                                                                     </div>
-                                                                    <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={250} />
+                                                                    <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={330} />
                                                                 </div>
                                                             </div>
                                                         </div>

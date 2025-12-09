@@ -356,7 +356,7 @@ const EmployeeChart = ({ activeTab }) => {
                             series={genderCounts.series}
                             type="donut"
                             width="100%"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}
@@ -369,7 +369,7 @@ const EmployeeChart = ({ activeTab }) => {
                             options={roleWise}
                             series={roleWise.series}
                             type="bar"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}
@@ -382,7 +382,7 @@ const EmployeeChart = ({ activeTab }) => {
                             options={departmentWise}
                             series={departmentWise.series}
                             type="bar"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}
@@ -396,7 +396,7 @@ const EmployeeChart = ({ activeTab }) => {
                             series={employeeTypeCounts.series}
                             type="pie"
                             width="100%"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}

@@ -465,7 +465,7 @@ useEffect(() => {
                                         options={statusChartData.options}
                                         series={statusChartData.series}
                                         type="bar"
-                                        height={250}
+                                        height={330}
                                       />
                                     ) : null
                                   }
@@ -482,7 +482,7 @@ useEffect(() => {
                                         options={yearChartData.options}
                                         series={yearChartData.series}
                                         type="bar"
-                                        height={250}
+                                        height={330}
                                       />
                                     ) : null
                                   }
@@ -499,7 +499,7 @@ useEffect(() => {
                                         options={clientChartData.options}
                                         series={clientChartData.series}
                                         type="bar"
-                                        height={250}
+                                        height={330}
                                       />
                                     ) : null
                                   }

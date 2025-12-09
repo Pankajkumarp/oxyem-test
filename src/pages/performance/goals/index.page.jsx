@@ -269,7 +269,7 @@ export default function index() {
                           <div className='graph-top-head'>
                             <h3>Goal Level</h3>
                           </div>
-                          <Chart options={goalLevel.options} series={goalLevel.series} type="bar" height={250} />
+                          <Chart options={goalLevel.options} series={goalLevel.series} type="bar" height={330} />
                         </div>
                       </div>
                       <div className="col-lg-3 col-md-12 col-sm-6">
@@ -277,7 +277,7 @@ export default function index() {
                           <div className='graph-top-head'>
                             <h3>Organization Goal</h3>
                           </div>
-                          <Chart options={organizationGoal.options} series={organizationGoal.series} type="pie" width={250} height={250} />
+                          <Chart options={organizationGoal.options} series={organizationGoal.series} type="pie" height={330} />
                         </div>
                       </div>
                       <div className="col-lg-3 col-md-12 col-sm-6">
@@ -285,7 +285,7 @@ export default function index() {
                           <div className='graph-top-head'>
                             <h3>Project Goal</h3>
                           </div>
-                          <Chart options={projectGoal.options} series={projectGoal.series} type="pie" width={250} height={250} />
+                          <Chart options={projectGoal.options} series={projectGoal.series} type="pie" height={330} />
                         </div>
                       </div>
                       <div className="col-lg-3 col-md-12 col-sm-6">
@@ -293,7 +293,7 @@ export default function index() {
                           <div className='graph-top-head'>
                             <h3>Goal Status</h3>
                           </div>
-                          <Chart options={goalStatus.options} series={goalStatus.series} type="pie" width={250} height={250} />
+                          <Chart options={goalStatus.options} series={goalStatus.series} type="pie" height={330} />
                         </div>
                       </div>
                     </div>

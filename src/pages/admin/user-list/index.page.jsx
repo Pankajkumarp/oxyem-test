@@ -475,7 +475,7 @@ onClick={() => {
                                     series={employeeTypeCounts.series}
                                     type="pie"
                                     width="100%"
-                                    height={250}
+                                    height={330}
                                   />
                                 </div>
                               )}
@@ -491,7 +491,7 @@ onClick={() => {
                                     series={genderCounts.series}
                                     type="pie"
                                     width="100%"
-                                    height={250}
+                                    height={330}
                                   />
                                 </div>
                               )}
@@ -506,7 +506,7 @@ onClick={() => {
                                     series={todayStatus.series}
                                     type="pie"
                                     width="100%"
-                                    height={250}
+                                    height={330}
                                   />
                                 </div>
                               )}
@@ -527,7 +527,7 @@ onClick={() => {
                             options={roleWise}
                             series={roleWise.series}
                             type="bar"
-                            height={275}
+                            height={330}
                         />
                     </div>
                 ) : null}
@@ -539,7 +539,7 @@ onClick={() => {
                             options={departmentWise}
                             series={departmentWise.series}
                             type="bar"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}

@@ -433,7 +433,7 @@ useEffect(() => {
                                         series={activeInactiveChartData.series}
                                         type="pie"
                                         width="100%"
-                                        height={250}
+                                        height={330}
                                       />
                                     )}
                                   </div>
@@ -450,7 +450,7 @@ useEffect(() => {
                                         options={employeeTypeChartData.options}
                                         series={employeeTypeChartData.series}
                                         type="bar"
-                                        height={250}
+                                        height={330}
                                       />
                                     )}
                                   </div>
@@ -468,7 +468,7 @@ useEffect(() => {
                                         series={pfChartData.series}
                                         type="pie"
                                        width="100%"
-                                        height={250}
+                                        height={330}
                                       />
                                     )}
                                   </div>

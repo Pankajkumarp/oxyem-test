@@ -318,7 +318,7 @@ export default function employeeTax({ showOnlylist }) {
                                                             <div className='graph-top-head'>
                                                                 <h3>Total Tax vs Paid</h3>
                                                             </div>
-                                                            <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width={250} height={250} />
+                                                            <Chart options={monthlyData.options} series={monthlyData.series} type="pie" height={330} />
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
@@ -326,7 +326,7 @@ export default function employeeTax({ showOnlylist }) {
                                                             <div className='graph-top-head'>
                                                                 <h3>Tax Paid - Monthly</h3>
                                                             </div>
-                                                            <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={250} />
+                                                            <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
                                                         </div>
                                                     </div>
 

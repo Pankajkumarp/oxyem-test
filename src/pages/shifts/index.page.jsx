@@ -415,7 +415,7 @@ useEffect(() => {
                                                                 <h3>Applicable Status</h3>
                                                                 </div>
                                                                 {anualChartData.series.length > 0 && (
-                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={252} width="100%" />
+                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
                                                                 )}
                                                             </div>
                                                         </div>
@@ -425,7 +425,7 @@ useEffect(() => {
                                                                 <div className='graph-top-head'>
                                                                 <h3>Allowance Status count</h3>
                                                                 </div>
-                                                                <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width={300} height={300} />
+                                                                <Chart options={monthlyData.options} series={monthlyData.series} type="pie" height={330} />
                                                             </div>
                                                         </div>
 
@@ -435,7 +435,7 @@ useEffect(() => {
                                                                 <div className='graph-top-head'>
                                                                 <h3>Annual Trend</h3>
                                                                 </div>
-                                                                <Chart options={anualChartLineData.options} series={anualChartLineData.series} type="line" height={250} />
+                                                                <Chart options={anualChartLineData.options} series={anualChartLineData.series} type="line" height={330} />
                                                                 
                                                             </div>
                                                         </div>

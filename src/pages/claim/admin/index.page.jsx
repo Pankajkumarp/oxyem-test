@@ -603,7 +603,7 @@ const onChangeYear = (value) => {
                                                                             <h3>Monthly Claim Amount {setMouth || `Until ${currentMonth}`}</h3>
                                                                         </div>
                                                                         {anualChartData.series.length > 0 && (
-                                                                            <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={250} width="100%" />
+                                                                            <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} width="100%" />
                                                                         )}
                                                                     </div>
                                                                 </div>
@@ -612,7 +612,7 @@ const onChangeYear = (value) => {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Total Claim Amount {setYear}</h3>
                                                                         </div>
-                                                                        <Chart options={anualChartDataClaim.options} series={anualChartDataClaim.series} type="bar" height={250} />
+                                                                        <Chart options={anualChartDataClaim.options} series={anualChartDataClaim.series} type="bar" height={330} />
                                                                     </div>
                                                                 </div>
                                                             </div>

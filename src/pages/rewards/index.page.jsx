@@ -181,7 +181,7 @@ export default function index() {
                                                                                         <h3>Awards Type</h3>
                                                                                         </div>
                                                                                         {anualChartData.series.length > 0 && (
-                                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={250} />
+                                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
                                                                                 )}
                                                                                     </div>
                                                                         </div>
@@ -192,7 +192,7 @@ export default function index() {
                                                                               <div className='graph-top-head'>
                                                                                 <h3>Awards View</h3>
                                                                               </div>
-                                                                              <Chart options={monthlyData.options} series={monthlyData.series} type="pie" height={250} />
+                                                                              <Chart options={monthlyData.options} series={monthlyData.series} type="pie" height={330} />
                                                                             </div>
                                                                             
                                                                         </div>
@@ -203,7 +203,7 @@ export default function index() {
                                                                             <div className='graph-top-head'>
                                                                                 <h3>Rewards Point</h3>
                                                                                 </div>
-                                                                                <Chart options={anualChartLineData.options} series={anualChartLineData.series} type="pie" height={250} />
+                                                                                <Chart options={anualChartLineData.options} series={anualChartLineData.series} type="pie" height={330} />
                                                                             </div>
                                                                         </div>
                                                                     </div>

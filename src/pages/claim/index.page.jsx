@@ -617,7 +617,7 @@ const handleCurrencyChange = (selectedOption) => {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Claim Type {setMouth || `Until ${currentMonth}`}</h3>
                                                                     </div>
-                                                                    <Chart options={monthlyDatadonut.options} series={monthlyDatadonut.series} type="donut" width={300} height={300} />
+                                                                    <Chart options={monthlyDatadonut.options} series={monthlyDatadonut.series} type="donut" height={330} />
                                                                 </div>
                                                             </div>
 
@@ -626,7 +626,7 @@ const handleCurrencyChange = (selectedOption) => {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Overall Claim Status {setMouth || `Until ${currentMonth}`}</h3>
                                                                     </div>
-                                                                    <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width={300} height={300} />
+                                                                    <Chart options={monthlyData.options} series={monthlyData.series} type="pie" height={330} />
                                                                 </div>
                                                             </div>
 
@@ -636,7 +636,7 @@ const handleCurrencyChange = (selectedOption) => {
                                                                         <h3>Annaul Claim Amount {setYear}</h3>
                                                                     </div>
                                                                     {anualChartData.series.length > 0 && (
-                                                                        <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={252} width="100%" />
+                                                                        <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} width="100%" />
                                                                     )}
                                                                 </div>
                                                             </div>

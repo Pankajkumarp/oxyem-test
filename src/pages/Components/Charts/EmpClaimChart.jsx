@@ -80,7 +80,7 @@ const EmpClaimChart = () => {
                   {monthlyDatadonut && monthlyDatadonut.options && monthlyDatadonut.series && showMonthlyDatadonut &&(
                     <div className="col-lg-3 col-md-6 col-sm-6 custom_padding_taskbar">
                         <div className="oxy_chat_box">
-                            <Chart options={monthlyDatadonut.options} series={monthlyDatadonut.series} type="donut" width="100%" height={250} />
+                            <Chart options={monthlyDatadonut.options} series={monthlyDatadonut.series} type="donut" width="100%" height={330} />
                         </div>
                     </div>
                     )}
@@ -88,7 +88,7 @@ const EmpClaimChart = () => {
                     <div className="col-lg-3 col-md-6 col-sm-6 custom_padding_taskbar">
                         <div className="oxy_chat_box">
                             {monthlyData && (
-                                <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width="100%" height={250} />
+                                <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width="100%" height={330} />
                             )}
                         </div>
                     </div>

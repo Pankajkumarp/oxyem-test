@@ -123,8 +123,7 @@ const ClientChart = ({ activeTab }) => {
                         options={totalClient}
                         series={totalClient.series}
                         type="pie"
-                        width="100%"
-                        height={250}
+                        height={330}
                     />
                     ):null}
                 </div>
@@ -137,7 +136,7 @@ const ClientChart = ({ activeTab }) => {
                         series={totalproject.series}
                         type="polarArea"
                         width="100%"
-                        height={250}
+                        height={330}
                     />
                 ):null}
                 </div>

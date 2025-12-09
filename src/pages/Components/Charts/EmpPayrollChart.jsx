@@ -178,7 +178,7 @@ const EmpPayrollChart = ({ empID }) => {
         <div className="col-lg-3 col-md-6 col-sm-6 custom_padding_taskbar">
           <div className="oxy_chat_box oxy_chat_box_stat oxy_chat_box_stat_project">
             <div className="row">
-                <Chart options={barChartOptions} series={barChartSeries} type="bar" height={250} />
+                <Chart options={barChartOptions} series={barChartSeries} type="bar" height={330} />
             </div>
           </div>
         </div>

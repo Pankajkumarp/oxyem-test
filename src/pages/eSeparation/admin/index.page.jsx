@@ -403,7 +403,7 @@ onClick={() => {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Status</h3>
                                                                         </div>
-                           <Chart options={statusbar.options} series={statusbar.series} type="pie" width={233} height={252} />
+                           <Chart options={statusbar.options} series={statusbar.series} type="pie" height={330} />
 
                           </div></div>
                           
@@ -412,7 +412,7 @@ onClick={() => {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Monthly Trend</h3>
                                                                         </div>
-                           <Chart options={monthwiseBar.options} series={monthwiseBar.series} type="bar" height={252} width="100%" />
+                           <Chart options={monthwiseBar.options} series={monthwiseBar.series} type="bar" height={330}/>
 
                           </div></div>
                           <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -420,7 +420,7 @@ onClick={() => {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Department-wise</h3>
                                                                         </div>
-                                                 <Chart options={departmentwiseBar.options} series={departmentwiseBar.series} type="bar" height={252} width="100%" />
+                                                 <Chart options={departmentwiseBar.options} series={departmentwiseBar.series} type="bar" height={330} />
 
                           </div></div>
 </div>

@@ -224,7 +224,7 @@ const FinancialChart = ({ activeTab }) => {
               options={revenueTrend.options}
               series={revenueTrend.series}
               type="bar"
-              height={250}
+              height={330}
             />
           ) : null}
         </div>
@@ -238,7 +238,7 @@ const FinancialChart = ({ activeTab }) => {
               options={expenses.options}
               series={expenses.series}
               type="pie"
-              height={250}
+              height={330}
             />
           ) : null}
         </div>

@@ -159,7 +159,7 @@ const ProjectChart = ({ activeTab }) => {
               series={totalClient.series}
               type="donut"
               width="100%"
-              height={250}
+              height={330}
             />
           </div>
         ) : null}
@@ -172,7 +172,7 @@ const ProjectChart = ({ activeTab }) => {
               series={totalProject.series}
               type="pie"
               width="100%"
-              height={250}
+              height={330}
             />
           </div>
         ) : null}
@@ -185,7 +185,7 @@ const ProjectChart = ({ activeTab }) => {
               series={projectStat.series}
               type="pie"
               width="100%"
-              height={250}
+              height={330}
             />
           </div>
         ) : null}

@@ -570,7 +570,7 @@ export default function AllocationManagement() {
                                                                             options={allocationStatusBarChartData.options}
                                                                             series={allocationStatusBarChartData.series}
                                                                             type="bar"
-                                                                            height={300}
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>
@@ -589,7 +589,7 @@ export default function AllocationManagement() {
                                                                             options={allocationCategoryBarChartData.options}
                                                                             series={allocationCategoryBarChartData.series}
                                                                             type="bar"
-                                                                            height={300}
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>
@@ -612,7 +612,7 @@ export default function AllocationManagement() {
                                                                             options={allocationMonthlyBarChartData.options}
                                                                             series={allocationMonthlyBarChartData.series}
                                                                             type="bar"
-                                                                            height={300}
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>
@@ -631,7 +631,7 @@ export default function AllocationManagement() {
                                                                             options={allocationDeptBarChartData.options}
                                                                             series={allocationDeptBarChartData.series}
                                                                             type="bar"
-                                                                            height={300}
+                                                                            height={330}
                                                                         />
                                                                     )}
                                                                 </div>

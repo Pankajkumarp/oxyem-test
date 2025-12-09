@@ -1167,7 +1167,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                                                                                         options={chartOptions}
                                                                                                         series={chartSeries}
                                                                                                         type="bar"
-                                                                                                        height={300}
+                                                                                                        height={330}
                                                                                                     />
 
                                                                                                     <div className='label_div_box_graph'>

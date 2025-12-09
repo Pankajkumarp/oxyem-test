@@ -183,7 +183,7 @@ export default function EmpTimeSheetChart() {
               options={annualStatus.options}
               series={annualStatus.series}
               type="bar"
-              height={250}
+              height={330}
             />
         </div>
       </div>

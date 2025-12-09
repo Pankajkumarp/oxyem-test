@@ -449,7 +449,7 @@ useEffect(() => {
                                       <div className='graph-top-head'>
                                         <h3>Status</h3>
                                       </div>
-                                      <Chart options={statusChartData.options} series={statusChartData.series} type="bar" height={250} />
+                                      <Chart options={statusChartData.options} series={statusChartData.series} type="bar" height={330} />
                                     </div>
                                   </div>
                                   <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -457,7 +457,7 @@ useEffect(() => {
                                       <div className='graph-top-head'>
                                         <h3>Yearly Status </h3>
                                       </div>
-                                      <Chart options={yearChartData.options} series={yearChartData.series} type="bar" height={250} />
+                                      <Chart options={yearChartData.options} series={yearChartData.series} type="bar" height={330} />
                                     </div>
                                   </div>
                                   <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -465,7 +465,7 @@ useEffect(() => {
                                       <div className='graph-top-head'>
                                         <h3>Industry Type</h3>
                                       </div>
-                                      <Chart options={clientChartData.options} series={clientChartData.series} type="bar" height={250} />
+                                      <Chart options={clientChartData.options} series={clientChartData.series} type="bar" height={330} />
                                     </div>
                                   </div>
                                 </div>

@@ -400,7 +400,7 @@ useEffect(() => {
                                         options={clientStatusChartData.options}
                                         series={clientStatusChartData.series}
                                         type="bar"
-                                        height="90%"
+                                        height={330}
                                       />
                                     )}
                                   </div>
@@ -417,8 +417,7 @@ useEffect(() => {
                                         options={overallStatusPieData.options}
                                         series={overallStatusPieData.series}
                                         type="pie"
-                                        width="100%"
-                                        height="90%"
+                                        height={330}
                                       />
                                     )}
                                   </div>
@@ -437,7 +436,7 @@ useEffect(() => {
                                         options={monthlyStatusChartData.options}
                                         series={monthlyStatusChartData.series}
                                         type="bar"
-                                        height="90%"
+                                        height={330}
                                       />
                                     )}
                                   </div>
@@ -454,7 +453,7 @@ useEffect(() => {
                                         options={topCountryChartData.options}
                                         series={topCountryChartData.series}
                                         type="bar"
-                                        height="90%"
+                                        height={330}
                                       />
                                     )}
                                   </div>

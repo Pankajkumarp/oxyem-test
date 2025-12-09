@@ -196,7 +196,6 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
   const handleCurrencyChange = (selectedOption) => {
     const value = selectedOption ? selectedOption.value : '';
     setSelectedCurrency(value);
-    console.log('Selected Currency:', value);
   };
 
   return (
@@ -209,7 +208,7 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
               options={topClients.options}
               series={topClients.series}
               type="bar"
-              height={250}
+              height={330}
             />
           ) : null}
         </div>
@@ -223,7 +222,7 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
               options={monthlyRevenueExpense.options}
               series={monthlyRevenueExpense.series}
               type="bar"
-              height={250}
+              height={330}
             />
           ) : null}
         </div>
@@ -237,7 +236,7 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
               options={topProjects.options}
               series={topProjects.series}
               type="bar"
-              height={250}
+              height={330}
             />
           ) : null}
         </div>

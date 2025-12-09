@@ -749,7 +749,7 @@ export default function Leaveview({ }) {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Monthly Status - {setMouth}</h3>
                                                                         </div>
-                                                                        <Chart options={monthlyData.options} series={monthlyData.series} type="pie"  width="100%" height={250} />
+                                                                        <Chart options={monthlyData.options} series={monthlyData.series} type="pie"  width="100%" height={330} />
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -757,7 +757,7 @@ export default function Leaveview({ }) {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Monthly Trend - {setMouth}</h3>
                                                                         </div>
-                                                                        <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={250} />
+                                                                        <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={330} />
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -765,7 +765,7 @@ export default function Leaveview({ }) {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Annual Chart - {setYear}</h3>
                                                                         </div>
-                                                                        <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={250} />
+                                                                        <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
                                                                     </div>
                                                                 </div>
                                                             </div>

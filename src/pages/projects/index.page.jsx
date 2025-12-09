@@ -540,8 +540,7 @@ export default function ProjectListing({ }) {
                                                                                 options={projectStatusBarChartData.options}
                                                                                 series={projectStatusBarChartData.series}
                                                                                 type="bar"
-                                                                                width="100%"
-                                                                                height="90%"
+                                                                                height={330}
                                                                             />
                                                                         )}
                                                                     </div>
@@ -558,8 +557,7 @@ export default function ProjectListing({ }) {
                                                                                 options={projectClientBarChartData.options}
                                                                                 series={projectClientBarChartData.series}
                                                                                 type="bar"
-                                                                                width="100%"
-                                                                                height="90%"
+                                                                                height={330}
                                                                             />
                                                                         )}
                                                                     </div>
@@ -577,8 +575,7 @@ export default function ProjectListing({ }) {
                                                                                 options={projectEndDateLineChartData.options}
                                                                                 series={projectEndDateLineChartData.series}
                                                                                 type="bar"
-                                                                                width="100%"
-                                                                                height="90%"
+                                                                                height={330}
                                                                             />
                                                                         )}
 

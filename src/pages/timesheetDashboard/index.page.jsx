@@ -414,7 +414,7 @@ export default function timesheetDashboard({ }) {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Annual Effort Chart</h3>
                                                                     </div>
-                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={250} />
+                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-4">
@@ -422,7 +422,7 @@ export default function timesheetDashboard({ }) {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Weekly Attendance Chart</h3>
                                                                     </div>
-                                                                    <Chart options={monthlyData.options} series={monthlyData.series} type="bar" height={250} />
+                                                                    <Chart options={monthlyData.options} series={monthlyData.series} type="bar" height={330} />
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-4">
@@ -430,7 +430,7 @@ export default function timesheetDashboard({ }) {
                                                                     <div className='graph-top-head'>
                                                                         <h3>%age of efforts logged</h3>
                                                                     </div>
-                                                                    <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="radialBar" height={250} />
+                                                                    <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="radialBar" height={330} />
                                                                 </div>
                                                             </div>
                                                         </div>

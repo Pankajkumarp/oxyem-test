@@ -205,7 +205,7 @@ const LeaveChart = ({ activeTab }) => {
               series={annualStatus.series}
               type="bar"
               width="100%"
-              height={250}
+              height={330}
             />
           </div>
         ) : null}
@@ -219,7 +219,7 @@ const LeaveChart = ({ activeTab }) => {
               series={monthlyStatus.series}
               type="bar"
               width="100%"
-              height={250}
+              height={330}
             />
           </div>
         ) : null}

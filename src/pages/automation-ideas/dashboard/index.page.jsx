@@ -261,7 +261,7 @@ export default function Index() {
                                       options={ideaTypeBarChartData.options}
                                       series={ideaTypeBarChartData.series}
                                       type="bar"
-                                      height={300}
+                                      height={330}
                                       width="100%"
                                     />
                                   )}
@@ -278,7 +278,7 @@ export default function Index() {
                                       options={employeeWiseBarChartData.options}
                                       series={employeeWiseBarChartData.series}
                                       type="bar"
-                                      height={300}
+                                      height={330}
                                       width="100%"
                                     />
                                   )}
@@ -297,7 +297,7 @@ export default function Index() {
                                       options={complexityWiseBarChartData.options}
                                       series={complexityWiseBarChartData.series}
                                       type="bar"
-                                      height={300}
+                                      height={330}
                                       width="100%"
                                     />
                                   )}
@@ -314,7 +314,7 @@ export default function Index() {
                                       options={statusWiseBarChartData.options}
                                       series={statusWiseBarChartData.series}
                                       type="bar"
-                                      height={300}
+                                      height={330}
                                       width="100%"
                                     />
                                   )}

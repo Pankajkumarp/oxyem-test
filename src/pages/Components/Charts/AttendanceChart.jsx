@@ -250,7 +250,7 @@ const AttendanceChart = ({ activeTab }) => {
                             series={todayStatus.series}
                             type="donut"
                             width="100%"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}
@@ -264,7 +264,7 @@ const AttendanceChart = ({ activeTab }) => {
                             series={annualAttend.series}
                             type="bar"
                             width="100%"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}
@@ -278,7 +278,7 @@ const AttendanceChart = ({ activeTab }) => {
                             series={monthlyAttend.series}
                             type="bar"
                             width="100%"
-                            height={250}
+                            height={330}
                         />
                     </div>
                 ) : null}

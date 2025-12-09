@@ -348,7 +348,7 @@ const TimesheetChart = ({ activeTab }) => {
               series={yearData.series}
               type="line"
               width="100%"
-              height={250}
+              height={330}
             />
           </div>
         ) : null}
@@ -362,7 +362,7 @@ const TimesheetChart = ({ activeTab }) => {
               series={mounthData.series}
               type="line"
               width="100%"
-              height={250}
+              height={330}
             />
           </div>
         ) : null}

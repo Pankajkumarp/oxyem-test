@@ -395,7 +395,7 @@ const handleTableTabClick = (tabIndex) => {
                                   <div className='graph-top-head'>
                                     <h3>Overall Ticket Status</h3>
                                   </div>
-                                  <Chart options={pieData.options} series={pieData.series} type="pie" width={300} height={300} />
+                                  <Chart options={pieData.options} series={pieData.series} type="pie" height={330} />
                                 </div>
                               </div>
                               <div className="col-lg-4 col-md-12 col-sm-6">
@@ -407,7 +407,7 @@ const handleTableTabClick = (tabIndex) => {
                                     options={moduleWiseStatus.options}
                                     series={moduleWiseStatus.series}
                                     type="bar"
-                                    width={300} height={280}
+                                    height={330}
                                   />
                                 </div>
                               </div>
@@ -420,7 +420,7 @@ const handleTableTabClick = (tabIndex) => {
                                     options={employeeWiseStatus.options}
                                     series={employeeWiseStatus.series}
                                     type="bar"
-                                    width={300} height={280}
+                                    height={330}
                                   />
                                 </div>
                               </div>

@@ -500,7 +500,7 @@ export default function pricingView() {
                                     <h3>Opportunity</h3>
                                   </div>
                                   {opptunitycountbar.series.length > 0 && (
-                                    <Chart options={opptunitycountbar.options} series={opptunitycountbar.series} type="bar" height={330} width="100%" />
+                                    <Chart options={opptunitycountbar.options} series={opptunitycountbar.series} type="bar" height={330} />
                                   )}
                                 </div>
 
@@ -511,7 +511,7 @@ export default function pricingView() {
                                     <h3>Monthly Trend</h3>
                                   </div>
                                   {monthlysumbar.series.length > 0 && (
-                                    <Chart options={monthlysumbar.options} series={monthlysumbar.series} type="bar" height={330} width="100%" />
+                                    <Chart options={monthlysumbar.options} series={monthlysumbar.series} type="bar" height={330} />
                                   )}
                                 </div>
                               </div>

@@ -399,7 +399,7 @@ const EmpLeaveChart = () => {
               series={annualChartData.series}
               type="bar"
               width="100%"
-              height={300}
+              height={330}
             />
           </div>
     </div>
@@ -412,7 +412,7 @@ const EmpLeaveChart = () => {
             series={annualStatus.series}
             type="bar"
             width="100%"
-            height={250}
+            height={330}
           />
         </div>
       </div>
@@ -420,14 +420,14 @@ const EmpLeaveChart = () => {
         {ischartopen && anualChartData?.options && anualChartData?.series && (
       <div className="col-lg-4 col-md-6 col-sm-6 custom_padding_taskbar">
         <div className="oxy_chat_box"   >
-          <Chart options={anualChartData?.options} series={anualChartData?.series} type="bar" height={250} /> 
+          <Chart options={anualChartData?.options} series={anualChartData?.series} type="bar" height={330} /> 
         </div>
       </div>
       )}
         {ischartopen && monthlyData?.options && monthlyData?.series && (
           <div className="col-lg-2 col-md-6 col-sm-6 custom_padding_taskbar">
             <div className="oxy_chat_box">
-              <Chart options={monthlyData?.options} series={monthlyData?.series} type="pie" width={250} height={250} />
+              <Chart options={monthlyData?.options} series={monthlyData?.series} type="pie" height={330} />
             </div>
           </div>
         )}

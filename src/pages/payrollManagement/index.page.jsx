@@ -688,22 +688,21 @@ export default function payrollManagement() {
                                         options={monthlyData.options}
                                         series={monthlyData.series}
                                         type="pie"
-                                        width={300}
-                                        height={300}
+                                        height={310}
                                       />
                                     </div>
                                   </div>
                                   {monthlyPaymentData?.options && monthlyPaymentData?.series && (
                                     <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
                                       <div className="oxy_chat_box"   >
-                                        <Chart options={monthlyPaymentData?.options} series={monthlyPaymentData?.series} type="bar" height={250} />
+                                        <Chart options={monthlyPaymentData?.options} series={monthlyPaymentData?.series} type="bar" height={330} />
                                       </div>
                                     </div>
                                   )}
                                   {monthlyTrend?.options && monthlyTrend?.series && (
                                     <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
                                       <div className="oxy_chat_box"   >
-                                        <Chart options={monthlyTrend?.options} series={monthlyTrend?.series} type="line" height={250} />
+                                        <Chart options={monthlyTrend?.options} series={monthlyTrend?.series} type="line" height={330} />
                                       </div>
                                     </div>
                                   )}

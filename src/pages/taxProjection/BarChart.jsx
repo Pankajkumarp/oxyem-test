@@ -43,7 +43,7 @@ const BarChart = ({ mygraphvalue }) => {
       {mygraphvalue?.data && mygraphvalue?.value ? (
         <>
           <h2>Chart</h2>
-          <Chart options={options} series={series} type="bar" height={350} />
+          <Chart options={options} series={series} type="bar" height={330} />
         </>
       ) : (
         <p>No data available</p>  // Optional: A fallback message if data is missing
