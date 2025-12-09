@@ -322,7 +322,7 @@ export default function AllocationManagement() {
                         },
                         xaxis: { categories: allocationChartResponse.status.categories },
                         colors: ["#1e88e5"],
-                        legend: { position: "bottom" },
+                        legend: {show: false},
                         dataLabels: { enabled: true },
                     },
                 });
@@ -348,9 +348,9 @@ export default function AllocationManagement() {
                                 },
                             },
                         },
+                        legend: {show: false},
                         xaxis: { categories: allocationChartResponse.category.categories },
                         colors: ["#43a047"],
-                        legend: { position: "bottom" },
                         dataLabels: { enabled: true },
                     },
                 });
@@ -409,7 +409,7 @@ export default function AllocationManagement() {
                         },
                         xaxis: { categories: allocationChartResponse.department.categories },
                         colors: ["#ff9800"],
-                        legend: { position: "bottom" },
+                        legend: {show: false},
                         dataLabels: { enabled: true },
                     },
                 });

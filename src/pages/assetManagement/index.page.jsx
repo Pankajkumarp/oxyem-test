@@ -224,10 +224,9 @@ useEffect(() => {
               },
             },
           },
+          legend: {show: false},
           xaxis: { categories: assetChartResponse.assetStatus.categories },
           colors: ["#1e88e5"],
-          legend: { position: "bottom" },
-          dataLabels: { enabled: true },
         },
       });
 

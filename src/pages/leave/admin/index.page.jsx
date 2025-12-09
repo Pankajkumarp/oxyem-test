@@ -27,7 +27,8 @@ export default function Leaveview({ }) {
     const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [toplist, setToplist] = useState({});
-
+const [employeeList, setEmployeeList] = useState([]);
+          const [selectedEmployee, setSelectedEmployee] = useState(null);
 
     const desiredOrder = ["srno", "id", "employeeName", "leaveType", "fromDate", "toDate", "numberofDays", "leaveReason", "status", "action"];
 
@@ -162,7 +163,41 @@ export default function Leaveview({ }) {
         }
 
     };
-
+       
+ const onEmployeeChange = (value) => {
+    if (value) {
+      setSelectedEmployee(value.value);
+    } else {
+      setSelectedEmployee(null);
+    }
+  };
+  useEffect(() => {
+      const fetchOptions = async () => {
+        try {
+          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await axiosJWT.get(`${apiUrl}/employees/employeesList`, { params: { "isFor": name } });
+          if (response) {
+            const optionsData = response.data.data.map((item) => ({
+              label: item.employeeName,
+              value: item.idEmployee,
+              image: item.profilePicPath ? item.profilePicPath : "",
+              profileLink: item.profileLink ? item.profileLink : "",
+              designation: item.designation ? item.designation : "",
+            }));
+            setEmployeeList(optionsData);
+            if (optionsData.length > 0) {
+              // setEmployeeValue(optionsData[-1].value); 
+              // setEmployeeValueadd(optionsData[0].value); // Set the first item
+              setSelectedEmployee(null);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching options:', error);
+        }
+      };
+  
+      fetchOptions();
+    }, []);
 
     const chartCategoryMap = {
         "Birthday": { leaveType: "Birthday" },
@@ -226,7 +261,7 @@ export default function Leaveview({ }) {
     const currentYear = new Date().getFullYear().toString();
     // console.log(currentYear)
     const optionsyear = [];
-    for (let year = 2000; year <= currentYear; year++) {
+    for (let year = 2020; year <= currentYear; year++) {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
     // console.log(optionsyear,"opyear")
@@ -260,6 +295,7 @@ useEffect(() => {
         month: setMouth,
         year: setYear,
         isFor: "admin",
+        "emp": selectedEmployee,
       };
 
       try {
@@ -340,6 +376,7 @@ useEffect(() => {
               title: { text: "", align: "left" },
               grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
               xaxis: { categories: yeartrendchart.categories },
+              legend: {show: false}
             },
           });
 
@@ -375,6 +412,7 @@ useEffect(() => {
               title: { text: "", align: "left" },
               grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
               xaxis: { categories: monthlytrendchart.categories },
+              legend: {show: false}
             },
           });
 
@@ -387,7 +425,7 @@ useEffect(() => {
 
     getgraphData();
   }
-}, [setMouth, setYear]); // ✅ activeTab removed
+}, [selectedEmployee, setMouth, setYear]); // ✅ activeTab removed
 
 
 
@@ -587,7 +625,7 @@ useEffect(() => {
                                                                     <div className='ox-colored-box-1'><h4 className='all_attendence'>{toplist.leavesOnToday}</h4></div>
 
 
-                                                                    <div className='ox-box-text'><h6>On Leave Today                                                        </h6></div>
+                                                                    <div className='ox-box-text'><h6>On Leave Today                                                      </h6></div>
 
 
 
@@ -637,16 +675,25 @@ useEffect(() => {
                                                     <div className="oxyem-top-box-design design-only-attendence leave-top-data-main mx-0 d-block">
 
                                                         <div className="row">
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 <div className="form-group">
                                                                     <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 <div className="form-group">
                                                                     <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
                                                                 </div>
                                                             </div>
+                                                              <div className="col-md-4">
+                                                                                                                            <div className="form-group">
+                                                            <SelectComponent label={"Filter Data by Employee"} placeholder={"Select Employee..."} options={employeeList} onChange={onEmployeeChange}
+                                                                        value={
+                                                                          selectedEmployee
+                                                                            ? employeeList.find(emp => emp.idEmployee === selectedEmployee)
+                                                                            : null
+                                                                        } />                                                                </div>
+                                                                                                                        </div>
 
                                                         </div>
                                                         <div className="row">

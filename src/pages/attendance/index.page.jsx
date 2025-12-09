@@ -421,6 +421,7 @@ export default function Leaveview({ }) {
                                             enabled: false
                                         }
                                     },
+                                    legend: {show: false},
                                     dataLabels: {
                                         enabled: false
                                     },

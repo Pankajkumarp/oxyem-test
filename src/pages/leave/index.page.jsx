@@ -335,6 +335,7 @@ useEffect(() => {
               markers: { colors: "#156082" },
               grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
               xaxis: { categories: yeartrendchart.categories },
+              legend: {show: false}
             },
           });
 
@@ -369,6 +370,7 @@ useEffect(() => {
               markers: { colors: "#156082" },
               grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
               xaxis: { categories: monthlytrendchart.categories },
+              legend: {show: false}
             },
           });
 

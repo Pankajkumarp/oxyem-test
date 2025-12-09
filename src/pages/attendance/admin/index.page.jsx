@@ -23,7 +23,8 @@ export default function Leaveview({ }) {
     const [toplist, setToplist] = useState({});
     const [Isaddress, setAddress] = useState('');
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    
+    const [employeeList, setEmployeeList] = useState([]);
+      const [selectedEmployee, setSelectedEmployee] = useState(null);
     useEffect(() => {
         const fetchLocation = async () => {
             try {
@@ -54,7 +55,41 @@ export default function Leaveview({ }) {
             console.error("Error fetching data", error);
         }
     };
-
+ const onEmployeeChange = (value) => {
+    if (value) {
+      setSelectedEmployee(value.value);
+    } else {
+      setSelectedEmployee(null);
+    }
+  };
+  useEffect(() => {
+      const fetchOptions = async () => {
+        try {
+          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await axiosJWT.get(`${apiUrl}/employees/employeesList`, { params: { "isFor": name } });
+          if (response) {
+            const optionsData = response.data.data.map((item) => ({
+              label: item.employeeName,
+              value: item.idEmployee,
+              image: item.profilePicPath ? item.profilePicPath : "",
+              profileLink: item.profileLink ? item.profileLink : "",
+              designation: item.designation ? item.designation : "",
+            }));
+            setEmployeeList(optionsData);
+            if (optionsData.length > 0) {
+              // setEmployeeValue(optionsData[-1].value); 
+              // setEmployeeValueadd(optionsData[0].value); // Set the first item
+              setSelectedEmployee(null);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching options:', error);
+        }
+      };
+  
+      fetchOptions();
+    }, []);
+    
     useEffect(() => {
         fetchData();
     }, []);
@@ -104,7 +139,7 @@ export default function Leaveview({ }) {
 
     const currentYear = new Date().getFullYear().toString();
     const optionsyear = [];
-    for (let year = 2021; year <= currentYear; year++) {
+    for (let year = 2020; year <= currentYear; year++) {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
 
@@ -136,7 +171,7 @@ export default function Leaveview({ }) {
             const getgraphData = async () => {
                 try {
                     const response = await axiosJWT.get(`${apiUrl}/graphstats`, 
-                        { params: { "month": setMouth, "year": setYear, "isFor":"admin"} 
+                        { params: { "month": setMouth, "year": setYear, "isFor":"admin", "emp": selectedEmployee} 
                     });
                     // Handle the response if needed
                     if (response) {
@@ -212,7 +247,8 @@ export default function Leaveview({ }) {
                                     },
                                     xaxis: {
                                         categories: monthlytrendchart.days
-                                    }
+                                    },
+                                    legend: {show: false}
                                 },
                             }
                         )
@@ -282,7 +318,7 @@ export default function Leaveview({ }) {
 				getgraphData();
 			}, 0);
         }
-    }, [setMouth, setYear ,activeTab]);
+    }, [selectedEmployee, setMouth, setYear ,activeTab]);
 
     const handleUpadateClick = async (id) => {
         router.push(`/attendance/${id}`);
@@ -505,17 +541,25 @@ const [searchfilter, setSearchfilter] = useState({});
                                                 {ischartopen ? (
                                                     <div>
                                                         <div className="row">
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 <div className="form-group">
                                                                     <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 <div className="form-group">
                                                                     <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
                                                                 </div>
                                                             </div>
-
+                                                              <div className="col-md-4">
+                                                                <div className="form-group">
+<SelectComponent label={"Filter Data by Employee"} placeholder={"Select Employee..."} options={employeeList} onChange={onEmployeeChange}
+            value={
+              selectedEmployee
+                ? employeeList.find(emp => emp.idEmployee === selectedEmployee)
+                : null
+            } />                                                                </div>
+                                                            </div>
                                                         </div>
 
                                                         <div className="row">

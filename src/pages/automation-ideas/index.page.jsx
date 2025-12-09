@@ -113,7 +113,7 @@ export default function Index() {
                         },
                         xaxis: { categories: ideaChartResponse.ideaType.categories },
                         colors: ["#1e88e5"],
-                        legend: { position: "bottom" },
+                        legend: {show: false},
                         dataLabels: { enabled: true },
                     },
                 });
@@ -141,7 +141,7 @@ export default function Index() {
                         },
                         xaxis: { categories: ideaChartResponse.complexityWise.categories },
                         colors: ["#fb8c00"],
-                        legend: { position: "bottom" },
+                        legend: {show: false},
                         dataLabels: { enabled: true },
                     },
                 });
@@ -168,8 +168,8 @@ export default function Index() {
                         },
                         xaxis: { categories: ideaChartResponse.statusWise.categories },
                         colors: ["#8e24aa"],
-                        legend: { position: "bottom" },
                         dataLabels: { enabled: true },
+                        legend: {show: false},
                     },
                 });
 

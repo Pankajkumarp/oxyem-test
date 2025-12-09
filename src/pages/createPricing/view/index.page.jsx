@@ -228,6 +228,7 @@ export default function pricingView() {
                     endingShape: 'rounded',
                   },
                 },
+                legend: {show: false},
                 colors: ['#26AF48', '#2196F3', '#FA7E12', '#FF4560', '#775DD0'],
                 dataLabels: { enabled: false },
                 xaxis: { categories: clientcountchart.categories },
@@ -246,6 +247,7 @@ export default function pricingView() {
             }],
             options: {
               chart: { type: 'bar' },
+              legend: {show: false},
               plotOptions: {
                 bar: {
                   horizontal: false,
@@ -298,6 +300,7 @@ export default function pricingView() {
               xaxis: {
                 categories: monthlysumchart.label,
               },
+              legend: {show: false},
               yaxis: {
                 title: {
                   text: '',

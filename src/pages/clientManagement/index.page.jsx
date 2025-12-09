@@ -202,6 +202,7 @@ useEffect(() => {
                 dataLabels: { enabled: false },
                 stroke: { width: 0 },
                 grid: { row: { colors: ["#fff", "#f2f2f2"] } },
+                legend: {show: false},
                 xaxis: {
                   labels: { rotate: -45 },
                   categories: statusChart.labels,
@@ -225,7 +226,6 @@ useEffect(() => {
                       const category = clientChart.labels[config.dataPointIndex];
                       if (!category) return;
                       requestAnimationFrame(() => {
-                        console.log("Client/Industry chart clicked:", category);
                         setSearchfilter({ clientName: category });
                         setActiveTab(1);
                         setActiveStatus(category);
@@ -242,6 +242,7 @@ useEffect(() => {
                   categories: clientChart.labels,
                   tickPlacement: "on",
                 },
+                legend: {show: false},
                 yaxis: { title: { text: "" } },
                 fill: { type: "color" },
               },
@@ -259,7 +260,6 @@ useEffect(() => {
                       const category = yearChart.labels[config.dataPointIndex];
                       if (!category) return;
                       requestAnimationFrame(() => {
-                        console.log("Year chart clicked:", category);
                         setSearchfilter({ month: category });
                         setActiveTab(1);
                         setActiveStatus(category);

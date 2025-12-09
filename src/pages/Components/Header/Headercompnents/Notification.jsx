@@ -11,7 +11,7 @@ const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
 
   const handlenotify = async () => {
     

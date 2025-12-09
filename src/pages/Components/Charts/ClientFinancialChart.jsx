@@ -36,6 +36,7 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
               toolbar: { show: true },
               zoom: { enabled: true },
             },
+            legend: {show: false},
             plotOptions: {
               bar: {
                 horizontal: false,
@@ -127,6 +128,7 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
               toolbar: { show: true },
               zoom: { enabled: true },
             },
+            legend: {show: false},
             plotOptions: {
               bar: {
                 horizontal: false,

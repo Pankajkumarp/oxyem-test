@@ -99,186 +99,186 @@ export default function index() {
     const [setMouth, setMonthValue] = useState(null);
     const [setYear, setYearValue] = useState(currentYear);
 
-const onChangeMonth = (value) => {
-  if (value) {
-    setMonthValue(value.value);
-  } else {
-    setMonthValue(null); // cleared
-  }
-};
+    const onChangeMonth = (value) => {
+        if (value) {
+            setMonthValue(value.value);
+        } else {
+            setMonthValue(null); // cleared
+        }
+    };
 
-const onChangeYear = (value) => {
-  if (value) {
-    setYearValue(value.value);
-  } else {
-    setYearValue(null);
-  }
-};
+    const onChangeYear = (value) => {
+        if (value) {
+            setYearValue(value.value);
+        } else {
+            setYearValue(null);
+        }
+    };
 
 
     const [isLoadingGraph, setIsLoadingGraph] = useState(false);
     useEffect(() => {
         setIsLoadingGraph(true);
         // if (setMouth && setYear && activeTab === 0) {
-            const chartData = async () => {
-                try {
-                    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-                    const params = {
-  isFor: 'admin',
-  currency: selectedCurrency,
-  ...(setMouth ? { month: setMouth } : {}),
-  ...(setYear ? { year: setYear } : {})
-};
-                    const response = await axiosJWT.get(`${apiUrl}/claims/graphStats`, {
-                        params
-                    });
+        const chartData = async () => {
+            try {
+                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+                const params = {
+                    isFor: 'admin',
+                    currency: selectedCurrency,
+                    ...(setMouth ? { month: setMouth } : {}),
+                    ...(setYear ? { year: setYear } : {})
+                };
+                const response = await axiosJWT.get(`${apiUrl}/claims/graphStats`, {
+                    params
+                });
 
-                    // Extract pie chart data for overall claims
-                    const overallClaimData = response.data.data.overallClaimData.overAll;
-                    const ClaimData = response.data.data.allClaims;
-                    const annualData = response.data.data.annualData;
-                    const lastChar = response.data.data.currentAndLastFinancialGraph;
-                    console.log(lastChar)
-                    // Set up pie chart data for overall claims
-                    setMonthlyData({
-                        series: overallClaimData.data,
-                        options: {
-                            chart: { width: 450, type: 'pie' },
-                            labels: overallClaimData.label,
-                            colors: ['#26AF48', '#2196F3', '#FA7E12', '#cf59f1'],
-                            title: { text: '', align: 'center' },
-                            legend: { position: 'bottom' },
-                            responsive: [{
-                                breakpoint: 480,
-                                options: {
-                                    chart: { width: 300 },
-                                    legend: { position: 'bottom' },
-                                },
-                            }],
-                        },
-                    });
-
-                    setMonthlyDatadonut({
-                        series: ClaimData.data,
-                        options: {
-                            chart: {
-                                type: 'donut',
-                                width: 450
+                // Extract pie chart data for overall claims
+                const overallClaimData = response.data.data.overallClaimData.overAll;
+                const ClaimData = response.data.data.allClaims;
+                const annualData = response.data.data.annualData;
+                const lastChar = response.data.data.currentAndLastFinancialGraph;
+                // Set up pie chart data for overall claims
+                setMonthlyData({
+                    series: overallClaimData.data,
+                    options: {
+                        chart: { width: 450, type: 'pie' },
+                        labels: overallClaimData.label,
+                        colors: ['#26AF48', '#2196F3', '#FA7E12', '#cf59f1'],
+                        title: { text: '', align: 'center' },
+                        legend: { position: 'bottom' },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: { width: 300 },
+                                legend: { position: 'bottom' },
                             },
-                            labels: ClaimData.label,
-                            colors: ['#2196F3', '#FF4560', '#26AF48', '#775DD0'], // Adjust these colors as necessary
-                            title: {
-                                text: '', // Update the title as needed
-                                align: 'center'
-                            },
-                            legend: {
-                                position: 'bottom'
-                            },
-                            responsive: [{
-                                breakpoint: 480,
-                                options: {
-                                    chart: {
-                                        width: 300
-                                    },
-                                    legend: {
-                                        position: 'bottom'
-                                    },
-                                },
-                            }],
-                        },
-                    });
-
-
-                    // Set bar chart for annual data
-                    setAnualChartData({
-                        series: [{
-                            name: 'Claims',
-                            data: annualData.data
                         }],
-                        options: {
-                            chart: { type: 'bar', height: 350 },
-                            plotOptions: {
-                                bar: {
-                                    horizontal: false,
-                                    columnWidth: '55%',
-                                    endingShape: 'rounded',
-                                },
-                            },
-                            colors: ['#26AF48', '#2196F3', '#FA7E12', '#FF4560', '#775DD0'],
-                            dataLabels: { enabled: false },
-                            xaxis: { categories: annualData.label },
-                            yaxis: { title: { text: 'Count' } },
-                            fill: { opacity: 1 },
-                            tooltip: { y: { formatter: (val) => `${val} claims` } },
-                        },
-                    });
+                    },
+                });
 
-                    setAnualChartDataClaim({
-                        series: lastChar.data.map((yearItem) => ({
-                            name: yearItem.name,
-                            data: yearItem.data
-                        })),
-                        options: {
-                            chart: {
-                                type: 'bar',
-                                height: 350,
-                            },
-                            plotOptions: {
-                                bar: {
-                                    horizontal: false,
-                                    columnWidth: '55%',
-                                    endingShape: 'rounded',
-                                    dataLabels: {
-                                        position: 'top',
-                                    },
+                setMonthlyDatadonut({
+                    series: ClaimData.data,
+                    options: {
+                        chart: {
+                            type: 'donut',
+                            width: 450
+                        },
+                        labels: ClaimData.label,
+                        colors: ['#2196F3', '#FF4560', '#26AF48', '#775DD0'], // Adjust these colors as necessary
+                        title: {
+                            text: '', // Update the title as needed
+                            align: 'center'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    width: 300
+                                },
+                                legend: {
+                                    position: 'bottom'
                                 },
                             },
-                            colors: ['#26AF48', '#2196F3', '#FA7E12'],
-                            dataLabels: {
-                                enabled: false,
+                        }],
+                    },
+                });
+
+
+                // Set bar chart for annual data
+                setAnualChartData({
+                    series: [{
+                        name: 'Claims',
+                        data: annualData.data
+                    }],
+                    options: {
+                        chart: { type: 'bar', height: 350 },
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '55%',
+                                endingShape: 'rounded',
                             },
+                        },
+                        colors: ['#26AF48', '#2196F3', '#FA7E12', '#FF4560', '#775DD0'],
+                        dataLabels: { enabled: false },
+                        xaxis: { categories: annualData.label },
+                        yaxis: { title: { text: 'Count' } },
+                        fill: { opacity: 1 },
+                        tooltip: { y: { formatter: (val) => `${val} claims` } },
+                        legend: {show: false}
+                    },
+                });
+
+                setAnualChartDataClaim({
+                    series: lastChar.data.map((yearItem) => ({
+                        name: yearItem.name,
+                        data: yearItem.data
+                    })),
+                    options: {
+                        chart: {
+                            type: 'bar',
+                            height: 350,
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '55%',
+                                endingShape: 'rounded',
+                                dataLabels: {
+                                    position: 'top',
+                                },
+                            },
+                        },
+                        colors: ['#26AF48', '#2196F3', '#FA7E12'],
+                        dataLabels: {
+                            enabled: false,
+                        },
+                        title: {
+                            text: '',
+                            align: 'left'
+                        },
+                        stroke: {
+                            show: true,
+                            width: 1,
+                            colors: ['transparent'],
+                        },
+                        xaxis: {
+                            categories: lastChar.categories,
+                        },
+                        yaxis: {
                             title: {
                                 text: '',
-                                align: 'left'
                             },
-                            stroke: {
-                                show: true,
-                                width: 1,
-                                colors: ['transparent'],
-                            },
-                            xaxis: {
-                                categories: lastChar.categories,
-                            },
-                            yaxis: {
-                                title: {
-                                    text: '',
-                                },
-                            },
-                            fill: {
-                                opacity: 1,
-                            },
-                            tooltip: {
-                                y: {
-                                    formatter: function (val) {
-                                        return `${val} Days`;
-                                    },
+                        },
+                        fill: {
+                            opacity: 1,
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    return `${val} Days`;
                                 },
                             },
                         },
-                    });
+                    },
+                });
 
 
-                    setIsChartOpen(true);
-                    setIsLoadingGraph(false);
-                } catch (error) {
-                    // Handle error
+                setIsChartOpen(true);
+                setIsLoadingGraph(false);
+            } catch (error) {
+                // Handle error
 
-                }
-            };
+            }
+        };
 
-            setTimeout(function () {
-                chartData();
-            }, 0);
+        setTimeout(function () {
+            chartData();
+        }, 0);
         // }
     }, [selectedCurrency, setMouth, setYear, activeTab]);
 
@@ -428,6 +428,7 @@ const onChangeYear = (value) => {
         if (value === "clr") {
             setSearchfilter({});
             setActiveStatus(null);
+            setActiveTableTab(0);
         }
         //    else if (value === "pending") {
 
@@ -437,6 +438,23 @@ const onChangeYear = (value) => {
             setSearchfilter({ status: value });
         }
     }
+
+//     const handleShowDataForStatus = (value) => {
+//     if (value === "clr") {
+//         setSearchfilter({});
+//         setActiveStatus(null);
+//         setActiveTableTab(0);
+//         return;
+//     }
+
+//     // status click hua → status filter lagana hai
+//     setSearchfilter({ status: value });
+
+//     // Tab hamesha pending rehna chahiye
+//     setActiveTableTab(0);
+
+//     setActiveStatus(value);
+// };
 
     useEffect(() => {
         const mainElement = document.querySelector('body');
@@ -550,80 +568,83 @@ const onChangeYear = (value) => {
                                                 }
                                             </div>
                                         </div>
-                                        {isLoadingGraph?(
-                                                                                            <Loader text={"Please wait while we load the claim graph."}/>
-                                                                                            ):(
-                                                                                            
-                                        <>
-                                            {ischartopen ? (
-                                                <div>
-                                                    <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                        {isLoadingGraph ? (
+                                            <Loader text={"Please wait while we load the claim graph."} />
+                                        ) : (
 
-                                                        <div className="tab-content">
-                                                           
+                                            <>
+                                                {ischartopen ? (
+                                                    <div>
+                                                        <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+
+                                                            <div className="tab-content">
+
                                                                 <>
-                                                            <div className="row">
-                                                                <div className="col-md-4">
-                                                                    <div className="form-group">
-                                                                        <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-4">
-                                                                    <div className="form-group">
-                                                                        <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-4">
-                                                                    <div className="form-group">
-                                                                        <SelectComponent label={"Filter Data by Currency"} placeholder={""} options={currencyOptions} onChange={handleCurrencyChange} value={selectedCurrency} />
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                            <div className="row">
-                                                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                                                    <div className='oxy_chat_box'>
-                                                                        <div className='graph-top-head'>
-                                                                            <h3>Claim Type {setMouth || `Until ${currentMonth}`}</h3>
+                                                                    <div className="row">
+                                                                        <div className="col-md-4">
+                                                                            <div className="form-group">
+                                                                                <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
+                                                                            </div>
                                                                         </div>
-                                                                        <Chart options={monthlyDatadonut.options} series={monthlyDatadonut.series} type="donut" width='100%' height={320} />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                                                    <div className='oxy_chat_box'>
-                                                                        <div className='graph-top-head'>
-                                                                            <h3>Overall Claim Status {setMouth || `Until ${currentMonth}`}</h3>
+                                                                        <div className="col-md-4">
+                                                                            <div className="form-group">
+                                                                                <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
+                                                                            </div>
                                                                         </div>
-                                                                        <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width='100%' height={320} />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                                                    <div className='oxy_chat_box'>
-                                                                        <div className='graph-top-head'>
-                                                                            <h3>Monthly Claim Amount {setMouth || `Until ${currentMonth}`}</h3>
+                                                                        <div className="col-md-4">
+                                                                            <div className="form-group">
+                                                                                <SelectComponent label={"Filter Data by Currency"} placeholder={""} options={currencyOptions} onChange={handleCurrencyChange} value={selectedCurrency} />
+                                                                            </div>
                                                                         </div>
                                                                         {anualChartData.series.length > 0 && (
                                                                             <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} width="100%" />
                                                                         )}
                                                                     </div>
-                                                                </div>
-                                                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                                                    <div className='oxy_chat_box'>
-                                                                        <div className='graph-top-head'>
-                                                                            <h3>Total Claim Amount {setYear}</h3>
+                                                                    <div className="row">
+                                                                        <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                                                            <div className='oxy_chat_box'>
+                                                                                <div className='graph-top-head'>
+                                                                                    <h3>Claim Type {setMouth || `Until ${currentMonth}`}</h3>
+                                                                                </div>
+                                                                                <Chart options={monthlyDatadonut.options} series={monthlyDatadonut.series} type="donut" width='100%' height={320} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                                                            <div className='oxy_chat_box'>
+                                                                                <div className='graph-top-head'>
+                                                                                    <h3>Overall Claim Status {setMouth || `Until ${currentMonth}`}</h3>
+                                                                                </div>
+                                                                                <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width='100%' height={320} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                                                            <div className='oxy_chat_box'>
+                                                                                <div className='graph-top-head'>
+                                                                                    <h3>Monthly Claim Amount {setMouth || `Until ${currentMonth}`}</h3>
+                                                                                </div>
+                                                                                {anualChartData.series.length > 0 && (
+                                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={250} width="100%" />
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                                                            <div className='oxy_chat_box'>
+                                                                                <div className='graph-top-head'>
+                                                                                    <h3>Total Claim Amount {setYear}</h3>
+                                                                                </div>
+                                                                                <Chart options={anualChartDataClaim.options} series={anualChartDataClaim.series} type="bar" height={250} />
+                                                                            </div>
                                                                         </div>
                                                                         <Chart options={anualChartDataClaim.options} series={anualChartDataClaim.series} type="bar" height={330} />
                                                                     </div>
-                                                                </div>
+                                                                </>
+
                                                             </div>
-                                                            </>
-                                                                
                                                         </div>
                                                     </div>
-                                                </div>
-                                            ) : (<></>)}
-                                        </>
-                                                )}
+                                                ) : (<></>)}
+                                            </>
+                                        )}
 
                                     </div>
 
@@ -675,7 +696,12 @@ const onChangeYear = (value) => {
                                                             onHistoryClick={handleHistoryClick}
                                                             dashboradApi={'/claims/manageClaims'}
                                                             ifForvalue={`admin`}
-                                                            tabParamsInObj={activeTableTab === 1 ? { status: 'paid' } : { status: 'pending' }}
+                                                            // tabParamsInObj={activeTableTab === 1 ? { status: 'paid' } : { status: 'pending' }}
+                                                            tabParamsInObj={Object.keys(searchfilter).length === 0 
+    ? (activeTableTab === 1 ? { status: 'paid' } : { status: 'pending' }) 
+    : {}
+}
+
                                                             searchfilter={searchfilter}
                                                         />
                                                     </div>

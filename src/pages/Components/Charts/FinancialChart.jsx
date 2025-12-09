@@ -53,6 +53,7 @@ const FinancialChart = ({ activeTab }) => {
               toolbar: { show: true },
               zoom: { enabled: true },
             },
+            legend: {show: false},
             plotOptions: {
               bar: {
                 columnWidth: "50%",

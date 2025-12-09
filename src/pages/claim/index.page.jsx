@@ -202,6 +202,7 @@ const onChangeYear = (value) => {
                             yaxis: { title: { text: 'Count' } },
                             fill: { opacity: 1 },
                             tooltip: { y: { formatter: (val) => `${val} claims` } },
+                            legend: {show: false}
                         },
                     });
 

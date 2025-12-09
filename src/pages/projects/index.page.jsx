@@ -103,7 +103,7 @@ export default function ProjectListing({ }) {
                     xaxis: { categories: projectChartResponse.projectStatus?.categories || [] },
                     grid: { row: { colors: ["#fff", "#f2f2f2"] } },
                     colors: ["#156082"],
-                    legend: { position: "bottom" },
+                    legend: {show: false},
                     dataLabels: { enabled: true },
                 },
             });
@@ -131,7 +131,7 @@ export default function ProjectListing({ }) {
                     xaxis: { categories: projectChartResponse.projectClient?.categories || [] },
                     grid: { row: { colors: ["#fff", "#f2f2f2"] } },
                     colors: ["#43a047"],
-                    legend: { position: "bottom" },
+                    legend: {show: false},
                     dataLabels: { enabled: true },
                 },
             });
@@ -145,7 +145,7 @@ export default function ProjectListing({ }) {
                     colors: ["#156082"],
                     dataLabels: { enabled: true },
                     grid: { row: { colors: ["#fff", "#f2f2f2"] } },
-                    legend: { position: "bottom" },
+                    legend: {show: false},
                 },
             });
 

@@ -216,6 +216,7 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
                             yaxis: { title: { text: '' } },
                             fill: { opacity: 1 },
                             tooltip: { y: { formatter: (val) => `${val} ` } },
+                            legend: {show: false}
                         },
                     });
 //                     } else {
@@ -241,6 +242,7 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
                             yaxis: { title: { text: '' } },
                             fill: { opacity: 1 },
                             tooltip: { y: { formatter: (val) => `${val}` } },
+                            legend: {show: false}
                         },
                     });
 

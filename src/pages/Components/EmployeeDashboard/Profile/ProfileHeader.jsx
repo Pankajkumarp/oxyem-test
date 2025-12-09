@@ -9,10 +9,10 @@ import { FaRegEdit } from "react-icons/fa";
 import { Tooltip } from 'react-tooltip'
 import { GrTooltip } from "react-icons/gr";
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
+import AlertWithButton from '../Alert/AlerWithbutton';
 
 
-
-export default function ProfileHeader({ empId, apiBaseUrl ,hitAddressApi ,handelactiveuser ,showbutton ,getEmpName}) {
+export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handelactiveuser, showbutton, getEmpName }) {
     const [viewData, setViewData] = useState(null);
     const [editData, setEditData] = useState(null);
     const [formData, setFormData] = useState([]);
@@ -23,7 +23,21 @@ export default function ProfileHeader({ empId, apiBaseUrl ,hitAddressApi ,handel
     const [Imgpa, setImg] = useState('../assets/img/avatar-10.jpg');
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef(null);
-const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
+    const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
+    const [showAddressAlert, setShowAddressAlert] = useState(false);
+    const [hasShownAddressAlert, setHasShownAddressAlert] = useState(false);
+
+    useEffect(() => {
+        if (
+            viewData &&
+            !viewData.address &&
+            !hasShownAddressAlert
+        ) {
+            setShowAddressAlert(true);
+            setHasShownAddressAlert(true);
+        }
+    }, [viewData, hasShownAddressAlert]);
+
     const openEditModal = () => {
         updateFormDataWithPersonalInfo();
         setIsEditOpen(true);
@@ -53,7 +67,7 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
                     setViewData(response.data.data.view);
                     setEditData(response.data.data.edit);
                     const url = response.data.data.view.profilePicPath
-                    if(url) { setImg(`${url}?t=${new Date().getTime()}`); }
+                    if (url) { setImg(`${url}?t=${new Date().getTime()}`); }
                     const vData = response.data.data.view.isActive
                     handelactiveuser(vData);
                     getEmpName(response.data.data.view.empName);
@@ -113,7 +127,7 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
                 ToastNotification({ message: errorMessage });
                 setLoading(false);
             } else {
-               
+
                 ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
                 setLoading(false);
             }
@@ -202,37 +216,38 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
         return <div>Loading...</div>;
     }
 
-    
+
+
     return (
         <>
-        
-            <Address isOpen={isEditOpenADD} closeModal={closeEditModalADD} formData={form} getsubmitformdata={getsubmitformdata} empId={empId} loaderSubmitButton={SubmitButtonLoading}/>
-            <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={formData} data={editData} getsubmitformdata={getsubmitformdataP} empId={empId} loaderSubmitButton={SubmitButtonLoading}/>
+
+            <Address isOpen={isEditOpenADD} closeModal={closeEditModalADD} formData={form} getsubmitformdata={getsubmitformdata} empId={empId} loaderSubmitButton={SubmitButtonLoading} />
+            <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={formData} data={editData} getsubmitformdata={getsubmitformdataP} empId={empId} loaderSubmitButton={SubmitButtonLoading} />
             <div className="card-body">
-            {!showbutton ? null :
-            <span className="" onClick={openEditModal}>
-                    <FaRegEdit style={{ cursor: 'pointer', float: 'right', color: 'var(--theme-pending-color-text)' }} size={15}  />
+                {!showbutton ? null :
+                    <span className="" onClick={openEditModal}>
+                        <FaRegEdit style={{ cursor: 'pointer', float: 'right', color: 'var(--theme-pending-color-text)' }} size={15} />
                     </span>
-            }
+                }
                 <div className="row">
                     <div className="col-md-12">
                         <div className="profile-view">
                             <div className="profile-img-wrap">
                                 <div className="profile-img">
-                                    <img alt="#" src={Imgpa ==='' ? '../assets/img/avatar-10.jpg' : Imgpa } />
+                                    <img alt="#" src={Imgpa === '' ? '../assets/img/avatar-10.jpg' : Imgpa} />
 
                                     {/* {!showbutton ? null :
                                     <span className="edit-icon" onClick={handleEditIconClick}>
                                         <MdEdit />
                                     </span> } */}
 
-                                    {loading ? ( 
+                                    {loading ? (
                                         <span className="edit_profileloader" ></span>
                                     ) : (
                                         !showbutton ? null :
-                                        <span className="edit-icon" onClick={handleEditIconClick}>
-                                            <MdEdit />
-                                        </span>
+                                            <span className="edit-icon" onClick={handleEditIconClick}>
+                                                <MdEdit />
+                                            </span>
                                     )}
 
 
@@ -244,43 +259,54 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
                                 <div className="row">
                                     <div className="col-md-5">
                                         <div className="profile-info-left">
-                                        <h2 className="user-name">{viewData.empName || ''}</h2>
+                                            <h2 className="user-name">{viewData.empName || ''}</h2>
                                             <h3 className="text-muted ">{viewData.role || ''}</h3>
                                             <h4 className="text-muted">{viewData.department || ''}</h4>
-                                            
+
                                             <ul className="personal-info-header top-details">
-                                            
-                                            <li>
-                                                <div className="title">ID :</div>
-                                                <div className="text">
-                                                {viewData.empNumber || <>&nbsp;</>}
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className="title"><FaPhone /> :</div>
-                                                <div className="text">
-                                                {viewData.mobileNumber || <>&nbsp;</>}
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className="title"><MdEmail /> :</div>
-                                                <div className="text">{viewData.emailAddress || <>&nbsp;</>}</div>
-                                            </li>
-                                            <li>
-                                                <div className="title"><IoLocationSharp /> :</div>
-                                                <div className="text">{viewData.joiningCountry || <>&nbsp;</>}</div>
-                                            </li>
-                                        </ul>
+
+                                                <li>
+                                                    <div className="title">ID :</div>
+                                                    <div className="text">
+                                                        {viewData.empNumber || <>&nbsp;</>}
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div className="title"><FaPhone /> :</div>
+                                                    <div className="text">
+                                                        {viewData.mobileNumber || <>&nbsp;</>}
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div className="title"><MdEmail /> :</div>
+                                                    <div className="text">{viewData.emailAddress || <>&nbsp;</>}</div>
+                                                </li>
+                                                <li>
+                                                    <div className="title"><IoLocationSharp /> :</div>
+                                                    <div className="text">{viewData.joiningCountry || <>&nbsp;</>}</div>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                     <div className="col-md-7">
                                         <ul className="personal-info-header-right top-details">
-                                            
+
                                             <li>
                                                 <div className="title">Birthday :</div>
                                                 <div className="text">{viewData.DOB ? viewData.DOB : ''}</div>
                                             </li>
                                             <li>
+                                                {showAddressAlert && (
+                                                    <AlertWithButton
+                                                        message="Please add your Address to complete your profile."
+                                                        type="warning"
+                                                        actionLabel="Add Address"
+                                                        onAction={() => {
+                                                            openEditModalADD();
+                                                        }}
+                                                    />
+                                                )}
+
                                                 <div className="title">Address :</div>
                                                 <div className="text">
                                                     {viewData.address ? (
@@ -288,7 +314,7 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
                                                             <>
                                                                 <div className='oxyem-tooltip-text'>
                                                                     {viewData.address.substr(0, 35)}...
-                                                                    <GrTooltip className='oxyem-tooltip-icon' style={{ marginLeft: '5px' }} data-tooltip-id="my-tooltip-table-text" data-tooltip-content={viewData.address}/>
+                                                                    <GrTooltip className='oxyem-tooltip-icon' style={{ marginLeft: '5px' }} data-tooltip-id="my-tooltip-table-text" data-tooltip-content={viewData.address} />
                                                                     <Tooltip id="my-tooltip-table-text" type='dark' effect='solid' style={{ width: '40%', zIndex: '999' }} />
                                                                 </div>
                                                             </>
@@ -302,15 +328,15 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
                                                     )}
                                                     {viewData.address ? (
                                                         <>
-                                                          {/* <FaRegEdit style={{marginLeft:'20px'  ,color: '#333' ,padding: '1px 0px 4px 1px'}} size={19} onClick={openEditModalADD}/> */}
+                                                            {/* <FaRegEdit style={{marginLeft:'20px'  ,color: '#333' ,padding: '1px 0px 4px 1px'}} size={19} onClick={openEditModalADD}/> */}
                                                         </>
-                                                    ) : ( 
+                                                    ) : (
                                                         <>
-                                                        {!showbutton ? null :<span className="add-btn-circle" onClick={openEditModalADD}>+</span>}
+                                                            {!showbutton ? null : <span className="add-btn-circle" onClick={openEditModalADD}>+</span>}
                                                         </>
-                                                        
+
                                                     )}
-                                                    
+
                                                 </div>
                                             </li>
                                             <li>

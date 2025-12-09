@@ -199,6 +199,7 @@ useEffect(() => {
             yaxis: { title: { text: "" } },
             fill: { type: "color" },
             colors: ["#2196F3", "#33FF57", "#3357FF", "#FF33A8"],
+            legend: {show: false},
           },
         });
       }
@@ -230,6 +231,7 @@ useEffect(() => {
             xaxis: { labels: { rotate: -45 }, categories: clientChart.labels, tickPlacement: "on" },
             yaxis: { title: { text: "" } },
             fill: { type: "color" },
+            legend: {show: false},
           },
         });
       }

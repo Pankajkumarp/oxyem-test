@@ -168,6 +168,7 @@ export default function shifts() {
                     xaxis: {
                         categories: annualchart.label
                     },
+                    legend: {show: false},
                     yaxis: { title: { text: '' } },
                     fill: { opacity: 1 },
                     tooltip: { y: {} },
@@ -188,6 +189,7 @@ export default function shifts() {
                             enabled: false
                         }
                     },
+                    legend: {show: false},
                     dataLabels: {
                         enabled: false
                     },

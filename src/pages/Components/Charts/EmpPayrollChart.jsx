@@ -150,6 +150,7 @@ const EmpPayrollChart = ({ empID }) => {
       text: 'TDS Current FY',
       align: 'center',
     },
+    legend: {show: false}
   };
 
   const barChartSeries = [

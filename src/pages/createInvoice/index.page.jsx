@@ -82,8 +82,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const [summaryCost, setSummaryCost] = useState({});
     const [invoiceData, setInvoiceData] = useState({});
     const [tableData, settableData] = useState({});
-    console.log("invoiceData", invoiceData)
-    console.log("tableData", tableData)
     const [totaltaxdata, setTotaltaxdata] = useState({
         untaxedAmount: "0",
         tax: "0",

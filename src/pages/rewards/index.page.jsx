@@ -71,6 +71,7 @@ export default function index() {
               },
               colors: ['#bd78f0'],
               title: { text: '', align: 'center' },
+              legend: {show: false},
           },
       });
       

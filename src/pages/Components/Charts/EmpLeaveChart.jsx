@@ -90,6 +90,7 @@ const EmpLeaveChart = () => {
             xaxis: {
               categories: anualTrend.categories,
             },
+            legend: {show: false}
           },
         });
       } catch (error) {

@@ -215,6 +215,7 @@ export default function payrollManagement() {
                   type: 'line',
                   zoom: { enabled: false },
                 },
+                legend: {show: false},
                 title: {
                   text: 'Monthly Trend',
                   align: 'center',

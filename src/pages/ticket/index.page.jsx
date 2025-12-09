@@ -213,9 +213,7 @@ const closedData = allTickets.map(t => t.closed || 0);
         text: 'Tickets'
       }
     },
-    legend: {
-      position: 'bottom'
-    },
+legend: {show: false},
     fill: {
       opacity: 1
     },
@@ -256,9 +254,6 @@ const closedData = allTickets.map(t => t.closed || 0);
         text: 'Number of Tickets'
       }
     },
-    legend: {
-      position: 'bottom'
-    },
     fill: {
       opacity: 1
     },
@@ -266,7 +261,8 @@ const closedData = allTickets.map(t => t.closed || 0);
       y: {
         formatter: (val) => `${val} ticket${val !== 1 ? 's' : ''}` // pluralization handled
       }
-    }
+    },
+    legend: {show: false},
   }
 });
                     console.log(pieData, "ye data set hona chiye ")

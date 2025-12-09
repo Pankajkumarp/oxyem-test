@@ -26,7 +26,6 @@ const LeaveChart = ({ activeTab }) => {
       });
       if (response) {
         const dataCome = response.data.data
-        console.log("dataCome", dataCome)
         setLeavesOnToday(dataCome.leavesOnToday)
         setEmpLeaveDetail(dataCome.leavesOnTodayList)
         setApprovalPending(dataCome.approvalPending)
@@ -88,6 +87,7 @@ const LeaveChart = ({ activeTab }) => {
             xaxis: {
               categories: dataCome.anualTrend.categories,
             },
+            legend: {show: false}
           }
         );
         setMonthlyStatus(
@@ -137,6 +137,7 @@ const LeaveChart = ({ activeTab }) => {
             xaxis: {
               categories: dataCome.monthlyTrend.categories, // X-axis categories
             },
+            legend: {show: false}
           }
         )
         setShowGraph(true)
