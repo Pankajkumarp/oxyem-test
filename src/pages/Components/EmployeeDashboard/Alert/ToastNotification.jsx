@@ -40,6 +40,10 @@ const ToastContainer = () => (
     <Toaster
         position="top-right"
         reverseOrder={false}
+        autoClose={3000}
+                closeOnClick
+                pauseOnHover
+                draggable
     />
 );
 

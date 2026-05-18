@@ -5,6 +5,8 @@ import LabelNormal from '../Label/LabelNormal';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import SelectRole from '../SelectOption/SelectComponent';
 import ViewPopup from '../../Popup/PopupForm';
+import { format } from "date-fns";
+
 
 const colourStyles = {
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -15,17 +17,21 @@ const colourStyles = {
     };
   }
 };
+const formatDate = (dateStr) => {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return isNaN(d) ? "" : format(d, "dd MMM yyyy");
+};
 
-export default function ProjectlistComponent({ label, isDisabled, additionalLabel, validations = [], value, onChange, handleGetformvalueClick }) {
+
+export default function ProjectlistComponent({ label, isDisabled, additionalLabel, validations = [], value, onChange, handleGetformvalueClick, isModule, getProjectDate }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
-  console.log("sec", selectedSubject)
   useEffect(() => {
     // Synchronize internal state with props
     setSelectedOption(value);
   }, [value]);
   const [error, setError] = useState(null);
-
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -33,28 +39,59 @@ export default function ProjectlistComponent({ label, isDisabled, additionalLabe
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         const response = await axiosJWT.get(`${apiUrl}/project/list`);
 
-        const optionsData = response.data.data.map((item) => ({ // Access response.data.data
-          label: item.projectName,
-          value: item.idProject
-        }));
+        if (response?.data?.data) {
 
-        setOptions(optionsData);
+          const optionsData = response.data.data.map((item) => ({
+            label:
+  isModule === "AssignTaskNew"
+    ? `${item.projectName} (${formatDate(item.startDate)} to ${formatDate(item.endDate)})`
+    : item.projectName,
+            value: item.idProject,
+            startDate: item.startDate,
+            endDate: item.endDate 
+          }));
+
+          setOptions(optionsData);
+        }
       } catch (error) {
-        
-        setError(error.message || 'Failed to fetch options');
+        setError(error.message || "Failed to fetch options");
       }
     };
 
     fetchOptions();
   }, []);
 
+useEffect(() => {
+  if (!value || options.length === 0) return;
+
+  // 🔍 find project by id
+  const matchedProject = options.find(
+    opt => opt.value === value
+  );
+
+  if (matchedProject) {
+
+    if (
+      matchedProject.startDate &&
+      matchedProject.endDate &&
+      typeof getProjectDate === "function"
+    ) {
+      getProjectDate(
+        matchedProject.startDate,
+        matchedProject.endDate
+      );
+    }
+  }
+}, [value, options, getProjectDate]);
 
 
   const handleSelectChange = (selectedValue) => {
     setSelectedOption(selectedValue);
-
     const newValue = selectedValue;
     onChange(newValue ? newValue.value : "");
+    if(selectedValue.startDate && getProjectDate && typeof getProjectDate === 'function' && selectedValue.endDate){
+      getProjectDate(selectedValue.startDate, selectedValue.endDate);
+    }
   };
   const [isModalOpeninput, setIsModalOpeninput] = useState(false);
   const closeModalInputselect = () => {

@@ -96,7 +96,7 @@ export default function PayrollPreview({ previewData, fields,tdsoveridevalue }) 
             };
     
             try {
-                const response = await axiosJWT.post(`${apiUrl}/payroll/generateSalaryDetails`, updatedData);
+                const response = await axiosJWT.post(`${apiUrl}/payroll/generateSalaryDetailsr`, updatedData);
                 if (response.status === 200) {
                    ToastNotification({ message: response.data.message });
                     router.push('/payrollManagement');

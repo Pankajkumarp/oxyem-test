@@ -15,7 +15,7 @@ export default function Sidebar() {
 		setshowMenu(false)
 		try {
 			const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-			const responseid = await axiosJWT.get(`${apiUrl}/getMenuItem`, {
+			const responseid = await axiosJWT.get(`${apiUrl}/permission/getMenuItem`, {
 				params: {
 					slug: router.pathname
 				}
@@ -50,7 +50,7 @@ export default function Sidebar() {
 		setshowMenu(false);
 		try {
 			const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-			const responseid = await axiosJWT.get(`${apiUrl}/getMenuItem`, {
+			const responseid = await axiosJWT.get(`${apiUrl}/permission/getMenuItem`, {
 				params: {
 					slug: `/${moduleGetName}`
 				},
@@ -85,7 +85,7 @@ export default function Sidebar() {
 		setmenuMainText("");
 		const secretKey = process.env.NEXT_PUBLIC_ENCRYPT_DECRYPTING;
 
-		const allowedModules = ["performance", "leave", "claim", "attendance", "basket-of-allowance", "project", "shifts", "holiday", "stock-management", "automation-ideas", "policies", "createInvoice", "reports"];
+		const allowedModules = ["performance", "leave", "claim", "attendance", "basket-of-allowance", "project", "shifts", "holiday", "stock-management", "automation-ideas", "policies", "createInvoice", "reports", "timesheet","permissions"];
 		if (allowedModules.includes(moduleName)) {
 			const existingModule = sessionStorage.getItem("moduleName");
 			let existingModuleName = "";

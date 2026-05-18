@@ -14,9 +14,8 @@ import Link from 'next/link';
 import DeleteModalProject from '../Components/Popup/DeleteModalProject.jsx';
 import Avatar from 'react-avatar';
 import { Tooltip } from 'react-tooltip'
-import { GrTooltip } from "react-icons/gr";
-
-
+import { GrTooltip } from "react-icons/gr"; 
+import CompletionBar from "../Components/CompletionBar.jsx";
 import pageTitles from '../../common/pageTitles.js';
 import { Toaster, toast } from 'react-hot-toast';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -225,7 +224,14 @@ export default function ProjectListing({ }) {
                 break;
         }
     };
+// completion
 
+const totalMilestones = 10;
+const completedMilestones = 4;
+
+const completion = Math.round(
+  (completedMilestones / totalMilestones) * 100
+);
 
     const menuRefs = useRef({});
     const [openMenuIndex, setOpenMenuIndex] = useState(null);
@@ -671,8 +677,7 @@ export default function ProjectListing({ }) {
                                                                                     <h3 className='main-head-sub-txt'>Client Name: <span>{project.clientName} </span></h3>
                                                                                     <span className={`project-status oxyem-mark-${project.status}`}>{project.status}</span>
                                                                                     <p className='discript-text'>
-                                                                                        {displayedDescription}
-                                                                                        {descriptionText.length > 115 && (
+                                                                                       <span dangerouslySetInnerHTML={{ __html: displayedDescription }} />                                                            {descriptionText.length > 115 && (
                                                                                             <span
                                                                                                 onClick={toggleDescription}
                                                                                                 style={{ color: '#004d95', cursor: 'pointer', marginLeft: '5px', fontSize: '10px', fontWeight: '700' }}
@@ -685,6 +690,7 @@ export default function ProjectListing({ }) {
                                                                                         <p style={{ width: '50%', fontSize: '11.2px' }}>Start: <span style={{ color: '#004d95' }}>{project.startDate}</span></p>
                                                                                         <p style={{ width: '50%', textAlign: 'end', fontSize: '11.2px' }}>End: <span style={{ color: '#004d95' }}>{project.endDate}</span></p>
                                                                                     </div>
+                                                                                  
                                                                                     <div className="menu-wrapper-p" ref={(el) => (menuRefs.current[index] = el)}>
                                                                                         <button className="menu-button-p" onClick={() => toggleMenu(index)}><HiDotsVertical /></button>
                                                                                         {openMenuIndex === index && (
@@ -725,12 +731,21 @@ export default function ProjectListing({ }) {
                                                                                             </div>
                                                                                         )}
                                                                                     </div>
+                                                                                    <div className="row">
+                                                                                    <div className="col-md-6">
+
                                                                                     <div className="d-flex justify-content-between align-items-center">
                                                                                         <div>
                                                                                             <GrResources /> {project.noOfResources} Resources
                                                                                         </div>
                                                                                         <GroupAvatar users={project?.allocationPercentage} maxVisible={5} />
-                                                                                    </div>
+                                                                                           
+                                                                                    </div></div>
+                                                                                                                                                                        <div className="col-md-6">
+
+                                                                                    <div className='d-flex date-info-sec'>
+                                                                                        <CompletionBar value={completion} />
+                                                                                            </div></div></div>
                                                                                 </div>
                                                                             </div>
                                                                         );

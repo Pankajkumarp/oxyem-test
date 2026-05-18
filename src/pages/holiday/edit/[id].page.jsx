@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
-import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs.jsx';
+import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription.jsx';
 import SecTab from '../../Components/Employee/SecTab';
 import axios from "axios";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { ToastNotification, ToastContainer } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification.jsx';
+import { MdEditCalendar } from "react-icons/md";
 
-
-export default function Holiday({ leaveFormdata, errorMessage, previousUrl}) {
+export default function Holiday({ leaveFormdata, errorMessage, previousUrl }) {
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [AdduserContent, setAdduserContent] = useState(leaveFormdata);
   const [idHoliday, setIdHoliday] = useState(null);
 
-   useEffect(() => {
-      if (errorMessage && previousUrl) {
-          router.push(previousUrl);
-        }
-  }, [errorMessage, router ,previousUrl]);
+  useEffect(() => {
+    if (errorMessage && previousUrl) {
+      router.push(previousUrl);
+    }
+  }, [errorMessage, router, previousUrl]);
 
   useEffect(() => {
     const { id } = router.query;
@@ -25,8 +26,8 @@ export default function Holiday({ leaveFormdata, errorMessage, previousUrl}) {
   }, [router.query.id]);
 
 
-  
-const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
+
+  const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
   const getsubmitformdata = async (value) => {
     setSubmitButtonLoading(true);
     try {
@@ -48,7 +49,7 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
   };
 
   const fetchInfo = async (value) => {
-    
+
     try {
       if (value) {
         const response = await axiosJWT.get(`${apiUrl}/holiday/edit`, { params: { idHoliday: value } });
@@ -82,23 +83,33 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
 
   return (
     <>
-    {AdduserContent && (
-      <div>
-      <div className="main-wrapper" id="holiday_page">
-        <div className="page-wrapper">
-          <div className="content container-fluid">
-            <div className="row">
-              <div className="col-12 col-lg-12 col-xl-12">
+      <Head>
+        <title>Manage Employee Holidays – Edit | | Oxytal</title>
+        <meta name="description" content={"Modify existing employee holiday records to ensure correct scheduling and planning."} />
+      </Head>
+      {AdduserContent && (
+        <div>
+          <div className="main-wrapper" id="holiday_page">
+            <div className="page-wrapper">
+              <div className="content container-fluid">
                 <div className="row">
-                  <div className="col">
-                    <Breadcrumbs maintext={"Add Holidays"} />
-                  </div>
-                  <div className="col-12 col-lg-12 col-xl-12 d-flex">
-                    <div className="card flex-fill comman-shadow oxyem-index">
-                      <div className="center-part">
-                        <div className="card-body oxyem-mobile-card-body">
-                          <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                            <SecTab AdduserContent={AdduserContent} getsubmitformdata={getsubmitformdata} loaderSubmitButton={SubmitButtonLoading}/>
+                  <div className="col-12 col-lg-12 col-xl-12">
+                    <div className="row">
+                      <div className="col">
+                        <Breadcrumbs
+                          maintext={"Update Employee Holiday Details"}
+                          discription={"This section allows administrators to modify employee holiday records to ensure accurate scheduling."}
+                          icon={<MdEditCalendar />}
+                        />
+                      </div>
+                      <div className="col-12 col-lg-12 col-xl-12 d-flex">
+                        <div className="card flex-fill comman-shadow oxyem-index">
+                          <div className="center-part">
+                            <div className="card-body oxyem-mobile-card-body">
+                              <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
+                                <SecTab AdduserContent={AdduserContent} getsubmitformdata={getsubmitformdata} loaderSubmitButton={SubmitButtonLoading} />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -108,11 +119,9 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
               </div>
             </div>
           </div>
+          <ToastContainer />
         </div>
-      </div>
-      <ToastContainer />
-      </div>
-    )}
+      )}
     </>
   );
 }
@@ -139,10 +148,10 @@ export async function getServerSideProps(context) {
       leaveFormdata = response.data.data;
     }
   } catch (error) {
-    
+
   }
 
   return {
-    props: { leaveFormdata: leaveFormdata || null, errorMessage ,previousUrl },
+    props: { leaveFormdata: leaveFormdata || null, errorMessage, previousUrl },
   };
 }

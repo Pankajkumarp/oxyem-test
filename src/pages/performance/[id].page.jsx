@@ -16,6 +16,7 @@ import { Tooltip } from 'react-tooltip'
 import CryptoJS from 'crypto-js';
 import { FaTimes } from 'react-icons/fa';
 import { FaInfoCircle } from "react-icons/fa";
+import { CgUnavailable } from "react-icons/cg";
 const Notes = dynamic(() => import('../Components/Popup/Notes'), {
     ssr: false
 });
@@ -575,48 +576,48 @@ export default function opportunity({ userFormdata }) {
     const handleCycleInitiate = async () => {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         const { id } = router.query;
-        const payloadInitiate ={
-             "idReview":id,
-            "status":"initiate"
+        const payloadInitiate = {
+            "idReview": id,
+            "status": "initiate"
         }
         const response = await axiosJWT.post(`${apiUrl}/performance/initiateCycle`, payloadInitiate);
         if (response) {
-                const message = response.data.message
-                toast.success(({ id }) => (
-                    <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                        <FaRegCheckCircle style={{
-                            fontSize: '35px',
-                            marginRight: '10px',
-                            color: '#4caf50'
-                        }} />
-                        <span dangerouslySetInnerHTML={{ __html: message }}></span>
-                        <button
-                            onClick={() => toast.dismiss(id)}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                color: '#4caf50',
-                                marginLeft: 'auto',
-                                cursor: 'pointer',
-                                fontSize: '20px',
-                            }}
-                        >
-                            <FaTimes />
-                        </button>
-                    </div>
-                ), {
-                    icon: null,
-                    duration: 7000,
-                    style: {
-                        border: '1px solid #4caf50',
-                        padding: '8px',
-                        color: '#4caf50',
-                    },
-                });
-                setActiveTab(formvalue.section[0].SectionName)
-                setStatusLabel(formvalue.section[0].SectionName)
-                setstatusValue("8641f749-5601-45c2-bce0-1f34b2e262d2")
-            }
+            const message = response.data.message
+            toast.success(({ id }) => (
+                <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
+                    <FaRegCheckCircle style={{
+                        fontSize: '35px',
+                        marginRight: '10px',
+                        color: '#4caf50'
+                    }} />
+                    <span dangerouslySetInnerHTML={{ __html: message }}></span>
+                    <button
+                        onClick={() => toast.dismiss(id)}
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#4caf50',
+                            marginLeft: 'auto',
+                            cursor: 'pointer',
+                            fontSize: '20px',
+                        }}
+                    >
+                        <FaTimes />
+                    </button>
+                </div>
+            ), {
+                icon: null,
+                duration: 7000,
+                style: {
+                    border: '1px solid #4caf50',
+                    padding: '8px',
+                    color: '#4caf50',
+                },
+            });
+            setActiveTab(formvalue.section[0].SectionName)
+            setStatusLabel(formvalue.section[0].SectionName)
+            setstatusValue("8641f749-5601-45c2-bce0-1f34b2e262d2")
+        }
     };
     const [statusLabel, setStatusLabel] = useState("");
     const getStautLabel = async (value) => {
@@ -626,9 +627,9 @@ export default function opportunity({ userFormdata }) {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await axiosJWT.get(`${apiUrl}/performance/getgoalcounts`, { params: { idReview: id } });
-            if(response){
-            const listheader = response.data.data || {};
-            setListHeaders(listheader);
+            if (response) {
+                const listheader = response.data.data || {};
+                setListHeaders(listheader);
             }
         } catch (error) {
 
@@ -674,6 +675,19 @@ export default function opportunity({ userFormdata }) {
             console.error('Error:', error);
         }
     };
+
+    const handleBack = () => {
+        const currentIndex = formvalue.section.findIndex(
+            section => section.SectionName === activeTab
+        );
+
+        if (currentIndex > 0) {
+            setActiveTab(formvalue.section[currentIndex - 1].SectionName);
+        }
+    };
+    const currentIndex = formvalue.section.findIndex(
+        section => section.SectionName === activeTab
+    );
     return (
         <>
             <Head>
@@ -785,26 +799,26 @@ export default function opportunity({ userFormdata }) {
                                                                         <div className="tab-content" >
                                                                             {formvalue.section.map((section, index) => (
                                                                                 activeTab === section.SectionName && (
-                                                                                    <div key={index} className={`tab-pane ${activeTab === section.SectionName ? 'active' : ''}`}>                                                                                       
-                                                                                            <div className="w-100 form_btn_arrow_bottom">
-                                                                            <button onClick={toggleVisibilityBottom} className='toggle-button'>
-                                                                                {isVisible ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                                                                            </button>
-                                                                        </div>
-                                                                                            {isVisibleBottom && (
+                                                                                    <div key={index} className={`tab-pane ${activeTab === section.SectionName ? 'active' : ''}`}>
+                                                                                        <div className="w-100 form_btn_arrow_bottom">
+                                                                                            <button onClick={toggleVisibilityBottom} className='toggle-button'>
+                                                                                                {isVisible ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        {isVisibleBottom && (
                                                                                             <div className='row'>
                                                                                                 {activeTab !== "Summary" && (
                                                                                                     <>
-                                                                                                    {statusLabel === "Open" && (
-                                                                                                    <div className='col-md-12 col-lg-2'>
-                                                                                                        <div className='add_line_performance'>
-                                                                                                            <span className='btn btn-performance' onClick={() => handleAddRowData(activeTab)}>
-                                                                                                                <IoAddCircleOutline /> Add Goal
-                                                                                                            </span>
-                                                                                                        </div>
-                                                                                                        </div>
+                                                                                                        {statusLabel === "Open" && (
+                                                                                                            <div className='col-md-12 col-lg-2'>
+                                                                                                                <div className='add_line_performance'>
+                                                                                                                    <span className='btn btn-performance' onClick={() => handleAddRowData(activeTab)}>
+                                                                                                                        <IoAddCircleOutline /> Add Goal
+                                                                                                                    </span>
+                                                                                                                </div>
+                                                                                                            </div>
                                                                                                         )}
-                                                                                                        </>
+                                                                                                    </>
                                                                                                 )}
                                                                                                 {activeTab == "Summary" && (
                                                                                                     <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
@@ -853,22 +867,34 @@ export default function opportunity({ userFormdata }) {
                                                                                                         </div>
                                                                                                         <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
                                                                                                             <div className="welcome-content-box-status">
-                                                                                                                {Object.keys(goalCount).map((goal) => (
-                                                                                                                    <div key={goal} className={`goal-progress-container`}>
-                                                                                                                        <div className="goal-label">
-                                                                                                                            <span>{goal}: </span>
+                                                                                                                {Object.keys(goalCount).length > 0 ? (
+                                                                                                                    Object.keys(goalCount).map((goal) => (
+                                                                                                                        <div key={goal} className="goal-progress-container">
+                                                                                                                            <div className="goal-label">
+                                                                                                                                <span>{goal}: </span>
+                                                                                                                            </div>
+
+                                                                                                                            <div className={`progress-bar-container mark_for_${goal}`}>
+                                                                                                                                <div
+                                                                                                                                    className="progress-bar"
+                                                                                                                                    style={{ width: `${goalCount[goal] || 0}%` }}
+                                                                                                                                ></div>
+                                                                                                                            </div>
+
+                                                                                                                            <div className="goal-label-end">
+                                                                                                                                <span>
+                                                                                                                                    {goalCount[goal]
+                                                                                                                                        ? `${goalCount[goal]}%`
+                                                                                                                                        : "0%"}
+                                                                                                                                </span>
+                                                                                                                            </div>
                                                                                                                         </div>
-                                                                                                                        <div className={`progress-bar-container mark_for_${goal}`}>
-                                                                                                                            <div
-                                                                                                                                className="progress-bar"
-                                                                                                                                style={{ width: `${goalCount[goal]}%` }}
-                                                                                                                            ></div>
-                                                                                                                        </div>
-                                                                                                                        <div className="goal-label-end">
-                                                                                                                            <span>{goalCount[goal]}%</span>
-                                                                                                                        </div>
+                                                                                                                    ))
+                                                                                                                ) : (
+                                                                                                                    <div className="no-data-message-performace">
+                                                                                                                        <div className="no-data-message-inner"><CgUnavailable /> Goals data is currently unavailable</div>
                                                                                                                     </div>
-                                                                                                                ))}
+                                                                                                                )}
                                                                                                             </div>
                                                                                                         </div></>
                                                                                                 )}
@@ -892,28 +918,40 @@ export default function opportunity({ userFormdata }) {
                                                                                                         </div>
                                                                                                         <div className={`col-md-5 ${statusLabel !== "Open" ? "col-lg-5" : "col-lg-4"}`}>
                                                                                                             <div className="welcome-content-box-status">
-                                                                                                                {Object.keys(goalCount).map((goal) => (
-                                                                                                                    <div key={goal} className={`goal-progress-container`}>
-                                                                                                                        <div className="goal-label">
-                                                                                                                            <span>{goal}: </span>
+                                                                                                                {Object.keys(goalCount).length > 0 ? (
+                                                                                                                    Object.keys(goalCount).map((goal) => (
+                                                                                                                        <div key={goal} className="goal-progress-container">
+                                                                                                                            <div className="goal-label">
+                                                                                                                                <span>{goal}: </span>
+                                                                                                                            </div>
+
+                                                                                                                            <div className={`progress-bar-container mark_for_${goal}`}>
+                                                                                                                                <div
+                                                                                                                                    className="progress-bar"
+                                                                                                                                    style={{ width: `${goalCount[goal] || 0}%` }}
+                                                                                                                                ></div>
+                                                                                                                            </div>
+
+                                                                                                                            <div className="goal-label-end">
+                                                                                                                                <span>
+                                                                                                                                    {goalCount[goal] !== undefined
+                                                                                                                                        ? `${goalCount[goal]}%`
+                                                                                                                                        : "Progress not started"}
+                                                                                                                                </span>
+                                                                                                                            </div>
                                                                                                                         </div>
-                                                                                                                        <div className={`progress-bar-container mark_for_${goal}`}>
-                                                                                                                            <div
-                                                                                                                                className="progress-bar"
-                                                                                                                                style={{ width: `${goalCount[goal]}%` }}
-                                                                                                                            ></div>
-                                                                                                                        </div>
-                                                                                                                        <div className="goal-label-end">
-                                                                                                                            <span>{goalCount[goal]}%</span>
-                                                                                                                        </div>
+                                                                                                                    ))
+                                                                                                                ) : (
+                                                                                                                    <div className="no-data-message-performace">
+                                                                                                                        <div className="no-data-message-inner"><CgUnavailable /> Goals data is currently unavailable</div>
                                                                                                                     </div>
-                                                                                                                ))}
+                                                                                                                )}
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </>
                                                                                                 )}
                                                                                             </div>
-                                                                                           )}
+                                                                                        )}
                                                                                         {isFormShowIs ? (
                                                                                             <>
                                                                                                 {activeTab === "Summary" ? (
@@ -993,6 +1031,38 @@ export default function opportunity({ userFormdata }) {
                                                                     </div>
                                                                 </div>
                                                             }
+                                                        </div>
+                                                        <div className="text-end w-100 mt-3 mb-3">
+
+                                                            {currentIndex > 0 && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-oxyem me-2"
+                                                                    onClick={handleBack}
+                                                                    disabled={
+                                                                        formvalue.section.findIndex(
+                                                                            section => section.SectionName === activeTab
+                                                                        ) === 0
+                                                                    }
+                                                                >
+                                                                    Back
+                                                                </button>
+                                                            )}
+
+                                                            {currentIndex < formvalue.section.length - 1 && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-primary"
+                                                                    onClick={handleNext}
+                                                                    disabled={
+                                                                        formvalue.section.findIndex(
+                                                                            section => section.SectionName === activeTab
+                                                                        ) === formvalue.section.length - 1
+                                                                    }
+                                                                >
+                                                                    Next
+                                                                </button>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>

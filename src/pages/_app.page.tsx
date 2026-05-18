@@ -32,7 +32,29 @@ useAutoLogout();
       }
 
   }, [router.asPath]);
-  if (router.route === "/" || router.route === "/login" || router.route === "/home" || router.route === "/changepassword" || router.route === "/passwordreset" || router.route === "/aboutus" || router.route === "/pricing" || router.route === "/signup") {
+  if (router.route === "/home" || router.route === "/") {
+    return (
+      <>
+        <link rel="stylesheet" href="/assets/css/style.css" />
+        <link rel="stylesheet" href="/assets/css/style-landing.css" />
+        <link rel="stylesheet" href="/assets/css/font.css" />
+        <link rel="stylesheet" href="/assets/cssmenu/style.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="/assets/cssmenu/responsive.css" />
+        <MsalProvider instance={msalInstance}>
+          <Login>
+            <Component {...pageProps} />
+          </Login>
+        </MsalProvider>
+        <script src="/assets/js/jquery-3.6.0.min.js"></script>
+        <script src="/assets/js/script.js"></script>
+        <script src="/assets/jsmenu/main.js"></script>
+      </>
+
+    )
+  }
+  if (router.route === "/login" || router.route === "/changepassword" || router.route === "/passwordreset" || router.route === "/aboutus" || router.route === "/pricing" || router.route === "/signup") {
     return (
       <>
         <link rel="stylesheet" href="/assets/css/style.css" />
@@ -87,6 +109,7 @@ useAutoLogout();
       {/* <Provider store={store}> */}
 	  {/* <FollowerListProvider>
       <AppWrapper> */}
+	  <div id="datepicker-portal"></div> 
 	  <MsalProvider instance={msalInstance}>
         <Frontend>
           <Component {...pageProps} />

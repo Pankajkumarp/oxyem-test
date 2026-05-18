@@ -426,7 +426,7 @@ useEffect(() => {
                                 <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("draft")}>
                                   <img src='/assets/img/booking-cancel-icon.png' />
                                   <div className='ox-colored-box-4'><h4 className='week_attendence'>
-                                    {statData.invoiceRejected}
+                                    {statData.invoiceDraft}
                                   </h4></div>
                                   <div className='ox-box-text'><h6>Draft</h6></div>
 

@@ -4,6 +4,8 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 import { FaRegEdit } from "react-icons/fa";
 import Edit from '../Edit/Edit';
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
+import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
+import { HiOutlineHome } from "react-icons/hi";
 
 export default function AddressInfo({ empId, apiBaseUrl ,refressAddressApi }) {
     const [isEditOpenRe, setIsEditOpenRe] = useState(false);
@@ -433,8 +435,11 @@ const populateFormData2 = () => {
                 <h3 className="card-title">Address Information</h3>
 
                 {Info.length === 0 ? (
-                    <div>No records found</div>
-                ) : (
+<EmptyInfoBlock
+          title="No address detail added yet."
+          description="This helps HR reach someone in case of emergency."
+icon={<HiOutlineHome size={48} color="#004D95" />}
+        />                 ) : (
                     Info.map((info, index) => {
                         const addressType = info.ResidentialAddress ? 'Residential' : 'Correspondence';
                         return (

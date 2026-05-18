@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
+import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbsdiscription.jsx';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -10,6 +10,7 @@ import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import SelectOptionComponent from '../Components/common/SelectComponent/SelectOptionComponent.jsx';
+import { MdEventAvailable } from "react-icons/md";
 const localizer = momentLocalizer(moment);
 
 const CustomToolbar = ({ label, onNavigate, onView }) => {
@@ -146,7 +147,7 @@ const Holiday = () => {
   const fetchHolidayStats = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await axiosJWT.get(`${apiUrl}/holiday/stats` , { params: { isFor: 'year' }});
+      const response = await axiosJWT.get(`${apiUrl}/holiday/stats`, { params: { isFor: 'year' } });
       const responsedata = response.data.data || {};
 
       setHolidayStats(responsedata);
@@ -159,54 +160,57 @@ const Holiday = () => {
   }, []);
 
   const [searchfilter, setSearchfilter] = useState({});
-const [activeStatus, setActiveStatus] = useState(null);
-const [activeTableTab, setActiveTableTab] = useState("");
+  const [activeStatus, setActiveStatus] = useState(null);
+  const [activeTableTab, setActiveTableTab] = useState("");
 
-const handleShowDataForStatus = (filterKey) => {
-  setActiveTableTab(filterKey);
-  setActiveStatus(filterKey);
+  const handleShowDataForStatus = (filterKey) => {
+    setActiveTableTab(filterKey);
+    setActiveStatus(filterKey);
 
-  if (filterKey === "clr") {
-    setSearchfilter({});
-    setActiveStatus(null);
-  } else {
-    let filter = {};
+    if (filterKey === "clr") {
+      setSearchfilter({});
+      setActiveStatus(null);
+    } else {
+      let filter = {};
 
-    switch (filterKey) {
-      case "Total":
-        // Show all holidays
-        // filter = {};
-        break;
+      switch (filterKey) {
+        case "Total":
+          // Show all holidays
+          // filter = {};
+          break;
 
-      case "Mandatory":
-                      // setSearchfilter({ type: "Mandatory" });
+        case "Mandatory":
+          // setSearchfilter({ type: "Mandatory" });
 
-        break;
+          break;
 
-      case "Optional":
-      
-              // setSearchfilter({ type: "Optional" });
+        case "Optional":
 
-        break;
+          // setSearchfilter({ type: "Optional" });
 
-      case "Upcoming":
-       
-              // setSearchfilter({ type: "Upcoming" });
+          break;
 
-        break;
+        case "Upcoming":
 
-      default:
-        filter = {};
-        break;
+          // setSearchfilter({ type: "Upcoming" });
+
+          break;
+
+        default:
+          filter = {};
+          break;
+      }
+
     }
-
-  }
-};
+  };
 
 
   return (
     <>
-      <Head><title>{pageTitles.Holidays}</title></Head>
+      <Head>
+        <title>Company Holiday Calendar for Employees | Oxytal</title>
+        <meta name="description" content={"View the complete employee holiday calendar with public holidays and company-approved leave dates for the year."} />
+      </Head>
       <div className="main-wrapper" id="holiday_page">
         <div className="page-wrapper">
           <div className="content container-fluid">
@@ -214,7 +218,12 @@ const handleShowDataForStatus = (filterKey) => {
               <div className="col-12 col-lg-12 col-xl-12">
                 <div className="row">
                   <div className="col">
-                    <Breadcrumbs maintext={"Holidays"} addlink={"/holiday/addHoliday"} />
+                  <Breadcrumbs 
+                    maintext={"Company Holiday Schedule for Employees"} 
+                    addlink={"/holiday/addHoliday"} 
+                    discription={"This page provides a complete list of company-recognized holidays to help employees plan leave and manage work schedules efficiently."}
+                    icon={<MdEventAvailable />}
+                    />
                   </div>
                   <div className="col-12 col-lg-12 col-xl-12 d-flex">
                     <div className="card flex-fill comman-shadow oxyem-index">
@@ -228,7 +237,7 @@ const handleShowDataForStatus = (filterKey) => {
                                     <a className="nav-link" onClick={() => setViewMode('month')}>
                                       <div className="skolrup-profile-tab-link">Month View</div>
                                     </a>
-                                  </li> 
+                                  </li>
                                   <li className={`nav-item ${viewMode === "year" ? 'active' : ''}`}>
                                     <a className="nav-link" onClick={() => setViewMode('year')}>
                                       <div className="skolrup-profile-tab-link">Year View</div>
@@ -308,7 +317,7 @@ const handleShowDataForStatus = (filterKey) => {
 
                                       {/* 🔹 Upcoming Holidays */}
                                       <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                        <div className="stats-info stats-info-cus text-center" >     
+                                        <div className="stats-info stats-info-cus text-center" >
                                           <img src='/assets/img/upcoming.png' alt="upcoming-holidays" />
                                           <div className='ox-colored-box-4 '>
                                             <h4 className='week_attendence'>
@@ -353,14 +362,14 @@ const handleShowDataForStatus = (filterKey) => {
                             <div className='year_cal'>
                               {viewMode === 'year' && renderMonthCalendars()}
                             </div>
-                             <div className="col-md-6">{activeStatus !== null && (
-                                <div className="active-filter-tag">
-                                  <span> {typeof activeStatus === "string"
-                                    ? activeStatus.charAt(0).toUpperCase() + activeStatus.slice(1)
-                                    : activeStatus}</span>
-                                  <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
-                                </div>
-                              )}</div>
+                            <div className="col-md-6">{activeStatus !== null && (
+                              <div className="active-filter-tag">
+                                <span> {typeof activeStatus === "string"
+                                  ? activeStatus.charAt(0).toUpperCase() + activeStatus.slice(1)
+                                  : activeStatus}</span>
+                                <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
+                              </div>
+                            )}</div>
                             <div className='all_cal'>
                               {viewMode === 'allHolidays' &&
                                 <CustomDataTable

@@ -5,7 +5,7 @@ import axios from "axios";
 import RadioComponent from '../Components/common/Inputfiled/RadioComponent';
 import moment from 'moment-timezone';
 import { axiosJWT } from '../Auth/AddAuthorization';
-import Viewallowence  from './view.jsx';
+// import Viewallowence  from './view.jsx';
 import { FaRegEye } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import Select from '../Components/common/SelectComponent/CreateSingleSelectComponent';
@@ -60,23 +60,41 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
   };
 
 
-  useEffect(() => {
-    const extractedData = extractFields(fields);
-    setFormData(extractedData);
-  }, [fields]);
+useEffect(() => {
+  const extractedData = extractFields(fields);
+  setFormData(prev => ({
+    ...prev,
+    ...extractedData
+  }));
+}, [fields]);
 
   
 
   const handleChange = async (fieldName, value) => {
+     if (fieldName === "idEmployee") {
+    setAdditionalFields({
+      earning: [],
+      deductions: []
+    });
+  }
+
 
     let getfieldarry = await updatedSubsection(fields, fieldName, value)
     if (pagename === "addPayRollNonemp") {
       getChangessField(getfieldarry)
     }
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [fieldName]: value,
-    }));
+    // setFormData(prevFormData => ({
+    //   ...prevFormData,
+    //   [fieldName]: value,
+    // }));
+     setFormData(prev => ({
+    ...prev,
+    idEmployee: value?.value || value,   // store ID only
+    employeeName: value?.label || "",
+    designation: value?.designation || "",
+    emailAddress: value?.emailAddress || ""
+
+  }))
     setCurrentFormData(prevFormData => ({
       ...prevFormData,
       [fieldName]: value,
@@ -263,6 +281,8 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
   };
 
   const editAdditionalfiled = async (fieldName, value) => {
+      if (!pageedit) return;
+
     try {
       setAdditionalFields(prevState => {
         // Copy the previous state to preserve existing data
@@ -271,16 +291,20 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
         if (fieldName === "otherAllowance") {
           // Add new earnings to the existing earnings array
           if (Array.isArray(value)) {
-          value.forEach(item => {
-            updatedFields.earning.push(item);
-          });
+                  updatedFields.earning = [...value];
+
+          // value.forEach(item => {
+          //   updatedFields.earning.push(item);
+          // });
         }
         } else if (fieldName === "deductionOtherAllowance") {
           // Add new deductions to the existing deductions array
           if (Array.isArray(value)) {
-          value.forEach(item => {
-            updatedFields.deductions.push(item);
-          });
+                  updatedFields.deductions = [...value];
+
+          // value.forEach(item => {
+          //   updatedFields.deductions.push(item);
+         // });
         }
         }
   
@@ -307,7 +331,7 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
   return (
      <>
 
-  <Viewallowence isOpen={isDrawerOpen} closeModal={closeDrawer}/>
+  {/* <Viewallowence isOpen={isDrawerOpen} closeModal={closeDrawer}/> */}
     <Suspense fallback={<div>Loading...</div>}>
       <form>
         {errorres && (
@@ -368,6 +392,23 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
                       );
                     })}
                 </div>
+                {formData?.idEmployee && (
+  <div className="row mb-4 employee-info-box">
+    <div className="col-md-6">
+      <div className="employee-info-item">
+        <label>Email</label>
+        <p className="info-text">{formData.emailAddress || "—"}</p>
+      </div>
+    </div>
+
+    <div className="col-md-4">
+      <div className="employee-info-item">
+        <label>Designation</label>
+        <p className="info-text">{formData.designation || "—"}</p>
+      </div>
+    </div>
+  </div>
+)}
               </div>
               {/* First Column: Fields with "first-6" position */}
               <div className="col-md-6">
@@ -447,11 +488,11 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
                           </div>
                         </div>
                             <div className="col-md-2 d-flex mt-2 add_payroll_icon">
-                 <span className="me-2 view-icon"
+                 {/* <span className="me-2 view-icon"
                  onClick={openDrawer}
                >
                  <FaRegEye />
-               </span>
+               </span> */}
                <span
                                        className="del-icon"
                                        onClick={() => handleDeleteField('earning', index)}

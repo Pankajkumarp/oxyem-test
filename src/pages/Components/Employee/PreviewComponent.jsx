@@ -123,9 +123,14 @@ export default function PreviewComponent({ data, submitformdata, setDocuments ,l
 </>
       ) : 
       
-      <div className="float-end">
-        <button type="button" className="btn btn-primary mb-2 ms-2" onClick={submitformdata}>Submit</button>
+       <>
+        <div className="float-end">
+        <button type="button" className="btn btn-primary mb-2 ms-2"   onClick={() => submitformdata("draft")}>Save as Draft</button>
       </div>
+        <div className="float-end">
+        <button type="button" className="btn btn-primary mb-2 ms-2" onClick={() => submitformdata("submit")}>Submit</button>
+      </div>
+      </>
 
       }
       

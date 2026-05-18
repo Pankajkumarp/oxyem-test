@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Breadcrumbs from "../../Components/Breadcrumbs/Breadcrumbs";
+import Breadcrumbs from "../../Components/Breadcrumbs/Breadcrumbsdiscription";
 import CustomDataTable from "../../Components/Datatable/tablewithApi.jsx";
 import { axiosJWT } from "../../Auth/AddAuthorization.jsx";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import SelectComponent from '../../Components/common/SelectOption/SelectComponent.jsx';
-import pageTitles from "../../../common/pageTitles.js";
+import { FaUsers } from "react-icons/fa";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function index() {
@@ -14,10 +13,10 @@ export default function index() {
   const router = useRouter();
   const [updleavelist, setUpdUserList] = useState([]);
   const [formcolumn, setFormColumn] = useState([]);
-    const [emptypefilter, setEmptypefilter] = useState();
-    const [employeeTypeCounts, setEmployeeTypeCounts] = useState({});
-      const [status, setStatus] = useState();
-    
+  const [emptypefilter, setEmptypefilter] = useState();
+  const [employeeTypeCounts, setEmployeeTypeCounts] = useState({});
+  const [status, setStatus] = useState();
+
   const [permanentCount, setPermanentCount] = useState(0);
   const [countactive, setCountactive] = useState(0);
   const [internCount, setInternCount] = useState(0);
@@ -45,36 +44,36 @@ export default function index() {
       const response = await axiosJWT.get(`${apiUrl}/getDashboardDetails`, {
         params: { isFor: "employees" },
       });
-       
+
 
       if (response) {
         const dataCome = response.data.data;
-const labels = dataCome.employeeTypeCounts.labels;
-const series = dataCome.employeeTypeCounts.series;
-const activeempl = dataCome.empStatus.labels;
-const activeemps = dataCome.empStatus.series;
+        const labels = dataCome.employeeTypeCounts.labels;
+        const series = dataCome.employeeTypeCounts.series;
+        const activeempl = dataCome.empStatus.labels;
+        const activeemps = dataCome.empStatus.series;
 
-const permanentIndex = labels.indexOf("Permanent");
-const internIndex = labels.indexOf("Intern");
-const ContractIndex = labels.indexOf("Contract");
-const activeIndex = activeempl.indexOf("Active");
+        const permanentIndex = labels.indexOf("Permanent");
+        const internIndex = labels.indexOf("Intern");
+        const ContractIndex = labels.indexOf("Contract");
+        const activeIndex = activeempl.indexOf("Active");
 
-if (activeIndex !== -1) {
-  const countactive = activeemps[activeIndex];
-  setCountactive(countactive); // ✅ Update the state properly
-}
-if (internIndex !== -1) {
-  const countin = series[internIndex];
-  setInternCount(countin); // ✅ Update the state properly
-}
-if (permanentIndex !== -1) {
-  const count = series[permanentIndex];
-  setPermanentCount(count); // ✅ Update the state properly
-}
-if (ContractIndex !== -1) {
-  const countcon = series[ContractIndex];
-  setConCount(countcon); // ✅ Update the state properly
-}
+        if (activeIndex !== -1) {
+          const countactive = activeemps[activeIndex];
+          setCountactive(countactive); // ✅ Update the state properly
+        }
+        if (internIndex !== -1) {
+          const countin = series[internIndex];
+          setInternCount(countin); // ✅ Update the state properly
+        }
+        if (permanentIndex !== -1) {
+          const count = series[permanentIndex];
+          setPermanentCount(count); // ✅ Update the state properly
+        }
+        if (ContractIndex !== -1) {
+          const countcon = series[ContractIndex];
+          setConCount(countcon); // ✅ Update the state properly
+        }
 
         if (
           dataCome.employeeTypeCounts &&
@@ -159,170 +158,170 @@ if (ContractIndex !== -1) {
             },
           });
           setTodayStatus(
-                    {
-                        series: dataCome.empStatus.series,
-                        chart: {
-                            type: 'pie',
-                            width: 600, 
-                            height: 400 
-                        },
-                        title: {
-                            text: "Today's Status",
-                            align: 'center', 
-                            margin: 20,
-                            style: {
-                                fontSize: '13px', 
-                                fontFamily: 'Helvetica Now MT Micro Regular', 
-                                fontWeight: '500',
-                                color: '#263238',
-                            },
-                        },
-                        labels: dataCome.empStatus.labels,
-                        colors: ['#156082', '#ed6a58', '#fcb040'],
-                        responsive: [
-                
-                            {
-                                breakpoint: 480,
-                                options: {
-                                    chart: {
-                                        width: 250,
-                                    },
-                                    legend: {
-                                        position: 'bottom',
-                                    },
-                                },
-                            },
-                        ],
-                        legend: {
-                            position: 'bottom',
-                        },
-                    }
-                )
-                 setRoleWise(
-                    {
-                        chart: {
-                            type: 'bar',
-                            height: 350,
-                            stacked: true,
-                            toolbar: {
-                                show: true,
-                            },
-                            zoom: {
-                                enabled: true,
-                            },
-                        },
-                        title: {
-                            text: "Role Wise Employees",
-                            align: 'center',
-                            margin: 20,
-                            style: {
-                                fontSize: '13px',
-                                fontFamily: 'Helvetica Now MT Micro Regular',
-                                fontWeight: '500',
-                                color: '#263238',
-                            },
-                        },
-                        series: dataCome.roleWise.series,
-                        responsive: [
-                            {
-                                breakpoint: 480,
-                                options: {
-                                    legend: {
-                                        position: 'bottom',
-                                        offsetX: -10,
-                                        offsetY: 0,
-                                    },
-                                },
-                            },
-                        ],
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                borderRadius: 0,
-                                borderRadiusApplication: 'end',
-                                borderRadiusWhenStacked: 'last',
+            {
+              series: dataCome.empStatus.series,
+              chart: {
+                type: 'pie',
+                width: 600,
+                height: 400
+              },
+              title: {
+                text: "Today's Status",
+                align: 'center',
+                margin: 20,
+                style: {
+                  fontSize: '13px',
+                  fontFamily: 'Helvetica Now MT Micro Regular',
+                  fontWeight: '500',
+                  color: '#263238',
+                },
+              },
+              labels: dataCome.empStatus.labels,
+              colors: ['#156082', '#ed6a58', '#fcb040'],
+              responsive: [
 
-                            },
-                        },
-                        xaxis: {
-                            categories: dataCome.roleWise.categories,
-                        },
-                        colors: ['#156082', '#e97132', '#fcb040'],
-                        legend: {
-                            position: 'bottom',
-                        },
-                        fill: {
-                            opacity: 1,
-                        },
-                    }
-                )
-                setDepartmentWise(
-                    {
-                        chart: {
-                            type: 'bar',
-                            height: 350,
-                            stacked: true,
-                            toolbar: {
-                                show: true,
-                            },
-                            zoom: {
-                                enabled: true,
-                            },
-                        },
-                        title: {
-                            text: "Department wise Employees",
-                            align: 'center', 
-                            margin: 20,
-                            style: {
-                                fontSize: '13px',
-                                fontFamily: 'Helvetica Now MT Micro Regular',
-                                fontWeight: '500',
-                                color: '#263238',
-                            },
-                        },
-                        series: dataCome.departmentWise.series,
-                        responsive: [
-                            {
-                                breakpoint: 480,
-                                options: {
-                                    legend: {
-                                        position: 'bottom',
-                                        offsetX: -10,
-                                        offsetY: 0,
-                                    },
-                                },
-                            },
-                        ],
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                borderRadius: 0,
-                                borderRadiusApplication: 'end',
-                                borderRadiusWhenStacked: 'last',
+                {
+                  breakpoint: 480,
+                  options: {
+                    chart: {
+                      width: 250,
+                    },
+                    legend: {
+                      position: 'bottom',
+                    },
+                  },
+                },
+              ],
+              legend: {
+                position: 'bottom',
+              },
+            }
+          )
+          setRoleWise(
+            {
+              chart: {
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                  show: true,
+                },
+                zoom: {
+                  enabled: true,
+                },
+              },
+              title: {
+                text: "Role Wise Employees",
+                align: 'center',
+                margin: 20,
+                style: {
+                  fontSize: '13px',
+                  fontFamily: 'Helvetica Now MT Micro Regular',
+                  fontWeight: '500',
+                  color: '#263238',
+                },
+              },
+              series: dataCome.roleWise.series,
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    legend: {
+                      position: 'bottom',
+                      offsetX: -10,
+                      offsetY: 0,
+                    },
+                  },
+                },
+              ],
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  borderRadius: 0,
+                  borderRadiusApplication: 'end',
+                  borderRadiusWhenStacked: 'last',
 
-                            },
-                        },
-                        xaxis: {
-                            categories: dataCome.departmentWise.categories,
-                        },
-                        colors: ['#156082', '#e97132', '#fcb040'],
-                        legend: {
-                            position: 'bottom',
-                        },
-                        fill: {
-                            opacity: 1,
-                        },
-                    }
-                )
+                },
+              },
+              xaxis: {
+                categories: dataCome.roleWise.categories,
+              },
+              colors: ['#156082', '#e97132', '#fcb040'],
+              legend: {
+                position: 'bottom',
+              },
+              fill: {
+                opacity: 1,
+              },
+            }
+          )
+          setDepartmentWise(
+            {
+              chart: {
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                  show: true,
+                },
+                zoom: {
+                  enabled: true,
+                },
+              },
+              title: {
+                text: "Department wise Employees",
+                align: 'center',
+                margin: 20,
+                style: {
+                  fontSize: '13px',
+                  fontFamily: 'Helvetica Now MT Micro Regular',
+                  fontWeight: '500',
+                  color: '#263238',
+                },
+              },
+              series: dataCome.departmentWise.series,
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    legend: {
+                      position: 'bottom',
+                      offsetX: -10,
+                      offsetY: 0,
+                    },
+                  },
+                },
+              ],
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  borderRadius: 0,
+                  borderRadiusApplication: 'end',
+                  borderRadiusWhenStacked: 'last',
+
+                },
+              },
+              xaxis: {
+                categories: dataCome.departmentWise.categories,
+              },
+              colors: ['#156082', '#e97132', '#fcb040'],
+              legend: {
+                position: 'bottom',
+              },
+              fill: {
+                opacity: 1,
+              },
+            }
+          )
           setShowGraph(true);
         }
       }
-    } catch (error) {}
+    } catch (error) { }
   };
-useEffect(() => {
+  useEffect(() => {
     if (activeTab === 1 && index === 0) {
       setStatus(null);
-                                          setEmptypefilter(null);    // Clear the filter
+      setEmptypefilter(null);    // Clear the filter
 
       fetchClientData();
     }
@@ -335,13 +334,19 @@ useEffect(() => {
   return (
     <>
       <Head>
-        <title>{pageTitles.UserList}</title>
+        <title>Employee Directory & Contacts | Oxytal</title>
+        <meta name="description" content={"Find employees, roles, departments, and contact information in our centralized employee directory. Easily connect with team members."} />
       </Head>
 
       <div className="main-wrapper">
         <div className="page-wrapper">
           <div className="content container-fluid">
-            <Breadcrumbs maintext={"User Directory"} addlink={"/user"} />
+            <Breadcrumbs
+              maintext={"Employee Directory"}
+              addlink={"/user"}
+              discription={"Quickly find employees, view roles, departments, and contact details across the organization."}
+              icon={<FaUsers />}
+            />
 
             <div className="row">
               <div className="col-12 col-lg-12 col-xl-12">
@@ -371,99 +376,97 @@ useEffect(() => {
                       </a>
                     </li>
                   </ul>
-                  {/* <br></br> */}
-                </div>
-                {activeTab === 0 && (
+                                  {activeTab === 0 && (
                   <>
                     <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                       {employeeTypeCounts && employeeTypeCounts.series && employeeTypeCounts.series.length > 0 && (
 
-                      <div className="">
-                        <div className="oxyem-top-box-design design-only-attendence claim-top-data-main mx-0 row stats-grid">
-                          <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                            <div
-                              className="stats-info stats-info-cus"
- onClick={() => {
-                                      setStatus("Active");
-                                      setActiveTab(1);
-                                    }}                               >
-                              <div className="ox-colored-box-1">
-                                <h4 className="all_attendence">
-                                  {countactive}
-                                </h4>
-                              </div>
-                              <div className="ox-box-text">
-                                <h6>Active</h6>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                            <div
-                              className="stats-info stats-info-cus"
-                            //   onClick={() => handleTabClick(1)}
-                               onClick={() => {
-                                      setEmptypefilter("Permanent");
-                                                                            setStatus("Active");
-
-                                      setActiveTab(1);
-                                    }}
-                            >
-                              <div className="ox-colored-box-2">
-                                <h4 className="month_attendence">
-                                  {permanentCount}
-                                </h4>
-                              </div>
-                              <div className="ox-box-text">
-                                <h6>Permanent</h6>
+                        <div className="">
+                          <div className="oxyem-top-box-design design-only-attendence claim-top-data-main mx-0 row stats-grid">
+                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                              <div
+                                className="stats-info stats-info-cus"
+                                onClick={() => {
+                                  setStatus("Active");
+                                  setActiveTab(1);
+                                }}                               >
+                                <div className="ox-colored-box-1">
+                                  <h4 className="all_attendence">
+                                    {countactive}
+                                  </h4>
+                                </div>
+                                <div className="ox-box-text">
+                                  <h6>Active</h6>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                              <div
+                                className="stats-info stats-info-cus"
+                                //   onClick={() => handleTabClick(1)}
+                                onClick={() => {
+                                  setEmptypefilter("Permanent");
+                                  setStatus("Active");
 
-                          <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                            <div
-                              className="stats-info stats-info-cus"
- onClick={() => {
-                                      setEmptypefilter("Contract");
-                                                                            setStatus("Active");
-
-                                      setActiveTab(1);
-                                    }}                            >
-                              <div className="ox-colored-box-3">
-                                <h4 className="notsubmit_attendence">
-                                  {conCount}
-                                </h4>
-                              </div>
-                              <div className="ox-box-text">
-                                <h6>Contract</h6>
+                                  setActiveTab(1);
+                                }}
+                              >
+                                <div className="ox-colored-box-2">
+                                  <h4 className="month_attendence">
+                                    {permanentCount}
+                                  </h4>
+                                </div>
+                                <div className="ox-box-text">
+                                  <h6>Permanent</h6>
+                                </div>
                               </div>
                             </div>
-                          </div>
 
-                          <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                            <div
-                              className="stats-info stats-info-cus"
-onClick={() => {
-                                      setEmptypefilter("Intern");
-                                      setStatus("Active");
-                                      setActiveTab(1);
-                                    }}                               >
-                              <div className="ox-colored-box-4">
-                                <h4 className="week_attendence">
-                                  {internCount}
-                                </h4>
+                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                              <div
+                                className="stats-info stats-info-cus"
+                                onClick={() => {
+                                  setEmptypefilter("Contract");
+                                  setStatus("Active");
+
+                                  setActiveTab(1);
+                                }}                            >
+                                <div className="ox-colored-box-3">
+                                  <h4 className="notsubmit_attendence">
+                                    {conCount}
+                                  </h4>
+                                </div>
+                                <div className="ox-box-text">
+                                  <h6>Contract</h6>
+                                </div>
                               </div>
-                              <div className="ox-box-text">
-                                <h6>Interns</h6>
+                            </div>
+
+                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                              <div
+                                className="stats-info stats-info-cus"
+                                onClick={() => {
+                                  setEmptypefilter("Intern");
+                                  setStatus("Active");
+                                  setActiveTab(1);
+                                }}                               >
+                                <div className="ox-colored-box-4">
+                                  <h4 className="week_attendence">
+                                    {internCount}
+                                  </h4>
+                                </div>
+                                <div className="ox-box-text">
+                                  <h6>Interns</h6>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      )} 
+                      )}
                     </div>
                     <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                       <div className="tab-content">
-                       
+
                         <div className="row">
                           <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
                             {showGraph &&
@@ -480,7 +483,7 @@ onClick={() => {
                                 </div>
                               )}
                           </div>
-                          
+
                           <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
                             {showGraph &&
                               genderCounts &&
@@ -512,42 +515,42 @@ onClick={() => {
                               )}
                           </div>
                         </div>
-                      {/* </div>
+                        {/* </div>
                     </div>
                     <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                       <div className="tab-content"> */}
-                       
+
 
                         <div>
                           <div className="row">
-            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
                               {showGraph ? (
-                    <div className="oxy_chat_box"  >
-                        <Chart
-                            options={roleWise}
-                            series={roleWise.series}
-                            type="bar"
-                            height={330}
-                        />
-                    </div>
-                ) : null}
+                                <div className="oxy_chat_box"  >
+                                  <Chart
+                                    options={roleWise}
+                                    series={roleWise.series}
+                                    type="bar"
+                                    height={330}
+                                  />
+                                </div>
+                              ) : null}
                             </div>
-            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                               {showGraph ? (
-                    <div className="oxy_chat_box"  >
-                        <Chart
-                            options={departmentWise}
-                            series={departmentWise.series}
-                            type="bar"
-                            height={330}
-                        />
-                    </div>
-                ) : null}
+                            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                              {showGraph ? (
+                                <div className="oxy_chat_box"  >
+                                  <Chart
+                                    options={departmentWise}
+                                    series={departmentWise.series}
+                                    type="bar"
+                                    height={330}
+                                  />
+                                </div>
+                              ) : null}
                             </div>
-                          
+
                           </div>
                         </div>
-                       
+
 
                         <br></br>
                       </div>
@@ -559,8 +562,8 @@ onClick={() => {
                     <div className="col-12 col-lg-12 col-xl-12 d-flex">
                       <div className="card flex-fill comman-shadow oxyem-index">
                         <div className="center-part">
-                                                                                                            <div className="card-body oxyem-mobile-card-body oxyem-main-attendance_dashborad">
-  {typeof status === "Active" && emptypefilter === "" && (
+                          <div className="card-body oxyem-mobile-card-body oxyem-main-attendance_dashborad">
+                            {typeof status === "Active" && emptypefilter === "" && (
                               <div className="active-filter-tag">
                                 <span>{status.charAt(0).toUpperCase() + status.slice(1)}</span>
                                 <button
@@ -574,7 +577,7 @@ onClick={() => {
                                 </button>
                               </div>
                             )}
-                             {typeof emptypefilter === 'string' && (
+                            {typeof emptypefilter === 'string' && (
                               <div className="active-filter-tag">
                                 <span>{emptypefilter.charAt(0).toUpperCase() + emptypefilter.slice(1)}</span>
                                 <button
@@ -588,33 +591,34 @@ onClick={() => {
                                 </button>
                               </div>
                             )}
-                          <div className="card-body oxyem-mobile-card-body">
-                            <div
-                              className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border"
-                              id="sk-create-page"
-                            >
-                              {/* <h2> Welcome to User page</h2> */}
+                            <div className="card-body oxyem-mobile-card-body">
+                              <div
+                                className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border"
+                                id="sk-create-page"
+                              >
+                                {/* <h2> Welcome to User page</h2> */}
 
-                              <CustomDataTable
-                              key={`${emptypefilter || "all"}-${status || "all"}`}
-                                title={""}
-                                data={updleavelist}
-                                columnsdata={formcolumn}
-                                onViewClick={onViewClick}
-                                onDeleteClick={onDeleteClick}
-                                dashboradApi={"/employees"}
-                                empType={emptypefilter}
-                                status={status}
+                                <CustomDataTable
+                                  key={`${emptypefilter || "all"}-${status || "all"}`}
+                                  title={""}
+                                  data={updleavelist}
+                                  columnsdata={formcolumn}
+                                  onViewClick={onViewClick}
+                                  onDeleteClick={onDeleteClick}
+                                  dashboradApi={"/employees"}
+                                  empType={emptypefilter}
+                                  status={status}
 
-                              />
+                                />
+                              </div>
                             </div>
-                          </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
+                </div>
               </div>
             </div>
           </div>

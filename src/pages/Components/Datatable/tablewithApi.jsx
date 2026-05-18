@@ -5,12 +5,15 @@ import MUIDataTable from "mui-datatables";
 import { FaRegEye } from "react-icons/fa6";
 import { RiDeleteBinLine } from "react-icons/ri";
 import Recall from '../Popup/Recallmodal';
+import Delay from '../Popup/DelayModal';
 import Profile from '../commancomponents/profile';
 import { GrTooltip } from "react-icons/gr";
 import { Tooltip } from 'react-tooltip'
 import { FiEdit } from "react-icons/fi";
 import { GoHistory } from "react-icons/go";
 import { IoRefreshSharp } from "react-icons/io5";
+import { IoTimeOutline } from "react-icons/io5";
+import { LuCheck } from "react-icons/lu";
 import RejectPopup from '../Popup/Rejectmodal';
 import { IoIosPeople } from "react-icons/io";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -47,7 +50,7 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
   }
 };
 
-export default function tablewithApi({ title, ismodule, onEditClick, onSubmitClick, responseData, onDeleteClick, onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick, handleViewAssignReq, pagename, dashboradApi, refreshtable,ifForvalue,updatelist, year ,utctimeconditionpage ,empId ,handleDecommissionreq,assetsparms,refreshAfterEdit ,handleDeallocationreq ,handleSubmitAllocation,checkboxbuttonName ,idBoa, onEmailClick,idJobApplicant, idProject, idSeparation, onConfirmClick ,searchfilter,tableStatus ,tabParamsInObj ,idClaim,status,empType,GetTotalSum,isShowFor,documentFor, onProcessClick, perPage}) {
+export default function tablewithApi({ title, ismodule, onEditClick, onSubmitClick, responseData, onDeleteClick, onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick, handlerdelayvalueClick, handleViewAssignReq, pagename, dashboradApi, refreshtable,ifForvalue,updatelist, year ,utctimeconditionpage ,empId ,handleDecommissionreq,assetsparms,refreshAfterEdit ,handleDeallocationreq ,handleSubmitAllocation,checkboxbuttonName ,idBoa, onEmailClick,idJobApplicant, idProject, idSeparation, onConfirmClick ,searchfilter,tableStatus ,tabParamsInObj ,idClaim,status,empType,GetTotalSum,isShowFor,documentFor, onProcessClick, perPage, onDelayClick, onApproveClick, idMilestone, isStatusFor}) {
 
   const timeZone = getCurrentTimeZone();
   const [data, setData] = useState([]); 
@@ -98,7 +101,9 @@ export default function tablewithApi({ title, ismodule, onEditClick, onSubmitCli
   const closeModalrecallModalreject = () => {
     setIsModalOpenreject(false);
   };
-
+const closeModaldelayModalreject = () => {
+    setIsModalOpenreject(false);
+  };
   const handleRejectClick = () => {
     setIsModalOpenreject(true);
   }
@@ -125,8 +130,18 @@ export default function tablewithApi({ title, ismodule, onEditClick, onSubmitCli
     }
   }, [responseData]);
 
+ useEffect(() => {
+    if (responseData) {
+      setRespdata(responseData)
+      setMessageType(respdata.type)
+      setMessage(respdata.message)
+      if (messageType == "success" && responseData.popup == "delay") {
+        setisModalOpendelay(false);
 
-
+      }
+    }
+  }, [responseData]);
+ 
   // Fetch data from API or any data source
   const fetchData = async (page, rowsPerPage, sortOrder, filterList, searchValue) => {
     const sortParam = sortOrder.name ? `&sort=${sortOrder.name}&order=${sortOrder.direction}` : '';
@@ -155,7 +170,7 @@ export default function tablewithApi({ title, ismodule, onEditClick, onSubmitCli
 
     // Replace with your API call
     // let response = await axiosJWT.get(`${apiUrl}${dashboradApi}?page=${page}&limit=${rowsPerPage}${sortParam}&${filterParams}${searchParam}`);
-    let response = await axiosJWT.get(`${apiUrl}${dashboradApi}?page=${page}&limit=${rowsPerPage}${sortParam}&${filterParams}${searchParam}${assetsParam}`, { params: { "isFor": ifForvalue, "year":year ,'idEmployee':empId ,"idBoa":idBoa ,"idJobApplicant":idJobApplicant, "idProject":idProject, "idSeparation":idSeparation , "pageName":tableStatus ,"idClaim":idClaim,"empType":empType  ,"status":status ,...cleanedSearchFilter ,...cleanedtabParamsInObj} });
+    let response = await axiosJWT.get(`${apiUrl}${dashboradApi}?page=${page}&limit=${rowsPerPage}${sortParam}&${filterParams}${searchParam}${assetsParam}`, { params: { "isFor": ifForvalue, "year":year ,'idEmployee':empId ,"idBoa":idBoa ,"idJobApplicant":idJobApplicant, "idProject":idProject, "idSeparation":idSeparation , "pageName":tableStatus ,"idClaim":idClaim,"empType":empType,"isStatusFor":isStatusFor  ,"status":status ,...cleanedSearchFilter ,...cleanedtabParamsInObj} });
     //const result = await response.json();
     setcolumns(response.data.data.formColumns)
     let taleData = response.data.data.formdata
@@ -466,6 +481,40 @@ export default function tablewithApi({ title, ismodule, onEditClick, onSubmitCli
                 });
               }
               break;
+                 case "delay":
+              button = (
+                <span key={index} className='oxyem-without-btn oxyem-mark-delay' data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"Delay"}>
+                  <IoTimeOutline color="#FFA500" size={20}/>
+                </span>
+              );
+              if (action.isEnable === true) {
+                button = React.cloneElement(button, {
+                  onClick: () => handleRowdelayClick(tableMeta.rowData, value),
+                });
+              } else {
+                button = React.cloneElement(button, {
+                  className: `${button.props.className} table_btn_disabled`, // add a disabled class to the button
+                });
+              }
+              break;
+     case "approve":
+              button = (
+                <span key={index} className='oxyem-without-btn oxyem-mark-approve' data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"Approve"}>
+                  <LuCheck />
+                </span>
+              );
+              if (action.isEnable === true) {
+                button = React.cloneElement(button, {
+                  onClick: () => handleRowApproveClick(tableMeta.rowData, value),
+                });
+              } else {
+                button = React.cloneElement(button, {
+                  className: `${button.props.className} table_btn_disabled`, // add a disabled class to the button
+                });
+              }
+              break;
+
+
             case "view":
               button = (
                 <span key={index} className='oxyem-without-btn oxyem-mark-view' data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"View"}>
@@ -709,6 +758,16 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
       </>
     );
   };
+  const renderassigncountMembers = (value, tableMeta, updateValue) => {
+    return (
+      <>
+      {value?(
+        <button className='oxyem-mark-assign-count' onClick={() => handleassignedMemClick(tableMeta.rowData)}>
+          {value}
+        </button>):null}
+      </>
+    );
+  };
   const rendertaskInformation = (value, tableMeta, updateValue) => {
     return (
       <>
@@ -731,6 +790,18 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
       </span>
     );
   };
+  const rendercustomMangerProfile = (value, tableMeta, updateValue) => {
+    const rowIndex = tableMeta.rowIndex;
+    const profileData = apisamedata[rowIndex].find(item => item.name === 'Name' || item.name === 'idEmployee' || item.name === "pManager" || item.name === 'employeeName');
+    const profilePicture = profileData?.profilePicPath || profileData?.profilePicPath || "";
+    const profileLink = profileData?.profilelink || "";
+    return (
+      <span className='oxyem-custom-table-profile'>
+        <Profile name={value} imageurl={profilePicture} size={"30"} profilelink={profileLink} />
+        {profileLink !== "" ? (<Link className='oxyem-table-link' href={profileLink}>{value}</Link>) : (<span className='oxyem-table-link' >{value}</span>)}
+      </span>
+    );
+  };
 
   const rendercustomProfileUserList = (value, tableMeta, updateValue) => {
     const rowIndex = tableMeta.rowIndex;
@@ -748,7 +819,7 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
 
   const renderLeaveReason = (value) => {
     const maxLength = 35;
-    const truncatedValue = value.length > maxLength ? value.substring(0, maxLength) + '...' : value;
+    const truncatedValue = value?.length > maxLength ? value.substring(0, maxLength) + '...' : value;
 
     return (
       <div className='oxyem-tooltip-text'>
@@ -785,20 +856,23 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
                   ? (value, tableMeta, updateValue) => rendercustomProfile(value, tableMeta, updateValue)
                   : column.name === 'projectManager'
                     ? (value, tableMeta, updateValue) => rendercustomProfile(value, tableMeta, updateValue)
+                  : column.name === 'pManager'
+                    ? (value, tableMeta, updateValue) => rendercustomMangerProfile(value, tableMeta, updateValue)
                     : column.name === 'empName'
                       ? (value, tableMeta, updateValue) => rendercustomProfileUserList(value, tableMeta, updateValue)
                       : column.name === 'assignedMembers'
                         ? (value, tableMeta, updateValue) => renderassignedMembers(value, tableMeta, updateValue)
+                      : column.name === 'totalAssignee'
+                        ? (value, tableMeta, updateValue) => renderassigncountMembers(value, tableMeta, updateValue)
                         : column.name === 'taskInformation'
                           ? (value, tableMeta, updateValue) => rendertaskInformation(value, tableMeta, updateValue)
                           : column.name === 'payslip'
                             ? (value, tableMeta, updateValue) => renderwithiconStatus(value, tableMeta, updateValue)
                             : column.name === 'documents' || column.name === 'pricingDocument'
-                            ? (value, tableMeta, updateValue) => (
-                              value && value.length > 0 ? (
-                                <IoDownloadOutline style={{ cursor: 'pointer' }} size={20} color='#FA7E12' onClick={() => handleDownloadClick(value)} />
-                              ) : null
-                            )
+  ? (value, tableMeta, updateValue) =>
+      value && value.length > 0
+        ? renderpolicyDoc(value, tableMeta, updateValue)
+        : null
                             : column.name === 'uploadInvoice' || column.name === 'ducumentPath' || column.name === 'offerLetterPath' || column.name === 'Uploadfile'
                             ? (value, tableMeta, updateValue) => (
                               value && value.length > 0 ? (
@@ -881,10 +955,11 @@ const getFileName = (path) => {
 
   const handleRowClick = (data, value, updatedvalue) => {
     let id = data[1]
+    let name = data[2]
     if (ismodule === "leave") {
       onHistoryClick(id)
     } else {
-      onViewClick(id)
+      onViewClick(id, name)
     }
 
   };
@@ -897,7 +972,11 @@ const getFileName = (path) => {
 
   const handleRowEditClick = async (data, value, updatedvalue) => {
     let id = data[1]
-    onEditClick(id)
+    if(pagename === "payrollView"){
+      onEditClick(id, data)
+    }else{
+      onEditClick(id)
+    }
 
   };
   const handleRowprocessClick = async (data, value, updatedvalue) => {
@@ -943,6 +1022,7 @@ const getFileName = (path) => {
   };
 
   const [isModalOpenrecall, setisModalOpenrecall] = useState(false);
+  const [isModalOpendelay, setisModalOpendelay] = useState(false);
 
 
   const handleRowrecallClick = (data, value) => {
@@ -955,6 +1035,24 @@ const getFileName = (path) => {
     setisModalOpenrecall(false);
   };
   const handleRecallSubmit = async (data) => {
+    let id = data[1]
+    onSubmitClick(id)
+
+  };
+    const handleRowdelayClick = (data, value) => {
+    let id = data[1]
+   onDelayClick(id)
+
+  };
+     const handleRowApproveClick = (data, value) => {
+    let id = data[1]
+   onApproveClick(id)
+
+  };
+  const closeModaldelayModal = () => {
+    setisModalOpendelay(false);
+  };
+  const handleDelaySubmit = async (data) => {
     let id = data[1]
     onSubmitClick(id)
 
@@ -989,6 +1087,8 @@ const getFileName = (path) => {
       <DecommissionModal isOpen={isModalDecommission} closeModal={closeModalDecommission} DecommissionId={DecommissionId} onSubmit={handleDecommissionSubmit} />
       <Recall isOpen={isModalOpenrecall} closeModal={closeModalrecallModal} onSubmit={handleRecallSubmit} />
       <RejectPopup isOpen={isModalOpenreject} closeModal={closeModalrecallModalreject} onSubmit={handleRejectSubmit} />
+       <Delay isOpen={isModalOpendelay} closeModal={closeModaldelayModal} onSubmit={handleDelaySubmit} />
+      {/* <RejectPopup isOpen={isModalOpenreject} closeModal={closeModaldelayModalreject} onSubmit={handleRejectSubmit} /> */}
       <MUIDataTable
         title={<div className={"oxyem-table-tittle"}>{title}</div>}
         data={data}

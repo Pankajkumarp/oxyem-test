@@ -101,7 +101,18 @@ const onChangeMonth = (value) => {
     setMonthValue(null); // cleared
   }
 };
-
+const formatIndianAmount = (value) => {
+  if (value >= 10000000) {
+    return (value / 10000000).toFixed(1).replace(/\.0$/, '') + 'Cr';
+  }
+  if (value >= 100000) {
+    return (value / 100000).toFixed(1).replace(/\.0$/, '') + 'L';
+  }
+  if (value >= 1000) {
+    return (value / 1000).toFixed(0) + 'k';
+  }
+  return value;
+};
 const onChangeYear = (value) => {
   if (value) {
     setYearValue(value.value);
@@ -137,7 +148,7 @@ const onChangeYear = (value) => {
                         options: {
                             chart: { width: 450, type: 'pie' },
                             labels: overallClaimData.label,
-                            colors: ['#26AF48', '#2196F3', '#FA7E12', '#cf59f1'],
+                            colors: ['#26AF48', '#2196F3', '#FA7E12', '#cf59f1', '#db1b1b'],
                             title: { text: '', align: 'center' },
                             legend: { position: 'bottom' },
                             responsive: [{
@@ -185,6 +196,8 @@ const onChangeYear = (value) => {
                     setAnualChartData({
                         series: [{
                             name: 'Claims',
+                                // data: annualData.data.map(val => val * 1000)
+
                             data: annualData.data
                         }],
                         options: {
@@ -199,9 +212,21 @@ const onChangeYear = (value) => {
                             colors: ['#26AF48', '#2196F3', '#FA7E12', '#FF4560', '#775DD0'],
                             dataLabels: { enabled: false },
                             xaxis: { categories: annualData.label },
-                            yaxis: { title: { text: 'Count' } },
+                            //yaxis: { title: { text: 'Count' } },
+
+                               yaxis: {
+  title: { text: 'Amount' },
+  labels: {
+    formatter: formatIndianAmount
+  }
+},
+tooltip: {
+  y: {
+    formatter: (val) => formatIndianAmount(val)
+  }
+},
                             fill: { opacity: 1 },
-                            tooltip: { y: { formatter: (val) => `${val} claims` } },
+                            // tooltip: { y: { formatter: (val) => `${val} claims` } },
                             legend: {show: false}
                         },
                     });
@@ -534,7 +559,7 @@ const handleCurrencyChange = (selectedOption) => {
                                                         >
                                                             
                                                              <div className='ox-colored-box-1'><h4 className='all_attendence'>{listheader.pendingclaim}</h4></div>
-                                                            <div className='ox-box-text'><h6>Pending Paid</h6></div>
+                                                            <div className='ox-box-text'><h6>Pending Approvals</h6></div>
                                                         </div>
                                                         </div>
 														
@@ -701,7 +726,13 @@ const handleCurrencyChange = (selectedOption) => {
                     </div>
                 </div>
             </div>
-
+<Toaster 
+      position="top-right" 
+      reverseOrder={false}  
+                     autoClose={6000}
+                      closeOnClick
+                      pauseOnHover
+                      draggable/>
         </>
     )
 }

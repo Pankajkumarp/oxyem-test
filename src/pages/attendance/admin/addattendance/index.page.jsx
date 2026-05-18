@@ -2,17 +2,15 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SecTab from '../../../Components/Employee/SecTab';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
-import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbs';
+import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import { SocketContext } from '../../../Auth/Socket';
 import Head from 'next/head';
 import { fetchWithToken } from '../../../Auth/fetchWithToken.jsx';
 import pageTitles from '../../../../common/pageTitles.js';
 import { ToastNotification, ToastContainer } from '../../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { MdAssignmentInd } from "react-icons/md";
+import AttendanceRegularization from "./AttendanceRegularization";
 export default function Projectmanagement({ userFormdata }) {
-  const router = useRouter();
-  const headingContent = '';
-  const socket = useContext(SocketContext);
-  const AdduserContent = userFormdata
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
   const handlesubmitApiData = async (newArray, idAttendance) => {
@@ -99,6 +97,28 @@ export default function Projectmanagement({ userFormdata }) {
       }
     };
   }, []);
+
+
+      const [formShow, setFormShow] = useState(false);
+      const [leaveFormdata, setLeaveFormdata] = useState({});
+      useEffect(() => {
+          fetchForm();
+      }, []);
+  
+      const fetchForm = async () => {
+          try {
+              const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+              const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, {
+                  params: { formType: "applyAdminAttandance" },
+              });
+  
+              if (response.status === 200 && response.data.data) {
+                  setLeaveFormdata(response.data.data);
+                  setFormShow(true)
+              }
+          } catch (error) {
+          }
+      };
   return (
     <>
       <Head><title>{pageTitles.AttendanceApplyAttendance}</title></Head>
@@ -109,18 +129,14 @@ export default function Projectmanagement({ userFormdata }) {
               <div className="col-12 col-lg-12 col-xl-12">
                 <div className="row">
                   <div className="col">
-                    <Breadcrumbs maintext={"Apply Attendance"} />
+                    <Breadcrumbs
+                      maintext={"Apply Attendance on Behalf of Employee"}
+                      discription={"Submit attendance records for an employee who missed marking attendance, including date, time, and a valid reason."}
+                      icon={<MdAssignmentInd />}
+                    />
                   </div>
-                  <div className="col-12 col-lg-12 col-xl-12 d-flex">
-                    <div className="card flex-fill comman-shadow oxyem-index">
-                      <div className="center-part">
-                        <div className="card-body oxyem-mobile-card-body">
-                          <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                            <SecTab AdduserContent={AdduserContent} headingContent={headingContent} handlesubmitApiData={handlesubmitApiData} pagename="add_attendances" showleave={"holiday"} loaderSubmitButton={SubmitButtonLoading} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="col-12 col-lg-12 col-xl-12">
+                    <AttendanceRegularization formShow={formShow} formData={leaveFormdata}/>
                   </div>
                 </div>
               </div>
@@ -135,11 +151,4 @@ export default function Projectmanagement({ userFormdata }) {
 
   );
 }
-export async function getServerSideProps(context) {
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const userFormdata = await fetchWithToken(`${apiUrl}/getDynamicForm`, { formType: 'Add_Attendance' }, context);
-  return {
-    props: { userFormdata },
-  }
-}

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import Edit from '../Edit/Edit';
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
-
+import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
+import { FaGraduationCap } from 'react-icons/fa';
 export default function EducationInfo({ empId, apiBaseUrl,showbutton }) {
   const [educationInfo, setEducationInfo] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,12 +28,9 @@ export default function EducationInfo({ empId, apiBaseUrl,showbutton }) {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         const response =   await axiosJWT.get(`${apiUrl}/getDynamicForm`, {params:{"formType":"EducationalInformation"}})
         
-        console.log(response);
         if (response.status === 200 && response.data.data) {
           setFormData(response.data.data);
         }
-      
-      // console.log(response);
     } catch (error) {
       console.error("Error occurred during API call:", error);
     }
@@ -100,8 +98,13 @@ export default function EducationInfo({ empId, apiBaseUrl,showbutton }) {
           ) : error ? (
             <div>{error}</div>
           ) : educationInfo.length === 0 ? (
-            <div>No records found</div>
-          ) : (
+<EmptyInfoBlock
+          title="No education information added yet."
+          description="This helps HR reach someone in case of emergency."
+          buttonText="Add Education Information"
+icon={<FaGraduationCap size={48} color="#004D95" />}
+onButtonClick={openEditModal}
+        />          ) : (
             <ul className="experience-list">
               {educationInfo.map((education) => (
                 <li key={education.idEducation}>

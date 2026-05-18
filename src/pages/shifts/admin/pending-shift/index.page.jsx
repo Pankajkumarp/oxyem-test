@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbs';
+import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
@@ -7,7 +7,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import { FaRegClock, FaTimes } from "react-icons/fa";
 import View from '../../../Components/Popup/ShiftDashboardHistroy.jsx';
 import Head from 'next/head';
-import pageTitles from '../../../../common/pageTitles.js';
+import { MdHourglassTop } from "react-icons/md";
 
 export default function index() {
 
@@ -33,137 +33,137 @@ export default function index() {
         openDetailpopup()
         return
     }
-    
-    
-        const fetchData = async () => {
-            try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-                const response = await axiosJWT.get(`${apiUrl}/pendingShift`);
-    
-                const responsedata = response.data.data || {};
-                const tablecolumn = responsedata.formcolumns || [];
-                const listheader = responsedata.listheader || {};
-                setListHeaders(listheader);
-                
-                const transformedArray = responsedata.shiftlist || [];
-    
-                const columnData = [
-                    {
-                        "lebel": "Sr No",
-                        "name": "srno"
-                    },
-                    {
-                        "lebel": "Id",
-                        "name": "id",
-                        "isfilter": true,
-                        "issort": true,
-                        "download": false,
 
-                    },
-                    {
-                        "name": "idEmployee",
-                        "lebel": "Employee",
-                        "isfilter": true,
-                        "issort": true
-                    },
-                    {
-                        "name": "shifName",
-                        "lebel": "Shift Name",
-                        "isfilter": true,
-                        "issort": true
-                    },
-                    {
-                        "name": "isapplicable",
-                        "lebel": "Allowance Applicable",
-                        "isfilter": true,
-                        "issort": true
-                    },
-                    {
-                        "name": "punchdate",
-                        "lebel": "Punch Date",
-                        "isfilter": true,
-                        "issort": true
-                    },
-                    {
-                        "name": "monthyear",
-                        "lebel": "Month",
-                        "isfilter": true,
-                        "issort": true
-                    },
-                    {
-                        "name": "hrs",
-                        "lebel": "#of Hrs",
-                        "isfilter": true,
-                        "issort": true
-                    },
-                    {
-                        "name": "status",
-                        "lebel": "Status",
-                        "isfilter": true,
-                        "issort": true
-                    },
-                    {
-                        "name": "action",
-                        "lebel": "Action",
-                        "download": false,
-                        
-                    },
-                ];
 
-                const mappedArray = transformedArray.map((item, index) => {
-                    const itemMap = {};
-                    item.forEach(obj => {
-                        itemMap[obj.name] = obj.value;
-                    });
-    
-                    return columnData.map(column => {
-                       if (column.name === 'action') {
-                            return {
-                                name: column.lebel,
-                                value: [ "history",
-                                         "aprvrej"
-                                        ]
-                                };
-                        }
-                        else {
-                            return {
-                                name: column.lebel,
-                                value: itemMap[column.name] || ''  // Handle missing values
-                            };
-                        }
-                    });
+    const fetchData = async () => {
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            const response = await axiosJWT.get(`${apiUrl}/pendingShift`);
+
+            const responsedata = response.data.data || {};
+            const tablecolumn = responsedata.formcolumns || [];
+            const listheader = responsedata.listheader || {};
+            setListHeaders(listheader);
+
+            const transformedArray = responsedata.shiftlist || [];
+
+            const columnData = [
+                {
+                    "lebel": "Sr No",
+                    "name": "srno"
+                },
+                {
+                    "lebel": "Id",
+                    "name": "id",
+                    "isfilter": true,
+                    "issort": true,
+                    "download": false,
+
+                },
+                {
+                    "name": "idEmployee",
+                    "lebel": "Employee",
+                    "isfilter": true,
+                    "issort": true
+                },
+                {
+                    "name": "shifName",
+                    "lebel": "Shift Name",
+                    "isfilter": true,
+                    "issort": true
+                },
+                {
+                    "name": "isapplicable",
+                    "lebel": "Allowance Applicable",
+                    "isfilter": true,
+                    "issort": true
+                },
+                {
+                    "name": "punchdate",
+                    "lebel": "Punch Date",
+                    "isfilter": true,
+                    "issort": true
+                },
+                {
+                    "name": "monthyear",
+                    "lebel": "Month",
+                    "isfilter": true,
+                    "issort": true
+                },
+                {
+                    "name": "hrs",
+                    "lebel": "#of Hrs",
+                    "isfilter": true,
+                    "issort": true
+                },
+                {
+                    "name": "status",
+                    "lebel": "Status",
+                    "isfilter": true,
+                    "issort": true
+                },
+                {
+                    "name": "action",
+                    "lebel": "Action",
+                    "download": false,
+
+                },
+            ];
+
+            const mappedArray = transformedArray.map((item, index) => {
+                const itemMap = {};
+                item.forEach(obj => {
+                    itemMap[obj.name] = obj.value;
                 });
-                setUpdUserList(mappedArray); // Set the non-flattened array
-                setFormColumn(columnData);
-    
-            } catch (error) {
-                
-            }
-        };
+
+                return columnData.map(column => {
+                    if (column.name === 'action') {
+                        return {
+                            name: column.lebel,
+                            value: ["history",
+                                "aprvrej"
+                            ]
+                        };
+                    }
+                    else {
+                        return {
+                            name: column.lebel,
+                            value: itemMap[column.name] || ''  // Handle missing values
+                        };
+                    }
+                });
+            });
+            setUpdUserList(mappedArray); // Set the non-flattened array
+            setFormColumn(columnData);
+
+        } catch (error) {
+
+        }
+    };
 
     useEffect(() => {
         fetchData();
     }, []);
-    
+
     const onViewClick = (id) => {
         router.push(`/employeeDashboard/${id}`);
     };
 
     const onDeleteClick = (id) => {
-        
+
     };
 
     const handleApprrovereq = async (id, type, data, onSuccess) => {
-        const apipayload ={
+        const apipayload = {
             "action": type,
             "idAttendance": id,
-            "rejectReason":data
+            "rejectReason": data
         }
 
         // console.log(onSuccess);
-        const message = type === 'approved' 
-        ? 'You have successfully <strong>Approved</strong>!'
-        : 'You have successfully <strong>Rejected</strong>!';
+        const message = type === 'approved'
+            ? 'You have successfully <strong>Approved</strong>!'
+            : 'You have successfully <strong>Rejected</strong>!';
         const errormessage = 'Error connecting to the backend. Please try after Sometime.';
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -197,7 +197,7 @@ export default function index() {
                         color: '#4caf50',
                     },
                 });
-                
+
                 fetchData();
             }
 
@@ -229,16 +229,16 @@ export default function index() {
                 },
             });
             // Handle the error if any
-            
+
         }
     }
-    
+
     const handleUpadateClick = async (id) => {
         router.push(`/attendance/${id}`);
     }
 
-    
-useEffect(() => {
+
+    useEffect(() => {
         const mainElement = document.querySelector('body');
         if (mainElement) {
             mainElement.setAttribute('id', 'shifts-module');
@@ -249,36 +249,42 @@ useEffect(() => {
             }
         };
     }, []);
-  return (
-    <>
-    <Head>
-        <title>{pageTitles.ShiftManagementPendingApproval}</title>
-        <meta name="description" content={pageTitles.ShiftManagementPendingApproval} />
-    </Head>
-    <View isOpen={isModalOpen} closeModal={closeDetailpopup} isHistroyId={isHistroyId} section={"adminAttendance"} handleUpadateClick={handleUpadateClick} />
-    
-    <div className="main-wrapper">
-        <div className="page-wrapper">
-            <div className="content container-fluid">
-                <Breadcrumbs maintext={"Pending Approval"} addlink={"/shift-management/create"}/>     
-                <div className="row">
-                    <div className="col-12 col-lg-12 col-xl-12">
+    return (
+        <>
+            <Head>
+                <title>Shift Approval Queue | Oxytal</title>
+                <meta name="description" content={"Review employee shift requests pending approval and take action to approve or reject assigned shifts."} />
+            </Head>
+            <View isOpen={isModalOpen} closeModal={closeDetailpopup} isHistroyId={isHistroyId} section={"adminAttendance"} handleUpadateClick={handleUpadateClick} />
+            <div className="main-wrapper">
+                <div className="page-wrapper">
+                    <div className="content container-fluid">
+                        <Breadcrumbs
+                            maintext={"Pending Shift Requests"}
+                            addlink={"/shift-management/create"}
+                            discription={"Review and approve employee shift requests that are currently pending approval."}
+                            icon={<MdHourglassTop />}
+                        />
                         <div className="row">
-                            <div className="col-12 col-lg-12 col-xl-12 d-flex">
-                                <div className="card flex-fill comman-shadow oxyem-index">
-                                    <div className="center-part">
-                                        <div className="card-body oxyem-mobile-card-body">
-                                            <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">                        
-                                                <CustomDataTable
-                                                    title={""}
-                                                    data={updleavelist}
-                                                    columnsdata={formcolumn}
-                                                    onViewClick={onViewClick}
-			    									onDeleteClick={onDeleteClick}
-                                                    handleApprrovereq={handleApprrovereq}
-                                                    onHistoryClick={handleHistoryClick}
-                                                    dashboradApi={'/pendingShift'}
-                                                />
+                            <div className="col-12 col-lg-12 col-xl-12">
+                                <div className="row">
+                                    <div className="col-12 col-lg-12 col-xl-12 d-flex">
+                                        <div className="card flex-fill comman-shadow oxyem-index">
+                                            <div className="center-part">
+                                                <div className="card-body oxyem-mobile-card-body">
+                                                    <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
+                                                        <CustomDataTable
+                                                            title={""}
+                                                            data={updleavelist}
+                                                            columnsdata={formcolumn}
+                                                            onViewClick={onViewClick}
+                                                            onDeleteClick={onDeleteClick}
+                                                            handleApprrovereq={handleApprrovereq}
+                                                            onHistoryClick={handleHistoryClick}
+                                                            dashboradApi={'/pendingShift'}
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -287,15 +293,13 @@ useEffect(() => {
                         </div>
                     </div>
                 </div>
+                <Toaster
+                    position="top-right"
+                    reverseOrder={false}
+
+                />
             </div>
-        </div>
-        <Toaster
-                position="top-right"
-                reverseOrder={false}
 
-            />
-    </div>
-
-    </>
-  )
+        </>
+    )
 }

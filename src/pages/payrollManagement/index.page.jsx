@@ -40,6 +40,25 @@ export default function payrollManagement() {
   const handleEditClick = (id) => {
     router.push(`/attendance/${id}`);
   };
+  const formatIndianAmount = (value) => {
+  if (value >= 10000000) {
+    return (value / 10000000).toFixed(1).replace(/\.0$/, '') + 'Cr';
+  }
+  if (value >= 100000) {
+    return (value / 100000).toFixed(1).replace(/\.0$/, '') + 'L';
+  }
+  if (value >= 1000) {
+    return (value / 1000).toFixed(0) + 'k';
+  }
+  return value;
+};
+const onChangeYear = (value) => {
+  if (value) {
+    setYearValue(value.value);
+  } else {
+    setYearValue(null);
+  }
+}; 
   //  const fetchData = async (status = "") => {
   //   try {
   //     const response = await axiosJWT.get(`${apiUrl}/payroll/getSalaryDetails`,
@@ -53,7 +72,7 @@ export default function payrollManagement() {
         console.log(salaryDetails);
         setRowData(salaryDetails);
       }
-
+ 
       const responsestats = await axiosJWT.get(
         `${apiUrl}/payroll/payrollStats`,
         {
@@ -173,21 +192,23 @@ export default function payrollManagement() {
                   xaxis: {
                     categories: currentMonthPayment.months,
                   },
-                  yaxis: {
-                    title: {
-                      text: '',
-                    },
-                  },
+                 yaxis: {
+  labels: {
+    formatter: function (value) {
+      return formatIndianAmount(value);
+    }
+  }
+},
                   fill: {
                     opacity: 1,
                   },
                   tooltip: {
-                    y: {
-                      formatter: function (val) {
-                        return "" + val;
-                      },
-                    },
-                  },
+  y: {
+    formatter: function (value) {
+      return formatIndianAmount(value);
+    }
+  }
+},
                 },
               }
             )
@@ -232,13 +253,13 @@ export default function payrollManagement() {
                     rotate: -45,
                   },
                 },
-                yaxis: {
-                  labels: {
-                    title: {
-                      text: '',
-                    },
-                  },
-                },
+               yaxis: {
+  labels: {
+    formatter: function (value) {
+      return formatIndianAmount(value);
+    }
+  }
+},
                 stroke: {
                   curve: 'stepline',
                   width: 3,
@@ -247,13 +268,12 @@ export default function payrollManagement() {
                   enabled: false,
                 },
                 tooltip: {
-                  y: {
-                    //   formatter: (value) => `${value.toFixed(2)}`,
-                    formatter: function (value) {
-                      return "" + value;
-                    },
-                  },
-                },
+  y: {
+    formatter: function (value) {
+      return formatIndianAmount(value);
+    }
+  }
+},
               },
             });
 
@@ -329,8 +349,12 @@ export default function payrollManagement() {
   const closeDetailpopup = async () => {
     setIsModalOpen(false);
   };
-  const onEditClick = (id) => {
+  const onEditClick = (id, data) => {
+    if (data[3]?.toLowerCase() === "intern") {
+      router.push(`/add-payrollemp/${id}`);
+    }else{
     router.push(`/edit-payroll/${id}`);
+    }
   };
   const handleApprrovereq = async (id, type, data, onSuccess) => {
     const apipayload = {
@@ -510,9 +534,12 @@ export default function payrollManagement() {
                       className="btn btn-primary"
                       type="submit"
                       onClick={handelDownloadAllPayslip}
+                       data-bs-toggle="tooltip"
+  data-bs-placement="top"
+  title="Download"
                     >
                       <MdOutlineFileDownload size={20} style={{ marginRight: "5px" }} />
-                      Download
+                      {/* Download */}
                     </button></div>
                 </div>
 
@@ -755,10 +782,10 @@ export default function payrollManagement() {
                                   onHistoryClick={onHistoryClick}
                                   onEditClick={onEditClick}
                                   handleApprrovereq={handleApprrovereq}
-                                  pagename={"addpayroll"}
                                   dashboradApi={"/payroll/getSalaryDetails"}
                                   status={status}
                                   searchfilter={status}
+                                  pagename={"payrollView"}
                                 />
                               </div>
                             </div>

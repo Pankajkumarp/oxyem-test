@@ -5,6 +5,8 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 import Edit from '../Edit/Edit';
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
 import DeleteModal from '../Alert/Delete';
+import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
+import { MdFamilyRestroom } from "react-icons/md";
 
 export default function DependentInfo({ empId, apiBaseUrl ,showbutton }) {
     const [dependentInfo, setDependentInfo] = useState([]);
@@ -174,13 +176,18 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
             <DeleteModal isOpen={isDeleteOpen} closeModal={closeDeleteModal} idEmployee={empId} idDependent={idEmergency} handleDeleteData={deleteEmergencyContact}/>
             <div className="card-body">
                 <h3 className="card-title">Dependent Information
-                {!showbutton ? null : <span className="add-btn-circle" onClick={openEditModal}>+</span>}
+                {dependentInfo.length > 0 && ( <span className="add-btn-circle" onClick={openEditModal}>+</span>)}
                     
                 </h3>
 
                 {dependentInfo.length === 0 ? (
-                    <div>No records found</div>
-                ) : (
+  <EmptyInfoBlock
+                    title="No dependent information added yet."
+                    description="This helps HR reach someone in case of emergency."
+                    buttonText="Add Dependent Information"
+icon={<MdFamilyRestroom size={48} color="#004D95" />}
+                    onButtonClick={openEditModal}
+                  />                 ) : (
                     <table className="table">
                         <thead>
                             <tr>

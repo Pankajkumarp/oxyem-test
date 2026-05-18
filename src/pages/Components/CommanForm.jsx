@@ -1,11 +1,12 @@
-import React, { useState, useEffect, Suspense ,useRef} from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { getFieldByName, updatedSubsection ,getFieldByName2} from '../../common/commonFunctions';
+import { getFieldByName, updatedSubsection, getFieldByName2 } from '../../common/commonFunctions';
 import axios from "axios";
 import RadioComponent from './common/Inputfiled/RadioComponent';
 import moment from 'moment-timezone';
 import { axiosJWT } from '../Auth/AddAuthorization';
 import { TiExport } from "react-icons/ti";
+import { countWorkingDays } from "./Hooks/countWorkingDays";
 
 const components = {
   'Text': dynamic(() => import('./common/Inputfiled/TextComponent')),
@@ -13,6 +14,7 @@ const components = {
   'Border': dynamic(() => import('./common/Inputfiled/BorderComponent')),
   'Time': dynamic(() => import('./common/Inputfiled/TimeComponent')),
   'Date': dynamic(() => import('./common/Inputfiled/DateComponent')),
+  'WeekendDate': dynamic(() => import('./common/Inputfiled/DateHolidayWeekendComponent')),
   'Password': dynamic(() => import('./common/Inputfiled/PasswordComponent')),
   'Number': dynamic(() => import('./common/Inputfiled/NumberComponent')),
   'Button': dynamic(() => import('./common/Buttons/ButtonComponent')),
@@ -32,6 +34,7 @@ const components = {
   'RadioButton': dynamic(() => import('./common/Inputfiled/RadioButtonComponent')),
   'radioLable': dynamic(() => import('./common/Inputfiled/RadioButtonComponentlable')),
   'Textwithicon': dynamic(() => import('./common/Inputfiled/TextwithiconComponent')),
+  'EmployeewithAllocation': dynamic(() => import('./common/Inputfiled/AllocateEmployeComponent')),
   'Textarea': dynamic(() => import('./common/Inputfiled/TextAreaComponentcomman')),
   'SelectEmployee': dynamic(() => import('./common/Inputfiled/SelectEmployee')),
   'Popupform': dynamic(() => import('./common/Inputfiled/Popupform')),
@@ -68,7 +71,7 @@ const components = {
   'InputFile': dynamic(() => import('./common/Inputfiled/InputFile.jsx')),
   'Rating': dynamic(() => import('./common/OnboardQuestions/StarRatingComponents.jsx')),
   'FreeText': dynamic(() => import('./common/Inputfiled/FreeTextComponent.jsx')),
-  'OnlyText': dynamic(() => import('./common/Inputfiled/OnlyValueComponent')),
+  'OnlyText': dynamic(() => import('./common/Inputfiled/OnlyValueComponent')), 
   'RoleBasedOnDepartment': dynamic(() => import('./common/SelectComponent/RoleBasedOnDepartmentComponent')),
   'RadioList': dynamic(() => import('./common/Radio/RadioListComponent.jsx')),
   'MultiEmployee': dynamic(() => import('./common/SelectComponent/MultiEmployeeComponent.jsx')),
@@ -85,11 +88,11 @@ const components = {
   'Attachment': dynamic(() => import('./common/Inputfiled/AttachmentComponent')),
 };
 
-const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChangeValue, content, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick, pagename, showButton, showleave, submitaddnlinfo, claimstatus, handleApprrovereqClaim, getChangessField, handleGetproject, handleAssetsformvalueClick,assetDocument, handleGetfiles, filegetpagename, getInstantValue, cancelClickAction, btpstpvalue,handleOnprocessBoarding,handelPreviewPdf,loaderSubmitButton, handleExportClick,getRewardData ,handelAttendanceData,attachments ,autofillData, isPageType}) => {
-  
-  const [btnloader, setBtnLoader] = useState(false);  
+const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChangeValue, content, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick, pagename, showButton, showleave, submitaddnlinfo, claimstatus, handleApprrovereqClaim, getChangessField, handleGetproject, handleAssetsformvalueClick, assetDocument, handleGetfiles, filegetpagename, getInstantValue, cancelClickAction, btpstpvalue, handleOnprocessBoarding, handelPreviewPdf, loaderSubmitButton, handleExportClick, getRewardData, handelAttendanceData, attachments, autofillData, isPageType, handlegetInfoClick, projectEndDatePM, projectStartDatePM }) => {
 
-  const [btnloaderbelow, setBtnLoaderbelow] = useState(false);  
+  const [btnloader, setBtnLoader] = useState(false);
+
+  const [btnloaderbelow, setBtnLoaderbelow] = useState(false);
 
   useEffect(() => {
     setBtnLoader(showButton)
@@ -98,7 +101,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
   useEffect(() => {
     setBtnLoaderbelow(loaderSubmitButton)
   }, [loaderSubmitButton]);
-  
+
   const [errors, setErrors] = useState({});
   const [errorres, setErrorres] = useState('');
   const [submitdata, setSubmitdata] = useState({});
@@ -116,26 +119,59 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
     return result;
   };
 
-  useEffect(() => {
-    if (showleave === "holiday") {
-      setSelectEmpId(formData.idEmployee ? formData.idEmployee.value : "")
+useEffect(() => {
+  if (isModule === "Project_management" || isModule === "Opportunity") {
+    if (formData.startDate && formData.endDate) {
+      handlegetInfoClick(formData.startDate, formData.endDate);
     }
-  }, [formData]);
+  }
+}, [formData.startDate, formData.endDate, isModule]);
+
+  const [totalDateCount, setTotalDateCount] = useState(0);
+useEffect(() => {
+  let isMounted = true;
+
+  const calculateWorkingDays = async () => {
+    if (showleave === "holiday") {
+      setSelectEmpId(formData.idEmployee?.value || "");
+    }
+
+    if (formData.startDate && formData.endDate) {
+      const weekdays = await countWorkingDays(
+        formData.startDate,
+        formData.endDate
+      );
+
+      if (isMounted) {
+        setTotalDateCount(weekdays);
+      }
+    } else {
+      setTotalDateCount(0);
+    }
+  };
+
+  calculateWorkingDays();
+
+  return () => {
+    isMounted = false;
+  };
+}, [formData.startDate, formData.endDate, showleave]);
 
   useEffect(() => {
     const extractedData = extractFields(fields);
     setFormData(extractedData);
-	    if(pagename === "updateProjection"){
-    handleGetproject(extractedData)
+    if (pagename === "updateProjection") {
+      handleGetproject(extractedData)
     }
   }, [fields]);
 
-  
+
 
   const [lastfromDate, setLastfromDate] = useState(null);
   const [lastToDate, setLastToDate] = useState(null);
   const [lastLeaveType, setLastLeaveType] = useState(null);
   const [lastIdEmployee, setLastIdEmployee] = useState(null);
+
 
   useEffect(() => {
     const hasValidFormData = fieldUpdate !== "" && (isModule === "addLeave" || isModule === "Admin_Leave");
@@ -173,7 +209,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
             });
         })
         .catch(error => {
-        
+
         });
     }
   }, [fieldUpdate, formData.fromDate, formData.toDate, formData.idEmployee, lastToDate]); // Include lastToDate in the dependency array
@@ -268,7 +304,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
       }));
     }
   }, [attachments]);
-  
+
   const updateTitleAndPath = (fields, autofillData) => {
     fields.Subsection.forEach(subsection => {
       subsection.fields.forEach(field => {
@@ -283,7 +319,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
   useEffect(() => {
     if (autofillData && fields) {
       const updatedFields = updateTitleAndPath(fields, autofillData);
-      setfieldUpdate(updatedFields); 
+      setfieldUpdate(updatedFields);
     }
   }, [autofillData, fields]);
 
@@ -298,6 +334,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
     });
     return fields;
   };
+  console.log("formData", formData);
 
   useEffect(() => {
     const hasValidFormData = fieldUpdate !== "" && (isModule === "createEmployee");
@@ -325,80 +362,80 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
                       setfieldUpdate(updatedFields);
                     })
                     .catch(error => {
-                      
+
                     });
                 });
             });
         })
         .catch(error => {
-          
+
         });
     }
   }, [formData.firstName, formData.lastName, formData.middleName, fieldUpdate, isModule]);
 
 
   const updateStartTime = (fields, currentShift) => {
-      fields.Subsection.forEach(subsection => {
-        subsection.fields.forEach(field => {
-          if (field.name === 'startTime') {
-            field.value = currentShift;
-          }
-        });
+    fields.Subsection.forEach(subsection => {
+      subsection.fields.forEach(field => {
+        if (field.name === 'startTime') {
+          field.value = currentShift;
+        }
       });
-      return fields;
+    });
+    return fields;
+  };
+
+  const prevEmployeeId = useRef(null);
+  const prevAttendanceDate = useRef(null);
+  const [idAttendanceForAddToEdit, setIdAttendanceForUpdateAddToEdit] = useState('')
+  useEffect(() => {
+    const fetchCurrentShift = async () => {
+      const hasValidFormData = formData.idEmployee && formData.attendancedate && (isModule === "Add_Attendance");
+
+      if (hasValidFormData) {
+        const idEmployee = formData.idEmployee.value;
+        const attendancedate = formData.attendancedate;
+
+        if (idEmployee !== prevEmployeeId.current || attendancedate !== prevAttendanceDate.current) {
+          prevEmployeeId.current = idEmployee;
+          prevAttendanceDate.current = attendancedate;
+
+          try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            const response = await axiosJWT.get(`${apiUrl}/employeeAttendancebyId`, {
+              params: { idEmployee, date: attendancedate }
+            });
+
+
+            const punchInTime = response.data.data.startTime; // "2025-04-25 08:09"
+            const idAttendance = response.data.data.idAttendance;
+            setIdAttendanceForUpdateAddToEdit(idAttendance)
+            const getCurrentTimeZone = () => {
+              return Intl.DateTimeFormat().resolvedOptions().timeZone;
+            };
+            const timeZone = getCurrentTimeZone();
+
+            const convertUtcToLocalTime = (utcDateTime, timeZone) => {
+              return moment.utc(utcDateTime).tz(timeZone).format('HH:mm');
+            };
+            const localPunchInTime = convertUtcToLocalTime(punchInTime, timeZone);
+
+            const updatedFields = updateStartTime(fields, localPunchInTime);
+            setfieldUpdate(updatedFields);
+
+          } catch (error) {
+            const updatedFields = updateStartTime(fields, '');
+            setfieldUpdate(updatedFields);
+          }
+        }
+      }
     };
-  
-     const prevEmployeeId = useRef(null);
-      const prevAttendanceDate = useRef(null);
-    const [idAttendanceForAddToEdit ,setIdAttendanceForUpdateAddToEdit] = useState('')
-       useEffect(() => {
-              const fetchCurrentShift = async () => {
-                const hasValidFormData = formData.idEmployee && formData.attendancedate && (isModule === "Add_Attendance");
-                
-                if (hasValidFormData) {
-                  const idEmployee = formData.idEmployee.value;
-                  const attendancedate = formData.attendancedate;
-          
-                  if (idEmployee !== prevEmployeeId.current || attendancedate !== prevAttendanceDate.current) {
-                    prevEmployeeId.current = idEmployee;
-                    prevAttendanceDate.current = attendancedate;
-          
-                    try {
-                      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-                      const response = await axiosJWT.get(`${apiUrl}/employeeAttendancebyId`, {
-                        params: { idEmployee, date: attendancedate }
-                      });
-          
-                      
-                      const punchInTime = response.data.data.startTime; // "2025-04-25 08:09"
-                      const idAttendance = response.data.data.idAttendance;
-                      setIdAttendanceForUpdateAddToEdit(idAttendance)
-                      const getCurrentTimeZone = () => {
-                        return Intl.DateTimeFormat().resolvedOptions().timeZone;
-                      };
-                      const timeZone = getCurrentTimeZone();
-      
-                      const convertUtcToLocalTime = (utcDateTime, timeZone) => {
-                      return moment.utc(utcDateTime).tz(timeZone).format('HH:mm');
-                      };
-                      const localPunchInTime = convertUtcToLocalTime(punchInTime, timeZone);
-      
-                      const updatedFields = updateStartTime(fields, localPunchInTime);
-                      setfieldUpdate(updatedFields);
-          
-                    } catch (error) {
-                      const updatedFields = updateStartTime(fields, '');
-                      setfieldUpdate(updatedFields);
-                    }
-                  }
-                }
-              };    
-              fetchCurrentShift();
-            }, [formData.idEmployee, formData.attendancedate, isModule]);
+    fetchCurrentShift();
+  }, [formData.idEmployee, formData.attendancedate, isModule]);
 
   const handleChange = async (fieldName, value) => {
     if (pagename === "createPricing") {
-    getInstantValue(fieldName, value)
+      getInstantValue(fieldName, value)
     }
     if (filegetpagename === "policyManagement") {
       if (fieldName === "policyDoccument") {
@@ -410,7 +447,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
     if (pagename === "addAsset") {
       getChangessField(getfieldarry)
     }
-	if (pagename === "addGoalValue") {
+    if (pagename === "addGoalValue") {
       setfieldUpdate(getfieldarry)
       getChangessField(fieldName, value)
     }
@@ -455,12 +492,12 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
 
   const handleValidation = async () => {
     const updatedErrors = {};
-    
+
     if (pagename === "edit_allowcation" || pagename === "edit_timeManagement" || pagename === "edit_attendances" || pagename === "createPricing") {
       fields.Subsection.forEach((subsection) => {
         subsection.fields.forEach((field) => {
           const value = field.value;  // Use the value directly from the field object
-          
+
 
           field.validations.forEach((validation) => {
             if (validation.type === "required" && !value) {
@@ -475,15 +512,15 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
           });
         });
       });
-    }else if (pagename === "addAsset" || pagename === "addGoalValue") {
-      
+    } else if (pagename === "addAsset" || pagename === "addGoalValue") {
+
       if (fields.Subsection.isFieldVisiblef !== false) {
         fields.Subsection.forEach((subsection) => {
           if (subsection.isFieldVisiblef !== false) {  // Check if the subsection is visible
             subsection.fields.forEach((field) => {
               const value = formData[field.name];  // Fetch the current value for the field
-              
-      
+
+
               field.validations.forEach((validation) => {
                 if (validation.type === "required" && !value) {
                   updatedErrors[field.name] = validation.message;
@@ -515,49 +552,49 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
           }
         });
       }
-      
-    }else if (pagename === "perform") {
+
+    } else if (pagename === "perform") {
       fields.Subsection.forEach((subsection) => {
         subsection.fields.forEach((field) => {
           const value = field.value;
-      
+
           field.validations.forEach((validation) => {
             if (validation.type === "required" && (value === undefined || value === "")) {
               updatedErrors[field.name] = validation.message;
-      
+
             } else if (validation.type === "min" && value && value.length < validation.length) {
               updatedErrors[field.name] = validation.message;
-      
+
             } else if (validation.type === "max" && value && value.length > validation.length) {
               updatedErrors[field.name] = validation.message;
-      
+
             } else if (validation.type === "domainCheck" && value && !value.endsWith(validation.pattern)) {
               updatedErrors[field.name] = validation.message;
-      
+
             } else if (validation.type === "minValue" && value !== undefined && parseFloat(value) <= validation.minValue) {
               updatedErrors[field.name] = validation.message;
-      
+
             } else if (validation.type === "maxValue" && value !== undefined && parseFloat(value) > validation.maxValue) {
               updatedErrors[field.name] = validation.message;
-      
+
             } else if (validation.type === "urlCheck" && value) {
               const isValidUrl = validateUrl(value, validation.startPattern);
-              if (!isValidUrl) { 
+              if (!isValidUrl) {
                 updatedErrors[field.name] = validation.message;
               }
-      
+
             } else if (validation.type === "textOnly" && value && !/^[a-zA-Z\s]*$/.test(value)) {
               updatedErrors[field.name] = validation.message;
             }
           });
         });
       });
-    }else {
+    } else {
       // Assuming formData is an object that contains the current form values
       fields.Subsection.forEach((subsection) => {
         subsection.fields.forEach((field) => {
           const value = formData[field.name];  // Fetch the current value for the field
-          
+
 
           field.validations.forEach((validation) => {
             if (validation.type === "required" && !value) {
@@ -568,11 +605,11 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
               updatedErrors[field.name] = validation.message;
             } else if (validation.type === "domainCheck" && value && !value.endsWith(validation.pattern)) {
               updatedErrors[field.name] = validation.message;
-            }else if (validation.type === "minValue" && value !== undefined && value <= validation.minValue) {
-              updatedErrors[field.name] = validation.message;         
-            }else if (validation.type === "maxValue" && value !== undefined && value > validation.maxValue) {
+            } else if (validation.type === "minValue" && value !== undefined && value <= validation.minValue) {
               updatedErrors[field.name] = validation.message;
-            }else if (validation.type === "urlCheck" && value) {
+            } else if (validation.type === "maxValue" && value !== undefined && value > validation.maxValue) {
+              updatedErrors[field.name] = validation.message;
+            } else if (validation.type === "urlCheck" && value) {
               const isValidUrl = validateUrl(value, validation.startPattern);
               if (!isValidUrl) {
                 updatedErrors[field.name] = validation.message;
@@ -600,10 +637,10 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
             }
             else if (validation.type === "descriptionTextlength" && value) {
               if (validation.minLength && value.length < validation.minLength) {
-                  updatedErrors[field.name] = `Minimum length is ${validation.minLength} characters.`;
+                updatedErrors[field.name] = `Minimum length is ${validation.minLength} characters.`;
               }
               if (validation.maxLength && value.length > validation.maxLength) {
-                  updatedErrors[field.name] = `Maximum length is ${validation.maxLength} characters.`;
+                updatedErrors[field.name] = `Maximum length is ${validation.maxLength} characters.`;
               }
             }
 
@@ -626,7 +663,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
     const isValidUrlFormat = urlPattern.test(url);
     return startsWithValidPattern && isValidUrlFormat;
   }
-  
+
   // shift management start
   const updateShift = (fields, currentShift) => {
     fields.Subsection.forEach(subsection => {
@@ -658,7 +695,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
             setfieldUpdate(updatedFields);
 
           } catch (error) {
-            
+
           }
         }
       }
@@ -685,7 +722,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
       if (Object.keys(validationErrors).length === 0) {
 
         if (pagename === "addAsset" || pagename === "addGoalValue") {
-          handleAssetsformvalueClick(formData ,documentData);
+          handleAssetsformvalueClick(formData, documentData);
         }
         if (pagename === "passwordreset") {
           submitformdata(formData);
@@ -694,22 +731,22 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
         if (pagename === "adminclaimInfo") {
           submitformdata(formData);
         }
-        
-		if (pagename === "createPricing") {
+
+        if (pagename === "createPricing") {
           const data = fields.Subsection[0].fields
-            const result = data.reduce((acc, current) => {
-              acc[current.name] = current.value;
-              return acc;
-            }, {});
+          const result = data.reduce((acc, current) => {
+            acc[current.name] = current.value;
+            return acc;
+          }, {});
           submitformdata(result);
         }
-		
+
         if (pagename === "add-automation-ideas") {
           submitformdata(formData);
         }
 
-        if (pagename === "claimInfo" ) {
-          
+        if (pagename === "claimInfo") {
+
           if (errorres === "" && (!documentData || documentData.length === 0)) {
             setErrorss('Document is required');
           } else {
@@ -718,7 +755,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
         }
 
         if (pagename === "claim" || pagename === 'ticket') {
-          
+
           if (errorres === "" && (!documentData || documentData.length === 0)) {
             setErrorss('Document is required');
           } else {
@@ -752,9 +789,9 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
           if (errorres === "") {
             submitformdata();
           }
-        } 
-        if(isModule==="Add_Attendance"){
-          handelAttendanceData(formData,idAttendanceForAddToEdit);
+        }
+        if (isModule === "Add_Attendance") {
+          handelAttendanceData(formData, idAttendanceForAddToEdit);
         }
         else {
           submitformdata();
@@ -772,13 +809,13 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
     e.preventDefault();
     try {
       const validationErrors = await handleValidation();
-      if (Object.keys(validationErrors).length === 0) {     
-          handleExportClick(formData ,documentData);
+      if (Object.keys(validationErrors).length === 0) {
+        handleExportClick(formData, documentData);
       } else {
         setErrors(validationErrors);
       }
     } catch (error) {
-      
+
     }
   };
   const handleValidationAddInfo = async () => {
@@ -857,58 +894,58 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
     setCurrentFormData({});
     setSubmitdata({});
     setErrors({});
-	  cancelClickAction();
+    cancelClickAction();
   };
 
   const handleUpdateClaimStatus = async (e, buttonType) => {
     e.preventDefault();
     try {
-      
+
       const validationErrors = await handleValidationAddInfo();
       if (Object.keys(validationErrors).length === 0) {
         if (pagename === "adminclaimInfo") {
           handleApprrovereqClaim(buttonType, formData);
         }
-        else if (pagename === "addReward"){
+        else if (pagename === "addReward") {
           setBtnLoader(true);
-          handelPreviewPdf(buttonType, formData); 
+          handelPreviewPdf(buttonType, formData);
         }
       } else {
         setErrors(validationErrors);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
-  const handleUpdateOnboardStatus = async (e, buttonType ,buttonvalue) => {
+  const handleUpdateOnboardStatus = async (e, buttonType, buttonvalue) => {
     e.preventDefault();
     try {
       if (pagename === "onprocessBoarding") {
+        const validationErrors = await handleValidationAddInfo();
+        if (Object.keys(validationErrors).length === 0) {
+          handleOnprocessBoarding(buttonType, buttonvalue, formData);
+        }
+        else {
+          setErrors(validationErrors);
+        }
+      }
+      else if (pagename === "jobApplicantsFinance") {
+        if (buttonType === 'Finance') {
+          handleApprrovereqClaim(buttonType, formData);
+        }
+        else if (buttonType === "OfferLetter") {
           const validationErrors = await handleValidationAddInfo();
           if (Object.keys(validationErrors).length === 0) {
-            handleOnprocessBoarding(buttonType, buttonvalue, formData);
-            }
-            else {
-              setErrors(validationErrors);
-            }
-        }
-        else if (pagename === "jobApplicantsFinance") {
-          if(buttonType ==='Finance'){
             handleApprrovereqClaim(buttonType, formData);
           }
-          else if (buttonType === "OfferLetter") {
-            const validationErrors = await handleValidationAddInfo();
-            if (Object.keys(validationErrors).length === 0) {
-            handleApprrovereqClaim(buttonType, formData);
-            }
-            else {
-              setErrors(validationErrors);
-            }
+          else {
+            setErrors(validationErrors);
           }
         }
-        else if (pagename === "ticketInfo") {
-          handleApprrovereqClaim(buttonType, formData);
-        }  
-    } catch (error) {}
+      }
+      else if (pagename === "ticketInfo") {
+        handleApprrovereqClaim(buttonType, formData);
+      }
+    } catch (error) { }
   };
 
   const [leaveInfo, setLeaveInfo] = useState([]);
@@ -927,37 +964,42 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
       console.error('Error fetching days info:', error);
     }
   };
-  console.log(isPageType,"isPageType")
-useEffect(() => {
-  if (
-    isPageType === null ||
-    isPageType === undefined ||
-    isPageType === ""
-  ) {
-    fetchDaysInfo();
-  }
-}, [isPageType]);
+  useEffect(() => {
+    if (
+      isPageType === null ||
+      isPageType === undefined ||
+      isPageType === ""
+    ) {
+      fetchDaysInfo();
+    }
+  }, [isPageType]);
 
-        const fetchEmpOptions = async (value) => {
-          try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const response = await axiosJWT.get(`${apiUrl}/leave/getDaysInfo`, { params: { "idEmployee": value } })
-            setLeaveInfo(response.data.data);
-          } catch (error) {
-            console.error('Error fetching options:', error); 
-          }
-        };
-      useEffect(() => {
-  if (formData?.idEmployee?.value && showleave === 'holiday') {
-    fetchEmpOptions(formData.idEmployee.value);
+  const fetchEmpOptions = async (value) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await axiosJWT.get(`${apiUrl}/leave/getDaysInfo`, { params: { "idEmployee": value } })
+      setLeaveInfo(response.data.data);
+    } catch (error) {
+      console.error('Error fetching options:', error);
+    }
+  };
+  useEffect(() => {
+    if (formData?.idEmployee?.value && showleave === 'holiday') {
+      fetchEmpOptions(formData.idEmployee.value);
+    }
+  }, [formData?.idEmployee?.value, showleave]);
+  const [projectStartDate, setProjectStartDate] = useState(null);
+  const [projectEndDate, setProjectEndDate] = useState(null);
+  const getProjectDate = async (startDate, endDate) => {
+    setProjectEndDate(endDate);
+    setProjectStartDate(startDate);
   }
-}, [formData?.idEmployee?.value, showleave]);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <form>
         {errorres && <div id="messages-container"><div className="alert alert-danger mb-4" role="alert">{errorres}</div></div>}
         {/* comman top button */}
-        {fields.topbuttons && fields.topbuttons.length > 0 &&  !btnloader ? (
+        {fields.topbuttons && fields.topbuttons.length > 0 && !btnloader ? (
           <div>
             <div className="text-end w-100 mb-4">
               {fields.topbuttons.map((buttonval, fieldIndex) => (
@@ -972,21 +1014,21 @@ useEffect(() => {
             </div>
           </div>
         ) : fields.topbuttons && fields.topbuttons.length > 0 && btnloader ? (
-        <>
-          <div className="text-end w-100 mb-4">
-            <button className="btn btn-primary" type="submit" disabled={btnloader}>
-              {btnloader ? (
-                <div className="spinner">
-                  <div className="bounce1"></div>
-                  <div className="bounce2"></div>
-                  <div className="bounce3"></div>
+          <>
+            <div className="text-end w-100 mb-4">
+              <button className="btn btn-primary" type="submit" disabled={btnloader}>
+                {btnloader ? (
+                  <div className="spinner">
+                    <div className="bounce1"></div>
+                    <div className="bounce2"></div>
+                    <div className="bounce3"></div>
                   </div>
                 ) : (
-                "Submit"
-              )}
-            </button>
-          </div>
-        </>
+                  "Submit"
+                )}
+              </button>
+            </div>
+          </>
         ) : null}
 
         {fields.buttontop && fields.buttontop.length > 0 && (
@@ -1010,18 +1052,18 @@ useEffect(() => {
             {subsection.isFieldVisiblef === false ? (
               null
             ) : (
-            <>
-              {subsection.SubsectionName ? (
-                <h5 className='mb-5 top-heading-text-tab'>{subsection.SubsectionName}</h5>
-              ) : null}
-            </>
+              <>
+                {subsection.SubsectionName ? (
+                  <h5 className='mb-5 top-heading-text-tab'>{subsection.SubsectionName}</h5>
+                ) : null}
+              </>
             )}
             {subsection.isFieldVisiblef === false ? (
               null
             ) : (
-            <div className="row">
-              {subsection.fields.map((field, fieldIndex) => {
-                const InputComponent = components[field.type];
+              <div className="row">
+                {subsection.fields.map((field, fieldIndex) => {
+                  const InputComponent = components[field.type];
                   return (
                     <>
                       {field.isVisible !== false && field.showinput !== false ? (
@@ -1036,9 +1078,9 @@ useEffect(() => {
                               options={field.options}
                               isMulti={field.isMulti}
                               name={field.name}
-							   minDate={field.minDate}
+                              minDate={field.minDate}
                               isClearable={field.isClearable || true}
-							                isCreated={field.isCreated || ""}
+                              isCreated={field.isCreated || ""}
                               otherAttributes={field.otherAttributes || ""}
                               value={field.value}
                               additionalLabel={field.additionalLabel}
@@ -1054,13 +1096,18 @@ useEffect(() => {
                               handleChangesDocument={handleChangesDocument} //for Document
                               errors={errorss}  //for Document
                               setErrors={setErrorss}  //for Document
-							                pagename={pagename}
+                              pagename={pagename}
                               dependentId={field.dependentId} // for dependent select filed
-                              selectedAsset={field.value} 
-							                btpstpvalue={btpstpvalue}
+                              selectedAsset={field.value}
+                              btpstpvalue={btpstpvalue}
                               getRewardData={getRewardData}
                               attachments={attachments}
-							  leaveInfo={leaveInfo}
+                              leaveInfo={leaveInfo}
+                              isModule={isModule}
+                              getProjectDate={getProjectDate}
+                              projectStartDate={isModule === "Project_management" ? projectStartDatePM : projectStartDate}
+                              projectEndDate={isModule === "Project_management" ? projectEndDatePM : projectEndDate}
+                              startDateValue={formData['startDate']}
                             />
                             {errors[field.name] && <div className="error text-danger">{errors[field.name]}</div>}
                           </div>
@@ -1069,26 +1116,28 @@ useEffect(() => {
                     </>
                   );
                 })}
-
+                {isModule === "AssignTaskNew" ? (
+                  <span className='total-days-count'> Total Duration: <b>{ totalDateCount } Days</b></span>
+                ) : null}
                 {fields?.buttonsInRow?.length > 0 && (
                   <div className={`${fields?.buttonOuterClass}`}>
                     <div className="row">
                       {fields.buttonsInRow.map((buttonval, fieldIndex) => (
-                      buttonval.type === 'Cancel' || buttonval.type === 'cancel' ? (
-                        <div className={`col-md-6 px-1`} key={fieldIndex}>
-                          <button key={fieldIndex} type="button" className={`btn ${buttonval.class} custom_btn_filter`} disabled={buttonval.isDisabled} onClick={handleCancel}>{buttonval.label}</button>
-                        </div>
-                      ): (
-                      <div className={`col-md-6 px-1`} key={fieldIndex}>
-                        <button key={fieldIndex} type="submit" disabled={buttonval.isDisabled} className={`btn ${buttonval.class} custom_btn_filter`} onClick={handleSubmit}>{buttonval.label}</button>
-                      </div>
-                      )
-                  ))} 
+                        buttonval.type === 'Cancel' || buttonval.type === 'cancel' ? (
+                          <div className={`col-md-6 px-1`} key={fieldIndex}>
+                            <button key={fieldIndex} type="button" className={`btn ${buttonval.class} custom_btn_filter`} disabled={buttonval.isDisabled} onClick={handleCancel}>{buttonval.label}</button>
+                          </div>
+                        ) : (
+                          <div className={`col-md-6 px-1`} key={fieldIndex}>
+                            <button key={fieldIndex} type="submit" disabled={buttonval.isDisabled} className={`btn ${buttonval.class} custom_btn_filter`} onClick={handleSubmit}>{buttonval.label}</button>
+                          </div>
+                        )
+                      ))}
                     </div>
                   </div>
                 )}
-            </div>
-          )}
+              </div>
+            )}
           </div>
         ))}
         {pagename === "edit_allowcation" ? (
@@ -1111,7 +1160,7 @@ useEffect(() => {
           <>
             <div className="text-end w-100">
               {fields.buttons.map((buttonval, fieldIndex) => (
-                buttonval.isVisible ? ( 
+                buttonval.isVisible ? (
                   buttonval.type === 'Cancel' || buttonval.type === 'cancel' ? (
                     <button key={fieldIndex} type="button" className={`btn ${buttonval.class}`} disabled={buttonval.isDisabled} onClick={handleCancel}>Cancel</button>
                   ) : buttonval.type === 'Add Info Required' ? (
@@ -1132,7 +1181,7 @@ useEffect(() => {
             </div>
           </>
         ) : (
-          !btnloaderbelow ? ( 
+          !btnloaderbelow ? (
             <>
               <div className="text-end w-100">
                 {fields.buttons.map((buttonval, fieldIndex) => (
@@ -1147,9 +1196,9 @@ useEffect(() => {
                   ) : buttonval.type === 'Recalled' ? (
                     <button key={fieldIndex} type="submit" className={`btn ${buttonval.class}`} disabled={buttonval.isDisabled} onClick={(e) => handleUpdateClaimStatus(e, buttonval.type)} > {buttonval.label} </button>
                   ) : buttonval.type === 'Finance' || buttonval.type === 'OfferLetter' || buttonval.type === 'shortlisted' || buttonval.type === 'approved' || buttonval.type === 'rejected' ? (
-                    <button key={fieldIndex} type="submit" className={`btn ${buttonval.class}`} disabled={buttonval.isDisabled} onClick={(e) => handleUpdateOnboardStatus(e, buttonval.type , buttonval.value)} > {buttonval.label} </button>
-					) : buttonval.type === 'export' ? (
-                <button key={fieldIndex} type="submit" className={`btn ${buttonval.class}`} disabled={buttonval.isDisabled} onClick={handleExoportSubmit} > {buttonval.showIcon ? <TiExport /> : null} {buttonval.label} </button>
+                    <button key={fieldIndex} type="submit" className={`btn ${buttonval.class}`} disabled={buttonval.isDisabled} onClick={(e) => handleUpdateOnboardStatus(e, buttonval.type, buttonval.value)} > {buttonval.label} </button>
+                  ) : buttonval.type === 'export' ? (
+                    <button key={fieldIndex} type="submit" className={`btn ${buttonval.class}`} disabled={buttonval.isDisabled} onClick={handleExoportSubmit} > {buttonval.showIcon ? <TiExport /> : null} {buttonval.label} </button>
                   ) : (
                     <button key={fieldIndex} type="submit" disabled={buttonval.isDisabled} className={`btn ${buttonval.class}`} onClick={handleSubmit}>{buttonval.label}</button>
                   )
@@ -1157,21 +1206,21 @@ useEffect(() => {
               </div>
             </>
           ) : fields.buttons && fields.buttons.length > 0 && btnloaderbelow ? (
-          <>
-            <div className="text-end w-100 mb-4">
-              <button className="btn btn-primary" type="submit" disabled={btnloaderbelow}>
-                {btnloaderbelow ? (
-                  <div className="spinner">
-                    <div className="bounce1"></div>
-                    <div className="bounce2"></div>
-                    <div className="bounce3"></div>
-                  </div>
-                ) : (
-                  "Submit"
-                )}
-              </button>
-            </div>
-          </>
+            <>
+              <div className="text-end w-100 mb-4">
+                <button className="btn btn-primary" type="submit" disabled={btnloaderbelow}>
+                  {btnloaderbelow ? (
+                    <div className="spinner">
+                      <div className="bounce1"></div>
+                      <div className="bounce2"></div>
+                      <div className="bounce3"></div>
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
+                </button>
+              </div>
+            </>
           ) : null
         )}
       </form>

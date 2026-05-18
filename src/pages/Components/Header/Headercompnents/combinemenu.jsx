@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { TbGridDots } from "react-icons/tb";
 import { axiosJWT } from '../../../Auth/AddAuthorization';
+import { FaSearch } from "react-icons/fa";
 export default function Combinemenu() {
   const router = useRouter();
   const [showDiv, setShowDiv] = useState(false);
@@ -10,6 +11,7 @@ export default function Combinemenu() {
     setShowDiv(!showDiv);
   };
   const inputRef = useRef();
+  const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     window.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -21,6 +23,7 @@ export default function Combinemenu() {
     if (inputRef.current && !inputRef.current.contains(e.target)) {
 
       setShowDiv(false);
+      setSearchTerm("")
     }
 
   };
@@ -99,14 +102,14 @@ export default function Combinemenu() {
     const fetchMenuOptions = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axiosJWT.get(`${apiUrl}/getMenuItem`, { params: { "isFor": "main" } })
+        const response = await axiosJWT.get(`${apiUrl}/permission/getMenuItem`, { params: { "isFor": "main" } })
         if (response) {
 
           const optionsData = response.data.data.map((item) => ({ // Access response.data.data
-            id: item.id ? item.id :"",
-            menuName: item.menuName ? item.menuName: "",
-            slug: item.slug ? item.slug: "",
-            children: item.children ? item.children: "",
+            id: item.id ? item.id : "",
+            menuName: item.menuName ? item.menuName : "",
+            slug: item.slug ? item.slug : "",
+            children: item.children ? item.children : "",
             menuImage: item.menuImage ? item.menuImage : ""
           }));
           seticonData(optionsData)
@@ -120,7 +123,7 @@ export default function Combinemenu() {
     const parsedData = JSON.parse(storedIconData);
     if (storedIconData === null) {
       fetchMenuOptions()
-    }else{
+    } else {
       seticonData(parsedData)
       if (parsedData.length === 0) {
         fetchMenuOptions()
@@ -130,19 +133,36 @@ export default function Combinemenu() {
 
   }, []);
 
-  const iconElements = iconData.map((icon, index) => (
-    <Link key={index} href={icon.slug} className='inner-icon-box' onClick={(e) => handleClickLinkside(icon.id, e)}>
+  const filteredIcons = iconData.filter(icon =>
+    icon.menuName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const iconElements = filteredIcons.map((icon, index) => (
+    <Link
+      key={index}
+      href={icon.slug}
+      className="inner-icon-box"
+      onClick={(e) => handleClickLinkside(icon.id, e)}
+    >
       <img src={icon.menuImage} alt={icon.menuName} />
       <span>{icon.menuName}</span>
     </Link>
   ));
+
   return (
     <div className='oxyem-navbar-combine' ref={inputRef}>
       <span className='oxyem-comb-ic' onClick={toggleDiv}><TbGridDots /></span>
-
-
       {showDiv &&
         <div className='oxyem-combine-icons'>
+          <div className="menu-search-box">
+            <input
+              type="text"
+              placeholder="Search modules, employees, actions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <FaSearch />
+          </div>
           <div className='oxyem-header-combine-icons'>
             {iconElements}
           </div>

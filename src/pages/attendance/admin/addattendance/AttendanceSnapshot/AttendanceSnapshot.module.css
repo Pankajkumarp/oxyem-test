@@ -1,0 +1,319 @@
+/* components/AttendanceSnapshot/AttendanceSnapshot.module.css */
+
+.card {
+  background: #ffffff;
+  border-radius: .375rem;
+  font-family: 'Poppins', sans-serif;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0px 15px;
+}
+.cardbottom {
+  padding-bottom: 20px;
+}
+.card:last-child {
+  border-bottom: none;
+}
+
+/* ── HEADER: title on left, dropdown on right ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0px;
+  margin-top: 15px;
+  gap: 5px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── STATS ROW ── */
+.statsRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.mainBlock{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.iconColltemplate{
+  cursor: pointer;
+  font-size: 1.2rem;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.employeeInfo {
+  display: flex;
+  align-items: center;
+  gap: 1%;
+  min-width: 23%;
+  max-width: 23%;
+    padding: 15px 10px;
+}
+
+
+.employeeName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.employeeRole {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.dividerV {
+  width: 1px;
+  background: #e5e7eb;
+  align-self: stretch;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1%;
+  padding: 15px 10px;
+  min-width: 14%;
+  max-width: 14%;
+}
+
+.statLabel {
+  font-size: 11.6px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.statValue.large {
+  font-size: 14px;
+}
+
+.unit {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.subText {
+  font-size: 11.5px;
+  color: #6b7280;
+}
+
+.badgeWeekday {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 20px;
+  margin-top: 2px;
+  padding: 2px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-block;
+  width: fit-content;
+}
+
+.badgeMissing {
+  display: inline-block;
+  width: fit-content;
+  background: #fff8f8;
+  color: #dc2626;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 12px;
+  border-radius: 20px;
+  margin-top: 2px;
+}
+
+/* ── RECENT ATTENDANCE DROPDOWN (top-right) ── */
+
+.recentBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.recentLabel {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.dropdownTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a56db;
+  font-size: 11.2px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dropdownTrigger:hover {
+  border-color: #1a56db;
+  background: #f0f4ff;
+}
+
+.dropdownTriggerText {
+  flex: 1;
+}
+
+.chevron {
+  color: #6b7280;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 50;
+  min-width: 125px;
+  background: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+  padding: 4px;
+  list-style: none;
+  margin: 0;
+  animation: dropIn 0.15s ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.dropdownItem:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.dropdownItemActive {
+  background: #eff6ff;
+  color: #1a56db;
+}
+
+.dropdownItemActive:hover {
+  background: #dbeafe;
+}
+
+.dropdownItemTick {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1a56db;
+}
+
+/* Legacy — kept for backward compatibility */
+.autoMargin { margin-left: auto; }
+
+.viewLink {
+  color: #1a56db;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.viewLink:hover { text-decoration: underline; }
+
+.calBtn {
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.calBtn:hover { background: #f9fafb; }
+.mainBx {
+    padding-right: 5px;
+    max-height: 275px;
+    overflow: auto;
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: var(--theme-lightgrey-color);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #004D95;
+    }
+}
+.noData {
+  text-align: center;
+  padding: 20px;
+  margin-top: 12px;
+  border-radius: 10px;
+  background-color: #f5f7fa;
+  border: 1px solid #dbe2ea;
+  color: #5b6573;
+  font-size: 14px;
+  font-weight: 500;
+}

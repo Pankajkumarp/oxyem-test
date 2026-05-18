@@ -73,6 +73,18 @@ export default function index() {
 
         }
     };
+    const formatIndianAmount = (value) => {
+        if (value >= 10000000) {
+            return (value / 10000000).toFixed(1).replace(/\.0$/, '') + 'Cr';
+        }
+        if (value >= 100000) {
+            return (value / 100000).toFixed(1).replace(/\.0$/, '') + 'L';
+        }
+        if (value >= 1000) {
+            return (value / 1000).toFixed(0) + 'k';
+        }
+        return value;
+    };
 
 
     const optionsmonth = [
@@ -144,7 +156,7 @@ export default function index() {
                     options: {
                         chart: { width: 450, type: 'pie' },
                         labels: overallClaimData.label,
-                        colors: ['#26AF48', '#2196F3', '#FA7E12', '#cf59f1'],
+                        colors: ['#26AF48', '#2196F3', '#FA7E12', '#cf59f1', '#db1b1b'],
                         title: { text: '', align: 'center' },
                         legend: { position: 'bottom' },
                         responsive: [{
@@ -165,7 +177,7 @@ export default function index() {
                             width: 450
                         },
                         labels: ClaimData.label,
-                        colors: ['#2196F3', '#FF4560', '#26AF48', '#775DD0'], // Adjust these colors as necessary
+                        colors: ['#2196F3', '#FF4560', '#26AF48', '#775DD0', '#db1b1b'], // Adjust these colors as necessary
                         title: {
                             text: '', // Update the title as needed
                             align: 'center'
@@ -206,10 +218,22 @@ export default function index() {
                         colors: ['#26AF48', '#2196F3', '#FA7E12', '#FF4560', '#775DD0'],
                         dataLabels: { enabled: false },
                         xaxis: { categories: annualData.label },
-                        yaxis: { title: { text: 'Count' } },
+                        // yaxis: { title: { text: 'Amount' } },
                         fill: { opacity: 1 },
-                        tooltip: { y: { formatter: (val) => `${val} claims` } },
-                        legend: {show: false}
+                        // tooltip: { y: { formatter: (val) => `${val} claims` } },
+                        yaxis: {
+                            title: { text: 'Amount' },
+                            labels: {
+                                formatter: formatIndianAmount
+                            }
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: (val) => formatIndianAmount(val)
+                            }
+                        },
+
+                        legend: { show: false }
                     },
                 });
 
@@ -249,21 +273,36 @@ export default function index() {
                         xaxis: {
                             categories: lastChar.categories,
                         },
-                        yaxis: {
-                            title: {
-                                text: '',
-                            },
-                        },
                         fill: {
                             opacity: 1,
                         },
+                        yaxis: {
+                            labels: {
+                                formatter: formatIndianAmount
+                            }
+                        },
                         tooltip: {
                             y: {
-                                formatter: function (val) {
-                                    return `${val} Days`;
-                                },
+                                formatter: (val) => formatIndianAmount(val)
                             },
                         },
+
+                        // yaxis: {
+                        //     title: {
+                        //         text: '',
+                        //     },
+                        // },
+                        // fill: {
+                        //     opacity: 1,
+                        // },
+                        // tooltip: {
+                        //     y: {
+
+                        //         formatter: function (val) {
+                        //             return `${val} Days`;
+                        //         },
+                        //     },
+                        // },
                     },
                 });
 
@@ -439,22 +478,22 @@ export default function index() {
         }
     }
 
-//     const handleShowDataForStatus = (value) => {
-//     if (value === "clr") {
-//         setSearchfilter({});
-//         setActiveStatus(null);
-//         setActiveTableTab(0);
-//         return;
-//     }
+    //     const handleShowDataForStatus = (value) => {
+    //     if (value === "clr") {
+    //         setSearchfilter({});
+    //         setActiveStatus(null);
+    //         setActiveTableTab(0);
+    //         return;
+    //     }
 
-//     // status click hua → status filter lagana hai
-//     setSearchfilter({ status: value });
+    //     // status click hua → status filter lagana hai
+    //     setSearchfilter({ status: value });
 
-//     // Tab hamesha pending rehna chahiye
-//     setActiveTableTab(0);
+    //     // Tab hamesha pending rehna chahiye
+    //     setActiveTableTab(0);
 
-//     setActiveStatus(value);
-// };
+    //     setActiveStatus(value);
+    // };
 
     useEffect(() => {
         const mainElement = document.querySelector('body');
@@ -596,9 +635,9 @@ export default function index() {
                                                                                 <SelectComponent label={"Filter Data by Currency"} placeholder={""} options={currencyOptions} onChange={handleCurrencyChange} value={selectedCurrency} />
                                                                             </div>
                                                                         </div>
-                                                                        {anualChartData.series.length > 0 && (
+                                                                        {/* {anualChartData.series.length > 0 && (
                                                                             <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} width="100%" />
-                                                                        )}
+                                                                        )} */}
                                                                     </div>
                                                                     <div className="row">
                                                                         <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
@@ -635,7 +674,7 @@ export default function index() {
                                                                                 <Chart options={anualChartDataClaim.options} series={anualChartDataClaim.series} type="bar" height={250} />
                                                                             </div>
                                                                         </div>
-                                                                        <Chart options={anualChartDataClaim.options} series={anualChartDataClaim.series} type="bar" height={330} />
+                                                                        {/* <Chart options={anualChartDataClaim.options} series={anualChartDataClaim.series} type="bar" height={330} /> */}
                                                                     </div>
                                                                 </>
 
@@ -697,10 +736,10 @@ export default function index() {
                                                             dashboradApi={'/claims/manageClaims'}
                                                             ifForvalue={`admin`}
                                                             // tabParamsInObj={activeTableTab === 1 ? { status: 'paid' } : { status: 'pending' }}
-                                                            tabParamsInObj={Object.keys(searchfilter).length === 0 
-    ? (activeTableTab === 1 ? { status: 'paid' } : { status: 'pending' }) 
-    : {}
-}
+                                                            tabParamsInObj={Object.keys(searchfilter).length === 0
+                                                                ? (activeTableTab === 1 ? { status: 'paid' } : { status: 'pending' })
+                                                                : {}
+                                                            }
 
                                                             searchfilter={searchfilter}
                                                         />
@@ -717,8 +756,13 @@ export default function index() {
                     </div>
                 </div>
             </div>
-            {/* </div>
-            </div> */}
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+                autoClose={6000}
+                closeOnClick
+                pauseOnHover
+                draggable />
         </>
     )
 }

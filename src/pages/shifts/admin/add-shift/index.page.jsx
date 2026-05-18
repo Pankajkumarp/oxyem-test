@@ -4,17 +4,17 @@ import { ToastNotification, ToastContainer } from '../../../../pages/Components/
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import pageTitles from '../../../../common/pageTitles';
-import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbs';
+import { MdSchedule } from "react-icons/md";
+import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import { fetchWithToken } from '../../../Auth/fetchWithToken';
 const DynamicForm = dynamic(() => import('../../../Components/CommanForm'), {
     ssr: false
 });
 
-export default function User({userFormdata}) {
-  const router = useRouter();
+export default function User({ userFormdata }) {
+    const router = useRouter();
 
-  const initialContent = userFormdata
+    const initialContent = userFormdata
 
     const [content, setContent] = useState(initialContent);
 
@@ -42,50 +42,50 @@ export default function User({userFormdata}) {
         setContent(updatedArray);
     };
 
-  
-const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
-    const submitformdata = async (value) => {
-      const formattedData = {};
-setSubmitButtonLoading(true);
-      // Convert the data to the required format
-      content.section.forEach(section => {
-          section.Subsection.forEach(subsection => {
-              subsection.fields.forEach(field => {
-                  if (typeof field.value === 'object' && 'value' in field.value) {
-                      formattedData[field.name] = field.value.value;
-                  } else {
-                      formattedData[field.name] = field.value;
-                  }
-              });
-          });
-      });
 
-  
-      try {
-        
+    const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
+    const submitformdata = async (value) => {
+        const formattedData = {};
+        setSubmitButtonLoading(true);
+        // Convert the data to the required format
+        content.section.forEach(section => {
+            section.Subsection.forEach(subsection => {
+                subsection.fields.forEach(field => {
+                    if (typeof field.value === 'object' && 'value' in field.value) {
+                        formattedData[field.name] = field.value.value;
+                    } else {
+                        formattedData[field.name] = field.value;
+                    }
+                });
+            });
+        });
+
+
+        try {
+
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/shiftmanage';
             const response = await axiosJWT.post(apiUrl, formattedData);
 
             if (response.status === 200) {
-                
+
                 ToastNotification({ message: response.data.message });
                 router.push(`/admin/shift-dashboard`);
                 setSubmitButtonLoading(false);
             }
-        
-    } catch (error) {
 
-        if (error.response && error.response.status === 400) {
-            const errorMessage = error.response.data.errors || 'Failed to submit the form. Please try again later.';
-            ToastNotification({ message: errorMessage });
-        } else {
-           
-            ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
+        } catch (error) {
+
+            if (error.response && error.response.status === 400) {
+                const errorMessage = error.response.data.errors || 'Failed to submit the form. Please try again later.';
+                ToastNotification({ message: errorMessage });
+            } else {
+
+                ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
+            }
+            setSubmitButtonLoading(false);
         }
-        setSubmitButtonLoading(false);
-    }
-  };
-useEffect(() => {
+    };
+    useEffect(() => {
         const mainElement = document.querySelector('body');
         if (mainElement) {
             mainElement.setAttribute('id', 'shifts-module');
@@ -98,18 +98,22 @@ useEffect(() => {
     }, []);
     return (
         <>
-        <Head>
-        <title>{pageTitles.ShiftManagementAddShift}</title>
-        <meta name="description" content={pageTitles.ShiftManagementAddShift} />
-    </Head>
+            <Head>
+                <title>Create Work Shift | Oxytal</title>
+                <meta name="description" content={"Define work shifts easily with start time, end time, breaks, and shift rules."} />
+            </Head>
             <div className="main-wrapper">
                 <div className="page-wrapper">
                     <div className="content container-fluid">
                         <div className="page-header">
                             <div className="row">
-                            <div className="col">
-                            <Breadcrumbs maintext={"Add Shift"} />
-                            </div>
+                                <div className="col">
+                                    <Breadcrumbs
+                                        maintext={"Create Work Shift"}
+                                        discription={"Create a new work shift by defining shift name, timings, duration, break time, and applicable days."}
+                                        icon={<MdSchedule />}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="row">
@@ -153,11 +157,11 @@ useEffect(() => {
     );
 }
 
-export async function getServerSideProps(context) {	
- 
-	const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+export async function getServerSideProps(context) {
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const userFormdata = await fetchWithToken(`${apiUrl}/getDynamicForm`, { formType: 'createShift' }, context);
-	return {
-	  props: { userFormdata  },
-	}
-  }
+    return {
+        props: { userFormdata },
+    }
+}

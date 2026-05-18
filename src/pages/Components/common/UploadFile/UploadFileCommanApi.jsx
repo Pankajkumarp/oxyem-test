@@ -55,7 +55,7 @@ const UploadFileDetail = ({ documentId, documentFor }) => {
           headers: { "Content-Type": "multipart/form-data" }
         }
       );
-      
+
       if (response) {
         const newFile = response.data.uploaded[0];
         const mappedData = {
@@ -113,15 +113,27 @@ const UploadFileDetail = ({ documentId, documentFor }) => {
           <div className='upload-doc_summary_upload'>
             <GrDocumentUpdate /> <p>Please upload any additional supporting documents.</p>
           </div>
-          
+
           <div className="upload-doc-popup-card">
             <div className="files custom_file_field_b">
               <Files
                 className='files-dropzone'
                 onChange={handleFileChange}
-                accepts={['image/png', 'image/jpg', 'image/jpeg', 'image/webp', '.pdf', '.doc', '.docx']}
+                accepts={[
+                  'image/png',
+                  'image/jpg',
+                  'image/jpeg',
+                  'image/webp',
+                  'application/pdf',
+                  '.doc',
+                  '.docx',
+                  '.ppt',
+                  '.pptx',
+                  '.csv',
+                  '.xlsx'
+                ]}
                 multiple
-                maxFileSize={3000000}
+                maxFileSize={10485760}
                 minFileSize={0}
                 clickable={true}>
                 <FiUpload /> Drag & Drop your files or <span className="filepond--label-action">Browse</span>
@@ -139,7 +151,7 @@ const UploadFileDetail = ({ documentId, documentFor }) => {
           </div>
         </div>
 
-        
+
       </div>
     </div>
   );

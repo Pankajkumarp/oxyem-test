@@ -6,7 +6,7 @@ import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios';
 import { FaRegCheckCircle } from "react-icons/fa";
-export default function Navbar({ pagename }) {
+export default function Navbar({ pagename, getProfileData }) {
 
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -57,6 +57,9 @@ export default function Navbar({ pagename }) {
         setIdSent(response.data.data.latestAttendance.idAttendance || "");
         setidShift(response.data.data.shiftDetails.idShift || "")
         setProfileInfo(response.data.data.profileInfo || {});
+        if(response?.data?.data?.profileInfo && pagename === "me"){
+          getProfileData(response.data.data.profileInfo)
+        }
         setAttendanceTimeInfo(response.data.data.attendanceList || {});
 
         const realTimeToday = response.data.data.attendanceList?.realTimeToday; // Assuming this is in "HH:MM:SS"
@@ -202,13 +205,7 @@ export default function Navbar({ pagename }) {
         <>
           <div className="col-lg-3 col-md-6 col-sm-6 custom_padding_taskbar">
             <div className="pr_card">
-              <div className="pr_card_top">
-                <img src={profileInfo.profilePicPath ? profileInfo.profilePicPath : "https://www.w3schools.com/howto/img_avatar.png"} alt="Profile Picture" />
-                <div className="emp_profile_text">
-                  <h2 className='user_name_m'>{profileInfo.employeeName}</h2>
-                  <p className='user_desi_m'>{profileInfo.roleName}</p>
-                </div>
-              </div>
+              
               <div className='emp_dash_bottom_box'>
                 <div className="time">
                 <p>{attendanceTimeInfo.showLiveTimer ? realTimeToday : attendanceTimeInfo.realTimeToday}</p>

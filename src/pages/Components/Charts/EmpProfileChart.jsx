@@ -4,7 +4,7 @@ import { axiosJWT } from '../../Auth/AddAuthorization';
 import EmpRewards from './EmpRewards';
 import CheckinCheckout from '../Attendance/CheckinCheckout';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-const EmpProfileChart = () => {
+const EmpProfileChart = ({getProfileDataMain}) => {
   const [upcomingHolidays, setUpcomingHolidays] = useState([]);
   const [upcomingLeave, setUpcomingLeave] = useState([]);
 
@@ -24,11 +24,13 @@ const EmpProfileChart = () => {
       };
       fetchData();
   }, []);
-
+    const getProfileData = async (value) => {
+      getProfileDataMain(value)
+      };
 
   return (
     <>
-      <CheckinCheckout pagename={'me'}/>
+      <CheckinCheckout pagename={'me'} getProfileData={getProfileData}/>
       {upcomingHolidays?.length > 0 && (
       <div className="col-lg-3 col-md-6 col-sm-6 custom_padding_taskbar">
         <div className="oxy_chat_box"   >

@@ -3,6 +3,7 @@ import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import Drawer from 'react-modern-drawer'
 import Avatar from 'react-avatar';
+import Link from "next/link";
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
@@ -86,8 +87,8 @@ const AssignmemberHistroy = ({ isOpen, closeModal, isHistroyId }) => {
                         <div className="assign-profile-s">
                           <div className="assign-inner1">
                             <Avatar
-                              name={detail.employeeName}
-                              src={detail.profilePicPath}
+                              name={detail?.employeeName}
+                              src={detail?.profilePicPath}
                               size={40}
                               textSizeRatio={2}
                               round={true}
@@ -98,23 +99,23 @@ const AssignmemberHistroy = ({ isOpen, closeModal, isHistroyId }) => {
                             />
                           </div>
                           <div className="assign-inner2">
-                            {detail.profilelink ? (
-                              <Link href={detail.profilelink}>
-                                {detail.profilelink}
+                            {detail?.profilelink ? (
+                              <Link href={detail?.profilelink}>
+                                {detail?.employeeName}
                               </Link>
                             ) : (
-                              <span className="assign-profile-name-text">{detail.employeeName}</span>
+                              <span className="assign-profile-name-text">{detail?.employeeName}</span>
                             )}
 
-                            <span className="assign-profile-designation-text">{detail.designation}</span>
+                            <span className="assign-profile-designation-text">{detail?.designation}</span>
                           </div>
                         </div>
                       </div>
                       <div className='col-2 text-center'>
-                        {detail.taskPercentage}
+                        {detail?.taskPercentage}
                       </div>
                       <div className='col-2 text-center'>
-                        <span className={`oxyem-mark-${detail.status}`}>{detail.status}</span>
+                        <span className={`oxyem-mark-${detail?.status}`}>{detail?.status}</span>
                       </div>
                       
                     </div>

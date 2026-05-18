@@ -192,10 +192,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-            <Toaster
-                position="top-right"
-                reverseOrder={false}
-            />
     </div>
     
   );

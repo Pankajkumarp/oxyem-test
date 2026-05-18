@@ -19,7 +19,7 @@ export default function Layout({ children }) {
   const [showSidebar, setShowSidebar] = useState(false);
   useEffect(() => {
     // Check if the route is '/dashboard' or specific pages
-    if (router.pathname === '/Dashboard' || router.pathname === '/me') {
+    if (router.pathname === '/Dashboard' || router.pathname === '/me' || router.pathname.startsWith('/employeeDashboard')) {
       document.body.classList.add('dashboard-page');
     } else {
       document.body.classList.remove('dashboard-page');
@@ -46,6 +46,11 @@ export default function Layout({ children }) {
       window.removeEventListener('resize', checkScreenSize);
     };
   }, [router.pathname]);
+  const hideSidebar =
+  router.pathname === '/Chat' ||
+  router.pathname === '/Dashboard' ||
+  router.pathname === '/me' ||
+  router.pathname.startsWith('/employeeDashboard');
   return (
     <SocketContext.Provider value={socket}>
     <InputContext.Provider value={{ globalSearch, handleChange }}>
@@ -53,7 +58,7 @@ export default function Layout({ children }) {
       {router.pathname !== '/Ckeditor' && <Mobilenavbar />}
       {showSidebar && (
         <div className='oxyem_dasktop_sidebar'>
-          {router.pathname !== '/Chat' && router.pathname !== '/Dashboard' && router.pathname !== '/me' && <Sidebar />}
+          {!hideSidebar && <Sidebar />}
         </div>
       )}
       <main>{children}</main>

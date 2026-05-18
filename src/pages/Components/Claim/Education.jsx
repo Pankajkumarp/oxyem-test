@@ -59,43 +59,68 @@ export default function DocumentTable({ activeTab, allData }) {
     setInfo(info);
   }
 }, [activeTab, allData]);
-// console.log('123');
-// console.log(columns.lebel);
-// console.log('987');
 
 
-  const tableColumns = columns.map(column => ({
+const tableColumns = columns.map(column => ({
   name: column.name,
   label: column.lebel,
- options: {
-  customBodyRender: (value) => {
-    if (column.name === "documents") {
-      return Array.isArray(value) && value.length > 0
-        ? (
-          <span onClick={() => handleDownloadClick(value[0])}>
-            <IoDownloadOutline
-              size={20}
-              style={{ color: 'var(--theme-primary-color)' }}
-            />
-          </span>
-        )
-        : '-';
-    }
-     if (column.name === "status") {
+  options: {
+    display: column.name !== 'documents',
+
+    customBodyRender: (value, tableMeta) => {
+      const rowIndex = tableMeta.rowIndex;
+      const rowData = info[rowIndex];
+
+      if (column.name === "status") {
         return (
           <span className={`oxyem-mark-${value}`}>
             {value}
           </span>
         );
       }
-    return value;
-  }
+
+      if (column.name === "claimNumber") {
+  return (
+    <span
+      className="oxyem-mark-link"
+      style={{ cursor: "pointer", color: "#004D95" }}
+      onClick={() => {
+        const docs = rowData?.documents;
+
+        console.log("docs:", docs);
+
+        // ✅ CASE 1: array of objects
+        if (Array.isArray(docs) && docs[0]?.path) {
+          handleDownloadClick(docs[0].path);
+          return;
+        }
+
+        // ✅ CASE 2: array of strings
+        if (Array.isArray(docs) && typeof docs[0] === "string") {
+          handleDownloadClick(docs[0]);
+          return;
+        }
+
+        // ✅ CASE 3: single string
+        if (typeof docs === "string") {
+          handleDownloadClick(docs);
+          return;
+        }
+
+        console.warn("No downloadable document found");
+      }}
+    >
+      {value}
+    </span>
+  );
 }
 
+
+      return value;
+    }
+  }
 }));
-// console.log('aaaaa');
-// console.log(tableColumns);
-// console.log('qqqq');
+
 
   const options = {
     filter: false,

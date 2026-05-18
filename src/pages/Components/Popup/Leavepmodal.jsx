@@ -18,15 +18,22 @@ const customStyles = {
     transform: 'translate(-50%, -50%)',
   },
 };
-export default function LeavePopup({ isOpen, closeModal, popupdata, conformRequest, handleCancel }) {
+export default function LeavePopup({
+  open,
+  popupdata,
+  conformRequest,
+  handleCancel
+}) {
 
   const [alert, setAlert] = useState({});
-  useEffect(() => {
+useEffect(() => {
+  if (popupdata?.message) {
     setAlert({ show: true, type: 'warning', message: popupdata.message });
-  }, [popupdata.message]);
+  }
+}, [popupdata]);
 
-  let earnedLeave = popupdata.EarnedLeaves
-  let lossOfPay = popupdata.LossOfPay
+  let earnedLeave = popupdata?.EarnedLeaves
+  let lossOfPay = popupdata?.LossOfPay
   const combinedLeaves = [
     { ...earnedLeave, leaveType: "earnedLeave" },
     { ...lossOfPay, leaveType: "lossOfPay" }
@@ -41,8 +48,8 @@ export default function LeavePopup({ isOpen, closeModal, popupdata, conformReque
 };
   return (
     <Drawer
-      open={isOpen}
-      onClose={closeModal}
+      open={open}
+      onClose={handleCancel}
       direction='right'
       className='custom-drawer'
       overlayClassName='custom-overlay' // Apply the custom overlay class
@@ -51,7 +58,7 @@ export default function LeavePopup({ isOpen, closeModal, popupdata, conformReque
         <div className="modal-content">
           <div className="modal-header mb-2">
             <h4 className="modal-title" id="myLargeModalLabel" >Leave</h4>
-            <button className="oxyem-btn-close" onClick={closeModal}>
+            <button className="oxyem-btn-close" onClick={handleCancel}>
               <MdClose />
             </button>
 

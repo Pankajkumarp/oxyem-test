@@ -1,0 +1,9 @@
+{
+  "name": "ckeditor5-custom-build",
+  "version": "0.0.1",
+  "main": "build/ckeditor.js",
+  "style": "build/ckeditor.css",
+  "files": [
+    "build"
+  ]
+}

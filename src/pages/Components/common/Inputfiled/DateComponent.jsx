@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,18 +8,24 @@ import { format } from 'date-fns';
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { Tooltip } from 'react-tooltip';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
+
+
 const DatePicker = ({ type, placeholder, readonly, isDisabled, label, value, validations = [], onChange, otherAttributes, showleave, selectEmpId, leaveInfo }) => {
   const [days, setDays] = useState(leaveInfo);
     useEffect(() => {
     setDays(leaveInfo);
   }, [leaveInfo]);
-  const [startDate, setStartDate] = useState(value);
+  // const [startDate, setStartDate] = useState(value);
+  const [startDate, setStartDate] = useState(
+  value ? new Date(value) : null
+);
+
   const isRequired = validations.some(validation => validation.type === "required");
   const datePickerRef = useRef(null); // Create a ref for the date picker input
   useEffect(() => {
     // Synchronize internal state with props
-    setStartDate(value);
-  }, [value]);
+setStartDate(value ? new Date(value) : null);
+}, [value]);
 
   const handleDateChange = (date) => {
     if (readonly) return; // Prevent change if readOnly
@@ -33,8 +40,11 @@ const DatePicker = ({ type, placeholder, readonly, isDisabled, label, value, val
     } catch (error) {
       console.log('Error:', error.message);
     }
-    setStartDate(formattedDate);
-    onChange(formattedDate);
+    // setStartDate(formattedDate);
+    // onChange(formattedDate);
+    setStartDate(date);  // keep as Date object
+onChange(formattedDate); // send string to parent
+
   };
 
   const today = new Date();
@@ -127,7 +137,7 @@ let minDate = new Date(`${minYear}-01-01`);
 
   function isValidDate(d) { return d instanceof Date && !isNaN(d); }
   const highlightDates = days.map(day => new Date(day.date)).filter(date => isValidDate(date));
-  
+
   return (
     <div className='custom-calender-oxyem'>
       {isRequired ? <LabelMandatory labelText={label}/> : <LabelNormal labelText={label}/>}
@@ -147,7 +157,12 @@ let minDate = new Date(`${minYear}-01-01`);
         maxDate={maxDate} // Sets the maximum selectable date to today
         minDate={minDate}
         renderDayContents={renderDayContents}
-        filterDate={isDaySelectable} // Use the filterDate prop to make certain days unselectable
+        // filterDate={isDaySelectable} // Use the filterDate prop to make certain days unselectable
+filterDate={
+  label?.toLowerCase() === "dob"
+    ? () => true
+    : isDaySelectable
+}
         highlightDates={highlightDates}
         {...otherAttributes.length > 0 ? otherAttributes.reduce((acc, attr) => ({ ...acc, [attr.name]: attr.value }), {}) : {}}
       />

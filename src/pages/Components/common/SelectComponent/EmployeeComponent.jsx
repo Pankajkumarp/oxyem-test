@@ -46,6 +46,7 @@ export default function SelectComponent({ label, validations = [] , value, onCha
   
         const optionsData = response.data.data.map((item) => ({
           label: item.employeeName,
+          emailAddress: item.emailAddress,
           value: item.idEmployee,
           image: item.profilePicPath ? item.profilePicPath : "",
           profileLink: item.profileLink ? item.profileLink : "",

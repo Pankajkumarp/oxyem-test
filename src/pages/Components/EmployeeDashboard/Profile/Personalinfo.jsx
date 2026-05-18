@@ -4,6 +4,8 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 import Edit from '../Edit/Edit';
 import { FaRegEdit } from "react-icons/fa";
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
+import { AiOutlineUser } from 'react-icons/ai';
+import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
 
 export default function PersonalInfo({ empId, apiBaseUrl ,showbutton }) {
     const [visible, setVisible] = useState(true); // Set to true to open section by default
@@ -15,9 +17,9 @@ export default function PersonalInfo({ empId, apiBaseUrl ,showbutton }) {
     const openEditModal = () => {
         fetchPersonalForm()
         setIsEditOpen(true);
-        if(isEditOpen){
-        populateFormData();
-        }
+        // if(isEditOpen){
+        // populateFormData();
+        // }
     };
 
     const closeEditModal = () => {
@@ -55,27 +57,61 @@ export default function PersonalInfo({ empId, apiBaseUrl ,showbutton }) {
 
     useEffect(() => {
         fetchPersonalInfo();
-        if(isEditOpen){
-        fetchPersonalForm();
-        }
+        // if(isEditOpen){
+        // fetchPersonalForm();
+        // }
     }, [empId]);
+useEffect(() => {
+  if (isEditOpen && formData?.section?.length && personalInfo.length) {
+    populateFormData();
+  }
+}, [isEditOpen, formData, personalInfo]);
 
+    // const populateFormData = () => {
+    //     const updatedFormData = { ...formData };
+    //     const section = updatedFormData.section.find(sec => sec.SectionName === "PersonalInformation");
+    //     if (section) {
+    //         const subsection = section.Subsection.find(sub => sub.SubsectionName === "Personal Information");
+    //         if (subsection) {
+    //             subsection.fields.forEach(field => {
+    //                 const matchingInfo = personalInfo.find(info => info.lebel === field.label);
+    //                 if (matchingInfo) {
+    //                     field.value = matchingInfo.value;
+    //                 }
+    //             });
+    //         }
+    //     }
+    //     setFormData(updatedFormData);
+    // };
     const populateFormData = () => {
-        const updatedFormData = { ...formData };
-        const section = updatedFormData.section.find(sec => sec.SectionName === "PersonalInformation");
-        if (section) {
-            const subsection = section.Subsection.find(sub => sub.SubsectionName === "Personal Information");
-            if (subsection) {
-                subsection.fields.forEach(field => {
-                    const matchingInfo = personalInfo.find(info => info.lebel === field.label);
-                    if (matchingInfo) {
-                        field.value = matchingInfo.value;
-                    }
-                });
-            }
-        }
-        setFormData(updatedFormData);
+  const updatedFormData = JSON.parse(JSON.stringify(formData));
+
+  const section = updatedFormData.section.find(
+    sec => sec.SectionName === "PersonalInformation"
+  );
+
+  if (!section) return;
+
+  const subsection = section.Subsection.find(
+    sub => sub.SubsectionName === "Personal Information"
+  );
+
+  if (!subsection) return;
+
+  subsection.fields = subsection.fields.map(field => {
+    const matchingInfo = personalInfo.find(
+      info => info.lebel === field.label
+    );
+
+    return {
+      ...field,
+      value: matchingInfo ? matchingInfo.value : field.value || ""
     };
+  });
+
+  setFormData(updatedFormData);
+};
+
 const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
     const getSubmitFormData = async (value) => {
         setSubmitButtonLoading(true);
@@ -101,37 +137,55 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
         <>
             <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={formData} getsubmitformdata={getSubmitFormData} empId={empId} error={error} loaderSubmitButton={SubmitButtonLoading}/>
             <div className="card-body">
-                <h3 className="card-title">Personal Information
+                <h1 className="card-title">Personal Information
 
-                    {!showbutton ? null :
-                    
-                    personalInfo.length === 0 ? (
-                        <span className="add-btn-circle" onClick={openEditModal}>+</span>
-                    ) : (
+                        {personalInfo.length > 0 && (
+
                         <FaRegEdit style={{ cursor: 'pointer', float: 'right', color: 'var(--theme-pending-color-text)' }} size={15} onClick={openEditModal} />
                     )}
                     <GrFormNext 
                         onClick={() => setVisible(!visible)} 
                         style={{ cursor: 'pointer', transform: visible ? 'rotate(90deg)' : 'rotate(0deg)', float: 'right', margin: '-1px 11px 0px 0px' }} 
                     />
-                </h3>
+                </h1>
                 
                 {visible && (
                     <div>
-                        {personalInfo.length === 0 ? (
-                            <div>No records found</div>
-                        ) : (
-                            <ul className="personal-info">
-                                {personalInfo.map((info, index) => (
-                                    info.value ? (
-                                        <li key={index}>
-                                            <div className="title">{info.lebel}</div>
-                                            <div className="text">{info.value}</div>
-                                        </li>
-                                    ) : null
-                                ))}
-                            </ul>
-                        )}
+                      {personalInfo.length === 0 ? (
+<EmptyInfoBlock
+                    title="No personal information added yet."
+                    description="This helps HR reach someone in case of emergency."
+                    buttonText="Add Personal Information"
+icon={<AiOutlineUser size={48} color="#004D95" />}
+                    onButtonClick={openEditModal}
+                  />      ) : (
+      <ul className="personal-info">
+        {personalInfo.map((info, index) => {
+          if (!info.value) return null;
+
+          return (
+            <React.Fragment key={index}>
+
+              {/* Text before Aadhaar */}
+              {info.lebel === "Aadhaar card No." && (
+                <li className="section-text_identification">Identity</li>
+              )}
+
+              {/* Text before Passport */}
+              {info.lebel === "Passport No" && (
+                <li className="section-text_identification">Government IDs</li>
+              )}
+
+              <li>
+                <div className="title">{info.lebel}</div>
+                <div className="text">{info.value}</div>
+              </li>
+
+            </React.Fragment>
+          );
+        })}
+      </ul>
+    )}
                     </div>
                 )}
             </div>

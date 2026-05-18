@@ -1,0 +1,25 @@
+.tabBox{   
+  padding: 6px 10px;
+  padding-bottom: 0px;
+}
+.tabNav{   
+  border: none;
+}
+.tabNavItem{   
+    font-size: 11.2px;
+}
+.tabNavLink{   
+    padding-bottom: 10px;
+}
+.isActive{   
+    color: #004D95 !important;
+    font-weight: 800 !important;
+    background-color: #ededed !important;
+}
+.tabNavItem svg{   
+    font-size: 15px;
+    margin-right: 5px;
+}
+.tabDataBox{
+    padding-top: 8px !important;
+}

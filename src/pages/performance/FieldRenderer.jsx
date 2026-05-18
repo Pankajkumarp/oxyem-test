@@ -8,17 +8,30 @@ import Rating from 'react-rating';
 import Files from 'react-files'
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Tooltip } from 'react-tooltip'
+import AutomationIdeaDetailsDrawer from '../Components/Popup/AutomationIdeaDetails';
 
 const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldChange, handleFileChange, handleGoalSubmit, handleCancel, handleNext, buttonArray , onDeleteClick}) => {
     const baseImageUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
     const [fieldValue, setFieldValue] = useState(field);
     const [subinnersectionIndex, setsubInnersectionIndex] = useState(subsectionIndex);
     const [subinnerfieldIndex, setsubInnerfieldIndex] = useState(fieldIndex);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    
     useEffect(() => {
         setFieldValue(field)
+        console.log('field updated:', fieldValue);
         setsubInnersectionIndex(subsectionIndex)
         setsubInnerfieldIndex(fieldIndex)
     }, [field, subsectionIndex, fieldIndex, index]);
+
+    
+    console.log(fieldValue.goalName, 'fieldValuefieldValuefieldValue');
+    const handleChartClick = (filterObject) => {
+        setIsDrawerOpen(true); 
+    };
+     const handleClearFilter = () => {
+        setIsDrawerOpen(false);  
+    };
 
     return (
         <div className='row box_main_all_f'>
@@ -30,7 +43,7 @@ const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldC
                     <div className='input_f_b'>
                         {fieldValue.target.type === "number" && ( 
                             <>
-                                <div className='inn_input_field'>
+                                <div className='inn_input_field' style={{ display: "flex", alignItems: "center", gap: "8px" }}>    
                                     <span className='main_lab_name main_lab_name_f'>Target</span>
                                     <input
                                         type="number"
@@ -40,6 +53,8 @@ const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldC
                                         name="value"
                                     />
                                     <span className='main_lab_name main_lab_name_b' data-tooltip-id="my-tooltip" data-tooltip-content={"The target value represents the requirement for achieving 100% completion of the goal."}>{fieldValue.noOrPercentage?.value || 0}</span>
+                                     {fieldValue.goalName.value === "automation" && (
+                                    <span className='main_lab_name main_lab_name_b2' data-tooltip-id="my-tooltip" data-tooltip-content={"View all Automation ideas submitted"} onClick={() => handleChartClick()} style={{ cursor: "pointer" }} >1</span>)}
                                 </div>
                                 <span className='performance_error_content'>{fieldValue.target.error}</span>
                             </>
@@ -277,6 +292,11 @@ const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldC
                     )}
                 </div>
             </div>
+            <AutomationIdeaDetailsDrawer
+                            isOpen={isDrawerOpen}
+                            closeModal={() => setIsDrawerOpen(false)}
+                            handleClearFilter={handleClearFilter}
+                        />
             <Tooltip id="my-tooltip-perform" style={{ maxWidth: "300px", backgroundColor: "#7030a0", background: "#7030a0" }} />
         </div>
     );

@@ -8,8 +8,9 @@ import ProjectChart from '../Components/Charts/ProjectChart';
 import FinancialChart from '../Components/Charts/FinancialChart.jsx';
 import ClaimStats from '../Components/Charts/ClaimStats.jsx';
 import Head from 'next/head';
-import pageTitles from '../../common/pageTitles.js';
+import Breadcrumbs from "../Components/Breadcrumbs/Breadcrumbsdiscription";
 import CheckPermission from '../Components/common/CheckPermission/CheckPermission.jsx';
+import { MdAdminPanelSettings } from "react-icons/md";
 
 export default function CreateQuiz() {
 
@@ -19,10 +20,18 @@ export default function CreateQuiz() {
     };
     return (
         <>
-            <Head><title>{pageTitles.Dashboard}</title></Head>
+            <Head>
+                <title>Organization Intelligence Dashboard | Oxytal</title>
+                <meta name="description" content={"View complete organizational metrics including employees, departments, projects, clients, time, leave, and financial performance."} />
+            </Head>
             <div className="main-wrapper">
                 <div className="page-wrapper">
                     <div className="content container-fluid">
+                        <Breadcrumbs
+                            maintext={"Organization Intelligence Dashboard"}
+                            discription={"Real-time visibility into employees, departments, projects, clients, time, leave, and financial performance."}
+                            icon={<MdAdminPanelSettings />}
+                        />
                         <div className="row">
                             <div className="col-12 col-lg-12 col-xl-12">
                                 <div className="row">

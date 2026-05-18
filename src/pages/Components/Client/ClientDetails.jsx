@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IoDownloadOutline } from "react-icons/io5";
 import { axiosJWT } from "../../Auth/AddAuthorization.jsx";
+import DocumentsEvidence from "../../claim/admin/DocumentsEvidence";
+
 
 export default function ClientDetailView({ clientinfodata, pricingDocument }) {
   if (!clientinfodata) return null;
@@ -65,7 +67,11 @@ console.log(response,"thisssssssss")
   return (
     <div className="row">
       {/* Left column */}
-      <div className="col-md-6">
+      <div className="col-md-6">        <div className="stats-info stats-info-cus">
+
+        <div className="card-header bg-light">
+          <strong>Client Information</strong>
+        </div>
         <ul className="personal-info-header-right claim-detail-v-page top-details">
           {clientId && (
             <li>
@@ -85,11 +91,16 @@ console.log(response,"thisssssssss")
               <div className="text">{emailAddress}</div>
             </li>
           )}
-        </ul>
+        </ul></div>
       </div>
 
       {/* Right column */}
       <div className="col-md-6">
+                <div className="stats-info stats-info-cus">
+
+        <div className="card-header bg-light">
+          <strong>Doument Information</strong>
+        </div>
         <ul className="personal-info-header-right claim-detail-v-page top-details">
           {businessTypeName  && (
             <li>
@@ -104,6 +115,8 @@ console.log(response,"thisssssssss")
               <li key={index} className="document-item">
                 <div className="title">{`Pricing Document :`}</div>
                 <div className="text" style={{ width: "10%" }}>
+                  <DocumentsEvidence documents={pricingDocument || []} />
+                  
                   <IoDownloadOutline
                     style={{ cursor: "pointer" }}
                     size={20}
@@ -119,7 +132,7 @@ console.log(response,"thisssssssss")
               <div className="text">No documents uploaded</div>
             </li>
           )}
-        </ul>
+        </ul></div>
       </div>
     </div>
   );

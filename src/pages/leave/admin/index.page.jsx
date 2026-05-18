@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
+import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
 import { reorderColumns, reorderEntries, sortData } from '../../../common/commonFunctions';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
@@ -10,6 +10,7 @@ import { FaTimes } from "react-icons/fa";
 import { Toaster, toast } from 'react-hot-toast';
 import View from '../../Components/Popup/Leaveview';
 import Recall from '../../Components/Popup/Recallmodal';
+import { BsBoxArrowRight } from "react-icons/bs";
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 import Head from 'next/head';
@@ -27,8 +28,8 @@ export default function Leaveview({ }) {
     const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [toplist, setToplist] = useState({});
-const [employeeList, setEmployeeList] = useState([]);
-          const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [employeeList, setEmployeeList] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
 
     const desiredOrder = ["srno", "id", "employeeName", "leaveType", "fromDate", "toDate", "numberofDays", "leaveReason", "status", "action"];
 
@@ -96,7 +97,7 @@ const [employeeList, setEmployeeList] = useState([]);
                 "leaveReason": data.leavereason
             }
             // console.log(recallPostdata)
-            const message = 'You have successfully <strong>Recall</strong> Your Leave!';
+            const message = 'You have successfully <strong>Recalled</strong> Your Leave!';
             const errormessage = 'Error connecting to the backend. Please try after Sometime.';
             const response = await axiosJWT.post(`${apiUrl}/leave/recall`, recallPostdata)
             const apiresponse = response.data != "" ? response.data : "";
@@ -163,40 +164,40 @@ const [employeeList, setEmployeeList] = useState([]);
         }
 
     };
-       
- const onEmployeeChange = (value) => {
-    if (value) {
-      setSelectedEmployee(value.value);
-    } else {
-      setSelectedEmployee(null);
-    }
-  };
-  useEffect(() => {
-      const fetchOptions = async () => {
-        try {
-          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-          const response = await axiosJWT.get(`${apiUrl}/employees/employeesList`, { params: { "isFor": name } });
-          if (response) {
-            const optionsData = response.data.data.map((item) => ({
-              label: item.employeeName,
-              value: item.idEmployee,
-              image: item.profilePicPath ? item.profilePicPath : "",
-              profileLink: item.profileLink ? item.profileLink : "",
-              designation: item.designation ? item.designation : "",
-            }));
-            setEmployeeList(optionsData);
-            if (optionsData.length > 0) {
-              // setEmployeeValue(optionsData[-1].value); 
-              // setEmployeeValueadd(optionsData[0].value); // Set the first item
-              setSelectedEmployee(null);
-            }
-          }
-        } catch (error) {
-          console.error('Error fetching options:', error);
+
+    const onEmployeeChange = (value) => {
+        if (value) {
+            setSelectedEmployee(value.value);
+        } else {
+            setSelectedEmployee(null);
         }
-      };
-  
-      fetchOptions();
+    };
+    useEffect(() => {
+        const fetchOptions = async () => {
+            try {
+                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+                const response = await axiosJWT.get(`${apiUrl}/employees/employeesList`, { params: { "isFor": name } });
+                if (response) {
+                    const optionsData = response.data.data.map((item) => ({
+                        label: item.employeeName,
+                        value: item.idEmployee,
+                        image: item.profilePicPath ? item.profilePicPath : "",
+                        profileLink: item.profileLink ? item.profileLink : "",
+                        designation: item.designation ? item.designation : "",
+                    }));
+                    setEmployeeList(optionsData);
+                    if (optionsData.length > 0) {
+                        // setEmployeeValue(optionsData[-1].value); 
+                        // setEmployeeValueadd(optionsData[0].value); // Set the first item
+                        setSelectedEmployee(null);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching options:', error);
+            }
+        };
+
+        fetchOptions();
     }, []);
 
     const chartCategoryMap = {
@@ -288,144 +289,144 @@ const [employeeList, setEmployeeList] = useState([]);
     const [annualTrendData, setAnnualTrendData] = useState();
     const [monthlyTrendData, setMonthlyTrendData] = useState();
     // console.log(setMouth,"this si what month looks like")
-useEffect(() => {
-  if (setMouth && setYear) {
-    const getgraphData = async () => {
-      const apipayload = {
-        month: setMouth,
-        year: setYear,
-        isFor: "admin",
-        "emp": selectedEmployee,
-      };
+    useEffect(() => {
+        if (setMouth && setYear) {
+            const getgraphData = async () => {
+                const apipayload = {
+                    month: setMouth,
+                    year: setYear,
+                    isFor: "admin",
+                    "emp": selectedEmployee,
+                };
 
-      try {
-        const response = await axiosJWT.post(`${apiUrl}/leave/getLeaveChart`, apipayload);
-        if (response) {
-          const mounthchart = response.data.data.monthlyTotal;
-          const yeartrendchart = response.data.data.anualTrend;
-          const monthlytrendchart = response.data.data.monthlyTrend;
+                try {
+                    const response = await axiosJWT.post(`${apiUrl}/leave/getLeaveChart`, apipayload);
+                    if (response) {
+                        const mounthchart = response.data.data.monthlyTotal;
+                        const yeartrendchart = response.data.data.anualTrend;
+                        const monthlytrendchart = response.data.data.monthlyTrend;
 
-          // --- MONTH CHART (PIE) ---
-          setMounthChartData({
-            series: mounthchart.data,
-            options: {
-              chart: {
-                width: 400,
-                type: "pie",
-                events: {
-                  dataPointSelection: (event, chartContext, config) => {
-                    const idx = config.dataPointIndex;
-                    const category = config.w.config.labels[idx];
-                    if (!category) return;
+                        // --- MONTH CHART (PIE) ---
+                        setMounthChartData({
+                            series: mounthchart.data,
+                            options: {
+                                chart: {
+                                    width: 400,
+                                    type: "pie",
+                                    events: {
+                                        dataPointSelection: (event, chartContext, config) => {
+                                            const idx = config.dataPointIndex;
+                                            const category = config.w.config.labels[idx];
+                                            if (!category) return;
 
-                    requestAnimationFrame(() => {
-                      const filter = getFilterFromChartCategory(category);
-                      setSearchfilter(filter);
-                      setActiveTab(1);
-                      setActiveTableTab(category);
-                      setActiveStatus(category);
-                    });
-                  },
-                },
-              },
-              labels: mounthchart.categories,
-              colors: ["#26AF48", "#2196F3", "#FA7E12"],
-              title: { text: "", align: "center" },
-              legend: { position: "bottom" },
-              responsive: [
-                {
-                  breakpoint: 480,
-                  options: {
-                    chart: { width: 200 },
-                    legend: { position: "bottom" },
-                  },
-                },
-              ],
-            },
-          });
+                                            requestAnimationFrame(() => {
+                                                const filter = getFilterFromChartCategory(category);
+                                                setSearchfilter(filter);
+                                                setActiveTab(1);
+                                                setActiveTableTab(category);
+                                                setActiveStatus(category);
+                                            });
+                                        },
+                                    },
+                                },
+                                labels: mounthchart.categories,
+                                colors: ["#26AF48", "#2196F3", "#FA7E12", "#9156be", "#fabf2d", "#94A3B8"],
+                                title: { text: "", align: "center" },
+                                legend: { position: "bottom" },
+                                responsive: [
+                                    {
+                                        breakpoint: 480,
+                                        options: {
+                                            chart: { width: 200 },
+                                            legend: { position: "bottom" },
+                                        },
+                                    },
+                                ],
+                            },
+                        });
 
-          // --- ANNUAL TREND CHART ---
-          setAnnualTrendData({
-            series: [{ name: "Total Day", data: yeartrendchart.data }],
-            options: {
-              chart: {
-                height: 350,
-                type: "line",
-                zoom: { enabled: false },
-                events: {
-                  click: (event, chartContext, config) => {
-                    const pointIndex = config?.dataPointIndex;
-                    if (pointIndex === undefined || pointIndex === -1) return;
+                        // --- ANNUAL TREND CHART ---
+                        setAnnualTrendData({
+                            series: [{ name: "Total Day", data: yeartrendchart.data }],
+                            options: {
+                                chart: {
+                                    height: 350,
+                                    type: "line",
+                                    zoom: { enabled: false },
+                                    events: {
+                                        click: (event, chartContext, config) => {
+                                            const pointIndex = config?.dataPointIndex;
+                                            if (pointIndex === undefined || pointIndex === -1) return;
 
-                    const category = yeartrendchart.categories?.[pointIndex];
-                    if (!category) return;
+                                            const category = yeartrendchart.categories?.[pointIndex];
+                                            if (!category) return;
 
-                    const selectedMonth = getMonthInYYYYMM(category);
-                    requestAnimationFrame(() => {
-                      setSearchfilter({ month: selectedMonth });
-                      setActiveTab(1);
-                      setActiveTableTab(category);
-                      setActiveStatus(category);
-                    });
-                  },
-                },
-              },
-              dataLabels: { enabled: false },
-              stroke: { width: 1, curve: "straight", colors: ["#156082"] },
-              markers: { colors: "#156082" },
-              title: { text: "", align: "left" },
-              grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
-              xaxis: { categories: yeartrendchart.categories },
-              legend: {show: false}
-            },
-          });
+                                            const selectedMonth = getMonthInYYYYMM(category);
+                                            requestAnimationFrame(() => {
+                                                setSearchfilter({ month: selectedMonth });
+                                                setActiveTab(1);
+                                                setActiveTableTab(category);
+                                                setActiveStatus(category);
+                                            });
+                                        },
+                                    },
+                                },
+                                dataLabels: { enabled: false },
+                                stroke: { width: 1, curve: "straight", colors: ["#156082"] },
+                                markers: { colors: "#156082" },
+                                title: { text: "", align: "left" },
+                                grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
+                                xaxis: { categories: yeartrendchart.categories },
+                                legend: { show: false }
+                            },
+                        });
 
-          // --- MONTHLY TREND CHART ---
-          setMonthlyTrendData({
-            series: [{ name: "Total Day", data: monthlytrendchart.data }],
-            options: {
-              chart: {
-                height: 350,
-                type: "line",
-                zoom: { enabled: false },
-                events: {
-                  click: (event, chartContext, config) => {
-                    const pointIndex = config?.dataPointIndex;
-                    if (pointIndex === undefined || pointIndex === -1) return;
+                        // --- MONTHLY TREND CHART ---
+                        setMonthlyTrendData({
+                            series: [{ name: "Total Day", data: monthlytrendchart.data }],
+                            options: {
+                                chart: {
+                                    height: 350,
+                                    type: "line",
+                                    zoom: { enabled: false },
+                                    events: {
+                                        click: (event, chartContext, config) => {
+                                            const pointIndex = config?.dataPointIndex;
+                                            if (pointIndex === undefined || pointIndex === -1) return;
 
-                    const category = monthlytrendchart.categories?.[pointIndex];
-                    if (!category) return;
+                                            const category = monthlytrendchart.categories?.[pointIndex];
+                                            if (!category) return;
 
-                    const formattedDate = formatCategoryDate(category);
-                    requestAnimationFrame(() => {
-                      setSearchfilter({ currentDate: formattedDate });
-                      setActiveTab(1);
-                      setActiveTableTab(category);
-                      setActiveStatus(category);
-                    });
-                  },
-                },
-              },
-              dataLabels: { enabled: false },
-              stroke: { width: 1, curve: "straight", colors: ["#156082"] },
-              markers: { colors: "#156082" },
-              title: { text: "", align: "left" },
-              grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
-              xaxis: { categories: monthlytrendchart.categories },
-              legend: {show: false}
-            },
-          });
+                                            const formattedDate = formatCategoryDate(category);
+                                            requestAnimationFrame(() => {
+                                                setSearchfilter({ currentDate: formattedDate });
+                                                setActiveTab(1);
+                                                setActiveTableTab(category);
+                                                setActiveStatus(category);
+                                            });
+                                        },
+                                    },
+                                },
+                                dataLabels: { enabled: false },
+                                stroke: { width: 1, curve: "straight", colors: ["#156082"] },
+                                markers: { colors: "#156082" },
+                                title: { text: "", align: "left" },
+                                grid: { row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 } },
+                                xaxis: { categories: monthlytrendchart.categories },
+                                legend: { show: false }
+                            },
+                        });
 
-          setIsAnnualOpen(true);
+                        setIsAnnualOpen(true);
+                    }
+                } catch (error) {
+                    console.error("Error occurred:", error);
+                }
+            };
+
+            getgraphData();
         }
-      } catch (error) {
-        console.error("Error occurred:", error);
-      }
-    };
-
-    getgraphData();
-  }
-}, [selectedEmployee, setMouth, setYear]); // ✅ activeTab removed
+    }, [selectedEmployee, setMouth, setYear]); // ✅ activeTab removed
 
 
 
@@ -568,6 +569,9 @@ useEffect(() => {
                 case "LossOfPay":
                     setSearchfilter({ leaveType: "LossOfPay" });
                     break;
+                case "EmployeesOnLeave":
+                    setSearchfilter({ isfor: "EmployeesOnLeave" });
+                    break;
                 case "currentMonthEmpLeaveCount":
                     // filter = { special: "monthTotal" }; 
                     break;
@@ -588,8 +592,12 @@ useEffect(() => {
             <div className="main-wrapper leave_dashborad_page">
                 <div className="page-wrapper">
                     <div className="content container-fluid">
-                        <Breadcrumbs maintext={"Admin Dashboard (Leaves)"} addlink={"/leave/addleave"} />
-
+                        <Breadcrumbs
+                            maintext={"Employee Leave Management"}
+                            addlink={"/leave/addleave"}
+                            discription={"Review, approve, and manage all employee leave requests with complete details and status updates."}
+                            icon={<BsBoxArrowRight />}
+                        />
 
                         <div className="row">
                             <div className="col-12 col-lg-12 col-xl-12">
@@ -606,176 +614,171 @@ useEffect(() => {
                                             </a>
                                         </li>
                                     </ul>
+                                    {activeTab === 0 &&
+                                        <>
+                                            <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                                <div className="">
+                                                    <div>
+                                                        {toplist && Object.keys(toplist).length > 0 &&
+                                                            <div className="oxyem-top-box-design design-only-attendence leave-top-data-main mx-0  row stats-grid">
 
+                                                                <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                    <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("leavesOnToday")}>
+                                                                        <img src='/assets/img/leave.png' />
+
+                                                                        <div className='ox-colored-box-1'><h4 className='all_attendence'>{toplist.leavesOnToday}</h4></div>
+
+
+                                                                        <div className='ox-box-text'><h6>On Leave Today                                                      </h6></div>
+
+
+
+
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                    <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("submitted")}>
+                                                                        <img src='/assets/img/date-of-birth.png' />
+                                                                        <div className='ox-colored-box-2'><h4 className='month_attendence'>{toplist.approvalPending}</h4></div>
+
+                                                                        <div className='ox-box-text'><h6>Pending Approvals</h6></div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                    <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("LossOfPay")}>
+                                                                        <img src='/assets/img/money.png' />
+                                                                        <div className='ox-colored-box-3'><h4 className='notsubmit_attendence'>{toplist.lopApplied}</h4></div>
+
+                                                                        <div className='ox-box-text'><h6>LOP</h6></div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                    <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("EmployeesOnLeave")}>
+                                                                        <img src='/assets/img/remain-leave.png' />
+                                                                        <div className='ox-colored-box-4'><h4 className='week_attendence'>{toplist.currentMonthEmpLeaveCount}</h4></div>
+
+                                                                        <div className='ox-box-text'><h6>Employees On Leave</h6></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+
+                                                <div className="tab-content">
+                                                    {isannualOpen ? (
+                                                        <div className="oxyem-top-box-design design-only-attendence leave-top-data-main mx-0 d-block">
+
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className="form-group">
+                                                                        <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <div className="form-group">
+                                                                        <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-4">
+                                                                    <div className="form-group">
+                                                                        <SelectComponent label={"Filter Data by Employee"} placeholder={"Select Employee..."} options={employeeList} onChange={onEmployeeChange}
+                                                                            value={
+                                                                                selectedEmployee
+                                                                                    ? employeeList.find(emp => emp.idEmployee === selectedEmployee)
+                                                                                    : null
+                                                                            } />                                                                </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                    <div className='oxy_chat_box'>
+                                                                        <div className='graph-top-head'>
+                                                                            <h3>Monthly Total</h3>
+
+                                                                        </div>
+                                                                        <Chart options={mounthChartData.options} series={mounthChartData.series} type="pie" height={330} />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                    <div className='oxy_chat_box'>
+                                                                        <div className='graph-top-head'>
+                                                                            <h3>Annual Leave Trend</h3>
+                                                                        </div>
+                                                                        <Chart options={annualTrendData.options} series={annualTrendData.series} type="line" height={330} />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                    <div className='oxy_chat_box'>
+                                                                        <div className='graph-top-head'>
+                                                                            <h3>Monthly Leave Trend</h3>
+                                                                        </div>
+                                                                        <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={330} />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : (<></>)}
+
+
+                                                </div>
+
+                                            </div>
+                                        </>
+                                    }
+                                    {activeTab === 1 &&
+                                        <div className="row">
+                                            <div className="col-12 col-lg-12 col-xl-12 d-flex">
+
+                                                <div className="card flex-fill comman-shadow oxyem-index">
+                                                    <div className="center-part">
+
+                                                        <div className="card-body oxyem-mobile-card-body">
+
+                                                            <div className="row"><div className="col-md-6">{activeStatus !== null && (
+                                                                <div className="active-filter-tag">
+                                                                    <span> {typeof activeStatus === "string"
+                                                                        ? activeStatus.charAt(0).toUpperCase() + activeStatus.slice(1)
+                                                                        : activeStatus}</span>
+                                                                    <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
+                                                                </div>
+                                                            )}</div>
+
+                                                                <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
+                                                                    <CustomDataTable
+                                                                        title={""}
+                                                                        data={updleavelist}
+                                                                        columnsdata={formcolumn}
+                                                                        ismodule={'leave'}
+                                                                        dashboradApi={'/leave'}
+                                                                        onEditClick={handleEditClick}
+                                                                        onSubmitClick={handleSubmitData}
+                                                                        responseData={responseData}
+                                                                        handleApprrovereq={handleApprrovereq}
+                                                                        onHistoryClick={handleHistoryClick}
+                                                                        handlerecallvalueClick={handlerecallvalueClick}
+                                                                        searchfilter={searchfilter}
+
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-
-
-                                {activeTab === 0 &&
-                                    <>
-                                        <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
-                                            <div className="">
-                                                <div>
-                                                    {toplist && Object.keys(toplist).length > 0 &&
-                                                        <div className="oxyem-top-box-design design-only-attendence leave-top-data-main mx-0  row stats-grid">
-
-                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                                <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("leavesOnToday")}>
-                                                                    <img src='/assets/img/leave.png' />
-
-                                                                    <div className='ox-colored-box-1'><h4 className='all_attendence'>{toplist.leavesOnToday}</h4></div>
-
-
-                                                                    <div className='ox-box-text'><h6>On Leave Today                                                      </h6></div>
-
-
-
-
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                                <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("submitted")}>
-                                                                    <img src='/assets/img/date-of-birth.png' />
-                                                                    <div className='ox-colored-box-2'><h4 className='month_attendence'>{toplist.approvalPending}</h4></div>
-
-                                                                    <div className='ox-box-text'><h6>Pending Approvals</h6></div>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                                <div className="stats-info stats-info-cus" onClick={() => handleShowDataForStatus("LossOfPay")}>
-                                                                    <img src='/assets/img/money.png' />
-                                                                    <div className='ox-colored-box-3'><h4 className='notsubmit_attendence'>{toplist.lopApplied}</h4></div>
-
-                                                                    <div className='ox-box-text'><h6>LOP</h6></div>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                                <div className="stats-info stats-info-cus">
-                                                                    <img src='/assets/img/remain-leave.png' />
-                                                                    <div className='ox-colored-box-4'><h4 className='week_attendence'>{toplist.currentMonthEmpLeaveCount}</h4></div>
-
-                                                                    <div className='ox-box-text'><h6>Employees On Leave</h6></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    }
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
-
-                                            <div className="tab-content">
-                                                {isannualOpen ? (
-                                                    <div className="oxyem-top-box-design design-only-attendence leave-top-data-main mx-0 d-block">
-
-                                                        <div className="row">
-                                                            <div className="col-md-4">
-                                                                <div className="form-group">
-                                                                    <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-4">
-                                                                <div className="form-group">
-                                                                    <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
-                                                                </div>
-                                                            </div>
-                                                              <div className="col-md-4">
-                                                                                                                            <div className="form-group">
-                                                            <SelectComponent label={"Filter Data by Employee"} placeholder={"Select Employee..."} options={employeeList} onChange={onEmployeeChange}
-                                                                        value={
-                                                                          selectedEmployee
-                                                                            ? employeeList.find(emp => emp.idEmployee === selectedEmployee)
-                                                                            : null
-                                                                        } />                                                                </div>
-                                                                                                                        </div>
-
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                <div className='oxy_chat_box'>
-                                                                    <div className='graph-top-head'>
-                                                                        <h3>Monthly Total</h3>
-
-                                                                    </div>
-                                                                    <Chart options={mounthChartData.options} series={mounthChartData.series} type="pie" height={330} />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                <div className='oxy_chat_box'>
-                                                                    <div className='graph-top-head'>
-                                                                        <h3>Annual Leave Trend</h3>
-                                                                    </div>
-                                                                    <Chart options={annualTrendData.options} series={annualTrendData.series} type="line" height={330} />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                <div className='oxy_chat_box'>
-                                                                    <div className='graph-top-head'>
-                                                                        <h3>Monthly Leave Trend</h3>
-                                                                    </div>
-                                                                    <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={330} />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ) : (<></>)}
-
-
-                                            </div>
-
-                                        </div>
-                                    </>
-
-
-                                }
-                                {activeTab === 1 &&
-                                    <div className="row">
-                                        <div className="col-12 col-lg-12 col-xl-12 d-flex">
-
-                                            <div className="card flex-fill comman-shadow oxyem-index">
-                                                <div className="center-part">
-
-                                                    <div className="card-body oxyem-mobile-card-body">
-
-                                                        <div className="row"><div className="col-md-6">{activeStatus !== null && (
-                                                            <div className="active-filter-tag">
-                                                                <span> {typeof activeStatus === "string"
-                                                                    ? activeStatus.charAt(0).toUpperCase() + activeStatus.slice(1)
-                                                                    : activeStatus}</span>
-                                                                <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
-                                                            </div>
-                                                        )}</div>
-
-                                                            <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                                                <CustomDataTable
-                                                                    title={""}
-                                                                    data={updleavelist}
-                                                                    columnsdata={formcolumn}
-                                                                    ismodule={'leave'}
-                                                                    dashboradApi={'/leave'}
-                                                                    onEditClick={handleEditClick}
-                                                                    onSubmitClick={handleSubmitData}
-                                                                    responseData={responseData}
-                                                                    handleApprrovereq={handleApprrovereq}
-                                                                    onHistoryClick={handleHistoryClick}
-                                                                    handlerecallvalueClick={handlerecallvalueClick}
-                                                                    searchfilter={searchfilter}
-
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
                             </div>
 
                         </div>
@@ -789,10 +792,9 @@ useEffect(() => {
 
 
             <Toaster
-                position="top-right"
-                reverseOrder={false}
-
-            />
+                    position="top-right"
+                    reverseOrder={false}
+                  />
         </>
 
     );

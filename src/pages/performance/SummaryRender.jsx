@@ -618,7 +618,7 @@ const SummaryRenderer = ({
                 </div>
             )}
 
-            <div className="text-end w-100 mt-4">
+            <div className="text-end w-100 mt-4 summary-btn-group">
                 {buttonArray.map((buttonssection, buttonsIndex) =>
                     buttonssection.buttontype === "cancel" ? (
                         <button

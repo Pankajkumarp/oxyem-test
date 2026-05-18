@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import Edit from '../Edit/Edit';
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
+import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
+import { GiBriefcase } from 'react-icons/gi';
 
 export default function ExperienceInfo({ empId ,showbutton}) {
     const [experienceInfo, setExperienceInfo] = useState([]);
@@ -21,13 +23,11 @@ export default function ExperienceInfo({ empId ,showbutton}) {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         const response =   await axiosJWT.get(`${apiUrl}/getDynamicForm`, {params:{"formType":"work"}})
-        
-        console.log(response);
+    
         if (response.status === 200 && response.data.data) {
           setFormData(response.data.data);
         }
       
-      // console.log(response);
     } catch (error) {
       console.error("Error occurred during API call:", error);
     }
@@ -83,14 +83,19 @@ export default function ExperienceInfo({ empId ,showbutton}) {
         <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={Formdata} getsubmitformdata={getsubmitformdata} empId={empId}/>
         <div className="card-body">
             <h3 className="card-title">Experience
-            {!showbutton ? null : <span className="add-btn-circle" onClick={openEditModal}>+</span>}
+            {experienceInfo.length > 0 && ( <span className="add-btn-circle" onClick={openEditModal}>+</span>)}
             
             </h3>
             <div className="experience-box">
 
             {experienceInfo.length === 0 ? (
-                <div>No records found</div>
-            ) : (
+ <EmptyInfoBlock
+                    title="No experience added yet."
+                    description="This helps HR reach someone in case of emergency."
+                    buttonText="Add Experience Detail"
+icon={<GiBriefcase size={48} color="#004D95" />}
+                    onButtonClick={openEditModal}
+                  />              ) : (
                 <ul className="experience-list">
                 
                     {experienceInfo.map((experience) => (

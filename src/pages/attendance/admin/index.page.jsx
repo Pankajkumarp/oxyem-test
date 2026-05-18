@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
+import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles.js';
 import SearchFilter from '../../Components/SearchFilter/SearchFilter.jsx';
 import Loader from '../../Components/loader/loader.jsx';
+import { FaUserClock } from "react-icons/fa";
 
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -24,7 +25,7 @@ export default function Leaveview({ }) {
     const [Isaddress, setAddress] = useState('');
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [employeeList, setEmployeeList] = useState([]);
-      const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
     useEffect(() => {
         const fetchLocation = async () => {
             try {
@@ -48,48 +49,48 @@ export default function Leaveview({ }) {
     const fetchData = async () => {
         try {
             // const response = await axiosJWT.get(`${apiUrl}/attendance`, { params: {isFor: 'stats' } });
-            const response = await axiosJWT.get(`${apiUrl}/attendance`, { params: {statsFor: 'admin' ,isFor:'stats'} });
+            const response = await axiosJWT.get(`${apiUrl}/attendance`, { params: { statsFor: 'admin', isFor: 'stats' } });
             setToplist(response.data.data.attendancesummary || {});
 
         } catch (error) {
             console.error("Error fetching data", error);
         }
     };
- const onEmployeeChange = (value) => {
-    if (value) {
-      setSelectedEmployee(value.value);
-    } else {
-      setSelectedEmployee(null);
-    }
-  };
-  useEffect(() => {
-      const fetchOptions = async () => {
-        try {
-          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-          const response = await axiosJWT.get(`${apiUrl}/employees/employeesList`, { params: { "isFor": name } });
-          if (response) {
-            const optionsData = response.data.data.map((item) => ({
-              label: item.employeeName,
-              value: item.idEmployee,
-              image: item.profilePicPath ? item.profilePicPath : "",
-              profileLink: item.profileLink ? item.profileLink : "",
-              designation: item.designation ? item.designation : "",
-            }));
-            setEmployeeList(optionsData);
-            if (optionsData.length > 0) {
-              // setEmployeeValue(optionsData[-1].value); 
-              // setEmployeeValueadd(optionsData[0].value); // Set the first item
-              setSelectedEmployee(null);
-            }
-          }
-        } catch (error) {
-          console.error('Error fetching options:', error);
+    const onEmployeeChange = (value) => {
+        if (value) {
+            setSelectedEmployee(value.value);
+        } else {
+            setSelectedEmployee(null);
         }
-      };
-  
-      fetchOptions();
+    };
+    useEffect(() => {
+        const fetchOptions = async () => {
+            try {
+                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+                const response = await axiosJWT.get(`${apiUrl}/employees/employeesList`, { params: { "isFor": name } });
+                if (response) {
+                    const optionsData = response.data.data.map((item) => ({
+                        label: item.employeeName,
+                        value: item.idEmployee,
+                        image: item.profilePicPath ? item.profilePicPath : "",
+                        profileLink: item.profileLink ? item.profileLink : "",
+                        designation: item.designation ? item.designation : "",
+                    }));
+                    setEmployeeList(optionsData);
+                    if (optionsData.length > 0) {
+                        // setEmployeeValue(optionsData[-1].value); 
+                        // setEmployeeValueadd(optionsData[0].value); // Set the first item
+                        setSelectedEmployee(null);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching options:', error);
+            }
+        };
+
+        fetchOptions();
     }, []);
-    
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -119,7 +120,7 @@ export default function Leaveview({ }) {
         setActiveTableTab(index); // Update active tab index when a tab is clicked
     };
 
-    
+
     const optionsmonth = [
         { value: 'Jan', label: 'January' },
         { value: 'Feb', label: 'February' },
@@ -163,16 +164,17 @@ export default function Leaveview({ }) {
     const [anualChartData, setAnualChartData] = useState();
     const [monthlyTrendData, setMonthlyTrend] = useState();
     const [monthlyData, setMonthlyData] = useState();
-		const [isLoadingGraph, setIsLoadingGraph] = useState(false);
+    const [isLoadingGraph, setIsLoadingGraph] = useState(false);
     useEffect(() => {
-		setIsLoadingGraph(true);
+        setIsLoadingGraph(true);
         // if (setMouth && setYear) {
-            if (setMouth && setYear && activeTab === 0) {
+        if (setMouth && setYear && activeTab === 0) {
             const getgraphData = async () => {
                 try {
-                    const response = await axiosJWT.get(`${apiUrl}/graphstats`, 
-                        { params: { "month": setMouth, "year": setYear, "isFor":"admin", "emp": selectedEmployee} 
-                    });
+                    const response = await axiosJWT.get(`${apiUrl}/graphstats`,
+                        {
+                            params: { "month": setMouth, "year": setYear, "isFor": "admin", "emp": selectedEmployee }
+                        });
                     // Handle the response if needed
                     if (response) {
                         const yearchart = response.data.data.annual
@@ -228,7 +230,7 @@ export default function Leaveview({ }) {
                                         enabled: false
                                     },
                                     stroke: {
-										width: 1,
+                                        width: 1,
                                         curve: 'straight',
                                         colors: ['#156082']  // Specify the line color you want here
                                     },
@@ -248,7 +250,7 @@ export default function Leaveview({ }) {
                                     xaxis: {
                                         categories: monthlytrendchart.days
                                     },
-                                    legend: {show: false}
+                                    legend: { show: false }
                                 },
                             }
                         )
@@ -305,7 +307,7 @@ export default function Leaveview({ }) {
                             }
                         )
                         setIsChartOpen(true)
-						setIsLoadingGraph(false);
+                        setIsLoadingGraph(false);
                     }
 
                 } catch (error) {
@@ -314,24 +316,24 @@ export default function Leaveview({ }) {
                 }
 
             };
-			setTimeout(function() {
-				getgraphData();
-			}, 0);
+            setTimeout(function () {
+                getgraphData();
+            }, 0);
         }
-    }, [selectedEmployee, setMouth, setYear ,activeTab]);
+    }, [selectedEmployee, setMouth, setYear, activeTab]);
 
     const handleUpadateClick = async (id) => {
         router.push(`/attendance/${id}`);
     }
     const handleApprrovereq = async (id, type, data, onSuccess) => {
-        const apipayload ={
+        const apipayload = {
             "action": type,
             "idAttendance": id,
-            "rejectReason":data
+            "rejectReason": data
         }
-        const message = type === 'approved' 
-        ? 'You have successfully <strong>Approved</strong> attendance!'
-        : 'You have successfully <strong>Rejected</strong> attendance!';
+        const message = type === 'approved'
+            ? 'You have successfully <strong>Approved</strong> attendance!'
+            : 'You have successfully <strong>Rejected</strong> attendance!';
         const errormessage = 'Error connecting to the backend. Please try after Sometime.';
         try {
             const response = await axiosJWT.post(`${apiUrl}/attendance/updateStatus`, apipayload);
@@ -364,7 +366,7 @@ export default function Leaveview({ }) {
                         color: '#4caf50',
                     },
                 });
-                
+
                 fetchData();
             }
 
@@ -400,69 +402,73 @@ export default function Leaveview({ }) {
         }
     }
 
-    
-const [searchfilter, setSearchfilter] = useState({});
+
+    const [searchfilter, setSearchfilter] = useState({});
     const searchFilterData = async (value) => {
         setSearchfilter(value);
     }
-	  useEffect(() => {
-    const mainElement = document.querySelector('body');
-    if (mainElement) {
-      mainElement.setAttribute('id', 'attendance-module');
-    }
-    return () => {
-      if (mainElement) {
-        mainElement.removeAttribute('id');
-      }
+    useEffect(() => {
+        const mainElement = document.querySelector('body');
+        if (mainElement) {
+            mainElement.setAttribute('id', 'attendance-module');
+        }
+        return () => {
+            if (mainElement) {
+                mainElement.removeAttribute('id');
+            }
+        };
+    }, []);
+
+
+    const [activeStatus, setActiveStatus] = useState(null);
+    const [activeTableTabStatus, setActiveTableTabStatus] = useState(null);
+
+    const handleShowDataForStatus = (filterKey) => {
+        setActiveTab(1); // switch to table tab
+        setActiveTableTabStatus(filterKey);
+        setActiveStatus(filterKey);
+
+        if (filterKey === "clr") {
+            setSearchfilter({});
+            setActiveStatus(null);
+        } else {
+            let filter = {};
+
+            switch (filterKey) {
+                case "leavesOnToday":
+                    const today = new Date().toISOString().split("T")[0];
+                    setSearchfilter({ currentDate: today });
+                    break;
+                case "submit":
+                    setSearchfilter({ status: "submit" });
+                    break;
+                case "LossOfPay":
+                    setSearchfilter({ leaveType: "LossOfPay" });
+                    break;
+                case "currentMonthEmpLeaveCount":
+                    // filter = { special: "monthTotal" }; 
+                    break;
+            }
+
+            // setSearchfilter(filter);
+            // console.log("Applied filter:", filter);
+        }
     };
-  }, []);
-
-
-      const [activeStatus, setActiveStatus] = useState(null);
-      const [activeTableTabStatus, setActiveTableTabStatus] = useState(null);
-  
-      const handleShowDataForStatus = (filterKey) => {
-          setActiveTab(1); // switch to table tab
-          setActiveTableTabStatus(filterKey);
-          setActiveStatus(filterKey);
-  
-          if (filterKey === "clr") {
-              setSearchfilter({});
-              setActiveStatus(null);
-          } else {
-              let filter = {};
-  
-              switch (filterKey) {
-                  case "leavesOnToday":
-                      const today = new Date().toISOString().split("T")[0];
-                      setSearchfilter({ currentDate: today });
-                      break;
-                  case "submit":
-                      setSearchfilter({ status:  "submit" });
-                      break;
-                  case "LossOfPay":
-                      setSearchfilter({ leaveType: "LossOfPay" });
-                      break;
-                  case "currentMonthEmpLeaveCount":
-                      // filter = { special: "monthTotal" }; 
-                      break;
-              }
-  
-              // setSearchfilter(filter);
-              // console.log("Applied filter:", filter);
-          }
-      };
     return (
         <>
-        <Head><title>{pageTitles.AttendanceTeamDashboard}</title></Head>
+            <Head><title>{pageTitles.AttendanceTeamDashboard}</title></Head>
             <View isOpen={isModalOpen} closeModal={closeDetailpopup} isHistroyId={isHistroyId} section={"adminAttendance"} handleUpadateClick={handleUpadateClick} />
-            
+
             <div className="main-wrapper">
                 <div className="page-wrapper">
                     <div className="content container-fluid">
-                        <Breadcrumbs maintext={"Dashboard (Attendance)"} addlink={"/addattendance"} tooltipcontent={"Add Attendance"} />
+                        <Breadcrumbs
+                            maintext={"Employee Attendance Management"}
+                            addlink={"/addattendance"}
+                            discription={"View, review, and manage attendance records for all employees, including pending approvals and status updates."}
+                            icon={<FaUserClock />}
+                        />
                         <div className="row">
-
                             <div className="col-12 col-lg-12 col-xl-12">
                                 <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                                     <ul className="nav-tabs nav nav-tabs-bottom justify-content-end oxyem-graph-tab">
@@ -478,150 +484,147 @@ const [searchfilter, setSearchfilter] = useState({});
                                         </li>
                                     </ul>
 
-                                     </div>
-                                   
+                                    {activeTab === 0 && (
 
-                                        {activeTab === 0 && (
-                                        
-                                            <><div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
-                                        <div className="">
-                                            <div>
-                                                {toplist && Object.keys(toplist).length > 0 &&
-                                                    <div className="oxyem-top-box-design design-only-attendence attendence-top-data-main leave-top-data-main mx-0 row stats-grid">
+                                        <><div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                            <div className="">
+                                                <div>
+                                                    {toplist && Object.keys(toplist).length > 0 &&
+                                                        <div className="oxyem-top-box-design design-only-attendence attendence-top-data-main leave-top-data-main mx-0 row stats-grid">
 
-                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                            <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("submit")}>
-                                                                <img src='/assets/img/proposal-icon.png' />
-                                                                <div className='ox-colored-box-1'><h4 className='all_attendence'>{toplist.totalattendance}<br />
+                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("submit")}>
+                                                                    <img src='/assets/img/proposal-icon.png' />
+                                                                    <div className='ox-colored-box-1'><h4 className='all_attendence'>{toplist.totalattendance}<br />
                                                                         <span className="leave-days-label">DAYS</span></h4></div>
 
-                                                                <div className='ox-box-text'><h6>Attendance Recorded</h6></div>
+                                                                    <div className='ox-box-text'><h6>Attendance Recorded</h6></div>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                            <div className="stats-info stats-info-cus text-center ">
-                                                                <img src='/assets/img/reservation-icon.png' />
-                                                                <div className='ox-colored-box-2'><h4 className='month_attendence'>{toplist.monthlycount}<br />
+                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                <div className="stats-info stats-info-cus text-center ">
+                                                                    <img src='/assets/img/reservation-icon.png' />
+                                                                    <div className='ox-colored-box-2'><h4 className='month_attendence'>{toplist.monthlycount}<br />
                                                                         <span className="leave-days-label">DAYS</span></h4></div>
 
-                                                                <div className='ox-box-text'><h6>Current Month Attendance</h6></div>
+                                                                    <div className='ox-box-text'><h6>Current Month Attendance</h6></div>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                            <div className="stats-info stats-info-cus text-center ">
-                                                                <img src='/assets/img/reservation-icon.png' />
-                                                                <div className='ox-colored-box-3'><h4 className='notsubmit_attendence'>{toplist.weeklycount}<br />
+                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                <div className="stats-info stats-info-cus text-center ">
+                                                                    <img src='/assets/img/reservation-icon.png' />
+                                                                    <div className='ox-colored-box-3'><h4 className='notsubmit_attendence'>{toplist.weeklycount}<br />
                                                                         <span className="leave-days-label">DAYS</span></h4></div>
 
-                                                                <div className='ox-box-text'><h6>Current Week Attendance</h6></div>
+                                                                    <div className='ox-box-text'><h6>Current Week Attendance</h6></div>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                            <div className="stats-info stats-info-cus text-center ">
-                                                                <img src='/assets/img/booking-cancel-icon.png' />
-                                                                <div className='ox-colored-box-4'><h4 className=' week_attendence'>{toplist.notsubmitted ? toplist.notsubmitted : 0}<br />
+                                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                                <div className="stats-info stats-info-cus text-center ">
+                                                                    <img src='/assets/img/booking-cancel-icon.png' />
+                                                                    <div className='ox-colored-box-4'><h4 className=' week_attendence'>{toplist.notsubmitted ? toplist.notsubmitted : 0}<br />
                                                                         <span className="leave-days-label">DAYS</span></h4></div>
 
-                                                                <div className='ox-box-text'><h6>Attendance Pending</h6></div>
+                                                                    <div className='ox-box-text'><h6>Attendance Pending</h6></div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>}
+                                                        </div>}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div><div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                        </div><div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
 
-                                            <div className="tab-content">
-											{isLoadingGraph?(
-                                                    <Loader text={"Please wait while we load the attendance graph."}/>
-                                                    ):(
-                                                    <>
-                                                {ischartopen ? (
-                                                    <div>
-                                                        <div className="row">
-                                                            <div className="col-md-4">
-                                                                <div className="form-group">
-                                                                    <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-4">
-                                                                <div className="form-group">
-                                                                    <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
-                                                                </div>
-                                                            </div>
-                                                              <div className="col-md-4">
-                                                                <div className="form-group">
-<SelectComponent label={"Filter Data by Employee"} placeholder={"Select Employee..."} options={employeeList} onChange={onEmployeeChange}
-            value={
-              selectedEmployee
-                ? employeeList.find(emp => emp.idEmployee === selectedEmployee)
-                : null
-            } />                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="row">
-
-                                                            <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                <div className='oxy_chat_box'>
-                                                                    <div className='graph-top-head'>
-                                                                        <h3>Monthly Status - {setMouth}</h3>
-
+                                                <div className="tab-content">
+                                                    {isLoadingGraph ? (
+                                                        <Loader text={"Please wait while we load the attendance graph."} />
+                                                    ) : (
+                                                        <>
+                                                            {ischartopen ? (
+                                                                <div>
+                                                                    <div className="row">
+                                                                        <div className="col-md-4">
+                                                                            <div className="form-group">
+                                                                                <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-md-4">
+                                                                            <div className="form-group">
+                                                                                <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-md-4">
+                                                                            <div className="form-group">
+                                                                                <SelectComponent label={"Filter Data by Employee"} placeholder={"Select Employee..."} options={employeeList} onChange={onEmployeeChange}
+                                                                                    value={
+                                                                                        selectedEmployee
+                                                                                            ? employeeList.find(emp => emp.idEmployee === selectedEmployee)
+                                                                                            : null
+                                                                                    } />                                                                </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width="100%" height={330} />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                <div className='oxy_chat_box'>
-                                                                    <div className='graph-top-head'>
-                                                                        <h3>Monthly Trend - {setMouth}</h3>
+
+                                                                    <div className="row">
+
+                                                                        <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                            <div className='oxy_chat_box'>
+                                                                                <div className='graph-top-head'>
+                                                                                    <h3>Monthly Status - {setMouth}</h3>
+
+                                                                                </div>
+                                                                                <Chart options={monthlyData.options} series={monthlyData.series} type="pie" width="100%" height={330} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                            <div className='oxy_chat_box'>
+                                                                                <div className='graph-top-head'>
+                                                                                    <h3>Monthly Trend - {setMouth}</h3>
+                                                                                </div>
+                                                                                <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={330} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                            <div className='oxy_chat_box'>
+                                                                                <div className='graph-top-head'>
+                                                                                    <h3>Annual Chart - {setYear}</h3>
+                                                                                </div>
+                                                                                <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="line" height={330} />
+
                                                                 </div>
-                                                            </div>
-                                                            <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                <div className='oxy_chat_box'>
-                                                                    <div className='graph-top-head'>
-                                                                        <h3>Annual Chart - {setYear}</h3>
-                                                                    </div>
-                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                            ) : (<></>)}
+                                                        </>
+                                                    )}
+                                                </div>
 
-                                                    </div>
-                                                ) : (<></>)}
-												</>
-                                                )}
-                                            </div>
+                                            </div></>
 
-                                        </div></>
+                                    )}
+                                    {activeTab === 1 &&
 
-                                       ) }
-                                        {activeTab === 1 &&
-                                            
-                                            <div className="row">
-                                    <div className="col-12 col-lg-12 col-xl-12 d-flex">
-                                        <div className="card flex-fill comman-shadow oxyem-index">
-                                            <div className="center-part">
-                                                <div className="card-body oxyem-mobile-card-body oxyem-main-attendance_dashborad">
-                                                    <SearchFilter searchFilterData={searchFilterData} formType={"searchFilterAttendanceForAdmin"}/>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-12 col-xl-12 d-flex">
+                                                <div className="card flex-fill comman-shadow oxyem-index">
+                                                    <div className="center-part">
+                                                        <div className="card-body oxyem-mobile-card-body oxyem-main-attendance_dashborad">
+                                                            <SearchFilter searchFilterData={searchFilterData} formType={"searchFilterAttendanceForAdmin"} />
 
-                                                    <ul className="nav-tabs nav nav-tabs-bottom oxyem-graph-tab">
-                                        <li class={`nav-item ${activeTableTab === 0 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTableTabClick(0)}>
-                                                <div className="skolrup-profile-tab-link">Pending for Approvals</div>
-                                            </a>
-                                        </li>
-                                        <li class={`nav-item ${activeTableTab === 1 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTableTabClick(1)}>
-                                                <div className="skolrup-profile-tab-link">Historical</div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div>
+                                                            <ul className="nav-tabs nav nav-tabs-bottom oxyem-graph-tab">
+                                                                <li class={`nav-item ${activeTableTab === 0 ? 'active' : ''}`}>
+                                                                    <a class={`nav-link`} onClick={() => handleTableTabClick(0)}>
+                                                                        <div className="skolrup-profile-tab-link">Pending for Approvals</div>
+                                                                    </a>
+                                                                </li>
+                                                                <li class={`nav-item ${activeTableTab === 1 ? 'active' : ''}`}>
+                                                                    <a class={`nav-link`} onClick={() => handleTableTabClick(1)}>
+                                                                        <div className="skolrup-profile-tab-link">Historical</div>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                            <div>
 
                                                                 <div className="col-md-6 mt-2">
                                                                     {activeStatus !== null && (
@@ -632,41 +635,43 @@ const [searchfilter, setSearchfilter] = useState({});
                                                                             <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
                                                                         </div>
                                                                     )}</div>
-                                                    <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                                        <CustomDataTable
-                                                            title={""}
-                                                            ismodule={'leave'}
-                                                            onEditClick={handleEditClick}
-                                                            onHistoryClick={handleHistoryClick}
-                                                            handleApprrovereq={handleApprrovereq}
-                                                            dashboradApi={'/attendance'}
-                                                            utctimeconditionpage={'userAttendance'}
-                                                            // onSubmitClick={handleSubmitData}
-                                                            searchfilter={searchfilter}
-                                                            tableStatus={activeTableTab === 0 ? 'pending' : 'history'}
-                                                            
-                                                        />
-                                                    </div>
+                                                                <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
+                                                                    <CustomDataTable
+                                                                        title={""}
+                                                                        ismodule={'leave'}
+                                                                        onEditClick={handleEditClick}
+                                                                        onHistoryClick={handleHistoryClick}
+                                                                        handleApprrovereq={handleApprrovereq}
+                                                                        dashboradApi={'/attendance'}
+                                                                        utctimeconditionpage={'userAttendance'}
+                                                                        // onSubmitClick={handleSubmitData}
+                                                                        searchfilter={searchfilter}
+                                                                        tableStatus={activeTableTab === 0 ? 'pending' : 'history'}
+
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+
+                                    }
                                 </div>
-                                            
-                                        }
-                                    </div>
-                                </div>
-                                
+
                             </div>
                         </div>
+
                     </div>
-                
-            
+                </div>
+            </div>
+
+
             <Toaster
                 position="top-right"
                 reverseOrder={false}
-
+                autoClose={3000} closeOnClick pauseOnHover draggable
             />
         </>
     );

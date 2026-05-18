@@ -107,7 +107,6 @@ export default function employeeAsset({ showOnlylist, isFor }) {
         }
     };
 
-
     return (
         <>
             <Head><title>{pageTitles.AssetDashboardEmployee}</title></Head>
@@ -115,171 +114,305 @@ export default function employeeAsset({ showOnlylist, isFor }) {
             {/* <ViewPopup isOpen={isModalOpenview} closeModal={closeDetailpopupview} isviewId={isviewIdv} section={"employeeLeave"} /> */}
             <View isOpen={isModalOpen} closeModal={closeDetailpopup} isHistroyId={isviewId} section={"adminAttendance"} datafor={'groups'} />
 
+            {showOnlylist !== 'showOnlylist' ? (
 
-            <div className="main-wrapper">
-                <div className="">
-                    <div className="content container-fluid">
-                        <Breadcrumbs maintext={"Dashborad (Employee Asset)"} addlink={"/addAssets"} />
-                        <div className="row">
-                            <div className="col-12 col-lg-12 col-xl-12">
-                                <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
-                                    <div className="">
-                                        <div>
-                                            {assetStatsEmp && Object.keys(assetStatsEmp)?.length > 0 &&
-                                                <div className="oxyem-top-box-design design-only-attendence leave-top-data-main row stats-grid mt-3">
+                <div className="main-wrapper">
+                    <div className="page-wrapper">
+                        <div className="content container-fluid">
+                            <Breadcrumbs maintext={"Dashborad (Employee Asset)"} addlink={"/addAssets"} />
+                            <div className="row">
+                                <div className="col-12 col-lg-12 col-xl-12">
+                                    <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                        <div className="">
+                                            <div>
+                                                {assetStatsEmp && Object.keys(assetStatsEmp)?.length > 0 &&
+                                                    <div className="oxyem-top-box-design design-only-attendence leave-top-data-main row stats-grid mt-3">
 
-                                                    {/* 🔹 Total Hardware */}
-                                                    <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                        <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Hardware")}>
-                                                            <img src='/assets/img/hardware.png' alt="hardware" />
-                                                            <div className='ox-colored-box-1'>
-                                                                <h4 className='all_attendence'>
-                                                                    {assetStatsEmp.totalHardware}<br />
-                                                                    {/* <span className="leave-days-label">Assets</span> */}
-                                                                </h4>
+                                                        {/* 🔹 Total Hardware */}
+                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                            <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Hardware")}>
+                                                                <img src='/assets/img/hardware.png' alt="hardware" />
+                                                                <div className='ox-colored-box-1'>
+                                                                    <h4 className='all_attendence'>
+                                                                        {assetStatsEmp.totalAllocatedHardware}<br />
+                                                                        {/* <span className="leave-days-label">Assets</span> */}
+                                                                    </h4>
+                                                                </div>
+                                                                <div className='ox-box-text'><h6>Hardware</h6></div>
                                                             </div>
-                                                            <div className='ox-box-text'><h6>Hardware</h6></div>
                                                         </div>
-                                                    </div>
 
-                                                    {/* 🔹 Total Software */}
-                                                    <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                        <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Software")}>
-                                                            <img src='/assets/img/software.png' alt="software" />
-                                                            <div className='ox-colored-box-2'>
-                                                                <h4 className='month_attendence'>
-                                                                    {assetStatsEmp.totalSoftware}<br />
-                                                                    {/* <span className="leave-days-label">Assets</span> */}
-                                                                </h4>
+                                                        {/* 🔹 Total Software */}
+                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                            <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Software")}>
+                                                                <img src='/assets/img/software.png' alt="software" />
+                                                                <div className='ox-colored-box-2'>
+                                                                    <h4 className='month_attendence'>
+                                                                        {assetStatsEmp.totalAllocatedSoftware}<br />
+                                                                        {/* <span className="leave-days-label">Assets</span> */}
+                                                                    </h4>
+                                                                </div>
+                                                                <div className='ox-box-text'><h6>Software</h6></div>
                                                             </div>
-                                                            <div className='ox-box-text'><h6>Software</h6></div>
                                                         </div>
-                                                    </div>
 
-                                                    {/* 🔹 Total Available */}
-                                                    <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                        <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Available")}>
-                                                            <img src='/assets/img/available.png' alt="available" />
-                                                            <div className='ox-colored-box-3'>
-                                                                <h4 className='notsubmit_attendence'>
-                                                                    {assetStatsEmp.totalActive}<br />
-                                                                    {/* <span className="leave-days-label">Assets</span> */}
-                                                                </h4>
+                                                        {/* 🔹 Total Available */}
+                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                            <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Available")}>
+                                                                <img src='/assets/img/available.png' alt="available" />
+                                                                <div className='ox-colored-box-3'>
+                                                                    <h4 className='notsubmit_attendence'>
+                                                                        {assetStatsEmp.totalActive}<br />
+                                                                        {/* <span className="leave-days-label">Assets</span> */}
+                                                                    </h4>
+                                                                </div>
+                                                                <div className='ox-box-text'><h6>Active</h6></div>
                                                             </div>
-                                                            <div className='ox-box-text'><h6>Active</h6></div>
                                                         </div>
-                                                    </div>
 
-                                                    {/* 🔹 Total Assets Amount */}
-                                                    <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
-                                                        <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("allocated")}>
-                                                            <img src='/assets/img/money.png' alt="amount" />
-                                                            <div className='ox-colored-box-4'>
-                                                                <h4 className='week_attendence'>
-                                                                    {assetStatsEmp?.allocated}
-                                                                </h4>
+                                                        {/* 🔹 Total Assets Amount */}
+                                                        <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                            <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("allocated")}>
+                                                                <img src='/assets/img/money.png' alt="amount" />
+                                                                <div className='ox-colored-box-4'>
+                                                                    <h4 className='week_attendence'>
+                                                                        {assetStatsEmp?.totalAllocated}
+                                                                    </h4>
+                                                                </div>
+                                                                <div className='ox-box-text'><h6>Allocated</h6></div>
                                                             </div>
-                                                            <div className='ox-box-text'><h6>Allocated</h6></div>
                                                         </div>
+
                                                     </div>
+                                                }
 
-                                                </div>
-                                            }
-
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-12 col-lg-12 col-xl-12 d-flex">
-                                        <div className="card flex-fill comman-shadow oxyem-index payroll_page_main">
-                                            <div className="center-part">
-                                                <div className="card-body oxyem-mobile-card-body">
-                                                    <div className="col-md-6">{activeStatus !== null && (
-                                                        <div className="active-filter-tag">
-                                                            <span> {typeof activeStatus === "string"
-                                                                ? activeStatus?.charAt(0).toUpperCase() + activeStatus.slice(1)
-                                                                : activeStatus}</span>
-                                                            <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
-                                                        </div>
-                                                    )}</div>
-                                                    {showOnlylist === 'showOnlylist' ?
-                                                        <div className="row">
-                                                            <div className="col-12 col-lg-12 col-xl-12">
-                                                                <div className="row">
-                                                                    <div className="col-12 col-lg-12 col-xl-12 d-flex">
-                                                                        <div className="card flex-fill comman-shadow oxyem-index payroll_page_main">
-                                                                            <div className="center-part">
-                                                                                <div className="card-body oxyem-mobile-card-body">
-                                                                                    <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                                                                        {isFor === "admin" ?
-
-                                                                                            <CustomDataTable
-                                                                                                title={""}
-                                                                                                onViewClick={onViewClick}
-                                                                                                onHistoryClick={onHistoryClick}
-                                                                                                onEditClick={onEditClick}
-                                                                                                handleApprrovereq={handleApprrovereq}
-                                                                                                pagename={"employeeAsset"}
-                                                                                                dashboradApi={'/asset/myAssets'}
-                                                                                                empId={router.query.id}
-                                                                                            />
-
-                                                                                            :
-
-                                                                                            <CustomDataTable
-                                                                                                title={""}
-                                                                                                onViewClick={onViewClick}
-                                                                                                onHistoryClick={onHistoryClick}
-                                                                                                onEditClick={onEditClick}
-                                                                                                handleApprrovereq={handleApprrovereq}
-                                                                                                pagename={"employeeAsset"}
-                                                                                                dashboradApi={'/asset/myAssets'}
-                                                                                            />}
-
-
-
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                    <div className="row">
+                                        <div className="col-12 col-lg-12 col-xl-12 d-flex">
+                                            <div className="card flex-fill comman-shadow oxyem-index payroll_page_main">
+                                                <div className="center-part">
+                                                    <div className="card-body oxyem-mobile-card-body px-0">
+                                                        <div className="col-md-6">{activeStatus !== null && (
+                                                            <div className="active-filter-tag">
+                                                                <span> {typeof activeStatus === "string"
+                                                                    ? activeStatus?.charAt(0).toUpperCase() + activeStatus.slice(1)
+                                                                    : activeStatus}</span>
+                                                                <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
                                                             </div>
-                                                        </div>
-                                                        :
-                                                        <>
-
-
+                                                        )}</div>
+                                                        {showOnlylist === 'showOnlylist' ?
 
                                                             <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                                                <CustomDataTable
-                                                                    title={""}
-                                                                    onViewClick={onViewClick}
-                                                                    onHistoryClick={onHistoryClick}
-                                                                    onEditClick={onEditClick}
-                                                                    handleApprrovereq={handleApprrovereq}
-                                                                    pagename={"employeeAsset"}
-                                                                    dashboradApi={'/asset/myAssets'}
-                                                                    searchfilter={searchfilter}
-                                                                />
+                                                                {isFor === "admin" ?
+
+                                                                    <CustomDataTable
+                                                                        title={""}
+                                                                        onViewClick={onViewClick}
+                                                                        onHistoryClick={onHistoryClick}
+                                                                        onEditClick={onEditClick}
+                                                                        handleApprrovereq={handleApprrovereq}
+                                                                        pagename={"employeeAsset"}
+                                                                        dashboradApi={'/asset/myAssets'}
+                                                                        empId={router.query.id}
+                                                                    />
+
+                                                                    :
+
+                                                                    <CustomDataTable
+                                                                        title={""}
+                                                                        onViewClick={onViewClick}
+                                                                        onHistoryClick={onHistoryClick}
+                                                                        onEditClick={onEditClick}
+                                                                        handleApprrovereq={handleApprrovereq}
+                                                                        pagename={"employeeAsset"}
+                                                                        dashboradApi={'/asset/myAssets'}
+                                                                    />}
+
+
+
                                                             </div>
+                                                            :
+                                                            <>
 
 
 
-                                                        </>
-                                                    }
+                                                                <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
+                                                                    <CustomDataTable
+                                                                        title={""}
+                                                                        onViewClick={onViewClick}
+                                                                        onHistoryClick={onHistoryClick}
+                                                                        onEditClick={onEditClick}
+                                                                        handleApprrovereq={handleApprrovereq}
+                                                                        pagename={"employeeAsset"}
+                                                                        dashboradApi={'/asset/myAssets'}
+                                                                        searchfilter={searchfilter}
+                                                                    />
+                                                                </div>
+
+
+
+                                                            </>
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="row">
+                    <div className="col-12 col-lg-12 col-xl-12">
+                        <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                            <div className="">
+                                <div>
+                                    {assetStatsEmp && Object.keys(assetStatsEmp)?.length > 0 &&
+                                        <div className="oxyem-top-box-design design-only-attendence leave-top-data-main row stats-grid mt-3">
+
+                                            {/* 🔹 Total Hardware */}
+                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Hardware")}>
+                                                    <img src='/assets/img/hardware.png' alt="hardware" />
+                                                    <div className='ox-colored-box-1'>
+                                                        <h4 className='all_attendence'>
+                                                            {assetStatsEmp.totalAllocatedHardware}<br />
+                                                            {/* <span className="leave-days-label">Assets</span> */}
+                                                        </h4>
+                                                    </div>
+                                                    <div className='ox-box-text'><h6>Hardware</h6></div>
+                                                </div>
+                                            </div>
+
+                                            {/* 🔹 Total Software */}
+                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Software")}>
+                                                    <img src='/assets/img/software.png' alt="software" />
+                                                    <div className='ox-colored-box-2'>
+                                                        <h4 className='month_attendence'>
+                                                            {assetStatsEmp.totalAllocatedSoftware}<br />
+                                                            {/* <span className="leave-days-label">Assets</span> */}
+                                                        </h4>
+                                                    </div>
+                                                    <div className='ox-box-text'><h6>Software</h6></div>
+                                                </div>
+                                            </div>
+
+                                            {/* 🔹 Total Available */}
+                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("Available")}>
+                                                    <img src='/assets/img/available.png' alt="available" />
+                                                    <div className='ox-colored-box-3'>
+                                                        <h4 className='notsubmit_attendence'>
+                                                            {assetStatsEmp.totalActive}<br />
+                                                            {/* <span className="leave-days-label">Assets</span> */}
+                                                        </h4>
+                                                    </div>
+                                                    <div className='ox-box-text'><h6>Active</h6></div>
+                                                </div>
+                                            </div>
+
+                                            {/* 🔹 Total Assets Amount */}
+                                            <div className='col-xl-3 col-lg-6 col-md-6 col-sm-6'>
+                                                <div className="stats-info stats-info-cus text-center" onClick={() => handleShowDataForStatus("allocated")}>
+                                                    <img src='/assets/img/money.png' alt="amount" />
+                                                    <div className='ox-colored-box-4'>
+                                                        <h4 className='week_attendence'>
+                                                            {assetStatsEmp?.totalAllocated}
+                                                        </h4>
+                                                    </div>
+                                                    <div className='ox-box-text'><h6>Allocated</h6></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div className="">
+                            <div className="">
+                                <div className="card flex-fill comman-shadow oxyem-index payroll_page_main">
+                                    <div className="center-part">
+                                        <div className="card-body oxyem-mobile-card-body px-0">
+                                            <div className="col-md-6">{activeStatus !== null && (
+                                                <div className="active-filter-tag">
+                                                    <span> {typeof activeStatus === "string"
+                                                        ? activeStatus?.charAt(0).toUpperCase() + activeStatus.slice(1)
+                                                        : activeStatus}</span>
+                                                    <button onClick={() => handleShowDataForStatus('clr')} className="remove-filter-btn">×</button>
+                                                </div>
+                                            )}</div>
+                                            {showOnlylist === 'showOnlylist' ?
+
+                                                <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
+                                                    {isFor === "admin" ?
+
+                                                        <CustomDataTable
+                                                            title={""}
+                                                            onViewClick={onViewClick}
+                                                            onHistoryClick={onHistoryClick}
+                                                            onEditClick={onEditClick}
+                                                            handleApprrovereq={handleApprrovereq}
+                                                            pagename={"employeeAsset"}
+                                                            dashboradApi={'/asset/myAssets'}
+                                                            empId={router.query.id}
+                                                        />
+
+                                                        :
+
+                                                        <CustomDataTable
+                                                            title={""}
+                                                            onViewClick={onViewClick}
+                                                            onHistoryClick={onHistoryClick}
+                                                            onEditClick={onEditClick}
+                                                            handleApprrovereq={handleApprrovereq}
+                                                            pagename={"employeeAsset"}
+                                                            dashboradApi={'/asset/myAssets'}
+                                                        />}
+
+
+
+                                                </div>
+
+                                                :
+                                                <>
+
+
+
+                                                    <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
+                                                        <CustomDataTable
+                                                            title={""}
+                                                            onViewClick={onViewClick}
+                                                            onHistoryClick={onHistoryClick}
+                                                            onEditClick={onEditClick}
+                                                            handleApprrovereq={handleApprrovereq}
+                                                            pagename={"employeeAsset"}
+                                                            dashboradApi={'/asset/myAssets'}
+                                                            searchfilter={searchfilter}
+                                                        />
+                                                    </div>
+
+
+
+                                                </>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            )}
 
 
 

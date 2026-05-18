@@ -5,7 +5,7 @@ import { FaAngleRight } from "react-icons/fa";
 import * as ReactIcons from "react-icons/fa"; // Import all icons from 'react-icons/fa' (you can change 'fa' to any other icon library like 'io' or 'bs')
 
 export default function SidebarItem({ item }) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const router = useRouter();
 
     const IconComponent = ReactIcons[item.icon]; // Dynamic selection of icon component

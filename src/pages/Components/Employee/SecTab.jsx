@@ -10,16 +10,71 @@ const DynamicForm = dynamic(() => import('../CommanForm.jsx'), {
 });
 import { Tooltip } from 'react-tooltip'
 import SummaryView from '../summary/summaryview.jsx';
-export default function SecTab({ AdduserContent, headingContent, getleavedetail, handlesubmitApiData, getsubmitformdata, getleaveoption, getsubmitformdatapreview, actionid, handleBTPformvalue, pagename, showButton, converttoenable, showleave, getChangessField, handleGetEmpDetail, handleGetproject ,LossOfPayApplicable,getsubmitformdatahitApi,assetid, handleGetfiles, filegetpagename ,applicantDetails, cancelClickAction,applicantid, btpstpvalue ,handelPreviewPdf,loaderSubmitButton ,handleDescriptionDetail,getRewardData ,attachments ,autofillData, isPageType}) {
+export default function SecTab({ AdduserContent, headingContent, getleavedetail, handlesubmitApiData, getsubmitformdata, getleaveoption, getsubmitformdatapreview, actionid, handleBTPformvalue, pagename, showButton, converttoenable, showleave, getChangessField, handleGetEmpDetail, handleGetproject ,LossOfPayApplicable,getsubmitformdatahitApi,assetid, handleGetfiles, filegetpagename ,applicantDetails, cancelClickAction,applicantid, btpstpvalue ,handelPreviewPdf,loaderSubmitButton ,handleDescriptionDetail,getRewardData ,attachments ,autofillData, isPageType, isFor}) {
   const apiUrl = "";
   const [content, setContent] = useState(AdduserContent); // State to hold the content
   const [activeTab, setActiveTab] = useState(AdduserContent.section[0].SectionName);
   const hasMultipleSections = Array.isArray(content.section) && content.section.length > 1;
-
-  const sectionname = AdduserContent.section[0].name
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
+const [projectStartDatePM, setProjectStartDatePM] = useState(null);
+const [projectEndDatePM, setProjectEndDatePM] = useState(null);
+const handlegetInfoClick = (start, end) => {
+    setProjectEndDatePM(end);
+    setProjectStartDatePM(start);
   };
+  const sectionname = AdduserContent.section[0].name
+
+const getSectionIndexByLabel = (label) => {
+  return content.section.findIndex(
+    sec => sec.SectionName === label
+  );
+};
+const isSectionValidByLabel = (sectionLabel) => {
+  const section = content.section.find(
+    sec => sec.SectionName === sectionLabel
+  );
+
+  if (!section) return true;
+
+  for (const sub of section.Subsection) {
+    for (const field of sub.fields) {
+      const isRequired = field.validations?.some(v => v.type === "required");
+
+      if (isRequired) {
+        const value = field.value;
+
+        const isEmpty =
+          value === "" ||
+          value === null ||
+          value === undefined ||
+          (Array.isArray(value) && value.length === 0);
+
+        if (isEmpty) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+};
+
+const handleTabClick = (tabLabel) => {
+  if(isFor === "project"){
+  const currentIndex = getSectionIndexByLabel(activeTab);
+  const targetIndex = getSectionIndexByLabel(tabLabel);
+
+  if (targetIndex > currentIndex) {
+    const isValid = isSectionValidByLabel(activeTab);
+
+    if (!isValid) {
+      return;
+    }
+  }
+  }
+  // ✅ Allow tab change
+  setActiveTab(tabLabel);
+};
+
 
   useEffect(() => {
     if (pagename === "onprocessBoarding") {
@@ -40,8 +95,6 @@ export default function SecTab({ AdduserContent, headingContent, getleavedetail,
     "formType": content.formType,
     "section": content.section
   };
-
-  
 
   const convertToArray = (sourceArray) => {
     const newArray = {
@@ -233,8 +286,7 @@ export default function SecTab({ AdduserContent, headingContent, getleavedetail,
 
   const handelAttendanceData = (formData,id) => {
     const newArray = convertToArray(sourceArray);
-    if (pagename === "add_attendances") {
-      console.log(newArray ,id);  
+    if (pagename === "add_attendances") { 
       handlesubmitApiData(newArray ,id)
     }
   };
@@ -418,6 +470,9 @@ export default function SecTab({ AdduserContent, headingContent, getleavedetail,
                             attachments={attachments}
                             autofillData={autofillData}
                             isPageType={isPageType}
+                            handlegetInfoClick={handlegetInfoClick}
+                            projectStartDatePM={projectStartDatePM}
+                            projectEndDatePM={projectEndDatePM}
                           />
                         )}
                       </>

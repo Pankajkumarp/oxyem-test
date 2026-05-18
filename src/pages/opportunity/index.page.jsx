@@ -23,6 +23,7 @@ const DynamicForm = dynamic(() => import('../Components/CommanForm.jsx'), {
 const Notes = dynamic(() => import('../Components/Popup/Notes'), {
     ssr: false
 });
+import { countWorkingDays } from "../Components/Hooks/countWorkingDays";
 export default function opportunity({ userFormdata }) {  // Default to empty array if not provided
 
     const router = useRouter();
@@ -75,7 +76,8 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             whiteSpace: 'nowrap',
         }),
     };
-
+        const [opportunityId, setOpportunityId] = useState("");
+    const [dayCount, setDayCount] = useState("");
     const [formvalue, setFormvalue] = useState(userFormdata);
     const [dataDocuments, setDataDocuments] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState({});
@@ -219,7 +221,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const [summaryCost, setSummaryCost] = useState({});
 
     const getRoleOptionsForUnit = async (unit, rowIndex) => {
-        const roleArray = dataEffort.map(item => item.role).filter(role => role); // filter out empty or null roles
+        const roleArray = dataEffort.map(item => item.role).filter(role => role);
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -233,21 +235,14 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                     value: item.id,
                 }));
 
-                // Remove any roles from fetchedRoleOptions where the id matches a role in roleArray
                 const filteredRoleOptions = fetchedRoleOptions.filter(option => !roleArray.includes(option.value));
-
-                // Update the role options in the state
                 if (activeTab === "Effort Details") {
                     setRoleOptions(prevData => {
-                        // Create a new array to hold updated role options
                         const updatedData = [...prevData];
 
-                        // Ensure the updatedData has enough rows
                         while (updatedData.length <= rowIndex) {
-                            updatedData.push({ roleOptions: [] }); // Initialize empty roleOptions for new rows
+                            updatedData.push({ roleOptions: [] });
                         }
-
-                        // Set the roleOptions for the specific row
                         updatedData[rowIndex].roleOptions = filteredRoleOptions;
 
                         return updatedData;
@@ -259,7 +254,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
         }
     };
 
-    // Initialize data for the active tab
 
     const initializeDataForTab = (tab) => {
 
@@ -268,13 +262,10 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
         if (selectedSection && selectedSection.Subsection.length > 0) {
 
             const initialRow = mergeDataWithFields(selectedSection.Subsection[0].fields, []);
-
-            // Ensure document rows have a fileKey placeholder so uploadedFiles can be mapped
             if (tab === "Documents") {
-                // keep fileKey empty until user selects a file
                 initialRow.fileKey = initialRow.fileKey || '';
             }
-            return [initialRow]; // Return an array with the initial row
+            return [initialRow];
 
         }
 
@@ -283,32 +274,11 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     };
 
 
-    // const handleTabClick = (tab) => {
-    //     if (tabArray.includes(tab)) {
-    //         if (activeTab !== tab) {
-    //             setActiveTab(tab);
-    //             setfields(formvalue.section.find(section => section.SectionName === tab).Subsection[0].fields);
-    //             if (tab === "Opportunity Details" && dataOpportunity.length === 0) {
-    //                 setDataOpportunity(initializeDataForTab(tab));
-    //             } else if (tab === "Effort Details" && dataEffort.length === 0) {
-    //                 setDataEffort(initializeDataForTab(tab));
-    //             } else if (tab === "Other Cost" && dataOtherCost.length === 0) {
-    //                 setDataOtherCost(initializeDataForTab(tab));
-    //             }else if (tab === "Documents" && dataDocuments.length === 0) {
-    //             setDataDocuments(initializeDataForTab(tab));
-    //         }
-
-    //         }
-    //     } else {
-    //         console.log(`${tab} is not in the tabArray`);
-    //     }
-
-    // };
-
-
-    // replace handleTabClick with this simpler version
     const handleTabClick = (tab) => {
-        // allow switching to any visible tab (no strict tabArray guard)
+        if (tab !== "Opportunity Details" && !opportunityId) {
+        console.warn("Please complete Opportunity Details first");
+        return;
+    }
         const section = formvalue.section.find(section => section.SectionName === tab);
         if (!section || !section.isVisible) {
             console.warn(`${tab} is not available or not visible`);
@@ -342,7 +312,12 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
         } else if (activeTab === "Effort Details") {
 
             setDataEffort([...dataEffort, newRow]);
-
+setDataEffort(prev =>
+            prev.map(row => ({
+                ...row,
+                totalEffort: dayCount
+            }))
+        );
         } else if (activeTab === "Other Cost") {
 
             setDataOtherCost([...dataOtherCost, newRow]);
@@ -787,99 +762,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     };
 
     const [sectionerrors, setSectionErrors] = useState({});
-    const [opportunityId, setOpportunityId] = useState("");
-    // const submitformdata = async (value) => {
-    //     const inputData = value
-    //     const transformedData = {
-    //         opportunityName: inputData.opportunityName,
-    //         existingClient: inputData.existingClient,
-    //         clientName: inputData.clientName.value,
-    //         startDate: inputData.startDate,
-    //         endDate: inputData.endDate,
-    //         location: inputData.location.value,
-    //         currencyType: inputData.currencyType.value
-    //     };
-    //     setDataOpportunity(transformedData)
-    //     const startDate = new Date(value.startDate);
-    //     const endDate = new Date(value.endDate);
-    //     const errors = {};
 
-    //     if (startDate >= endDate) {
-    //         errors.dateRange = 'Start date must be before end date.';
-    //     }
-
-    //     if (Object.keys(errors).length > 0) {
-    //         setSectionErrors(errors);
-    //         return;
-    //     }
-
-    //        // Prepare FormData to include files
-    // const formData = new FormData();
-    // formData.append('status', 'Draft');
-    // formData.append('opportunityId', opportunityId || '');
-    // formData.append('dataOpportunity', JSON.stringify(transformedData));
-    // formData.append('dataEffort', JSON.stringify(dataEffort));
-    // formData.append('dataOtherCost', JSON.stringify(dataOtherCost));
-    // formData.append('summaryCost', JSON.stringify(summaryCost));
-
-    // // Include documents rows metadata (file names + fileKey) so server can map files -> rows
-    // formData.append('dataDocuments', JSON.stringify(dataDocuments || []));
-
-    // // Append each uploaded File object. server should accept multiple files under same field (e.g. 'files')
-    // Object.entries(uploadedFiles || {}).forEach(([fileKey, file]) => {
-    //     // append file with its fileKey so backend can correlate
-    //     formData.append('files', file); // multiple files under 'files'
-    //     formData.append('fileKeys', fileKey); // optional: send parallel list of keys (or backend can read from dataDocuments)
-    // });
-    // try {
-    //     const response = await axiosJWT.post(`${apiUrl}/opportunity/add`, formData, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data'
-    //         }
-    //     });
-
-    //     } catch (error) {
-    //         console.log("Error submitting form data:", error);
-    //     }
-    //     if (response) {
-    //         setActiveTab("Effort Details");
-    //         const tab = "Effort Details"
-    //         setDataEffort(initializeDataForTab(tab));
-    //         setOpportunityId(response.data.moduleId)
-    //         setCurrencyId(response.data.currencyType)
-
-    //         const updatedFormvalue = JSON.parse(JSON.stringify(formvalue));
-
-    //         const clientNameField = updatedFormvalue.section[1].Subsection[0].fields.find(
-    //             field => field.name === "totalEffort"
-    //         );
-
-    //         if (clientNameField) {
-    //             clientNameField.value = response.data.totalDays;
-    //             clientNameField.isDisabled = true;
-    //         }
-    //         setFormvalue(updatedFormvalue);
-    //         setisTabclick(true);
-    //         settableSection("show");
-    //         const totalDays = response.data.totalDays;
-
-    //         const updatedData = dataEffort.map(row => ({
-    //             ...row, // Spread the existing row data
-    //             totalEffort: totalDays // Set totalEffort to the value of totalDays
-    //         }));
-
-    //         setDataEffort(updatedData);
-
-    //         setTimeout(() => {
-    //             setcalculate(true)
-    //         }, 1000);
-    //         setTimeout(() => {
-    //             setcalculate(false)
-    //         }, 2000);
-
-
-    //     }
-    // };
 
 
     const submitformdata = async (value) => {
@@ -999,6 +882,20 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const handleSubmit = async () => {
 
         if (activeTab !== "Summary") {
+            if (activeTab === "Documents") {
+                const updatedFormvalue = JSON.parse(JSON.stringify(formvalue));
+                const clientNameField = updatedFormvalue.section[1].Subsection[0].fields.find(
+                    field => field.name === "totalEffort"
+                );
+
+                if (clientNameField) {
+                    clientNameField.value = dayCount;
+                    clientNameField.isDisabled = true;
+                }
+                setFormvalue(updatedFormvalue);
+                setActiveTab("Effort Details");
+                return;
+            }
             const fieldErrors = validateFields(fields);
             if (Object.keys(fieldErrors).length > 0) {
                 setErrors(fieldErrors);
@@ -1090,6 +987,18 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const closeNotesModal = async () => {
         setIsNotesModalOpen(false)
     }
+    const handlegetInfoClick = async (startDate, endDate) => {
+        const days = await countWorkingDays(startDate, endDate);
+        setDayCount(days)
+    }
+    useEffect(() => {
+        setDataEffort(prev =>
+            prev.map(row => ({
+                ...row,
+                totalEffort: dayCount
+            }))
+        );
+    }, [dayCount, activeTab]);
     return (
         <>
             <Head>
@@ -1156,8 +1065,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
 
                                                                 <div className="tab-content" >
 
-
-
                                                                     {formvalue.section.map((section, index) => (
                                                                         activeTab === section.SectionName && (
                                                                             <div key={index} className={`tab-pane ${activeTab === section.SectionName ? 'active' : ''}`}>
@@ -1170,7 +1077,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                                                                                 <div className="col-12 text-end">
                                                                                                     <span className='btn btn-primary breadcrum-btn' onClick={addRow}><FaPlus /></span>
                                                                                                 </div>
-                                                                                                { section.name === "effortD" ? (
+                                                                                                {section.name === "effortD" ? (
                                                                                                     <div className="opp_box_info">
                                                                                                         <div className='icon_box_perform'>
                                                                                                             <FaInfoCircle />
@@ -1211,56 +1118,46 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                                                                             </div>
                                                                                         ) : (<></>)}
                                                                                     </>
-                                                                                ): section.name === "Documents" ? (
-                                                                                                    <div className="oxyem-time-mang-format">
-                                                                                                        <div className="row">
-                                                                                                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                                                                                                                {/* Info Section */}
-                                                                                                                <div className="opp_box_info">
-                                                                                                                    <div className='icon_box_perform'>
-                                                                                                                        <FaInfoCircle />
-                                                                                                                    </div>
-                                                                                                                    <div>
-                                                                                                                        <p>Uploaded project-related documents are listed below:</p>
-                                                                                                                    </div>
-                                                                                                                </div>
-
-                                                                                                                {/* Upload Component - pass onDocumentsChange to sync parent state */}
-                                                                                                                <UploadFileDetail
-                                                                                                                    documentId={opportunityId}
-                                                                                                                    documentFor="opportunity"
-                                                                                                                    onDocumentsChange={(docs) => setDataDocuments(docs)}
-                                                                                                                />
-
-                                                                                                                <div className="justify-content-end d-flex w-100 mt-4">                                                   <button className="btn btn-secondary" onClick={handleBackClick}>Cancel</button>
-                                                                                                                    <button
-                                                                                                                        className="btn btn-primary ms-2"
-                                                                                                                        onClick={() => {
-                                                                                                                            // If any tab has validation errors, jump to its first error tab
-                                                                                                                            const errorTab = findFirstErrorTab();
-                                                                                                                            if (errorTab) {
-                                                                                                                                setActiveTab(errorTab);
-                                                                                                                                return;
-                                                                                                                            }
-                                                                                                                            // otherwise move to next visible tab
-                                                                                                                            const idx = formvalue.section.findIndex(s => s.SectionName === activeTab);
-                                                                                                                            if (idx >= 0) {
-                                                                                                                                for (let i = idx + 1; i < formvalue.section.length; i++) {
-                                                                                                                                    if (formvalue.section[i].isVisible) {
-                                                                                                                                        setActiveTab(formvalue.section[i].SectionName);
-                                                                                                                                        break;
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }}
-                                                                                                                    >
-                                                                                                                        Next
-                                                                                                                    </button>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
+                                                                                ) : section.SectionName === "Documents" ? (
+                                                                                    <div className="oxyem-time-mang-format">
+                                                                                        <div className="row">
+                                                                                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-6">
+                                                                                                {/* Info Section */}
+                                                                                                <div className="opp_box_info">
+                                                                                                    <div className='icon_box_perform'>
+                                                                                                        <FaInfoCircle />
                                                                                                     </div>
-                                                                                                )  : section.name === "summary" ? (
+                                                                                                    <div>
+                                                                                                        <p>Uploaded project-related documents are listed below:</p>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                <UploadFileDetail
+                                                                                                    documentId={opportunityId}
+                                                                                                    documentFor="opportunity"
+                                                                                                />
+                                                                                                <div className="justify-content-end d-flex w-100 mt-4">
+                                                                                                    {formbuttons.map((btn, index) => (
+                                                                                                        <>
+                                                                                                            {btn.buttontype === "submit" ? (
+                                                                                                                <button className={`btn ${btn.class}`} key={index} onClick={handleSubmit}>{btn.label}</button>
+                                                                                                            ) : (
+                                                                                                                <>
+                                                                                                                    {btn.buttontype === "Cancel" ? (
+                                                                                                                        <button className={`btn ${btn.class}`} key={index} onClick={handleBackClick}>{btn.label}</button>
+                                                                                                                    ) : (
+                                                                                                                        <button className={`btn ${btn.class}`} key={index} onClick={handleDraftSubmit} >{btn.label}</button>
+                                                                                                                    )}
+                                                                                                                </>
+                                                                                                            )}
+                                                                                                        </>
+                                                                                                    ))}
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                ) : section.name === "summary" ? (
                                                                                     <>
                                                                                         <div className="row justify-content-center">
                                                                                             <div className="col-xxl-10">
@@ -1483,9 +1380,8 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                                                                             handleChangeValue={handleChangeValue}
                                                                                             Openedsection={index}
                                                                                             handleChangess={() => handleChangess(index)}
-
+                                                                                            handlegetInfoClick={handlegetInfoClick}
                                                                                             submitformdata={submitformdata}
-
                                                                                             isModule={formvalue.formType}
                                                                                             pagename={pagename}
                                                                                             showButton={showButton}

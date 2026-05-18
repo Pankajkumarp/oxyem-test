@@ -44,6 +44,7 @@ export default function Projectmanagement({ userFormdata }) {
       "feature": newArray.feature,
       "section": sendData
     }
+    console.log("apipayload", apipayload)
     try {
       const response = await axiosJWT.post(`${apiUrl}/project`, apipayload);
       // Handle the response if needed
@@ -105,7 +106,7 @@ export default function Projectmanagement({ userFormdata }) {
             },
         });
        
-          router.push(`/Project-dashboard`);
+          router.push(`/projects`);
           setSubmitButtonloader(false);
         }
       }
@@ -143,7 +144,7 @@ export default function Projectmanagement({ userFormdata }) {
                         <div className="card-body oxyem-mobile-card-body project-oxyem-alocation">
                           <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
 						  {errorMessage !== "" ? (<div className="alert alert-danger alert-dismissible fade show" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button></div>) : (null)}
-                            <SecTab AdduserContent={AdduserContent} headingContent={headingContent} handlesubmitApiData={handlesubmitApiData} handleBTPformvalue={handleBTPformvalue} loaderSubmitButton={SubmitButtonloader}/>
+                            <SecTab AdduserContent={AdduserContent} headingContent={headingContent} handlesubmitApiData={handlesubmitApiData} handleBTPformvalue={handleBTPformvalue} loaderSubmitButton={SubmitButtonloader} isFor={"project"}/>
                           </div>
                         </div>
                       </div>

@@ -176,8 +176,8 @@ export default function Login({ loginFormdata1 }) {
 											{errorres && <div id="messages-container"><div className="alert alert-danger  mb-4" role="alert">{errorres}</div></div>}
 											{showlogin &&
 												<>
-													<h3 className='auth_page_heading'>Welcome Back!</h3>
-													<p className='auth_page_text'> Please login to your account</p>
+													<h1 className='auth_page_heading'>Welcome Back!</h1>
+													<p className='auth_page_text'> Log in to manage your workforce.</p>
 													<SecTab AdduserContent={AdduserContent} getleaveoption={getleaveoption} headingContent={headingContent} getsubmitformdata={getsubmitformdata} isPageType="withoutToken"/>
 													
 		

@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles';
 import { fetchWithToken } from '../../Auth/fetchWithToken';
-import { FaRegCheckCircle} from "react-icons/fa";
+import { FaRegCheckCircle } from "react-icons/fa";
 export default function User({ leaveFormdata }) {
 
   const router = useRouter();
@@ -20,9 +20,6 @@ export default function User({ leaveFormdata }) {
 
   const [formContent, setFormContent] = useState(leaveFormdata);
 
-  console.log("formContent", formContent)
-
-  console.log("formContent", formContent)
   const convertArrayToObject = (data) => {
     if (!Array.isArray(data) || data.length === 0 || !data[0] || !Array.isArray(data[0].fields)) {
       return {};
@@ -40,331 +37,46 @@ export default function User({ leaveFormdata }) {
 
   const [salaryStructue, setSalaryStructue] = useState([]);
   const [monthlySalary, setmonthlySalary] = useState("");
-
-
-  // const calculateSalaries = (monthlySalary, salaryData) => {
-  //   let basicSalary;
-  // 
-  //   const updatedData = salaryData.map(item => {
-  //     let existingBOAwithpf, existingBOAwithoutpf;
-  // 
-  //     if (item.fixedamount) {
-  //       existingBOAwithpf = parseFloat(item.fixedamount).toFixed(2);
-  //       existingBOAwithoutpf = parseFloat(item.fixedamount).toFixed(2);
-  //     } else {
-  //       const percentageWithPf = parseFloat(item.pfyes) / 100;
-  //       const percentageWithoutPf = parseFloat(item.pfno) / 100;
-  // 
-  //       if (item.name === "basicSalary") {
-  //         basicSalary = parseFloat(monthlySalary) * percentageWithPf;
-  //         existingBOAwithpf = basicSalary.toFixed(2);
-  //         existingBOAwithoutpf = basicSalary.toFixed(2);
-  //       } else if (item.name === "DA+HRA") {
-  //         existingBOAwithpf = (basicSalary * 0.4).toFixed(2);
-  //         existingBOAwithoutpf = (basicSalary * 0.4).toFixed(2);
-  //       } else if (item.name === "projectAllowance") {
-  //         existingBOAwithpf = (parseFloat(monthlySalary) * percentageWithPf).toFixed(2);
-  //         existingBOAwithoutpf = (parseFloat(monthlySalary) * percentageWithoutPf).toFixed(2);
-  //       } else if (item.name === "pfemployee" || item.name === "pfCompany") {
-  //         existingBOAwithpf = (basicSalary  * percentageWithPf).toFixed(2);
-  //         existingBOAwithoutpf = (basicSalary  * percentageWithoutPf).toFixed(2);
-  //       } else {
-  //         existingBOAwithpf = (parseFloat(monthlySalary) * percentageWithPf).toFixed(2);
-  //         existingBOAwithoutpf = (parseFloat(monthlySalary) * percentageWithoutPf).toFixed(2);
-  //       }
-  //     }
-  // 
-  //     return {
-  //       ...item,
-  //       existingBOAwithpf,
-  //       existingBOAwithoutpf,
-  //     };
-  //   });
-  // 
-  //   // Calculate total monthly with and without PF
-  //   let totalMonthlyWithPf = 0;
-  //   let totalMonthlyWithoutPf = 0;
-  // 
-  //   updatedData.forEach(item => {
-  //     if (item.isEditable !== false && item.name !== 'specialAllowance') {
-  //       totalMonthlyWithPf += parseFloat(item.existingBOAwithpf);
-  //       totalMonthlyWithoutPf += parseFloat(item.existingBOAwithoutpf);
-  //     }
-  //   });
-  // 
-  //   totalMonthlyWithPf = totalMonthlyWithPf.toFixed(2);
-  //   totalMonthlyWithoutPf = totalMonthlyWithoutPf.toFixed(2);
-  // 
-  //   // Update 'otherAllowance' with the remaining amount
-  //   updatedData.forEach(item => {
-  //     if (item.name === "specialAllowance") {
-  //       item.existingBOAwithpf = (parseFloat(monthlySalary) - totalMonthlyWithPf).toFixed(2);
-  //       item.existingBOAwithoutpf = (parseFloat(monthlySalary) - totalMonthlyWithoutPf).toFixed(2);
-  //     }
-  //   });
-  // 
-  //   // Update total monthly and annual salary
-  //   totalMonthlyWithPf = 0;
-  //   totalMonthlyWithoutPf = 0;
-  // 
-  //   updatedData.forEach(item => {
-  //     if (item.isEditable !== false) {
-  //       totalMonthlyWithPf += parseFloat(item.existingBOAwithpf);
-  //       totalMonthlyWithoutPf += parseFloat(item.existingBOAwithoutpf);
-  //     }
-  //   });
-  // 
-  //   updatedData.forEach(item => {
-  //     if (item.name === "totalMonthlySalary") {
-  //       item.existingBOAwithpf = totalMonthlyWithPf.toFixed(2);
-  //       item.existingBOAwithoutpf = totalMonthlyWithoutPf.toFixed(2);
-  //     }
-  // 
-  //     if (item.name === "totalAnnualSalary") {
-  //       item.existingBOAwithpf = (totalMonthlyWithPf * 12).toFixed(2);
-  //       item.existingBOAwithoutpf = (totalMonthlyWithoutPf * 12).toFixed(2);
-  //     }
-  //   });
-  // 
-  //   return updatedData;
-  // };
-  //
-  // useEffect(() => {
-  //   const updatedSalaryData = calculateSalaries(monthlySalary, data.initialSalaryData);
-  //   setSalaryStructue(updatedSalaryData)
-  // }, [monthlySalary]);
-
   const [showtable, setShowtable] = useState(true);
-
-    const revisedSalarieswithoutpf = (monthlySalary, salaryData) => {
-
-    let basicSalary;
-    let medicalAllowance = 1600;
-    let conveyanceAllowance = 1250;
-    let daHRA;
-    let projectAllowances;
-
-    const updatedData = salaryData.map(item => {
-      let revisedBOA;
-
-      if (item.fixedamount) {
-        revisedBOA = parseFloat(item.fixedamount).toFixed(2);
-      } else {
-        const percentageWithoutPf = parseFloat(item.pfno) / 100;
-
-        if (item.name === "basicSalary") {
-          basicSalary = parseFloat(monthlySalary) * percentageWithoutPf;
-          revisedBOA = basicSalary.toFixed(2);
-        } else if (item.name === "daHRA") {
-          daHRA = (basicSalary * 0.4).toFixed(2);
-          revisedBOA = daHRA;
-        } else if (item.name === "projectAllowances") {
-          projectAllowances = (parseFloat(monthlySalary) * percentageWithoutPf).toFixed(2);
-          revisedBOA = projectAllowances;
-        } else if (item.name === "pfEmployee" || item.name === "pfcompany") {
-          revisedBOA = (basicSalary * percentageWithoutPf).toFixed(2);
-        } else {
-          revisedBOA = (parseFloat(monthlySalary) * percentageWithoutPf).toFixed(2);
-        }
-      }
-
-      return {
-        ...item,
-        revisedBOA,
-      };
-    });
-
-    // Calculate total monthly with and without PF
-    let totalMonthlyWithoutPf = 0;
-
-    updatedData.forEach(item => {
-      if (item.isEditable !== false && item.name !== 'specialAllowance') {
-        totalMonthlyWithoutPf += parseFloat(item.revisedBOA);
-
-      }
-    });
-
-    totalMonthlyWithoutPf = totalMonthlyWithoutPf.toFixed(2);
-
-
-    // Update 'otherAllowance' with the remaining amount
-    updatedData.forEach(item => {
-      if (item.name === "specialAllowance") {
-        item.revisedBOA = (parseFloat(monthlySalary) - totalMonthlyWithoutPf).toFixed(2);
-      }
-    });
-    // Check if "specialAllowance" is negative or less than 0
-    updatedData.forEach(item => {
-      if (item.name === "specialAllowance") {
-        let specialAllowanceValue = parseFloat(item.revisedBOA);
-        if (specialAllowanceValue < 0) {
-
-          // Adjust "projectAllowances" and set "specialAllowance" to 0
-          let totalAllowances = medicalAllowance + conveyanceAllowance + basicSalary + parseFloat(daHRA);
-          let adjustedProjectAllowances = parseFloat(monthlySalary) - totalAllowances;
-          updatedData.forEach(adjustedItem => {
-            if (adjustedItem.name === "projectAllowances") {
-              adjustedItem.revisedBOA = adjustedProjectAllowances.toFixed(2);
-            }
-          });
-
-          item.revisedBOA = "0.00"; // Set "specialAllowance" to 0
-        }
-      }
-    });
-    // Update total monthly and annual salary
-    totalMonthlyWithoutPf = 0;
-
-    updatedData.forEach(item => {
-      if (item.isEditable !== false) {
-        totalMonthlyWithoutPf += parseFloat(item.revisedBOA);
-      }
-    });
-
-    updatedData.forEach(item => {
-      if (item.name === "totalMonthlySalary") {
-        item.revisedBOA = totalMonthlyWithoutPf.toFixed(2);
-      }
-
-      if (item.name === "totalAnnualSalary") {
-        item.revisedBOA = (totalMonthlyWithoutPf * 12).toFixed(2);
-      }
-    });
-
-    return updatedData;
-  };
-  const revisedSalarieswithpf = (monthlySalary, salaryData) => {
-    let basicSalary;
-    let medicalAllowance = 1600;
-    let conveyanceAllowance = 1250;
-    let daHRA;
-    let projectAllowances;
-    let pfEmployee;
-    let pfcompany;
-
-    const updatedData = salaryData.map(item => {
-      let revisedBOA;
-
-      if (item.fixedamount) {
-        revisedBOA = parseFloat(item.fixedamount).toFixed(2);
-      } else {
-        const percentageWithPf = parseFloat(item.pfyes) / 100;
-
-        if (item.name === "basicSalary") {
-          basicSalary = parseFloat(monthlySalary) * percentageWithPf;
-          revisedBOA = basicSalary.toFixed(2);
-        } else if (item.name === "daHRA") {
-          daHRA = (basicSalary * 0.4).toFixed(2);
-          revisedBOA = daHRA;
-        } else if (item.name === "projectAllowances") {
-          revisedBOA = (parseFloat(monthlySalary) * percentageWithPf).toFixed(2);
-        } else if (item.name === "pfEmployee") {
-          pfEmployee = (basicSalary * percentageWithPf).toFixed(2);
-          revisedBOA = pfEmployee;
-        }  else if (item.name === "pfcompany") {
-          pfcompany = (basicSalary * percentageWithPf).toFixed(2);
-          revisedBOA = pfcompany;
-        }else {
-          revisedBOA = (parseFloat(monthlySalary) * percentageWithPf).toFixed(2);
-        }
-      }
-
-      return {
-        ...item,
-        revisedBOA,
-      };
-    });
-
-    // Calculate total monthly with and without PF
-    let totalMonthlyWithPf = 0;
-
-    updatedData.forEach(item => {
-      if (item.isEditable !== false && item.name !== 'specialAllowance') {
-        totalMonthlyWithPf += parseFloat(item.revisedBOA);
-      }
-    });
-
-    totalMonthlyWithPf = totalMonthlyWithPf.toFixed(2);
-
-    // Update 'otherAllowance' with the remaining amount
-    updatedData.forEach(item => {
-      if (item.name === "specialAllowance") {
-        item.revisedBOA = (parseFloat(monthlySalary) - totalMonthlyWithPf).toFixed(2);
-      }
-    });
-    // Check if "specialAllowance" is negative or less than 0
-    updatedData.forEach(item => {
-      if (item.name === "specialAllowance") {
-        let specialAllowanceValue = parseFloat(item.revisedBOA);
-        if (specialAllowanceValue < 0) {
-
-          // Adjust "projectAllowances" and set "specialAllowance" to 0
-          console.log("pfEmployee", pfEmployee)
-          console.log("pfcompany", pfcompany)
-          let totalAllowances = medicalAllowance + conveyanceAllowance + basicSalary + parseFloat(daHRA) + parseFloat(pfEmployee) + parseFloat(pfcompany);
-          console.log("totalAllowances", totalAllowances)
-          let adjustedProjectAllowances = parseFloat(monthlySalary) - totalAllowances;
-          updatedData.forEach(adjustedItem => {
-            if (adjustedItem.name === "projectAllowances") {
-              adjustedItem.revisedBOA = adjustedProjectAllowances.toFixed(2);
-            }
-          });
-
-          item.revisedBOA = "0.00"; // Set "specialAllowance" to 0
-        }
-      }
-    });
-    // Update total monthly and annual salary
-    totalMonthlyWithPf = 0;
-
-    updatedData.forEach(item => {
-      if (item.isEditable !== false) {
-        totalMonthlyWithPf += parseFloat(item.revisedBOA);
-      }
-    });
-
-    updatedData.forEach(item => {
-      if (item.name === "totalMonthlySalary") {
-        item.revisedBOA = totalMonthlyWithPf.toFixed(2);
-      }
-
-      if (item.name === "totalAnnualSalary") {
-        item.revisedBOA = (totalMonthlyWithPf * 12).toFixed(2);
-      }
-    });
-
-    return updatedData;
-  };
-  
-  const handleIncrementChange = (value, isEligibleForPF) => {
-    const newIncrement = parseFloat(value);
-    const incrementAmount = (monthlySalary / 100) * newIncrement;
-    const newSalary = monthlySalary + incrementAmount;
-    if (isEligibleForPF === false) {
-      const updatedSalaryData = revisedSalarieswithoutpf(newSalary, salaryStructue)
-      setSalaryStructue(updatedSalaryData)
-    } else {
-      const updatedSalaryData = revisedSalarieswithpf(newSalary, salaryStructue)
-      setSalaryStructue(updatedSalaryData)
-    }
-  }
-  const handleIncrementMonthChange = (value, isEligibleForPF) => {
-    const newSalary = value;
-    if (isEligibleForPF === false) {
-      const updatedSalaryData = revisedSalarieswithoutpf(newSalary, salaryStructue)
-      setSalaryStructue(updatedSalaryData)
-    } else {
-      const updatedSalaryData = revisedSalarieswithpf(newSalary, salaryStructue)
-      setSalaryStructue(updatedSalaryData)
-    }
-  }
   const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
-  const getsubmitformdata = async (value) => {
+  
+  const fetchcalculateValue = async (convertedData) => {
+    const { idEmployee, applicableFrom, currencyType, ...rest } = convertedData;
 
+    const hasOtherValues = Object.values(rest).some(
+      val => val !== "" && val !== null && val !== undefined
+    );
+    if (idEmployee && applicableFrom && currencyType && hasOtherValues) {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+       const formattedData = Object.fromEntries(
+        Object.entries(convertedData).map(([key, value]) => {
+          if (typeof value === "boolean") {
+            return [key, value ? "Yes" : "No"];
+          }
+          return [key, value];
+        })
+      );
+      const response = await axiosJWT.get(`${apiUrl}/payroll/calculateBoa`, {
+        params: formattedData
+      });
+        if (response) {
+          const data = response.data.data
+          setSalaryStructue(data.initialSalaryData)
+        }
+
+      } catch (error) {
+
+        setError(error.message || 'Failed to fetch options');
+      }
+    }
+  };
+  const getsubmitformdata = async (value) => {
     const convertedData = convertArrayToObject(value.section);
     setEmpInfo(convertedData)
     const currentvalue = parseFloat(convertedData.salaryamount);
     setmonthlySalary(currentvalue)
+
     if (convertedData.appraisalPercent === "No") {
       if (convertedData.appraisalPercent === "No") {
         formContent.section[0].Subsection[0].fields.forEach(field => {
@@ -383,12 +95,7 @@ export default function User({ leaveFormdata }) {
         });
         setFormContent({ ...formContent });
       }
-      if (convertedData.salaryamount === "") {
-        //setmonthlySalary(0)
-        handleIncrementMonthChange(0, convertedData.isEligibleForPF)
-      } else {
-        handleIncrementMonthChange(currentvalue, convertedData.isEligibleForPF)
-      }
+      fetchcalculateValue(convertedData)
 
     } else {
 
@@ -411,17 +118,8 @@ export default function User({ leaveFormdata }) {
         setFormContent({ ...formContent });
       }
 
-      if (convertedData.appraisalPercent !== "No") {
-        if (convertedData.percentageIncreament === "") {
-          handleIncrementChange(0, convertedData.isEligibleForPF)
-        } else {
-          handleIncrementChange(convertedData.percentageIncreament, convertedData.isEligibleForPF)
-        }
-      } else {
-        handleIncrementChange(0, convertedData.isEligibleForPF)
-      }
+      fetchcalculateValue(convertedData)
     }
-    console.log("FormData", convertedData);
   };
 
   const currentDate = new Date(); // Get the current date
@@ -460,7 +158,7 @@ export default function User({ leaveFormdata }) {
       "typeOfAppraisal": empInfo.appraisalPercent,
       "percentageIncreament": empInfo.percentageIncreament,
       "salarayDetail": salarayDetail,
-	  "currencyType": empInfo.currencyType,
+      "currencyType": empInfo.currencyType,
     }
     try {
       const response = await axiosJWT.post(`${apiUrl}/payroll/addBoa`, payload);
@@ -470,22 +168,22 @@ export default function User({ leaveFormdata }) {
         toast.success(({ id }) => (
           <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
             <FaRegCheckCircle style={{
-							fontSize: '35px',
-							marginRight: '10px',
-							color: '#4caf50'
-						}} />
+              fontSize: '35px',
+              marginRight: '10px',
+              color: '#4caf50'
+            }} />
             <span dangerouslySetInnerHTML={{ __html: message }}></span>
             <button
-            onClick={() => toast.dismiss(id)}
-            style={{
+              onClick={() => toast.dismiss(id)}
+              style={{
                 background: 'none',
-				border: 'none',
-				color: '#4caf50',
-				marginLeft: 'auto',
-				cursor: 'pointer',
-				fontSize: '20px',
-            }}
-          >
+                border: 'none',
+                color: '#4caf50',
+                marginLeft: 'auto',
+                cursor: 'pointer',
+                fontSize: '20px',
+              }}
+            >
               <FaTimes />
             </button>
           </div>
@@ -539,12 +237,12 @@ export default function User({ leaveFormdata }) {
   }
   const [error, setError] = useState(null);
   const [tableHeader, setTableHeader] = useState([]);
-    const [buttonType, setButtonType] = useState([]);
+  const [buttonType, setButtonType] = useState([]);
   const [showButton, setshowButton] = useState(false);
   const [lastAppraisalshow, setlastAppraisalshow] = useState(false);
   const [lastAppraisal, setlastAppraisal] = useState("");
   const fetchOptions = async () => {
-	  setValidationErrors("")
+    setValidationErrors("")
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/payroll/getBoaByEmployee`, {
@@ -554,8 +252,8 @@ export default function User({ leaveFormdata }) {
         }
       });
       if (response) {
-if(response.data.errorMessage){
-        setValidationErrors(response.data.errorMessage)
+        if (response.data.errorMessage) {
+          setValidationErrors(response.data.errorMessage)
         }
         const data = response.data.data
         const dataTotal = response.data.data.empData.totalAmmount
@@ -568,7 +266,7 @@ if(response.data.errorMessage){
         setShowtable(true)
         setlastAppraisalshow(true)
         setshowButton(true)
-		setButtonType(data.button)
+        setButtonType(data.button)
 
         formContent.section[0].Subsection[0].fields.forEach(field => {
           if (field.name === 'salaryamount') {
@@ -585,7 +283,6 @@ if(response.data.errorMessage){
           }
         });
         setFormContent({ ...formContent });
-
       }
 
     } catch (error) {
@@ -600,23 +297,23 @@ if(response.data.errorMessage){
     }
   }, [empInfo.idEmployee, empInfo.applicableFrom]);
 
-	    useEffect(() => {
-        const mainElement = document.querySelector('body');
-        if (mainElement) {
-            mainElement.setAttribute('id', 'basketOfAll-module');
-        }
-        return () => {
-            if (mainElement) {
-                mainElement.removeAttribute('id');
-            }
-        };
-    }, []);
+  useEffect(() => {
+    const mainElement = document.querySelector('body');
+    if (mainElement) {
+      mainElement.setAttribute('id', 'basketOfAll-module');
+    }
+    return () => {
+      if (mainElement) {
+        mainElement.removeAttribute('id');
+      }
+    };
+  }, []);
   return (
     <>
-        <Head>
-          <title>{pageTitles.BasketOfAllowanceAdd}</title>
-          <meta name="description" content={pageTitles.BasketOfAllowanceAdd} />
-        </Head>
+      <Head>
+        <title>{pageTitles.BasketOfAllowanceAdd}</title>
+        <meta name="description" content={pageTitles.BasketOfAllowanceAdd} />
+      </Head>
       <div className="main-wrapper">
         <div className="page-wrapper">
           <div className="content container-fluid">
@@ -644,7 +341,7 @@ if(response.data.errorMessage){
 
                             </div>
 
-                            <SecTab AdduserContent={formContent} pagename={"create_allowance"} getsubmitformdata={getsubmitformdata} loaderSubmitButton={SubmitButtonLoading}/>
+                            <SecTab AdduserContent={formContent} pagename={"create_allowance"} getsubmitformdata={getsubmitformdata} loaderSubmitButton={SubmitButtonLoading} />
                             {showtable ? (
                               <div className='allownce_table'>
                                 <table className="table-input-oxyem">
@@ -684,36 +381,36 @@ if(response.data.errorMessage){
 
                               SubmitButtonLoading ? (
                                 <div className="text-end w-100 oxyem-timesheet-popup-button">
-                  <button className="btn btn-primary" type="submit" disabled={SubmitButtonLoading}>
-                  <div className="spinner">
-                    <div className="bounce1"></div>
-                    <div className="bounce2"></div>
-                    <div className="bounce3"></div>
-                  </div>
-              </button>
-            </div>
-                              ) : (
-                              <div className="text-end w-100 oxyem-timesheet-popup-button">
-                                {buttonType.map((btn, index) => (
-                                  <button
-                                    key={index} // Add a unique key for each button
-                                    type={btn.type}
-                                    className={`btn mx-2 ${btn.value === "cancel" ? "btn-oxyem" : "btn-primary"}`}
-                                    disabled={!btn.isEnabled}
-                                    onClick={
-                                      btn.value === "submit"
-                                        ? handleDataSave
-                                        : btn.value === "cancel"
-                                          ? handleDataCancel
-                                          : null
-                                    }
-                                  >
-                                    {btn.value}
+                                  <button className="btn btn-primary" type="submit" disabled={SubmitButtonLoading}>
+                                    <div className="spinner">
+                                      <div className="bounce1"></div>
+                                      <div className="bounce2"></div>
+                                      <div className="bounce3"></div>
+                                    </div>
                                   </button>
-                                ))}
-                              </div>
-                            )
-                          ) : null}
+                                </div>
+                              ) : (
+                                <div className="text-end w-100 oxyem-timesheet-popup-button">
+                                  {buttonType.map((btn, index) => (
+                                    <button
+                                      key={index} // Add a unique key for each button
+                                      type={btn.type}
+                                      className={`btn mx-2 ${btn.value === "cancel" ? "btn-oxyem" : "btn-primary"}`}
+                                      disabled={!btn.isEnabled}
+                                      onClick={
+                                        btn.value === "submit"
+                                          ? handleDataSave
+                                          : btn.value === "cancel"
+                                            ? handleDataCancel
+                                            : null
+                                      }
+                                    >
+                                      {btn.value}
+                                    </button>
+                                  ))}
+                                </div>
+                              )
+                            ) : null}
                           </div>
                         </div>
                       </div>

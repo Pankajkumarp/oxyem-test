@@ -1,8 +1,8 @@
 ﻿@charset "UTF-8";
 
 :root {
-  --fontFamily: "Helvetica Now MT Micro Regular";
-  --headingFontFamily: "Helvetica Now MT Micro Regular";
+  --fontFamily: 'Inter', sans-serif;
+  --headingFontFamily: 'Poppins', sans-serif;
   --startupMainColor: #fd5444;
   --marketingMainColor: #004D95;
   --businessMainColor: #004D95;

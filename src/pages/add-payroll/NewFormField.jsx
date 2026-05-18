@@ -411,11 +411,13 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
                           </div>
                         </div>
                                <div className="col-md-2 d-flex mt-2 add_payroll_icon">
+                                  {field?.name?.label === "Shift Allowances" && (
+
                     <span className="me-2 view-icon"
                     onClick={openDrawer}
                   >
                     <FaRegEye />
-                  </span>
+                  </span>)}
                   <span
                                           className="del-icon"
                                           onClick={() => handleDeleteField('earning', index)}

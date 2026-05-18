@@ -124,9 +124,6 @@ export default function Navbar({ page }) {
                                     </ul>
                                 </li>
                                 <li className="nav-item">
-                                    <Link href="/pricing" className=" nav-link">Pricing</Link>
-                                </li>
-                                <li className="nav-item">
                                     <Link href="/aboutus" className=" nav-link">About Us</Link>
                                 </li>
 

@@ -3,6 +3,8 @@ import { GrFormNext } from 'react-icons/gr';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import Edit from '../Edit/Edit';
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
+import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
+import { MdAccountBalance } from "react-icons/md";
 
 export default function BankInfo({ empId, apiBaseUrl, Formdata ,showbutton}) {
   const [bankInfo, setBankInfo] = useState([]);
@@ -96,8 +98,13 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
         </h3>
 
         {bankInfo.length === 0 ? (
-          <div>No records found</div>
-        ) : (
+  <EmptyInfoBlock
+                    title="No bank information added yet."
+                    description="This helps HR reach someone in case of emergency."
+                    buttonText="Add Bank Information"
+icon={<MdAccountBalance size={48} color="#004D95" />}
+                    onButtonClick={openEditModal}
+                  />         ) : (
           bankInfo.map((infoArray, index) => {
             const nameOnAccount = infoArray.find(info => info.lebel === "Name on account")?.value;
             const bankName = infoArray.find(info => info.lebel === "Bank Name")?.value;

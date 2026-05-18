@@ -1,210 +1,113 @@
-import React, { useState, useEffect, useRef  } from 'react';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
-import {
-	ClassicEditor,
-	AccessibilityHelp,
-	Alignment,
-	Autoformat,
-	AutoLink,
-	Autosave,
-	BlockQuote,
-	Bold,
-	Code,
-	Essentials,
-	FindAndReplace,
-	FontBackgroundColor,
-	FontColor,
-	FontFamily,
-	FontSize,
-	GeneralHtmlSupport,
-	Heading,
-	Highlight,
-	HorizontalLine,
-	Indent,
-	IndentBlock,
-	Italic,
-	Link,
-	Paragraph,
-	RemoveFormat,
-	SelectAll,
-	SpecialCharacters,
-	SpecialCharactersArrows,
-	SpecialCharactersCurrency,
-	SpecialCharactersEssentials,
-	SpecialCharactersLatin,
-	SpecialCharactersMathematical,
-	SpecialCharactersText,
-	Strikethrough,
-	Style,
-	Subscript,
-	Superscript,
-	Table,
-	TableCaption,
-	TableCellProperties,
-	TableColumnResize,
-	TableProperties,
-	TableToolbar,
-	TextTransformation,
-	Underline,
-	Undo,
-	List,  // List plugin for handling ordered and unordered lists
-} from 'ckeditor5';
 
-import 'ckeditor5/ckeditor5.css';
+const CKEditorTextComponent = ({
+  type,
+  readonly,
+  isDisabled,
+  placeholder,
+  label,
+  value,
+  validations = [],
+  onChange
+}) => {
 
-const CKEditorTextComponent = ({ type, readonly, isDisabled, placeholder, label, value, validations = [], onChange }) => {
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const isRequired = validations.some(validation => validation.type === "required");
+  // 👇 keep your existing ref (for modules)
+  const editorRef = useRef(null);
 
-    const [textData, settextData] = useState(value);
-    useEffect(() => {
-      settextData(value);
-    }, [value]);
+  // 👇 NEW ref only for editor instance
+  const editorInstanceRef = useRef(null);
 
-    const handleInputChange = (data) => {
-        settextData(data);
-        onChange(data);
+  const CKEditor = editorRef.current?.CKEditor;
+  const Editor = editorRef.current?.Editor;
+
+  const [editorLoaded, setEditorLoaded] = useState(false);
+
+  useEffect(() => {
+    editorRef.current = {
+      CKEditor: require("@ckeditor/ckeditor5-react").CKEditor,
+      Editor: require("ckeditor5-custom-build")
     };
+    setEditorLoaded(true);
+  }, []);
 
-    const userid = "0990f32f-ab18-4e2b-8c1c-9f2d50400a90";
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const isRequired = validations.some(v => v.type === "required");
 
-    const handleImageUpload = async (file) => {
-        if (!file) return;
+  const [textData, settextData] = useState(value);
 
-        const formData = new FormData();
-        formData.append('files', file);
-        
-		console.log(formData);
+  useEffect(() => {
+    settextData(value);
+  }, [value]);
 
-        try {
-            const response = await axiosJWT.post(`${apiBaseUrl}/automationIdea/uploadFile`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+  const handleInputChange = (data) => {
+    settextData(data);
+    onChange(data);
+  };
 
-            if (response) {
-				const imageUrl = response.data.data[0].url; // Access the first item in the data array
-                return imageUrl;
-            }
-        } catch (error) {
-            console.error("Error occurred during image upload:", error);
-        }
-    };
+  const editorConfig = {
+    licenseKey: "GPL",
+    toolbar: {
+      items: [
+        'undo',
+        'redo',
+        '|',
+        'bold',
+        'italic',
+        'underline',
+        '|',
+        'bulletedList',
+        'numberedList',
+      ],
+    },
+    placeholder
+  };
 
-    // Updated editor configuration without image support
-    const editorConfig = {
-		toolbar: {
-			items: [
-				'undo',
-				'redo',
-				'|',
-				'bold',
-				'italic',
-				'underline',
-				'|',
-				'numberedList',
-				'bulletedList',
-			],
-			shouldNotGroupWhenFull: false
-		},
-		plugins: [
-			AccessibilityHelp,
-			Alignment,
-			Autoformat,
-			AutoLink,
-			Autosave,
-			BlockQuote,
-			Bold,
-			Code,
-			Essentials,
-			FindAndReplace,
-			FontBackgroundColor,
-			FontColor,
-			FontFamily,
-			FontSize,
-			GeneralHtmlSupport,
-			Heading,
-			Highlight,
-			HorizontalLine,
-			Indent,
-			IndentBlock,
-			Italic,
-			Link,
-			Paragraph,
-			RemoveFormat,
-			SelectAll,
-			SpecialCharacters,
-			SpecialCharactersArrows,
-			SpecialCharactersCurrency,
-			SpecialCharactersEssentials,
-			SpecialCharactersLatin,
-			SpecialCharactersMathematical,
-			SpecialCharactersText,
-			Strikethrough,
-			Style,
-			Subscript,
-			Superscript,
-			Table,
-			TableCaption,
-			TableCellProperties,
-			TableColumnResize,
-			TableProperties,
-			TableToolbar,
-			TextTransformation,
-			Underline,
-			Undo,
-			List,                // List plugin to manage lists
-		],
-		fontFamily: {
-			supportAllValues: false
-		},
-		fontSize: {
-			options: [10, 12, 14, 'default', 18, 20, 22, 24],
-			supportAllValues: true
-		},
-		placeholder: placeholder,
-		table: {
-			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
-		}
-	};
+  // ✅ FIXED: readonly toggle uses editorInstanceRef
+  useEffect(() => {
+    const editor = editorInstanceRef.current;
+    const lockId = 'manual-readonly-lock';
 
-	const editorRef = useRef(null); 
-	useEffect(() => {
-		const editor = editorRef.current;
-		const lockId = 'manual-readonly-lock';
+    if (!editor) return;
 
-		if (editor) {
-			if (isDisabled) {
-				editor.enableReadOnlyMode(lockId);
-			} else {
-				editor.disableReadOnlyMode(lockId);
-			}
-		}
-	}, [isDisabled]);
-  
-    return (
-        <>
-        {isRequired ? <LabelMandatory labelText={label} /> : <LabelNormal labelText={label} />}
+    if (isDisabled) {
+      editor.enableReadOnlyMode(lockId);
+    } else {
+      editor.disableReadOnlyMode(lockId);
+    }
+  }, [isDisabled]);
+
+  return (
+    <>
+      {isRequired
+        ? <LabelMandatory labelText={label} />
+        : <LabelNormal labelText={label} />
+      }
+
+      {editorLoaded && CKEditor && Editor ? (
         <CKEditor
-            editor={ClassicEditor}
-            data={textData}
-            config={editorConfig}
-			onReady={(editor) => {
-				editorRef.current = editor;
-				const lockId = 'manual-readonly-lock';
-				if (readonly || isDisabled) {
-					editor.enableReadOnlyMode(lockId);
-				}
-			}}
-            onChange={(event, editor) => {
-                const data = editor.getData();
-                handleInputChange(data);
-            }}
+          editor={Editor}
+          data={textData}
+          config={editorConfig}
+          onReady={(editor) => {
+            // 👇 editor instance stored here ONLY
+            editorInstanceRef.current = editor;
+
+            const lockId = 'manual-readonly-lock';
+            if (readonly || isDisabled) {
+              editor.enableReadOnlyMode(lockId);
+            }
+          }}
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            handleInputChange(data);
+          }}
         />
-        </>
-    );
+      ) : null}
+    </>
+  );
 };
 
 export default CKEditorTextComponent;

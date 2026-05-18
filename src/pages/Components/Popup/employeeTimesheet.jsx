@@ -11,6 +11,7 @@ import { axiosJWT } from '../../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
 import { FaTimes } from "react-icons/fa";
 import { FaRegCheckCircle} from "react-icons/fa";
+import { MdErrorOutline } from "react-icons/md";
 const customStyles = {
     content: {
         background: '#fff',
@@ -36,6 +37,7 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
     const [sectionButton, setSectionButton] = useState([]);
     const [idTimesheet, setidTimesheet] = useState("");
     const [filltercolums, setFilltercolums] = useState([]);
+    const [invalidCells, setInvalidCells] = useState({});
 
     const [fillterData, setFillterData] = useState([]);
 
@@ -81,6 +83,8 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
                 const tableHeaders = [
                     { name: "idTaskProject", label: "idTaskProject", isfilter: true, issort: false },
                     { name: "idTaskSubmission", label: "idTaskSubmission", isfilter: true, issort: false },
+                    { name: "idSubTask", label: "idSubTask", isfilter: true, issort: false },
+                    { name: "isSubTask", label: "isSubTask", isfilter: true, issort: false },
                     { name: "startDate", label: "startDate", isfilter: true, issort: false },
                     { name: "endDate", label: "endDate", isfilter: true, issort: false },
                     { name: "sn", label: "S.N", isfilter: true, issort: true },
@@ -131,6 +135,8 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
                     return [
                         { name: "idTaskProject", value: task.idTaskProject },
                         { name: "idTaskSubmission", value: task.idTaskSubmission ? task.idTaskSubmission : "" },
+                        { name: "idSubTask", value: task.idSubTask ? task.idSubTask : "" },
+                        { name: "isSubTask", value: task.isSubTask ? task.isSubTask :false },
                         { name: "startDate", value: task.startDate },
                         { name: "endDate", value: task.endDate },
                         { name: "sn", value: (index + 1).toString() },
@@ -156,7 +162,7 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
                 });
 
                 const totalresult = names.map(name => {
-                    if (name === "idTaskProject" || name === "sn" || name === "projectName" || name === "TaskName" || name === "idTaskSubmission" || name === "startDate" || name === "endDate") {
+                    if (name === "idTaskProject" || name === "sn" || name === "projectName" || name === "TaskName" || name === "idTaskSubmission" || name === "startDate" || name === "endDate" || name === "idSubTask" || name === "isSubTask") {
                         return { name, value: "Total" };
                     } else {
                         const sum = formattedData.flatMap(item => item.filter(innerItem => innerItem.name === name)).reduce((acc, current) => acc + parseFloat(current.value), 0);
@@ -333,7 +339,38 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
             console.error("Error occurred:", error);
         }
     }
+
+    const validateTimesheet = () => {
+  const errors = {};
+  let hasError = false;
+
+  // remove total row
+  const rows = fillterData.slice(0, -1);
+
+  rows.forEach((row, rowIndex) => {
+    row.forEach(cell => {
+      if (
+        cell.type === 'taskAssignedDays' &&
+        cell.isFreezable === false &&
+        Number(cell.value) <= 0
+      ) {
+        const key = `${rowIndex}-${cell.name}`;
+        errors[key] = true;
+        hasError = true;
+      }
+    });
+  });
+
+  setInvalidCells(errors);
+  return !hasError;
+};
+const [errorsMessage, setErrorMessage] = useState("");
     const handleDataSave = async (value) => {
+        setErrorMessage("")
+    if ((value === 'submit' || value === 'draft') && !validateTimesheet()) {
+      setErrorMessage('Please fill all required effort fields before submitting.')
+  return;
+}
         fillterData.pop();
 
         const transformItem = (item) => {
@@ -361,6 +398,7 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
 
             if (response && response.data) {
                 const message = response.data.message;
+                setErrorMessage("")
                 toast.success(({ id }) => (
                     <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
                         <FaRegCheckCircle style={{
@@ -519,166 +557,250 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
         }
     };
 
-    const handleDataChange = (rowIndex, field, value) => {
-        // Create a deep copy of fillterData to avoid mutating the original state directly
-        const updatedData = fillterData.map(row => row.map(cell => ({ ...cell })));
+const handleDataChange = (rowIndex, field, value) => {
+  const updatedData = fillterData.map(row =>
+    row.map(cell => ({ ...cell }))
+  );
 
-        // Find the correct cell to update
-        const rowToUpdate = updatedData[rowIndex];
-        for (let i = 0; i < rowToUpdate.length; i++) {
-            if (rowToUpdate[i].name === field) {
-                rowToUpdate[i].value = value;
-                break;
-            }
+  const rowToUpdate = updatedData[rowIndex];
+
+  // Update changed cell
+  rowToUpdate.forEach(cell => {
+    if (cell.name === field) {
+      cell.value = value;
+    }
+  });
+
+  let totalEffort = 0;
+  let totalAllocationEffort = 0;
+
+  rowToUpdate.forEach(cell => {
+    if (cell.type === 'taskAssignedDays') {
+      const effort = parseFloat(cell.value);
+      totalEffort += isNaN(effort) ? 0 : effort;
+    }
+
+    if (cell.name === 'totalEffortsAllocated') {
+      totalAllocationEffort = parseFloat(cell.value) || 0;
+    }
+  });
+
+  const format = num =>
+    Number.isInteger(num) ? num.toString() : num.toFixed(2);
+
+  rowToUpdate.forEach(cell => {
+    if (cell.name === 'totalEffortsSubmitted') {
+      cell.value = format(totalEffort);
+    }
+
+    if (cell.name === 'remainEffortsAllocated') {
+      cell.value = format(totalAllocationEffort - totalEffort);
+    }
+  });
+
+  // remove total row
+  updatedData.pop();
+
+  // recompute footer totals
+  const names = [...new Set(updatedData.flatMap(r => r.map(c => c.name)))];
+
+  const totalRow = names.map(name => {
+    if (
+      ["idTaskProject", "sn", "projectName", "TaskName", "idTaskSubmission", "startDate", "endDate"]
+        .includes(name)
+    ) {
+      return { name, value: "Total" };
+    }
+
+    const sum = updatedData
+      .flatMap(r => r.filter(c => c.name === name))
+      .reduce((acc, c) => acc + (parseFloat(c.value) || 0), 0);
+
+    return { name, value: format(sum) };
+  });
+
+  setFillterData([...updatedData, totalRow]);
+};
+
+const isZeroOrEmpty = (v) =>
+  v === '' || v === null || v === undefined || Number(v) <= 0;
+
+const columns = filltercolums.map(col => ({
+  name: col.name,
+  label: col.label,
+  options: {
+    filter: col.isfilter,
+    sort: col.issort,
+    display: ['idTaskProject', 'idTaskSubmission', 'startDate', 'endDate','idSubTask','isSubTask']
+      .includes(col.name)
+      ? 'excluded'
+      : 'true',
+    // ✅ ADD CLASS TO <th>
+    setCellHeaderProps: () => {
+      const baseClass = 'th-common-head';
+
+      const specificClass =
+        col.name === 'projectName'
+          ? 'th-project-name-head'
+          : col.name === 'taskName'
+          ? 'th-taskName-name-head'
+          : col.name === 'percentageAllocation'
+          ? 'th-percentageAllocation-name-head'
+          : col.name === 'sn'
+          ? 'th-sn-name-head'
+          : col.name === 'totalEffortsSubmitted'
+          ? 'th-total-effort'
+          : col.name === 'totalEffortsAllocated'
+          ? 'th-alloc-effort'
+          : col.name === 'remainEffortsAllocated'
+          ? 'th-pending-effort'
+          : '';
+
+      return {
+        className: `${baseClass} ${specificClass}`.trim()
+      };
+    },
+    // ✅ ADD CLASS TO <td>
+setCellProps: (value) => {
+  let className = '';
+
+  // ===== existing column classes =====
+  if (col.name === 'totalEffortsSubmitted') {
+    className = 'td-total-effort';
+  }
+
+  if (col.name === 'totalEffortsAllocated') {
+    className = 'td-alloc-effort';
+  }
+
+  if (col.name === 'remainEffortsAllocated') {
+    className = 'td-pending-effort';
+
+    // ✅ negative highlight
+    if (Number(value) < 0) {
+      className += ' time_hightlight_test_minus';
+    }
+  }
+
+  // ===== ✅ CENTER ONLY NUMERIC TD =====
+  const isNumberValue =
+    value !== null &&
+    value !== '' &&
+    !isNaN(Number(value));
+
+  if (isNumberValue) {
+    className += (className ? ' ' : '') + 'text-center-row';
+  }
+
+  return { className };
+},
+
+
+customBodyRender: (value, tableMeta, updateValue) => {
+  const rowData = fillterData[tableMeta.rowIndex];
+  const cell = rowData[tableMeta.columnIndex];
+
+  const projectName =
+    rowData.find(c => c.name === 'projectName')?.value;
+
+  const isLeaveRow = projectName === 'Leave';
+  const isHolidayRow = projectName === 'Holiday';
+
+  const isDateCell = cell?.type === 'taskAssignedDays';
+  const isEditable = isDateCell && cell.isFreezable === false;
+
+  let className = 'form-control timesheet-emp';
+
+  // ✅ LEAVE
+  if (isLeaveRow && isDateCell && Number(value) > 0) {
+    className += ' td-leave-project-value';
+  }
+
+  // ✅ HOLIDAY
+  if (isHolidayRow && isDateCell && Number(value) > 0) {
+    className += ' td-holiday-project-value';
+  }
+
+  // ✅ Submitted
+  if (isEditable && Number(value) > 0) {
+  className += ' td-submitted-project-value';
+  }
+  // ✅ Submitted
+if (
+    isEditable &&
+    (
+      value === null ||
+      value === undefined ||
+      value === '' ||
+      Number(value) <= 0
+    )
+  ) {
+    className += ' td-pending-project-value';
+  }
+
+  // ---------- Editable days ----------
+if (isEditable) {
+  const cellKey = `${tableMeta.rowIndex}-${cell.name}`;
+  const isInvalid =
+    invalidCells[cellKey] && isZeroOrEmpty(value);
+
+  return (
+    <input
+      type="number"
+      min={0}
+      value={value ?? ''}
+      className={`${className} ${isInvalid ? 'input-error-s-t' : ''}`}
+
+      /* ✅ USE onClick instead of onFocus */
+      onClick={() => {
+        if (isZeroOrEmpty(value)) {
+          setInvalidCells(prev => ({
+            ...prev,
+            [cellKey]: true
+          }));
         }
+      }}
 
-        // Calculate the total effort
-        let totalEffort = 0;
-        let totalAllocationEffort = 0;
-        for (let i = 0; i < rowToUpdate.length; i++) {
-            if (rowToUpdate[i].name.startsWith('2024-')) {
-                // Check if the value is a valid number
-                const effortValue = parseFloat(rowToUpdate[i].value);
-                totalEffort += isNaN(effortValue) ? 0 : effortValue;
-            } else if (rowToUpdate[i].name === 'totalEffortsAllocated') {
-                // Get the total allocation effort value
-                totalAllocationEffort = parseFloat(rowToUpdate[i].value);
-            }
+      onChange={(e) => {
+        const v = Math.max(0, Number(e.target.value) || 0);
+
+        updateValue(v);
+        handleDataChange(tableMeta.rowIndex, cell.name, v);
+
+        /* ✅ CLEAR ERROR WHEN VALID */
+        if (v > 0) {
+          setInvalidCells(prev => {
+            const copy = { ...prev };
+            delete copy[cellKey];
+            return copy;
+          });
         }
+      }}
+    />
+  );
+}
 
-        // Format the total Effort(hrs)
-        const formatNumber = (num) => {
-            if (isNaN(num)) return '0';
-            const fixed = num.toFixed(2);
-            return fixed.endsWith('.00') ? fixed.slice(0, -3) : fixed;
-        };
 
-        // Update the total Effort(hrs)
-        for (let i = 0; i < rowToUpdate.length; i++) {
-            if (rowToUpdate[i].name === 'totalEffortsSubmitted') {
-                rowToUpdate[i].value = formatNumber(totalEffort);
-            }
-        }
+  // ---------- Disabled days ----------
+  if (isDateCell && cell.isFreezable === true) {
+    return (
+      <input
+        className={className}
+        value={value || ''}
+        disabled
+      />
+    );
+  }
 
-        // Calculate and update the Remaining allocation Effort(hrs)
-        for (let i = 0; i < rowToUpdate.length; i++) {
-            if (rowToUpdate[i].name === 'remainEffortsAllocated') {
-                const remainingEffort = totalAllocationEffort - totalEffort;
-                rowToUpdate[i].value = formatNumber(remainingEffort);
-            }
-        }
+  return value;
+}
 
-        updatedData.pop();
-        const result = [];
 
-        // Get all unique names
-        const names = [...new Set(updatedData.flatMap(item => item.map(innerItem => innerItem.name)))];
-
-        function formatValue(value) {
-            return value % 1 === 0 ? value.toString() : value.toFixed(2);
-        }
-
-        names.forEach(name => {
-            const sum = updatedData.flatMap(item => item.filter(innerItem => innerItem.name === name))
-                .reduce((acc, current) => acc + parseFloat(current.value), 0);
-            result.push({ name, value: formatValue(sum) });
-        });
-
-        const totalresult = names.map(name => {
-            if (name === "idTaskProject" || name === "sn" || name === "projectName" || name === "TaskName" || name === "idTaskSubmission" || name === "startDate" || name === "endDate") {
-                return { name, value: "Total" };
-            } else {
-                const sum = updatedData.flatMap(item => item.filter(innerItem => innerItem.name === name))
-                    .reduce((acc, current) => acc + parseFloat(current.value), 0);
-                return { name, value: formatValue(sum) };
-            }
-        });
-        const mergedResult = [...updatedData, totalresult];
-        console.log("merge", mergedResult)
-        // Update the state with the modified data
-        setFillterData(mergedResult);
-    };
-
-    const columns = filltercolums.map(field => ({
-        name: field.name,
-        label: field.label,
-        options: {
-            filter: field.isfilter,
-            sort: field.issort,
-            display: ['idTaskProject', 'idTaskSubmission', 'startDate', 'endDate'].includes(field.name) ? 'excluded' : 'true',
-            customHeadRender: (columnMeta) => {
-                // Example: Apply custom class to a specific column header
-                const customClass = field.name === 'sn'
-                    ? 'timesheet-table-th-sr'
-                    : (field.name === 'projectName' || field.name === 'taskName')
-                        ? 'timesheet-table-th-other'
-                        : 'timesheet-table-th-otherfield';
-                return (
-                    <th className={customClass}>
-                        {columnMeta.label}
-                    </th>
-                );
-            },
-            customBodyRender: (value, tableMeta, updateValue) => {
-                const rowData = fillterData[tableMeta.rowIndex];
-                const field = rowData[tableMeta.columnIndex];
-               
-                if (field.isFreezable === false) {
-                    return (
-                        <>
-                            <input
-                                type='number'
-                                className={`form-control timesheet-emp`}
-                                value={value || ""}
-                                min="0"
-                                max="100"
-                                placeholder={field.placeholder}
-                                onChange={(e) => {
-                                    // Ensure the entered value is not negative
-                                    const newValue = Math.max(0, Math.min(100, parseFloat(e.target.value) || 0));
-                                    updateValue(newValue);
-                                    handleDataChange(tableMeta.rowIndex, field.name, newValue);
-                                }}
-                                onInput={(e) => {
-                                    // Prevent entering a minus sign or any non-digit characters
-                                    if (e.target.value < 0) {
-                                        e.target.value = 0;
-                                    }
-                                }}
-                                onKeyDown={(e) => {
-                                    // Prevent entering a minus sign or 'e' for scientific notation
-                                    if (e.key === '-' || e.key === 'e') {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            />
-                        </>
-                    );
-                } else if (field.isFreezable === true) {
-                    return (
-                        <>
-                            <input
-                                className={`form-control timesheet-emp`}
-                                value={value || ""}
-                                disabled={true}
-                            />
-                        </>
-                    );
-                } else if (field.name === "sn") {
-                    return (
-                        value
-                    );
-                } else {
-                    return (
-                        <div className={`${value < 0 ? 'time_hightlight_test_minus' : 'time_text_value'}`}>{value}</div>
-                    );
-                }
-            }
-        }
-    }));
-
+  }
+}));
 
     const options = {
+        responsive: "standard", 
         filterType: 'checkbox',
         search: false,
         filter: false,
@@ -692,7 +814,6 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
             // Define your row coloring logic here
             let backgroundColor = '';
             let className = '';
-            console.log("row", row)
             if (rowIndex % 2 === 0) {
                 backgroundColor = 'var(--table-bg-row-color1)';
             } else {
@@ -728,6 +849,17 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
                     </div>
                     <div className="modal-body">
                         <div className="user-text oxyem-time-managment_table">
+                            {errorsMessage && (
+                              <div className="alert alert-danger alert-dismissible fade show oxyem-submit-timesheet-error" role="alert">
+                                <MdErrorOutline /> {errorsMessage}
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  aria-label="Close"
+                                  onClick={() => setErrorMessage('')}
+                                />
+                              </div>
+                            )}
                             {showTable === true ? (
                                 <>
                                     <MUIDataTable
@@ -743,7 +875,7 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
                                                 if (button.type === "submit") {
                                                     return <button type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("submit")}>{button.type}</button>;
                                                 } else if (button.type === "save") {
-                                                    return <button type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("draft")}>{button.type}</button>;
+                                                    return <button type="submit" className="btn btn-oxyem mx-2" onClick={() => handleDataSave("draft")}>{button.type}</button>;
                                                 } else if (button.type === "cancel") {
                                                     return <button type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
                                                 } else if (button.type === "recall") {

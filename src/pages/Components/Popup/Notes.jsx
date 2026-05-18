@@ -1,73 +1,29 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef, useMemo  } from "react";
 import { MdClose } from "react-icons/md";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
-import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import Profile from '../commancomponents/profile';
 import { SocketContext } from '../../Auth/Socket';
 
-import {
-  ClassicEditor,
-  AccessibilityHelp,
-  Alignment,
-  Autoformat,
-  AutoLink,
-  Autosave,
-  BlockQuote,
-  Bold,
-  Code,
-  Essentials,
-  FindAndReplace,
-  FontBackgroundColor,
-  FontColor,
-  bulletedList,
-  List,
-  FontFamily,
-  FontSize,
-  GeneralHtmlSupport,
-  Heading,
-  Highlight,
-  HorizontalLine,
-  Indent,
-  IndentBlock,
-  Italic,
-  Link,
-  Mention,
-  Paragraph,
-  RemoveFormat,
-  SelectAll,
-  SpecialCharacters,
-  SpecialCharactersArrows,
-  SpecialCharactersCurrency,
-  SpecialCharactersEssentials,
-  SpecialCharactersLatin,
-  SpecialCharactersMathematical,
-  SpecialCharactersText,
-  Strikethrough,
-  Style,
-  Subscript,
-  Superscript,
-  Table,
-  TableCaption,
-  TableCellProperties,
-  TableColumnResize,
-  TableProperties,
-  TableToolbar,
-  TextTransformation,
-  Underline,
-  Undo,
-  Image,
-  ImageToolbar,
-  ImageUpload,
-  ImageResize,
-  ImageStyle
-} from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
 
 const Notes = ({ isOpen, closeModal, id, type }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const editorRef = useRef(null);
+  const editorWrapperRef = useRef(null);
+    const CKEditor = editorRef.current?.CKEditor;
+const Editor = editorRef.current?.Editor;
+
+    useEffect(() => {
+      editorRef.current = {
+        CKEditor: require("@ckeditor/ckeditor5-react").CKEditor,
+        Editor: require("ckeditor5-custom-build")
+      };
+    }, []);
+    const [editorLoaded, setEditorLoaded] = useState(false);
+    useEffect(() => {
+        setEditorLoaded(true);
+      }, []);
   const [opportunityId, setOpportunity] = useState(id);
   useEffect(() => {
     setOpportunity(id)
@@ -122,9 +78,12 @@ const Notes = ({ isOpen, closeModal, id, type }) => {
       const response = await axiosJWT.post(`${apiUrl}/addNotes`, payload);
 
       if (response) {
-        //getExistingDetails(id);
+        getExistingDetails(id);
         settextData("")
         setEditorSize("small")
+         setTimeout(() => {
+  getExistingDetails(id);
+}, 1000);
       }
     } catch (error) {
     }
@@ -204,12 +163,15 @@ const Notes = ({ isOpen, closeModal, id, type }) => {
     fetchProfileOptions();
   }, []);
 
-  const feedItems = users.map((user) => ({
-    id: user.id,
+const feedItems = useMemo(() => {
+  return users.map(user => ({
+    id: user.id.toString(),
     name: user.name,
-    image: user.image || '/assets/img/emp.png',
-    qualification: user.qualification
+    image: user.image || "/assets/img/emp.png",
+    qualification: user.qualification,
   }));
+}, [users]);
+
 
   function createCustomItem(item) {
     const itemElement = document.createElement('div');
@@ -247,10 +209,12 @@ const Notes = ({ isOpen, closeModal, id, type }) => {
     return itemElement;
   }
   // Updated editor configuration
-  const editorConfig = {
-    toolbar: {
-      items: [
-        'undo',
+   const editorConfig = useMemo(() => ({
+  licenseKey: "GPL",
+
+  toolbar: {
+    items: [
+      'undo',
         'redo',
         '|',
         'heading',
@@ -263,216 +227,46 @@ const Notes = ({ isOpen, closeModal, id, type }) => {
         'bold',
         'italic',
         'underline',
-        'code',
+        'alignment',
+        'bulletedList', // Add this for bulleted list
+        'numberedList', // Add this for numbered list
         '|',
-        'horizontalLine',
         'link',
         'insertTable',
         'highlight',
         'blockQuote',
         '|',
-        'alignment',
-        'List',
-        'bulletedList', // Add this for bulleted list
-        'numberedList', // Add this for numbered list
-        '|',
         'outdent',
         'indent',
         'imageUpload',  // Add image upload to the toolbar
-      ],
-      shouldNotGroupWhenFull: false
-    },
-    mention: {
-      feeds: [
-        {
-          marker: '@',
-          feed: (queryText) => {
-            // Filter the feed items based on the search query
-            return feedItems
-              .filter(item => item.name.toLowerCase().includes(queryText.toLowerCase()))
-              .map(item => {
-                return {
-                  id: '@' + item.id, // Prefix with '@' to make it work with CKEditor
-                  label: item.name,
-                  avatar: item.image || 'path/to/default-avatar.png', // Optional: Default avatar if not present
-                  qualification: item.qualification || '', // Optional: Qualification information
-                };
-              });
-          },
-          itemRenderer: (item) => createCustomItem(item), // Use custom item renderer
-        },
-      ],
-    },
-    plugins: [
-      AccessibilityHelp,
-      Alignment,
-      Autoformat,
-      AutoLink,
-      Autosave,
-      BlockQuote,
-      Bold,
-      Code,
-      Essentials,
-      FindAndReplace,
-      FontBackgroundColor,
-      FontColor,
-      FontFamily,
-      FontSize,
-      GeneralHtmlSupport,
-      Heading,
-      Highlight,
-      HorizontalLine,
-      Indent,
-      IndentBlock,
-      Italic,
-      List,
-      Link,
-      Paragraph,
-      RemoveFormat,
-      SelectAll,
-      SpecialCharacters,
-      SpecialCharactersArrows,
-      SpecialCharactersCurrency,
-      SpecialCharactersEssentials,
-      SpecialCharactersLatin,
-      SpecialCharactersMathematical,
-      SpecialCharactersText,
-      Strikethrough,
-      Style,
-      Subscript,
-      Superscript,
-      Table,
-      TableCaption,
-      TableCellProperties,
-      TableColumnResize,
-      TableProperties,
-      TableToolbar,
-      TextTransformation,
-      Underline,
-      Undo,
-      Image,               // Image plugin for image handling
-      ImageToolbar,        // Toolbar for image actions
-      ImageUpload,         // Enables image upload functionality
-      ImageResize,         // Allows resizing images
-      ImageStyle,          // Adds image style options
-      Mention,
     ],
-    fontFamily: {
-      supportAllValues: true
-    },
-    fontSize: {
-      options: [10, 12, 14, 'default', 18, 20, 22, 24],
-      supportAllValues: true
-    },
-    heading: {
-      options: [
-        {
-          model: 'paragraph',
-          title: 'Paragraph',
-          class: 'ck-heading_paragraph'
+  },
+
+  mention: {
+    feeds: [
+      {
+        marker: "@",
+        minimumCharacters: 0,
+        feed: (queryText) => {
+          return feedItems
+            .filter(item =>
+              item.name.toLowerCase().includes(queryText.toLowerCase())
+            )
+            .map(item => ({
+              id: `@${item.id}`,
+              label: item.name,
+              avatar: item.image,
+              qualification: item.qualification,
+            }));
         },
-        {
-          model: 'heading1',
-          view: 'h1',
-          title: 'Heading 1',
-          class: 'ck-heading_heading1'
-        },
-        {
-          model: 'heading2',
-          view: 'h2',
-          title: 'Heading 2',
-          class: 'ck-heading_heading2'
-        },
-        {
-          model: 'heading3',
-          view: 'h3',
-          title: 'Heading 3',
-          class: 'ck-heading_heading3'
-        },
-        {
-          model: 'heading4',
-          view: 'h4',
-          title: 'Heading 4',
-          class: 'ck-heading_heading4'
-        },
-        {
-          model: 'heading5',
-          view: 'h5',
-          title: 'Heading 5',
-          class: 'ck-heading_heading5'
-        },
-        {
-          model: 'heading6',
-          view: 'h6',
-          title: 'Heading 6',
-          class: 'ck-heading_heading6'
-        }
-      ]
-    },
-    style: {
-      definitions: [
-        {
-          name: 'Article category',
-          element: 'h3',
-          classes: ['category']
-        },
-        {
-          name: 'Title',
-          element: 'h2',
-          classes: ['document-title']
-        },
-        {
-          name: 'Subtitle',
-          element: 'h3',
-          classes: ['document-subtitle']
-        },
-        {
-          name: 'Info box',
-          element: 'p',
-          classes: ['info-box']
-        },
-        {
-          name: 'Side quote',
-          element: 'blockquote',
-          classes: ['side-quote']
-        },
-        {
-          name: 'Marker',
-          element: 'span',
-          classes: ['marker']
-        },
-        {
-          name: 'Spoiler',
-          element: 'span',
-          classes: ['spoiler']
-        },
-        {
-          name: 'Code (dark)',
-          element: 'pre',
-          classes: ['fancy-code', 'fancy-code-dark']
-        },
-        {
-          name: 'Code (bright)',
-          element: 'pre',
-          classes: ['fancy-code', 'fancy-code-bright']
-        }
-      ]
-    },
-    placeholder: "Add your comments or observations\nType @ to mention a teammate and notify them about this notes",
-    image: {
-      toolbar: [
-        'imageStyle:inline',
-        'imageStyle:block',
-        'imageStyle:side',
-        '|',
-        'imageTextAlternative',
-        'imageResize'    // Add resizing option in the toolbar
-      ]
-    },
-    table: {
-      contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
-    }
-  };
+        itemRenderer: createCustomItem,
+      },
+    ],
+  },
+
+  placeholder:
+    "Add your comments or observations\nType @ to mention a teammate",
+}), [feedItems]);
 
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
@@ -510,10 +304,13 @@ const Notes = ({ isOpen, closeModal, id, type }) => {
     setEditorSize("large");
   };
   const handleClickOutside = (event) => {
-    if (editorRef.current && !editorRef.current.contains(event.target)) {
-      setEditorSize("small");  // Set editor size to "small" when clicked outside
-    }
-  };
+  if (
+    editorWrapperRef.current &&
+    !editorWrapperRef.current.contains(event.target)
+  ) {
+    setEditorSize("small");
+  }
+};
 
   // Add event listener when component mounts
   useEffect(() => {
@@ -524,6 +321,7 @@ const Notes = ({ isOpen, closeModal, id, type }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  const editorKey = users.length;
   return (
     <Drawer
       open={isOpen}
@@ -544,11 +342,12 @@ const Notes = ({ isOpen, closeModal, id, type }) => {
             </button>
           </div>
           <div className="modal-body  oxyem-note-popup">
-            <div className={`modal-note-top-section ${editorSize === "large" ? "expand_size_editor" : "reduce_size_editor"}`}>
+            <div ref={editorWrapperRef} className={`modal-note-top-section ${editorSize === "large" ? "expand_size_editor" : "reduce_size_editor"}`}>
               {showEditor ? (
-                <div className="" ref={editorRef}>
+                <div className="">
                   <CKEditor
-                    editor={ClassicEditor}
+                    key={editorKey}
+                    editor={Editor}
                     data={textData}
                     config={editorConfig}
                     onChange={(event, editor) => {

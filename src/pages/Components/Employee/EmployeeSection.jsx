@@ -117,9 +117,9 @@ const isUserPage = router.pathname.includes('/user');
   }
 };
 
-  const submitformdataPreview = () => {
+  const submitformdataPreview = (buttonval) => {
     const newArray = convertToArray(sourceArray);
-    getsubmitformdatapreview(newArray, myfiles);
+    getsubmitformdatapreview(newArray, myfiles, buttonval);
   };
 
   const handlesubmitbyDocumment = (value) => {

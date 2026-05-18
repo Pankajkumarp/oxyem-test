@@ -10,9 +10,29 @@ import { Tooltip } from 'react-tooltip'
 import { GrTooltip } from "react-icons/gr";
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
 import AlertWithButton from '../Alert/AlerWithbutton';
+import styles from './ProfileHeader.module.css';
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
+import {
+    FiEdit,
+    FiPhone,
+    FiMail,
+    FiMapPin,
+    FiHome,
+    FiUser,
+    FiUsers,
+    FiCalendar,
+    FiCheckCircle,
+    FiGift,
+    FiBriefcase,
+    FiCreditCard,
+    FiXCircle,
+    FiDownload,
+} from 'react-icons/fi';
 
-export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handelactiveuser, showbutton, getEmpName }) {
+export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handelactiveuser, showbutton, getEmpName, contactNumber }) {
+    const cardRef = useRef();
     const [viewData, setViewData] = useState(null);
     const [editData, setEditData] = useState(null);
     const [formData, setFormData] = useState([]);
@@ -56,28 +76,60 @@ export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handel
         setIsEditOpenADD(false);
     };
 
+    const convertImageToBase64ViaCanvas = (url) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL('image/png'));
+            };
+            img.onerror = () => reject(new Error('Image load failed'));
+            img.src = url;
+        });
+    };
+
+    const [ImgBase64, setImgBase64] = useState('');
     const fetchPersonalInfo = async () => {
         try {
             if (empId) {
                 const response = await axiosJWT.get(`${apiBaseUrl}/profile`, {
                     params: { idEmployee: empId }
                 });
-
                 if (response.status === 200 && response.data.data) {
                     setViewData(response.data.data.view);
                     setEditData(response.data.data.edit);
                     const url = response.data.data.view.profilePicPath
+                    if (url) {
+                        const timestampedUrl = `${url}?t=${new Date().getTime()}`;
+                        setImg(timestampedUrl);
+                        try {
+                            const response = await fetch(
+                                `/api/proxy-image?url=${encodeURIComponent(timestampedUrl)}`
+                            );
+                            const data = await response.json();
+                            const base64Src = data.base64;
+                            setImgBase64(base64Src)
+                        } catch (err) {
+                            console.warn('Could not convert image to base64:', err);
+                            // fallback: ImgBase64 stays empty, Imgpa (URL) is used
+                        }
+                    }
                     if (url) { setImg(`${url}?t=${new Date().getTime()}`); }
                     const vData = response.data.data.view.isActive
                     handelactiveuser(vData);
                     getEmpName(response.data.data.view.empName);
+
                 }
             }
         } catch (error) {
             console.error("Error occurred during API call:", error);
         }
     };
-
     useEffect(() => {
         fetchPersonalInfo();
         fetchForm();
@@ -194,166 +246,296 @@ export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handel
     };
 
     const updateFormDataWithPersonalInfo = () => {
-        if (!editData || !formData || formData.length === 0) return;
+        if (!editData || !formData || !formData.section) return;
 
-        const updatedFormData = { ...formData };
-        const profileSection = updatedFormData.section.find(section => section.name === 'PersonalInfo');
+        const updatedFormData = JSON.parse(JSON.stringify(formData));
 
-        if (profileSection) {
-            profileSection.Subsection.forEach(subsection => {
-                subsection.fields.forEach(field => {
-                    if (field.name in editData) {
-                        field.value = editData[field.name];
-                    }
-                });
+        const profileSection = updatedFormData.section.find(
+            section => section.name === 'PersonalInfo'
+        );
+
+        if (!profileSection) return;
+
+        profileSection.Subsection.forEach(subsection => {
+            subsection.fields.forEach(field => {
+
+                // 🔹 Generic mapping for all fields
+                if (editData[field.name] !== undefined) {
+                    field.value = editData[field.name];
+                }
+
+                // 🔹 Special case: role (React Select)
+                if (field.name === "role" && editData.role) {
+                    field.value =
+                        typeof editData.role === "object"
+                            ? editData.role
+                            : { label: editData.role, value: editData.roleId };
+                }
+
+                // 🔹 Optional: department override (if needed)
+                if (field.name === "department") {
+                    field.value = editData.department;
+                }
+
             });
-        }
+        });
 
         setFormData(updatedFormData);
     };
 
+
+
+    // Replace the openDownloadIDCard function with this:
+    const openDownloadIDCard = async () => {
+        const element = cardRef.current;
+
+        // ✅ If ImgBase64 is already set, swap img src before capture
+        if (ImgBase64) {
+            const images = element.querySelectorAll('img');
+            images.forEach(img => {
+                img.src = ImgBase64;
+            });
+        }
+
+        const canvas = await html2canvas(element, {
+            scale: 4,
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: "#ffffff",
+            logging: false,
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF({
+            orientation: "landscape",
+            unit: "px",
+            format: [canvas.width, canvas.height],
+        });
+
+        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+        pdf.save("Employee-ID-Card.pdf");
+    };
+
+
     if (!viewData) {
-        return <div>Loading...</div>;
+        return <div className={styles.loadingBox}>Please wait data is Loading...</div>;
     }
-
-
-
     return (
         <>
 
             <Address isOpen={isEditOpenADD} closeModal={closeEditModalADD} formData={form} getsubmitformdata={getsubmitformdata} empId={empId} loaderSubmitButton={SubmitButtonLoading} />
             <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={formData} data={editData} getsubmitformdata={getsubmitformdataP} empId={empId} loaderSubmitButton={SubmitButtonLoading} />
-            <div className="card-body">
-                {!showbutton ? null :
-                    <span className="" onClick={openEditModal}>
-                        <FaRegEdit style={{ cursor: 'pointer', float: 'right', color: 'var(--theme-pending-color-text)' }} size={15} />
-                    </span>
-                }
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="profile-view">
-                            <div className="profile-img-wrap">
-                                <div className="profile-img">
-                                    <img alt="#" src={Imgpa === '' ? '../assets/img/avatar-10.jpg' : Imgpa} />
+            <div className="card-body-4">
+                <div className={styles.employeeCard}>
+                    <div className="row align-items-center">
 
-                                    {/* {!showbutton ? null :
-                                    <span className="edit-icon" onClick={handleEditIconClick}>
-                                        <MdEdit />
-                                    </span> } */}
+                        <div className="col-lg-12">
+                            <div ref={cardRef} className={styles.cardContainer} style={{ 
+        position: 'fixed',
+        top: '-9999px',
+        left: '-9999px',
+        zIndex: -1,
+        pointerEvents: 'none'
+    }}>
+                                <div className={styles.idCard}>
+                                    <div className={styles.topHeader}>
+                                        <span className={styles.oxy}>O</span>
+                                        <span className={styles.xytal}>XYTAL</span>
+                                    </div>
 
-                                    {loading ? (
-                                        <span className="edit_profileloader" ></span>
-                                    ) : (
-                                        !showbutton ? null :
-                                            <span className="edit-icon" onClick={handleEditIconClick}>
-                                                <MdEdit />
-                                            </span>
-                                    )}
+                                    <div className={styles.profilecardBody}>
+                                        <img
+                                            src={ImgBase64 || Imgpa || '../assets/img/avatar-10.jpg'}
+                                            alt={viewData.empName || ''}
+                                            className={styles.profileImage}
+                                        />
 
+                                        <h2 className={styles.idemployeeName}>{viewData.empName || ''}</h2>
 
-                                    <input type="file" ref={fileInputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+                                        <p className={styles.iddesignation}>{viewData.role || ''}</p>
+
+                                        <p className={styles.idemployeeId}>{viewData.empNumber}</p>
+
+                                        <p className={styles.bloodGroup}>{viewData?.bloodGroup || "Not Added"}</p>
+                                    </div>
+
+                                    <div className={styles.bottomBar}></div>
                                 </div>
-                            </div>
 
-                            <div className="profile-basic">
-                                <div className="row">
-                                    <div className="col-md-5">
-                                        <div className="profile-info-left">
-                                            <h2 className="user-name">{viewData.empName || ''}</h2>
-                                            <h3 className="text-muted ">{viewData.role || ''}</h3>
-                                            <h4 className="text-muted">{viewData.department || ''}</h4>
+                                {/* BACK SIDE */}
+                                <div className={styles.idCardRight}>
+                                    <div className={styles.backTopSection}>
+                                        <div className={styles.emergencySection}>
+                                            <p className="label">Emergency No.</p>
+                                            <p className="value">{contactNumber || "Not Added"}</p>
+                                        </div>
 
-                                            <ul className="personal-info-header top-details">
+                                        <div className={styles.addressSection}>
+                                            <p className="label">Registered office Address</p>
 
-                                                <li>
-                                                    <div className="title">ID :</div>
-                                                    <div className="text">
-                                                        {viewData.empNumber || <>&nbsp;</>}
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="title"><FaPhone /> :</div>
-                                                    <div className="text">
-                                                        {viewData.mobileNumber || <>&nbsp;</>}
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="title"><MdEmail /> :</div>
-                                                    <div className="text">{viewData.emailAddress || <>&nbsp;</>}</div>
-                                                </li>
-                                                <li>
-                                                    <div className="title"><IoLocationSharp /> :</div>
-                                                    <div className="text">{viewData.joiningCountry || <>&nbsp;</>}</div>
-                                                </li>
-                                            </ul>
+                                            <p className={styles.companyName}>
+                                                Oxytal India Private Limited
+                                            </p>
+
+                                            <p className="addressText">
+                                                76, RK Puram Jatal Road, Near Shiv Mandir
+                                            </p>
+
+                                            <p className="addressText">
+                                                Panipat - Haryana
+                                            </p>
+
+                                            <p className="addressText">
+                                                India - 132103
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="col-md-7">
-                                        <ul className="personal-info-header-right top-details">
+                                </div>
+                            </div>
+                        </div>
+                        {/* LEFT SIDE */}
+                        <div className="col-lg-6">
+                            <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4">
+                                {/* IMAGE */}
+                                <div className={styles.profileWrapper}>
+                                    <div className={styles.profileRing}>
+                                        <img
+                                            src={Imgpa === '' ? '../assets/img/avatar-10.jpg' : Imgpa}
+                                            alt=""
+                                            className={styles.profileRingImg}
+                                        />
+                                        {loading ? (
+                                            <span className="edit_profileloader" ></span>
+                                        ) : (
+                                            !showbutton ? null :
+                                                <span className="edit-icon" onClick={handleEditIconClick}>
+                                                    <MdEdit />
+                                                </span>
+                                        )}
+                                        <input type="file" ref={fileInputRef} onChange={handleImageChange} style={{ display: 'none' }} />
 
-                                            <li>
-                                                <div className="title">Birthday :</div>
-                                                <div className="text">{viewData.DOB ? viewData.DOB : ''}</div>
-                                            </li>
-                                            <li>
-                                                {showAddressAlert && (
-                                                    <AlertWithButton
-                                                        message="Please add your Address to complete your profile."
-                                                        type="warning"
-                                                        actionLabel="Add Address"
-                                                        onAction={() => {
-                                                            openEditModalADD();
-                                                        }}
-                                                    />
-                                                )}
-
-                                                <div className="title">Address :</div>
-                                                <div className="text">
-                                                    {viewData.address ? (
-                                                        viewData.address.length > 35 ? (
-                                                            <>
-                                                                <div className='oxyem-tooltip-text'>
-                                                                    {viewData.address.substr(0, 35)}...
-                                                                    <GrTooltip className='oxyem-tooltip-icon' style={{ marginLeft: '5px' }} data-tooltip-id="my-tooltip-table-text" data-tooltip-content={viewData.address} />
-                                                                    <Tooltip id="my-tooltip-table-text" type='dark' effect='solid' style={{ width: '40%', zIndex: '999' }} />
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                {viewData.address}
-                                                            </>
-                                                        )
-                                                    ) : (
-                                                        <>&nbsp;</>
-                                                    )}
-                                                    {viewData.address ? (
-                                                        <>
-                                                            {/* <FaRegEdit style={{marginLeft:'20px'  ,color: '#333' ,padding: '1px 0px 4px 1px'}} size={19} onClick={openEditModalADD}/> */}
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            {!showbutton ? null : <span className="add-btn-circle" onClick={openEditModalADD}>+</span>}
-                                                        </>
-
-                                                    )}
-
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className="title">Gender :</div>
-                                                <div className="text">{viewData.gender || <>&nbsp;</>}</div>
-                                            </li>
-                                            <li>
-                                                <div className="title">Joining Date :</div>
-                                                <div className="text">{viewData.dateOfJoining ? viewData.dateOfJoining : <>&nbsp;</>}</div>
-                                            </li>
-                                            <li>
-                                                <div className="title">Reports to :</div>
-                                                <div className="text">{viewData.reportingTo || <>&nbsp;</>}</div>
-                                            </li>
-                                        </ul>
                                     </div>
                                 </div>
+
+                                {/* USER INFO */}
+                                <div className="flex-grow-1 w-100">
+                                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+                                        <div>
+                                            <h2 className={styles.employeeName}>{viewData.empName || ''}</h2>
+                                            <h6 className={styles.employeeRole}>{viewData.role}</h6>
+                                            <p className={styles.employeeDepartment}>
+                                                {viewData.department}
+                                            </p>
+                                        </div>
+                                        <div
+                                            className={`${styles.statusBadge} ${viewData.isActive ? styles.active : styles.inactive
+                                                }`}
+                                        >
+                                            {viewData.isActive ? <FiCheckCircle /> : <FiXCircle />}
+                                            {viewData.isActive ? 'Active' : 'Inactive'}
+                                        </div>
+
+                                    </div>
+
+                                    {/* INFO GRID */}
+                                    <div className={styles.infoGrid}>
+                                        <div className={styles.infoItem}>
+                                            <FiCreditCard />
+                                            <span>ID : {viewData.empNumber}</span>
+                                        </div>
+
+                                        <div className={styles.infoItem}>
+                                            <FiPhone />
+                                            <span>{viewData.mobileNumber}</span>
+                                        </div>
+
+                                        <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+                                            <FiMail />
+                                            <span>{viewData.emailAddress}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* TAGS */}
+                                    <div className="d-flex flex-wrap gap-3 mt-4">
+                                        <div className={`${styles.tag} ${styles.location}`}>
+                                            <FiMapPin />
+                                            {viewData.joiningCountry}
+                                        </div>
+
+                                        <div className={`${styles.tag} ${styles.permanent}`}>
+                                            <FiBriefcase />
+                                            {viewData.employeeType}
+                                        </div>
+
+                                        <div className={`${styles.tag} ${styles.remote}`}>
+                                            <FiHome />
+                                            {viewData?.worktype || "Remote"}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* RIGHT SIDE */}
+                        <div className="col-lg-4">
+                            <div className={styles.centerSection}>
+                                <div className={styles.detailsList}>
+                                    <div className={styles.detailRow}>
+                                        <div className={styles.labelWrap}>
+                                            <div className={styles.iconBox}>
+                                                <FiGift />
+                                            </div>
+                                            <span>Birthday</span>
+                                        </div>
+
+                                        <strong>{viewData.DOB ? viewData.DOB : ''}</strong>
+                                    </div>
+
+                                    <div className={styles.detailRow}>
+                                        <div className={styles.labelWrap}>
+                                            <div className={styles.iconBox}>
+                                                <FiUser />
+                                            </div>
+                                            <span>Gender</span>
+                                        </div>
+
+                                        <strong>{viewData.gender || <>&nbsp;</>}</strong>
+                                    </div>
+
+                                    <div className={styles.detailRow}>
+                                        <div className={styles.labelWrap}>
+                                            <div className={styles.iconBox}>
+                                                <FiCalendar />
+                                            </div>
+                                            <span>Joining Date</span>
+                                        </div>
+
+                                        <strong>{viewData.dateOfJoining ? viewData.dateOfJoining : <>&nbsp;</>}</strong>
+                                    </div>
+
+                                    <div className={`${styles.detailRow} border-0 pb-0`}>
+                                        <div className={styles.labelWrap}>
+                                            <div className={styles.iconBox}>
+                                                <FiUsers />
+                                            </div>
+                                            <span>Reports To</span>
+                                        </div>
+
+                                        <strong>{viewData.reportingTo || <>&nbsp;</>}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-2">
+                            <div className={styles.rightSection}>
+                                {showbutton && (<button className={styles.editBtn} onClick={openEditModal}>
+                                    <FiEdit />
+                                    Edit Profile
+                                </button>)}
+                                <button className={styles.downloadBtn} onClick={openDownloadIDCard}>
+                                    <FiDownload />
+                                    Download ID Card
+                                </button>
                             </div>
                         </div>
                     </div>

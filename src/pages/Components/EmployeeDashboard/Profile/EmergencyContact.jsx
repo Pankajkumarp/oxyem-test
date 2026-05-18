@@ -5,8 +5,10 @@ import Edit from '../Edit/Edit';
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
 import DeleteModal from '../Alert/Delete';
 import { RiDeleteBinLine } from "react-icons/ri";
+import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
+import { HiUserGroup } from "react-icons/hi";
 
-export default function EmergencyInfo({ empId, apiBaseUrl ,showbutton}) {
+export default function EmergencyInfo({ empId, apiBaseUrl, showbutton, getContactNumber }) {
     const [emergencyInfo, setEmergencyInfo] = useState([]);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [openSection, setOpenSection] = useState(true); // Set to true to open section by default
@@ -44,6 +46,13 @@ export default function EmergencyInfo({ empId, apiBaseUrl ,showbutton}) {
 
                 if (response.status === 200 && response.data.data) {
                     setEmergencyInfo(response.data.data);
+                    const emergencyData = response.data.data[0];
+                    const phoneNumber = emergencyData.find(
+                        item => item.lebel === "Phone Number"
+                    )?.value;
+                    if (phoneNumber) {
+                        getContactNumber(phoneNumber);
+                    }
                 }
             }
         } catch (error) {
@@ -79,7 +88,7 @@ export default function EmergencyInfo({ empId, apiBaseUrl ,showbutton}) {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [idEmergency, setidEmergencyContact] = useState('');
 
-    
+
 
     const openDeleteModal = (id) => {
         setIsDeleteOpen(true);
@@ -93,9 +102,9 @@ export default function EmergencyInfo({ empId, apiBaseUrl ,showbutton}) {
     const deleteEmergencyContact = async (value) => {
         try {
             const response = await axiosJWT.delete(`${apiBaseUrl}/emergencyContact`, {
-                data: { 
-                    idEmployee:empId,
-                    idEmergencyContact:idEmergency
+                data: {
+                    idEmployee: empId,
+                    idEmergencyContact: idEmergency
                 }
             });
 
@@ -120,20 +129,26 @@ export default function EmergencyInfo({ empId, apiBaseUrl ,showbutton}) {
 
     return (
         <>
-            <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={Formdata} getsubmitformdata={getsubmitformdata} empId={empId} loaderSubmitButton={SubmitButtonLoading}/>
-            <DeleteModal isOpen={isDeleteOpen} closeModal={closeDeleteModal} idEmployee={empId} idDependent={idEmergency} handleDeleteData={deleteEmergencyContact}/>
+            <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={Formdata} getsubmitformdata={getsubmitformdata} empId={empId} loaderSubmitButton={SubmitButtonLoading} />
+            <DeleteModal isOpen={isDeleteOpen} closeModal={closeDeleteModal} idEmployee={empId} idDependent={idEmergency} handleDeleteData={deleteEmergencyContact} />
             <div className="card-body">
                 <h3 className="card-title">
                     Emergency Contact Information
-                    {!showbutton ? null : <span className="add-btn-circle" onClick={openEditModal}>+</span> }
+                    {emergencyInfo.length > 0 && (
+                        <span className="add-btn-circle" onClick={openEditModal}>+</span>)}
                     <GrFormNext size={20} style={{ cursor: 'pointer', float: 'right', transform: openSection ? 'rotate(90deg)' : 'rotate(0deg)', marginRight: '10px' }} onClick={toggleSection} />
                 </h3>
 
                 {openSection && (
                     <div className="accordion-body mt-1">
                         {emergencyInfo.length === 0 ? (
-                            <div>No records found</div>
-                        ) : (
+                            <EmptyInfoBlock
+                                title="No emergency contact added yet."
+                                description="This helps HR reach someone in case of emergency."
+                                buttonText="Add Emergency Contact"
+                                icon={<HiUserGroup size={48} color="#004D95" />}
+                                onButtonClick={openEditModal}
+                            />) : (
                             emergencyInfo.map((infoArray, index) => {
                                 // Filter out objects with the label "idEmergencyContact"
                                 const filteredInfoArray = infoArray.filter(info => info.lebel !== "idEmergencyContact");
@@ -144,13 +159,13 @@ export default function EmergencyInfo({ empId, apiBaseUrl ,showbutton}) {
                                 return (
                                     <div key={index} className="accordion-item mt-1">
                                         <div className="accordion-header" onClick={() => toggleItem(index)} style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer' }}>
-                                        <span>{name} ({relationship})</span>
+                                            <span>{name} ({relationship})</span>
                                             <span>
-                                                <RiDeleteBinLine style={{width: '30px'}} color='red' size={15}  onClick={() => openDeleteModal(id)}/>
+                                                <RiDeleteBinLine style={{ width: '30px' }} color='red' size={15} onClick={() => openDeleteModal(id)} />
                                                 <GrFormNext size={20} style={{ transform: openItem === index ? 'rotate(90deg)' : 'rotate(0deg)' }} />
                                             </span>
-                                           
-                                           
+
+
                                             {/* {name} ({relationship})
                                             <FiTrash2 size={20} style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => deleteEmergencyContact(id)} />
                                             <GrFormNext size={20} style={{ transform: openItem === index ? 'rotate(90deg)' : 'rotate(0deg)' }} /> */}

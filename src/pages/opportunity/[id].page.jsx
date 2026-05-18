@@ -8,8 +8,6 @@ import { axiosJWT } from '../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
 import { useRouter } from 'next/router'
 import Head from 'next/head';
-import pageTitles from '../../common/pageTitles.js';
-import { GrDocumentNotes } from "react-icons/gr";
 import { FaRegClock, FaTimes } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -22,6 +20,7 @@ const DynamicForm = dynamic(() => import('../Components/CommanForm.jsx'), {
 const Notes = dynamic(() => import('../Components/Popup/Notes'), {
     ssr: false
 });
+import { countWorkingDays } from "../Components/Hooks/countWorkingDays";
 const customDropdownStyles = {
     control: (provided, state) => ({
         ...provided,
@@ -87,6 +86,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const [dataDocuments, setDataDocuments] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState({});
     const { id } = router.query;
+    const [dayCount, setDayCount] = useState("");
     const fetchOpportunityInfo = async (value) => {
         try {
             if (value) {
@@ -423,6 +423,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             setDataDocuments(updatedData);
         }
     };
+    console.log("fields", fields)
     const columns = fields.map(field => ({
         name: field.name,
         label: field.label,
@@ -1024,6 +1025,21 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const closeNotesModal = async () => {
         setIsNotesModalOpen(false)
     }
+    const handlegetInfoClick = async (startDate, endDate) => {
+        const days = await countWorkingDays(startDate, endDate);
+        setDayCount(days)
+    }
+useEffect(() => {
+  if (activeTab !== "Effort Details") return;
+
+  setDataEffort(prev =>
+    prev.map(row => ({
+      ...row,
+      totalEffort: dayCount
+    }))
+  );
+}, [dayCount, activeTab]);
+
     return (
         <>
             <Head>
@@ -1047,7 +1063,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                             <div className="center-part">
                                                 <div className="card-body oxyem-mobile-card-body">
                                                     <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-
                                                         <div className="center-part">
                                                             <div className="card-body -body skolrup-learning-card-body oxyem-time-managment">
                                                                 <div className="row">
@@ -1164,14 +1179,10 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                                                                                                 </div>
                                                                                                             </div>
 
-                                                                                                            {/* Upload Component */}
                                                                                                             <UploadFileDetail
                                                                                                                 documentId={opportunityId}
                                                                                                                 documentFor="opportunity"
                                                                                                             />
-
-                                                                                                            {/* Buttons */}
-                                                                                                            {/* Buttons */}
                                                                                                             <div className="justify-content-end d-flex w-100 mt-4">
                                                                                                                 {formbuttons.map((btn, index) => (
                                                                                                                     <>
@@ -1191,21 +1202,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                                                                                             </div>
                                                                                                         </div>
 
-
-                                                                                                        {/* <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-        <DynamicForm
-          fields={section}
-          content={formvalue}
-          apiurl={apiUrl}
-          handleChangeValue={handleChangeValue}
-          Openedsection={index}
-          handleChangess={() => handleChangess(index)}
-          submitformdata={submitformdata}
-          isModule={formvalue.formType}
-          pagename={pagename}
-          showButton={showButton}
-        />
-      </div> */}
                                                                                                     </div>
                                                                                                 </div>
                                                                                             )
@@ -1384,7 +1380,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                                                                                                             handleChangess={() => handleChangess(index)}
 
                                                                                                             submitformdata={submitformdata}
-
+                                                                                                            handlegetInfoClick={handlegetInfoClick}
                                                                                                             isModule={formvalue.formType}
                                                                                                             pagename={pagename}
                                                                                                             showButton={showButton}
