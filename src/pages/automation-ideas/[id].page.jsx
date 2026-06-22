@@ -11,7 +11,7 @@ import { ToastNotification } from '../../pages/Components/EmployeeDashboard/Aler
 
 const DynamicForm = dynamic(() => import('../Components/CommanForm'), { ssr: false });
 
-export default function AutomationId({userFormdata}) {
+export default function Index({userFormdata}) {
     const router = useRouter();
     const [claimDetails, setClaimDetails] = useState([]);
     const [cid, setCId] = useState('');
