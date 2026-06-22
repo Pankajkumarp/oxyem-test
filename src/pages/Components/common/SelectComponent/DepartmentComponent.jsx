@@ -8,9 +8,9 @@ export default function DepartmentComponent({ label, isDisabled, validations = [
   const [selectedoption, setSelectedoption] = useState(value);
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedoption(value);
   }, [value]);
-  const [error, setError] = useState(null);
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -26,8 +26,7 @@ export default function DepartmentComponent({ label, isDisabled, validations = [
         
         setOptions(optionsData);
       } catch (error) {
-        console.error('Error fetching options:', error);
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 

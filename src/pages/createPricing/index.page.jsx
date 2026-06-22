@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import MUIDataTable from "mui-datatables";
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { FaPlus } from "react-icons/fa6";
@@ -20,14 +20,12 @@ const Notes = dynamic(() => import('../Components/Popup/Notes'), {
     ssr: false
 });
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-export default function opportunity({ userFormdata }) {  // Default to empty array if not provided
+export default function Creatpricing({ userFormdata }) {  // Default to empty array if not provided
     const router = useRouter();
     const showButton = "";
     const pagename = "createPricing";
 
     const [formvalue, setFormvalue] = useState(userFormdata);
-
-    const [calculate, setcalculate] = useState(false);
     const [fields, setfields] = useState([]);
     const formbuttons = formvalue.section[1].buttons;
     const formsubmitbuttons = formvalue.section[2].buttons;
@@ -36,15 +34,15 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const [tabArray, setTabArray] = useState([]);
     useEffect(() => {
         if (!tabArray.includes(activeTab) && activeTab !== null) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTabArray((prevTabArray) => [...prevTabArray, activeTab]);
         }
     }, [activeTab]);
 
-    const [isTabclick, setisTabclick] = useState(true);
-    const [tableSection, settableSection] = useState("show");
+    const tableSection = "show";
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const [existingData, setexistingData] = useState([]);
+    const existingData = [];
     // Merge existing data with form fields
     const mergeDataWithFields = (fields, existingData) => {
         const existingDataMap = existingData.reduce((acc, item) => {
@@ -57,13 +55,8 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             return acc;
         }, {});
     };
-    const initialData = mergeDataWithFields(fields, existingData);
-    const [data, setData] = useState([initialData]);
 
-
-
-
-    const [cuurencyId, setCurrencyId] = useState("");
+    const cuurencyId = "";
     const fetchTotalCostForRole = async (role) => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -175,6 +168,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
 
         if (initialSection && initialSection.Subsection.length > 0) {
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setfields(initialSection.Subsection[0].fields);
 
             // Initialize data for the active tab only if it's empty
@@ -448,7 +442,9 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
 
     const handleChangess = (currentIndex) => {
         const nextIndex = currentIndex + 1;
+        // eslint-disable-next-line no-undef
         if (nextIndex < content.section.length) {
+            // eslint-disable-next-line no-undef
             setActiveTab(content.section[nextIndex].SectionName);
         }
     };
@@ -551,8 +547,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                 }
             }
             setActiveTab("Milestone Details");
-            const tab = "Milestone Details"
-
         }
     };
     const handleSubmit = async () => {
@@ -632,6 +626,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                 }
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const removeError = (key) => {
@@ -649,7 +644,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     }
 
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-    const [isHistroyId, setIsHistroyId] = useState("");
     const openNotesModal = async () => {
         setIsNotesModalOpen(true)
     }
@@ -666,7 +660,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
         const fieldsToDisable = ["opportunityNo", "clientName", "currencyType", "startDate", "endDate"];
         if (fieldName === "opportunityName") {
             function getValue(value) {
-                if (value && typeof value === 'object' && value.hasOwnProperty('value')) {
+                if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'value')) {
                     return value.value;
                 }
                 return value;
@@ -711,6 +705,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                             const updateFormValueOption = (form) => {
                                 form.section.forEach(section => {
                                     section.Subsection.forEach(subsection => {
+                                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                         subsection.fields.forEach(field => {
                                             fields.forEach(field => {
                                                 if (fieldsOption.includes(field.name)) {
@@ -734,6 +729,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                 const updateFormValueswithout = (form) => {
                     form.section.forEach(section => {
                         section.Subsection.forEach(subsection => {
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                             subsection.fields.forEach(field => {
                                 fields.forEach(field => {
                                     if (fieldsToDisable.includes(field.name)) {
@@ -1271,6 +1267,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

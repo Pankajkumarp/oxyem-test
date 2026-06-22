@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
+import React, { useState } from 'react'
 import Link from 'next/link';
 import { RiMapPin2Line } from "react-icons/ri";
 import { MdMailOutline, MdAddCall } from "react-icons/md";
@@ -7,10 +6,7 @@ import { CgLogIn } from "react-icons/cg";
 import { IoMenu, IoCloseSharp } from "react-icons/io5";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-export default function index() {
-
-
-
+export default function MainHome() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     async function handleOpenMenu() {
@@ -359,7 +355,7 @@ export default function index() {
                             <div className="single-process-box">
                                 <img src="assets/img/process/process3.png" alt="image" />
                                 <h3>Customizable and Scalable Features</h3>
-                                <p>Tailor the portal to meet your organization's unique needs and scale seamlessly as your team grows.</p>
+                                <p>Tailor the portal to meet your organization&apos;s unique needs and scale seamlessly as your team grows.</p>
                             </div>
                         </div>
                         <div className="col-lg-4 col-md-6 col-sm-6">
@@ -460,7 +456,7 @@ export default function index() {
                 </div>
                 <div className="copyright-area">
                     <div className="container">
-                        <p>Copyright © 2024 Oxytal Limited. All Rights Reserved </p>
+                        <p>Copyright © 2026 Oxytal Limited. All Rights Reserved </p>
                     </div>
                 </div>
             </footer>

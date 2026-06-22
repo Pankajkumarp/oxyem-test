@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
-import LabelMandatory from '../Label/LabelMandatory';
-import LabelNormal from '../Label/LabelNormal';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import SelectRole from '../SelectOption/SelectComponent';
 import SelectCreate from '../SelectOption/CreateComponent';
 import BtpStpForm from '../../Popup/BtpStpForm';
-
-const colourStyles = {
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    return {
-      ...styles,
-      backgroundColor: isFocused ? "#0056A1" : null,
-      color: isFocused ? "#fff" : "#333333",
-    };
-  }
-};
 
 export default function ClientComponent({ label, isCreated, isDisabled, additionalLabel, validations = [], value, onChange, handleGetformvalueClick, dependentId, btpstpvalue }) {
   const [options, setOptions] = useState([]);
@@ -23,10 +10,10 @@ export default function ClientComponent({ label, isCreated, isDisabled, addition
   const [idclient, setidclient] = useState("");
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedOption(value);
     setidclient(value && value.value ? value.value : value)
   }, [value]);
-  const [error, setError] = useState(null);
 
 
   useEffect(() => {
@@ -43,13 +30,12 @@ export default function ClientComponent({ label, isCreated, isDisabled, addition
 
         setOptions(optionsData);
       } catch (error) {
-
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 
     fetchOptions();
-  }, []);
+  }, [dependentId]);
 
 
 

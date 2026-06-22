@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import { axiosJWT } from '../Auth/AddAuthorization';
@@ -16,6 +16,7 @@ export default function AddClaim({ userFormdata }) {
     );
 
 
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
 
@@ -61,7 +62,6 @@ export default function AddClaim({ userFormdata }) {
             const response = await axiosJWT.post(apiUrl, formattedData);
 
             if (response.status === 200) {
-                console.log(response)
                 if(response.data.message){
                 ToastNotification({ message: response.data.message });
                 router.push(`/eSeparation`);
@@ -72,8 +72,8 @@ export default function AddClaim({ userFormdata }) {
 			}
             }
         } catch (error) {
+            console.error(error)
             setSubmitButtonLoading(false);
-            const errorMessage = error.response.data.errors || 'Failed to submit the form. Please try again later.';
         }
     };
 
@@ -149,14 +149,13 @@ export async function getServerSideProps(context) {
                 Authorization: accessToken,
             },
         });
-        console.log(response.data)
-
         return {
 
             props: { userFormdata: response.data.data },
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

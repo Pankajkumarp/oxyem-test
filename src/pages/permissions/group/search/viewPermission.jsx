@@ -7,11 +7,12 @@ import { GoFileSubmodule } from "react-icons/go";
 import NormalTable from './NormalTable';
 import MultiSelectionTable from './MultiSelectionTable';
 
-export default function viewPermission({ isOpen, closeModal, goupInfo }) {
+export default function ViewPermission({ isOpen, closeModal, goupInfo }) {
     const [isMobile, setIsMobile] = useState(false);
 	const [searchfilter, setSearchfilter] = useState({});
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMobile(window.innerWidth <= 768);
 
         const handleResize = () =>
@@ -23,6 +24,7 @@ export default function viewPermission({ isOpen, closeModal, goupInfo }) {
 	useEffect(() => {
   if (!goupInfo?.id) return;
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   setSearchfilter({ idGroup: goupInfo.id });
 }, [goupInfo?.id]);
 

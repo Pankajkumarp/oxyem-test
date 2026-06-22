@@ -6,16 +6,18 @@ import { axiosJWT } from '../Auth/AddAuthorization';
 export default function Stats({apipath}) {
   const [data, setStats] = useState(null);
 
-  const fetchStats = async () => {
+
+
+  useEffect(() => {
+      const fetchStats = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/reward/${apipath}`);
       setStats(response.data.data);
     } catch (error) {
+      console.error(error)
     }
   };
-
-  useEffect(() => {
     fetchStats(apipath);
   }, [apipath]);
 

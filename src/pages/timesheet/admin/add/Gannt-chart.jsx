@@ -46,7 +46,7 @@ export default function GanttChart({ dataEntry, projectid }) {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const d = new Date(dateStr);
-        return isNaN(d) ? "" : format(d, "dd MMM yyyy");
+        return Number.isNaN(d) ? "" : format(d, "dd MMM yyyy");
     };
 
     useEffect(() => {
@@ -92,7 +92,7 @@ const flattenTasks = (tasks = []) => {
         });
 
         // Subtasks
-        if (task.subTasks && task.subTasks.length) {
+        if (task.subTasks?.length) {
             task.subTasks.forEach((sub, subIndex) => {
                 result.push({
                     ...sub,
@@ -160,15 +160,15 @@ const data = useMemo(() => {
             d.setDate(d.getDate() + i * 7);
 
             const label = getMonthLabel(d);
-            if (label !== last) {
+            if (label === last) {
+                res.at(-1).span++;
+            } else {
                 res.push({ label, span: 1 });
                 last = label;
-            } else {
-                res[res.length - 1].span++;
             }
         }
         return res;
-    }, [view, totalWeeks, projectStart]);
+    }, [view, totalWeeks]);
     const todayStr = new Date().toDateString();
 
     return (

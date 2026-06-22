@@ -29,6 +29,7 @@ const FormalitiesView = ({ isOpen, closeModal, id, handleApproveSubmit, approval
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(id);
     }
   }, [isOpen, id]);

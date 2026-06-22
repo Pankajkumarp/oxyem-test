@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect, useRef } from "react";
 import ReactModal from 'react-modal';
 import Select from 'react-select';
@@ -39,7 +40,7 @@ export default function SelectUser({ isOpen, closeModal, labelText, userdata, va
     const handleConvert = async () => {
         FillterData();
     }
-    const handleMenuOpen = (data) => {
+    const handleMenuOpen = () => {
         FillterData();
     };
     useEffect(() => {
@@ -251,7 +252,7 @@ export default function SelectUser({ isOpen, closeModal, labelText, userdata, va
                                                                     borderColor: state.isFocused ? 'var(--dropdownhoverbg)' : provided.borderColor // Ensure hover state does not override focus state
                                                                 }
                                                             }),
-                                                            indicatorSeparator: (provided, state) => ({
+                                                            indicatorSeparator: (provided) => ({
                                                                 ...provided,
                                                                 backgroundColor: 'var(--dropdownhoverbg)' // Change border color when clicked to show options
                                                             }),
@@ -318,7 +319,8 @@ export default function SelectUser({ isOpen, closeModal, labelText, userdata, va
                                             </div>
                                         </div>
                                     )}
-                                    {selectuser.map((detail, index) => (
+                                    {selectuser.map((detail) => (
+                                        // eslint-disable-next-line react/jsx-key
                                         <div className='oxyem-pop-up-del'>
                                             <div className='row'>
                                                 <div className='col-6'>

@@ -2,9 +2,8 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react';
 import Apialert from '../../../Components/Errorcomponents/Apierror'
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FaTimes } from "react-icons/fa";
-import { fetchWithToken } from '../../../Auth/fetchWithToken.jsx';
 import Head from 'next/head';
 import pageTitles from '../../../../common/pageTitles.js';
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -13,10 +12,11 @@ import FormRenderer from "../../../Components/FormRender/TemplateOne/FormRendere
 import { MdAssignmentInd } from "react-icons/md";
 import { FaUserFriends } from "react-icons/fa";
 import Profile from '../../../Components/commancomponents/profile.jsx';
-export default function addleave() {
+export default function Addleave() {
     const [formShow, setFormShow] = useState(false);
     const [leaveFormdata, setLeaveFormdata] = useState({});
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
         fetchForm();
     }, []);
 
@@ -32,6 +32,7 @@ export default function addleave() {
                 setFormShow(true)
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const getToday = () => {
@@ -52,9 +53,11 @@ export default function addleave() {
                 setEmpLeaveInfo(response.data.data || {});
             }
         } catch (error) {
+            console.error(error)
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchLeaveEmp()
     }, [fromDate, toDate]);
     const fetchstatForm = async (empId) => {
@@ -67,6 +70,7 @@ export default function addleave() {
                 setToplist(response.data.data || {});
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const [alert, setAlert] = useState({
@@ -82,7 +86,7 @@ export default function addleave() {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    const [errorMessage, seterrorMessage] = useState("");
+    const errorMessage = "";
 
     const [SubmitLoading, setSubmitLoading] = useState(false);
     const getEmployeeID = (empId) => {
@@ -95,7 +99,7 @@ export default function addleave() {
                 {
                     SectionName: "leave",
                     fields: Object.entries(values)
-                        .filter(([_, value]) => value !== "" && value !== null)
+                        .filter(([value]) => value !== "" && value !== null)
                         .map(([key, value]) => ({
                             name: key,
                             attributeValue: value
@@ -256,7 +260,7 @@ export default function addleave() {
                                                     type={alert.type}
                                                     message={alert.message}
                                                     show={alert.show} />
-                                                {errorMessage !== "" ? (<div className="alert alert-danger alert-dismissible fade show" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button></div>) : (null)}
+                                                {errorMessage !== "" ? (<div className="alert alert-danger alert-dismissible fade show" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" ></button></div>) : (null)}
                                                 <FormRenderer schema={leaveFormdata} handeSubmit={submitformdata} sumbitStart={SubmitLoading} isFor={"applyLeave"} isPage={"admin"} onClickGetEmployeeId={getEmployeeID} handleCancelClick={handleCancelClick} onClickGetDateInfo={onClickGetDateInfo} />
                                             </div>) : (
                                             <div className="w-100 h-100 comman-form-loader-wrapper">

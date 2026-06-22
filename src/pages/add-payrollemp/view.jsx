@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { MdClose } from "react-icons/md";
-import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import Drawer from 'react-modern-drawer';
 
 //import styles 👇
 import 'react-modern-drawer/dist/index.css';
 
 const AssetHistory = ({ isOpen, closeModal, isHistroyId }) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-  
-
   useEffect(() => {
     if (isOpen) {
      

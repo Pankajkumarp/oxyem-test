@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getValidationRules } from "./validation";
 
 export default function Input({ field, register, errors }: any) {

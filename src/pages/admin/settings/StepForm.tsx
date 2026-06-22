@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState , useRef, useEffect} from "react";
 import FieldRenderer from "./FieldRenderer";
-import { FaRegCircle } from "react-icons/fa";
-import { FaRegTimesCircle } from "react-icons/fa";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { FaRegCheckCircle, FaRegCircle, FaRegTimesCircle } from "react-icons/fa";
 
 
 export default function StepForm({ formFieldData }) {
@@ -129,8 +128,6 @@ export default function StepForm({ formFieldData }) {
         });
     };
 
-
-    console.log("formJason", formJason)
     const validateStep = () => {
         const errors: Record<string, any> = {};
 
@@ -328,8 +325,6 @@ export default function StepForm({ formFieldData }) {
 
             return;
         }
-
-        console.log("Form Submitted", formJason);
     };
 
 

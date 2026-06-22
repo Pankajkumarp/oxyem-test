@@ -1,16 +1,14 @@
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
-import { useRouter } from 'next/router';
 import { axiosJWT } from '../Auth/AddAuthorization';
 import SelectComponent from '../Components/common/SelectOption/SelectComponent.jsx';
 import Input from '../Components/common/Inputfiled/TextComponent';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 
-export default function employeePolicies() {
+export default function EmployeePolicies() {
 	const policyBaseurl = process.env.NEXT_PUBLIC_POLICY_IMAGE_BASE_URL
-  const router = useRouter();
   const [leaveTypeList, setLeaveTypeList] = useState([]);
   const [leaveType, setLeaveType] = useState(""); // State to manage active tab index
   const [countvalue, setcountvalue] = useState(4); // State to manage active tab index
@@ -29,8 +27,7 @@ export default function employeePolicies() {
           setLeaveType(optionsData[0].value);  // Set the first item
         }
       } catch (error) {
-
-        //setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 
@@ -51,15 +48,13 @@ export default function employeePolicies() {
         setsectionName(response.data.policyDetail.policiesName)
         setsectionCardList(response.data.policyDetail.policies)
       }
-    } catch (error) {
-
-
-    }
+    } catch (error) {console.error(error)}
   };
   useEffect(() => {
 
 
     if (leaveType !== "") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchlistOptions(leaveType)
     }
   }, [leaveType, countvalue]);
@@ -103,6 +98,7 @@ export default function employeePolicies() {
 
   useEffect(() => {
     if (searchText.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchResults(searchText);
     } else {
       setResultsSearch([]);

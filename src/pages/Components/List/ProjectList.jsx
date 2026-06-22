@@ -12,9 +12,9 @@ import Avatar from 'react-avatar';
 import { GrTooltip } from "react-icons/gr";
 import DeleteModalProject from '../../Components/Popup/DeleteModalProject.jsx';
 
-export default function ProjectList({ empId }) {
+export default function ProjectList() {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const [searchfilter, setSearchfilter] = useState({});
+    const searchfilter = {};
 
 
     const menuRefs = useRef({});
@@ -75,6 +75,7 @@ export default function ProjectList({ empId }) {
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         getProjectValue(currentPage);
     }, [currentPage, itemsPerPage, searchValue, filterList, searchfilter]);
 
@@ -121,12 +122,14 @@ export default function ProjectList({ empId }) {
                     setCurrentPage(0);
                     break;
                 case 'sort':
+                    // eslint-disable-next-line no-undef
                     setSortOrder({
                         name: tableState.sortOrder.name,
                         direction: tableState.sortOrder.direction,
                     });
                     break;
                 case 'filterChange':
+                    // eslint-disable-next-line no-case-declarations
                     const newFilterList = {};
                     tableState.filterList.forEach((value, index) => {
                         if (value.length) {
@@ -181,7 +184,7 @@ export default function ProjectList({ empId }) {
                 getProjectValue();
             }
         } catch (error) {
-
+            console.error(error)
         }
     }
     const GroupAvatar = ({ users, maxVisible = 3 }) => {

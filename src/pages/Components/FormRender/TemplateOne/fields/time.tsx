@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, {
@@ -194,7 +196,7 @@ export default function TimeInput({
                           const match = endTime.match(/(\d+):(\d+)\s*(AM|PM)/);
 
                           if (match) {
-                            let [, hours, minutes, modifier] = match;
+                            const [, hours, minutes, modifier] = match;
 
                             let hrs = parseInt(hours, 10);
 

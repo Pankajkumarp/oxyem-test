@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import EmployeeChart from '../Components/Charts/EmployeeChart';
 import AttendanceChart from '../Components/Charts/AttendanceChart';
 import LeaveChart from '../Components/Charts/LeaveChart';
@@ -43,28 +43,28 @@ export default function CreateQuiz() {
 
                                                     <div className="card-body oxyem-mobile-card-body">
                                                         <ul className="nav-tabs nav nav-tabs-bottom justify-content-end oxyem-graph-tab">
-                                                            <li class={`nav-item ${activeTab === "All" ? 'active' : ''}`}>
-                                                                <a class={`nav-link`} onClick={() => handleTabClick("All")}>
+                                                            <li className={`nav-item ${activeTab === "All" ? 'active' : ''}`}>
+                                                                <a className={`nav-link`} onClick={() => handleTabClick("All")}>
                                                                     <div className="skolrup-profile-tab-link">All</div>
                                                                 </a>
                                                             </li>
-                                                            <li class={`nav-item ${activeTab === "Employees" ? 'active' : ''}`}>
-                                                                <a class={`nav-link`} onClick={() => handleTabClick("Employees")}>
+                                                            <li className={`nav-item ${activeTab === "Employees" ? 'active' : ''}`}>
+                                                                <a className={`nav-link`} onClick={() => handleTabClick("Employees")}>
                                                                     <div className="skolrup-profile-tab-link">Employee</div>
                                                                 </a>
                                                             </li>
-                                                            <li class={`nav-item ${activeTab === "Projects" ? 'active' : ''}`}>
-                                                                <a class={`nav-link`} onClick={() => handleTabClick("Projects")}>
+                                                            <li className={`nav-item ${activeTab === "Projects" ? 'active' : ''}`}>
+                                                                <a className={`nav-link`} onClick={() => handleTabClick("Projects")}>
                                                                     <div className="skolrup-profile-tab-link">Projects</div>
                                                                 </a>
                                                             </li>
-                                                            <li class={`nav-item ${activeTab === "Clients" ? 'active' : ''}`}>
-                                                                <a class={`nav-link`} onClick={() => handleTabClick("Clients")}>
+                                                            <li className={`nav-item ${activeTab === "Clients" ? 'active' : ''}`}>
+                                                                <a className={`nav-link`} onClick={() => handleTabClick("Clients")}>
                                                                     <div className="skolrup-profile-tab-link">Clients</div>
                                                                 </a>
                                                             </li>
-                                                            <li class={`nav-item ${activeTab === "Financial" ? 'active' : ''}`}>
-                                                                <a class={`nav-link`} onClick={() => handleTabClick("Financial")}>
+                                                            <li className={`nav-item ${activeTab === "Financial" ? 'active' : ''}`}>
+                                                                <a className={`nav-link`} onClick={() => handleTabClick("Financial")}>
                                                                     <div className="skolrup-profile-tab-link">Financial</div>
                                                                 </a>
                                                             </li>

@@ -2,29 +2,15 @@ import React, { useState, useEffect } from "react";
 
 import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
 
 //import styles 
 import 'react-modern-drawer/dist/index.css'
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 
 
-const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpadateClick }) => {
+const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId }) => {
   
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  
-  const [getidAttendance, setGetidAttendance] = useState("");
 
   const [shiftDetails, setShiftDetails] = useState([]);
 
@@ -47,32 +33,10 @@ const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpa
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
     }
   }, [isOpen, isHistroyId]);
-
-//   useEffect(() => {
-    
-//       getAttendanceDetails(isHistroyId);
-    
-//   }, []);
-
-  const handleupdate = () => {
-    handleUpadateClick(getidAttendance);
-};
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-    
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${day}-${month}-${year} `;
-}
   
   
   return (

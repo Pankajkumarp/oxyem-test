@@ -24,6 +24,7 @@ export default function Finance({ applicantid, fullName,isBoaGenerated }) {
 
 
         useEffect(() => {
+            // eslint-disable-next-line react-hooks/immutability
             fetchForm();   // Ensure content updates when formData prop changes
         }, []);
 
@@ -46,7 +47,7 @@ export default function Finance({ applicantid, fullName,isBoaGenerated }) {
                 setFormData(updatedFormData);
             }
         } catch (error) {
-            
+            console.error(error)
             setError("Failed to fetch form data");
         }
     };
@@ -77,16 +78,10 @@ export default function Finance({ applicantid, fullName,isBoaGenerated }) {
               setContent(updatedFormData);
           }
       } catch (error) {
+        console.error(error)
           setError("Failed to fetch form data");
       }
   };
-  
-
-    const handleCancel = () => {
-        
-        // Add your cancel logic here
-    };
-
     const transformFormData = (data) => {
         const transformedData = {};
         data.section.forEach(section => {
@@ -144,6 +139,7 @@ export default function Finance({ applicantid, fullName,isBoaGenerated }) {
                 router.push('/onboardDashboard'); 
             }
           } catch (error) {
+            console.error(error)
             const errormessage = 'Error connecting to the backend. Please try after Sometime.';
             toast.success(({ id }) => (
               <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
@@ -175,9 +171,7 @@ export default function Finance({ applicantid, fullName,isBoaGenerated }) {
           }
     };
 
-    const getsubmit = async (value) =>{
-
-    }
+    const getsubmit = async () =>{}
     const handleJobApplicantOfferlatter = async (value ,formData) =>{
         if(value === "Finance"){
         openEditModal();
@@ -259,7 +253,7 @@ export default function Finance({ applicantid, fullName,isBoaGenerated }) {
                     color: '#FF000F',
                   },
                 });
-                
+                console.error(error)
               }
         } 
     }
@@ -301,7 +295,6 @@ export default function Finance({ applicantid, fullName,isBoaGenerated }) {
                                             fields={section}
                                             submitformdata={getsubmit}
                                             handleChangeValue={handleChangeValue}
-                                            handleChangess={() => handleChangess(index)}
                                             pagename={'jobApplicantsFinance'}
                                             isModule={content.formType}  
                                             handleApprrovereqClaim={handleJobApplicantOfferlatter}                                                                                

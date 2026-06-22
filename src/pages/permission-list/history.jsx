@@ -18,12 +18,13 @@ const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId }) => {
         setDetails(response.data.data.action);
       }
     } catch (error) {
-      
+      console.error(error)
     }
   };
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
     }
   }, [isOpen, isHistroyId]);

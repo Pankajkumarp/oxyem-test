@@ -45,6 +45,7 @@ export default function DynamicForm({ formData, shareId, onlyView }) {
 
   const schema = yup.object().shape(shape);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { register, control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });

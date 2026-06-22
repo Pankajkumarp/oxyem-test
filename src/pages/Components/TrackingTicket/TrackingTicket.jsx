@@ -2,21 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Tooltip } from 'react-tooltip';
 
 export default function TrackingTicket({ ticketDetails }) {
-  if (!ticketDetails) return null;
-  console.log(ticketDetails,"params recieved")
+
   const [status, setStatusTrack] = useState('');
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatusTrack(ticketDetails.toLowerCase().trim());
   }, []);
-// useEffect(() => {
-//   if (ticketDetails?.status) {
-//     setStatus(ticketDetails.status.toLowerCase().trim());
-//   }
-// }, [ticketDetails.status]);
 
-
-  console.log(status, "this is status");
 
 
   // Determine the status classes based on ticket status
@@ -68,7 +61,7 @@ export default function TrackingTicket({ ticketDetails }) {
 
   // Ensure status is available and convert to lowercase for the container class
   const statusClass = status ? `oxyem-ticket-trking-${status.toLowerCase()}` : 'oxyem-ticket-trking-pending';
-console.log(statusClass)
+  if (!ticketDetails) return null;
   return (
     <div className={`tracking-ticket-container ${statusClass}`}>
 

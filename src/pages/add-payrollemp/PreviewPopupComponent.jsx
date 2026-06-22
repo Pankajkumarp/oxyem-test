@@ -14,6 +14,7 @@ export default function PreviewPopupComponent({ isOpen, closeModal, previewData,
         }
     }, [isOpen]);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setInputData(previewData || {});
         setShowInfo(true);
     }, [previewData]);
@@ -114,8 +115,8 @@ export default function PreviewPopupComponent({ isOpen, closeModal, previewData,
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            {transformedData?.otherAllowance.map((item, index) => (
-                                                                                <tr key={index}>
+                                                                            {transformedData?.otherAllowance.map((item) => (
+                                                                                <tr key={item?.name?.label || item?.name}>
                                                                                     <td>{item?.name?.label || item?.name}</td>
                                                                                     <td className="text-end">{transformedData.currency} {item.attributeValue}</td>
                                                                                 </tr>
@@ -144,8 +145,8 @@ export default function PreviewPopupComponent({ isOpen, closeModal, previewData,
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            {transformedData?.deductionOtherAllowance.map((item, index) => (
-                                                                                <tr key={index}>
+                                                                            {transformedData?.deductionOtherAllowance.map((item) => (
+                                                                                <tr key={item?.name?.label || item?.name}>
                                                                                     <td>{item?.name?.label || item?.name}</td>
                                                                                     <td className="text-end">{transformedData.currency} {item.attributeValue}</td>
                                                                                 </tr>

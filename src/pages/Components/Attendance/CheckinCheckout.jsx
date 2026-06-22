@@ -1,14 +1,10 @@
-import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import { FaRegClock, FaTimes } from "react-icons/fa";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import { Toaster, toast } from 'react-hot-toast';
+import {  toast } from 'react-hot-toast';
 import axios from 'axios';
 import { FaRegCheckCircle } from "react-icons/fa";
 export default function Navbar({ pagename, getProfileData }) {
-
-  const router = useRouter();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const formatDate = (date) => {
@@ -22,10 +18,7 @@ export default function Navbar({ pagename, getProfileData }) {
   const [isClient, setIsClient] = useState(false);
   const [timeDate, setTimeDate] = useState('');
   const [idsent, setIdSent] = useState("");
-  const [Isaddress, setAddress] = useState();
   const [idShift, setidShift] = useState("");
-  const [isCheckIn, setIsCheckIn] = useState(true);
-  const [profileInfo, setProfileInfo] = useState({});
   const [attendanceTimeInfo, setAttendanceTimeInfo] = useState({});
 
   const formatDateTime = (date) => {
@@ -39,6 +32,7 @@ export default function Navbar({ pagename, getProfileData }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
@@ -56,7 +50,6 @@ export default function Navbar({ pagename, getProfileData }) {
         setPunchmode(response.data.data.latestAttendance.mode || "");
         setIdSent(response.data.data.latestAttendance.idAttendance || "");
         setidShift(response.data.data.shiftDetails.idShift || "")
-        setProfileInfo(response.data.data.profileInfo || {});
         if(response?.data?.data?.profileInfo && pagename === "me"){
           getProfileData(response.data.data.profileInfo)
         }
@@ -74,6 +67,7 @@ export default function Navbar({ pagename, getProfileData }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, []);
 
@@ -127,7 +121,6 @@ export default function Navbar({ pagename, getProfileData }) {
           },
         });
 
-        setIsCheckIn(false);
         fetchData();
       }
     } catch (error) {
@@ -167,7 +160,6 @@ export default function Navbar({ pagename, getProfileData }) {
       const city = response.data.city;
       const state = response.data.state;
       const country = response.data.country;
-      setAddress(`${city}, ${state}, ${country}`);
       const combineAddress = `${city}, ${state}, ${country}`;
       if (response) {
         handlesubmitclickA(combineAddress);
@@ -194,6 +186,7 @@ export default function Navbar({ pagename, getProfileData }) {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRealTimeToday(
       `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
     );

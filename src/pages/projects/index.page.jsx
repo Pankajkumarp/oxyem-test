@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useRef } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import Head from 'next/head';
@@ -17,10 +18,10 @@ import { Tooltip } from 'react-tooltip'
 import { GrTooltip } from "react-icons/gr"; 
 import CompletionBar from "../Components/CompletionBar.jsx";
 import pageTitles from '../../common/pageTitles.js';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function ProjectListing({ }) {
+export default function ProjectListing() {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     useEffect(() => {
         const mainElement = document.querySelector('body');
@@ -35,25 +36,18 @@ export default function ProjectListing({ }) {
     }, []);
 
     const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
+    const [searchfilter, setSearchfilter] = useState({});
+    const [activeStatus, setActiveStatus] = useState(null);
     const handleTabClick = (index) => {
-        setActiveTab(index); // Update active tab index when a tab is clicked
+        setActiveTab(index);
     };
 
     const [projectStats, setProjectStats] = useState({});
 
     const fetchProjectStats = async () => {
         try {
-            // 🔹 Replace this dummy with your real API later
             const response = await axiosJWT.get(`${apiUrl}/project/projectstats`);
             const responsedata = response.data.data || {};
-
-            // ✅ Dummy Stats
-            // const responsedata = {
-            //     totalActive: 8,
-            //     totalInactive: 2,
-            //     totalExpiringThisMonth: 1,
-            //     totalDraft: 1
-            // };
 
             setProjectStats(responsedata);
         } catch (error) {
@@ -62,6 +56,7 @@ export default function ProjectListing({ }) {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchProjectStats();
     }, []);
 
@@ -70,14 +65,12 @@ export default function ProjectListing({ }) {
     const [projectStatusBarChartData, setProjectStatusBarChartData] = useState();
     const [projectClientBarChartData, setProjectClientBarChartData] = useState();
     const [projectEndDateLineChartData, setProjectEndDateLineChartData] = useState();
-    const [projectTypeDonutChartData, setProjectTypeDonutChartData] = useState();
 
    useEffect(() => {
     const getProjectCharts = async () => {
         try {
             const response = await axiosJWT.get(`${apiUrl}/project/projectgraphs`);
             const projectChartResponse = response.data?.data || {}; // ✅ Access inside .data
-            console.log("this ", projectChartResponse);
 
             // 📊 Chart 1 - Bar (Projects by Status)
             setProjectStatusBarChartData({
@@ -91,7 +84,6 @@ export default function ProjectListing({ }) {
                                 const category = chartContext.w.config.xaxis.categories[config.dataPointIndex];
                                 if (!category) return;
                                 requestAnimationFrame(() => {
-                                    console.log("Filter by status:", category);
                                     setSearchfilter( category );
                                     setActiveTab(1);
                                     setActiveStatus(category);
@@ -119,7 +111,6 @@ export default function ProjectListing({ }) {
                                 const category = chartContext.w.config.xaxis.categories[config.dataPointIndex];
                                 if (!category) return;
                                 requestAnimationFrame(() => {
-                                    console.log("Filter by client:", category);
                                     setSearchfilter({ projectName: category });
                                     setActiveTab(1);
                                     setActiveStatus(category);
@@ -148,19 +139,6 @@ export default function ProjectListing({ }) {
                 },
             });
 
-            // 📊 Chart 4 - Donut (Projects vs Opportunities) — only if API provides it
-            if (projectChartResponse.projectType) {
-                setProjectTypeDonutChartData({
-                    series: projectChartResponse.projectType.data,
-                    options: {
-                        chart: { type: "donut", height: 350 },
-                        labels: projectChartResponse.projectType.categories,
-                        colors: ["#156082", "#43a047"],
-                        legend: { position: "bottom" },
-                        dataLabels: { enabled: true },
-                    },
-                });
-            }
 
             setIsProjectChartOpen(true);
         } catch (error) {
@@ -169,17 +147,12 @@ export default function ProjectListing({ }) {
     };
 
     getProjectCharts();
-}, []);
+}, [apiUrl]);
 
 
-
-    const [searchfilter, setSearchfilter] = useState({});
-    const [activeStatus, setActiveStatus] = useState(null);
-    const [activeTableTab, setActiveTableTab] = useState("");
 
     const handleShowDataForStatus = (filterKey) => {
         setActiveTab(1); // Switch to table view
-        setActiveTableTab(filterKey);
         setActiveStatus(filterKey);
 
         if (filterKey === "clr") {
@@ -201,9 +174,9 @@ export default function ProjectListing({ }) {
 
             case "ExpiringThisMonth":
                 // 🔹 For expiring projects, you can filter based on endDate within this month
-                const now = new Date();
-                const currentMonth = now.getMonth();
-                const currentYear = now.getFullYear();
+                //const now = new Date();
+                //const currentMonth = now.getMonth();
+                //const currentYear = now.getFullYear();
                 // setSearchfilter({
                 //   expiringThisMonth: true, // optional flag
                 //   filterFn: (row) => {
@@ -291,7 +264,9 @@ const completion = Math.round(
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         getProjectValue(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, itemsPerPage, searchValue, filterList, searchfilter]);
 
     const handlePageClick = (event) => {
@@ -336,13 +311,7 @@ const completion = Math.round(
                     setItemsPerPage(tableState.rowsPerPage);
                     setCurrentPage(0);
                     break;
-                case 'sort':
-                    setSortOrder({
-                        name: tableState.sortOrder.name,
-                        direction: tableState.sortOrder.direction,
-                    });
-                    break;
-                case 'filterChange':
+                case 'filterChange': {
                     const newFilterList = {};
                     tableState.filterList.forEach((value, index) => {
                         if (value.length) {
@@ -351,6 +320,7 @@ const completion = Math.round(
                     });
                     setFilterList(newFilterList);
                     break;
+                }
                 case 'search':
                     setSearchValue(tableState.searchText);
                     break;
@@ -398,7 +368,7 @@ const completion = Math.round(
                 getProjectValue();
             }
         } catch (error) {
-
+console.error(error)
         }
     }
     const GroupAvatar = ({ users, maxVisible = 3 }) => {

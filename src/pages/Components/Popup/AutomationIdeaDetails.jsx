@@ -6,8 +6,7 @@ import CustomDataTable from "../Datatable/tablewithApi.jsx";
 
 export default function AutomationIdeaDetailsDrawer({
   isOpen,
-  closeModal,
-  handleClearFilter
+  closeModal
 }) {
   const router = useRouter();
 

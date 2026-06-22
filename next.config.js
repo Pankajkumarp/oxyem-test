@@ -9,6 +9,11 @@ const nextConfig = {
         hostname: 'oxyemdev.s3.eu-west-1.amazonaws.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'oxytal.s3.eu-west-1.amazonaws.com',
+        pathname: '/**',
+      },
     ],
   },
 

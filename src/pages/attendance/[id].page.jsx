@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import SecTab from '../Components/Employee/SecTab';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router';
-import { FaEdit } from "react-icons/fa";
 import { Toaster, toast } from 'react-hot-toast';
 import { FaTimes } from "react-icons/fa";
 import moment from 'moment-timezone';
@@ -24,6 +24,7 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
         if (localTime === "Invalid date") return ""; // Return empty string if the date is invalid
         return localTime;
     } catch (error) {
+        console.error(error)
         return ""; // Return empty string in case of any error during conversion
     }
 };
@@ -53,8 +54,8 @@ export default function Projectallocation({ userFormdata }) {
                 setidEmployee(response.data.data.idEmployee)
                 // Split the punchIn value to separate date and time
                 const [apiResponseDate, apiResponseTime] = punchIn.split(' ');
-                const [apiResponseDatepunchOut, apiResponseTimepunchOut] = punchOut.split(' ');
-                const startT = convertUtcToLocalTime(apiResponseTime, timeZone)
+                const [apiResponseTimepunchOut] = punchOut.split(' ');
+
                 const mergeData = (data) => {
                     data.section.forEach(section => {
                         section.Subsection.forEach(subsection => {
@@ -93,9 +94,11 @@ export default function Projectallocation({ userFormdata }) {
     useEffect(() => {
         const { id } = router.query; // Extract the "id" parameter from the query object
         if (id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setGetID(id);
             getProjectValue(id);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.id]);
 
     const handlesubmitApiData = async (value) => {
@@ -110,7 +113,6 @@ export default function Projectallocation({ userFormdata }) {
             const response = await axiosJWT.post(`${apiUrl}/attendance`, apipayload);
             // Handle the response if needed
 			const message = `You have successfully <strong>Update</strong> Attendance`;
-			const errormessage = 'Error connecting to the backend. Please try after Sometime.';
 			if(response){
 				toast.success(({ id }) => (
                     <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
@@ -141,6 +143,7 @@ export default function Projectallocation({ userFormdata }) {
 				router.push(`/attendance/admin`);
 			}
         } catch (error) {
+            const errormessage = "Something Happened"
 			toast.success(({ id }) => (
                 <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
                     <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />

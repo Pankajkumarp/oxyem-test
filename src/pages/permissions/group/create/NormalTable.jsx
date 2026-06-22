@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { GrNext, GrPrevious } from "react-icons/gr";
@@ -51,6 +52,7 @@ export default function NormalTable({
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, [currentPage, rowsPerPage, sortConfig, search]);
 

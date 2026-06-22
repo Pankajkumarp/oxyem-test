@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { GoFileSubmodule } from "react-icons/go";
-import Select from "react-select";
 import Stepper from './Stepper';
 import CompanyIdentity from './CompanyIdentity';
 import LegalAddress from './LegalAddress';
@@ -21,7 +18,7 @@ const selectStyles = {
         },
         backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
     }),
-    indicatorSeparator: (provided, state) => ({
+    indicatorSeparator: (provided) => ({
         ...provided,
         backgroundColor: 'var(--dropdownhoverbg)',
         fontWeight: 'var(--dropdownfontweight)',
@@ -44,9 +41,8 @@ const selectStyles = {
         },
     }),
 };
-export default function createGroup() {
+export default function CreateGroup() {
     const [activeTab, setActiveTab] = useState("companyInfo");
-    const router = useRouter();
 
     const [companyLegalName, setCompanyLegalName] = useState("");
     const [brandName, setBrandName] = useState("");
@@ -106,12 +102,8 @@ export default function createGroup() {
     // Maternity Leave
     const [maternityLeaveEnabled, setMaternityLeaveEnabled] = useState(false);
     const [maternityLeaveCount, setMaternityLeaveCount] = useState("");
-
     const isLeaveDone = earnedLeaveCount || birthdayLeaveCount ||  maternityLeaveCount || paidLeaveCount;
-
     const issummary = activeTab === "summary" && isCompanyIdentityDone && isLegalAddressDone && isLeaveDone && isAsssignModule;
-
-    const [error, setError] = useState("");
     useEffect(() => {
         const mainElement = document.querySelector('body');
         if (mainElement) {
@@ -124,7 +116,8 @@ export default function createGroup() {
         };
     }, []);
 
-    const [submitted, setSubmitted] = useState(false);
+    const submitted = false;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [errors, setErrors] = useState({
         group: false,
         role: false,
@@ -133,38 +126,7 @@ export default function createGroup() {
     });
 
 const handleSubmit = () => {
-  const payload = {
-    company: {
-      companyLegalName,
-      brandName,
-      industry,
-      companyType,
-      incorporationYear,
-      website,
-      companyDescription,
-    },
-    legal: {
-      registeredCountry,
-      registrationNumber,
-      taxId,
-      gstVatEin,
-      pan,
-      registeredAddress,
-      stateProvince,
-      city,
-      postalCode,
-    },
-    leavePolicy: {
-      birthdayLeaveEnabled,
-      birthdayLeaveCount,
-      earnedLeaveCount,
-      paidLeaveCount,
-      maternityLeaveCount,
-    },
-    modules: moduleIds,
-  };
 
-  console.log("Final Payload:", payload);
 };
 
     return (

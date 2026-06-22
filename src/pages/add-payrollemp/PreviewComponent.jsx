@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
-import { FaEdit } from 'react-icons/fa'; // Example import for FontAwesome edit icon
-import Edit from '../Components/EmployeeDashboard/Edit/Edit.jsx';
-import { ToastNotification, ToastContainer } from '../Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../Components/EmployeeDashboard/Alert/ToastNotification';
 
-export default function PayrollPreview({ previewData, fields,tdsoveridevalue }) {
+export default function PayrollPreview({ previewData, fields }) {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     const [inputData, setInputData] = useState(previewData || {});
     const [showInfo, setShowInfo] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
-    const [formData, setFormData] = useState([]);
-    const [empId, setEmpId] = useState('');
-    const [error, setError] = useState(null);
     const [loader, setloader] = useState(false);
     
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setInputData(previewData || {});
         setShowInfo(true);
     }, [previewData]);
@@ -48,35 +42,7 @@ export default function PayrollPreview({ previewData, fields,tdsoveridevalue }) 
        
         
     };
-console.log(transformedData.netSalary);
 
-    const fetchForm = async () => {
-        try {
-            const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "tdsOverride" } });
-            if (response.status === 200 && response.data.data) {
-                const formResponse = response.data.data
-
-                if (inputData.tds) {
-                    formResponse.section[0].Subsection[0].fields[0].value = inputData.tds;
-                }
-                if (inputData.tdsOverrideReason) {
-                    formResponse.section[0].Subsection[0].fields[1].value = inputData.tdsOverrideReason;
-                }
-                setFormData(formResponse);
-            }
-        } catch (error) {
-            setError("Failed to fetch form data.");
-        }
-    };
-
-    const openEditModal = () => {
-        fetchForm();
-        setIsEditOpen(true);
-    };
-
-    const closeEditModal = () => {
-        setIsEditOpen(false);
-    };
 
     const handleSubmit = async (buttonval) => {
         if (buttonval === 'cancel') {
@@ -117,25 +83,8 @@ console.log(transformedData.netSalary);
     
     
 
-    const handleOverrideValue = (overrideValues) => {
-        const tdsOverrideSection = overrideValues.section.find(section => section.SectionName === "TDSOverride");
-        const tdsField = tdsOverrideSection.fields.find(field => field.name === "tds");
-        const tdsOverrideReasonField = tdsOverrideSection.fields.find(field => field.name === "tdsOverrideReason");
-        const updatedData = {
-            ...inputData,
-            tds: tdsField.attributeValue,
-            tdsOverrideReason: tdsOverrideReasonField.attributeValue,
-            isWithoutActualTax: true,
-        };
-        setInputData(updatedData);
-        tdsoveridevalue(updatedData);
-        closeEditModal();
-    };
-
-
     return (
         <>
-            <Edit isOpen={isEditOpen} closeModal={closeEditModal} formData={formData} getsubmitformdata={handleOverrideValue} empId={empId} error={error} />
             <div className="row">
                 <div className="col-12 col-lg-12 col-xl-12">
                     <div className="row">

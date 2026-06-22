@@ -97,6 +97,7 @@ export default function DocumentsEvidence({
               <div className="d-flex gap-3 al-c">
                 {/* IMAGE */}
                 {doc.type === "image" && (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={doc.url}
                     alt={doc.name}

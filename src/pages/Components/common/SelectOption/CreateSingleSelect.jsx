@@ -3,14 +3,6 @@ import Selectcreatable from 'react-select/creatable';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 
-
-const options = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3' },
-  // Add more options as needed
-];
-
 export default function CreateSingleSelect({label, validations = [] ,options, value, onChange, isDisabled}) {
   
   const isRequired = validations.some(validation => validation.type === "required");
@@ -54,7 +46,7 @@ const filteredOptions = options.filter(option => customFilter(option, inputValue
               borderColor: state.isFocused ? 'var(--dropdownhoverbg)' : provided.borderColor // Ensure hover state does not override focus state
             }
           }),
-          indicatorSeparator: (provided, state) => ({
+          indicatorSeparator: (provided) => ({
             ...provided,
             backgroundColor: 'var(--dropdownhoverbg)' // Change border color when clicked to show options
           }),

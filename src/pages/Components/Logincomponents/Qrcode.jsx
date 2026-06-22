@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image'
+import React from 'react';
 import axios from "axios";
-export default function Qrcode({apiData,username,getsubmitformdata}) {
+export default function Qrcode({apiData, getsubmitformdata}) {
    const apiurl =  process.env.NEXT_PUBLIC_API_BASE_URL
-   const [getapidata, setGetApiData] = useState(apiData);
+   const getapidata = apiData;
     {/*const handleScanner = async (e) => {
         e.preventDefault();
         const resp = {"showotp":true}
@@ -17,7 +16,7 @@ export default function Qrcode({apiData,username,getsubmitformdata}) {
              const apiresponse = response.data != "" ? response.data :"";           
              getsubmitformdata(apiresponse)
         } catch (error) {         
-          	
+          	console.error(error)
           }
     }
 
@@ -31,9 +30,9 @@ export default function Qrcode({apiData,username,getsubmitformdata}) {
                               <h6 className='auth_scan_heading'>Activate the authenticator App</h6>
                                  <h6 className='auth_scan_text'>Steps to Configure QR Code</h6>
 																<ul>
-                                <li>Download and install the Google Authenticator app from your mobile device's app store</li>
+                                <li>Download and install the Google Authenticator app from your mobile device&apos;s app store</li>
 																<li>Setup a new account using the QR code</li>
-																<li>Under "Authenticator app," tap Set up.On some devices, under “Authenticator app,” tap Get Started.</li>
+																<li>Under &quot;Authenticator app,&quot; tap Set up.On some devices, under “Authenticator app,” tap Get Started.</li>
 																<li>Follow the on-screen steps.</li>
 																</ul>
 															</div>

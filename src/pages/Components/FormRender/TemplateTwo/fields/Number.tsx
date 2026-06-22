@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getValidationRules } from "./validation";
 const getNestedError = (errors: any, name: string) => {
   return name.split(".").reduce((obj, key) => obj?.[key], errors);

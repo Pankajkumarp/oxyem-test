@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/immutability */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useEffect } from "react";
 import FieldRenderer from "../FieldRenderer";
@@ -6,7 +9,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import currencySymbolMap from 'currency-symbol-map';
 
 
-export default function DynamicList({ field, control, register, errors, setValue, allValues, InvoiceAllData }: any) {
+export default function DynamicList({ field, control, register, errors, setValue, InvoiceAllData }: any) {
     const currencyType = InvoiceAllData?.invoiceData?.currencyType
     const symbol = currencySymbolMap(currencyType);
     const { fields, append, remove, replace } = useFieldArray({

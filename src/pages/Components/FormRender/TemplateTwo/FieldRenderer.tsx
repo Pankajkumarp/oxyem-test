@@ -21,6 +21,7 @@ export default function FieldRenderer({
     allValues,
     InvoiceAllData,
     setValue
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) {
     const commonProps = { field, register, errors };
     switch (field.type) {

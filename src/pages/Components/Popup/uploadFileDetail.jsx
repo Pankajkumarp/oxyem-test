@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import Drawer from 'react-modern-drawer'
-import { MdDriveFolderUpload } from "react-icons/md";
 import 'react-modern-drawer/dist/index.css'
 import Files from 'react-files'
 import { FiUpload } from 'react-icons/fi';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { GrDocumentUpdate } from "react-icons/gr";
 import { MdDownload } from 'react-icons/md';
-const uploadFileDetail = ({ isOpen, closeModal, documentId, documentFor }) => {
+const UploadFileDetail = ({ isOpen, closeModal, documentId, documentFor }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [documentData, setDocumentData] = useState([]);
   const [fieldValue, setFieldValue] = useState({
@@ -37,6 +36,7 @@ const uploadFileDetail = ({ isOpen, closeModal, documentId, documentFor }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getUploadList(documentId);
     }
   }, [isOpen, documentId]);
@@ -178,7 +178,7 @@ const handleDownloadClickWithPath = async (path) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {documentData.map((file, index) => (
+                      {documentData.map((file) => (
                         <tr className='bottom_table_line' key={file.Id}>
                           <td className='name_ic'>
                             <div className='highlight_t_s'>{file["Uploaded Date"]}</div>
@@ -206,4 +206,4 @@ const handleDownloadClickWithPath = async (path) => {
   );
 };
 
-export default uploadFileDetail;
+export default UploadFileDetail;

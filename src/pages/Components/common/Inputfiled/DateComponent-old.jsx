@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,7 +8,7 @@ import { format } from 'date-fns';
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { Tooltip } from 'react-tooltip';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
-const DatePicker = ({ type, placeholder, readonly, isDisabled, label, value, validations = [], onChange, otherAttributes, showleave, selectEmpId }) => {
+const DatePicker = ({ placeholder, readonly, isDisabled, label, value, validations = [], onChange, otherAttributes, showleave, selectEmpId }) => {
   const [days, setDays] = useState([]);
   
   const [startDate, setStartDate] = useState(value);
@@ -63,6 +64,7 @@ const DatePicker = ({ type, placeholder, readonly, isDisabled, label, value, val
   }, [selectEmpId]);
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStartDate(value);
   }, [value]);
 
@@ -77,7 +79,7 @@ const DatePicker = ({ type, placeholder, readonly, isDisabled, label, value, val
         console.log('Invalid date');
       }
     } catch (error) {
-      console.log('Error:', error.message);
+      console.error('Error:', error.message);
     }
     setStartDate(formattedDate);
     onChange(formattedDate);

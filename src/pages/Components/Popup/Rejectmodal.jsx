@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai";
+import React, { useState } from "react";
 import ReactModal from 'react-modal';
 import { MdClose } from "react-icons/md";
 import Textarea from '../common/Inputfiled/TextAreaComponentcomman';
@@ -19,7 +18,6 @@ export default function Rejectmodal({ isOpen, closeModal,onSubmit  }) {
   const [validationMessage, setValidationMessage] = useState('');
 
   const onChange = (newValue) => {
-   console.log("ttt",leaveReason)
     setLeaveReason(newValue);   
     if (leaveReason.trim() === '') {
       // setValidationMessage('Rejection reason is required.');

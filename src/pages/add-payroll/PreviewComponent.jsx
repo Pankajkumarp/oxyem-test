@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { FaEdit } from 'react-icons/fa'; // Example import for FontAwesome edit icon
 import Edit from '../Components/EmployeeDashboard/Edit/Edit.jsx';
-import { ToastNotification, ToastContainer } from '../Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../Components/EmployeeDashboard/Alert/ToastNotification';
 
 export default function PayrollPreview({ previewData, fields,tdsoveridevalue }) {
     const router = useRouter();
@@ -14,12 +13,13 @@ export default function PayrollPreview({ previewData, fields,tdsoveridevalue }) 
     const [showInfo, setShowInfo] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [formData, setFormData] = useState([]);
-    const [empId, setEmpId] = useState('');
+    const empId =""
     const [error, setError] = useState(null);
     const [loader, setloader] = useState(false);
     
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setInputData(previewData || {});
         setShowInfo(true);
     }, [previewData]);
@@ -62,6 +62,7 @@ export default function PayrollPreview({ previewData, fields,tdsoveridevalue }) 
             }
         } catch (error) {
             setError("Failed to fetch form data.");
+            console.error(error)
         }
     };
 

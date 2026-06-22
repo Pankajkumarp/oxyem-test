@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from 'react';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
-import Link from 'next/link';
 
 
 export default function CheckPermission({ service, action, children }) {

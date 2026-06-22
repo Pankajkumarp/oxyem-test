@@ -2,62 +2,43 @@ import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../../Components/Datatable/tablenew.jsx';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
-import { useRouter } from 'next/router';
 import { FaTimes } from "react-icons/fa";
 import View from '../../../Components/Popup/AttendenceHistroy';
 import ViewAssign from '../../../Components/Popup/AssignmemberHistroy';
 import TimesheetPopup from '../../../Components/Popup/employeeTimesheet';
-import dynamic from 'next/dynamic';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { Toaster, toast } from 'react-hot-toast';
 import Head from 'next/head';
 import { MdAccessTimeFilled } from "react-icons/md";
-export default function adminDashboard({ }) {
-
-
-
-
-
-    const router = useRouter();
+import Image from 'next/image'
+export default function AdminDashboard() {
     const [datacoloum, setDatacoloum] = useState([]);
     const [rowData, setRowData] = useState([]);
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-    const handleEditClick = (id) => {
-        
-    };
+    const handleEditClick = () => { };
 
     const fetchData = async () => {
         try {
             const response = await axiosJWT.get(`${apiUrl}/timesheet/timesheetDashboard`);
             if (response) {
-
                 setDatacoloum(response.data.data.formcolumns);
-                //setRowData(columneeData);
                 const timesheetData = response.data.data.timesheetData;
-
                 setRowData(timesheetData);
-
-
             }
         } catch (error) {
             console.error("Error fetching data", error);
         }
     };
-
     useEffect(() => {
-        fetchData();
-    }, []);
+        const fetchDataUse = async () => {
+            await fetchData();
+        };
+        fetchDataUse();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isHistroyId, setIsHistroyId] = useState("");
-    const handleHistoryClick = async (id) => {
-        //setIsHistroyId(id)
-        // openDetailpopup()
-    }
-    const openDetailpopup = async () => {
-        setIsModalOpen(true)
-    }
+    const isHistroyId = "";
+    const handleHistoryClick = async () => { }
     const closeDetailpopup = async () => {
         setIsModalOpen(false)
     }
@@ -80,7 +61,15 @@ export default function adminDashboard({ }) {
                 onSuccess("clear");
                 toast.success(({ id }) => (
                     <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                        <img src='/assets/img/proposal-icon.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+                        <Image
+                            src="/assets/img/proposal-icon.png"
+                            alt="Proposal Icon"
+                            width={30}
+                            height={30}
+                            style={{
+                                marginRight: '10px'
+                            }}
+                        />
                         <span dangerouslySetInnerHTML={{ __html: message }}></span>
                         <button
                             onClick={() => toast.dismiss(id)}
@@ -111,7 +100,15 @@ export default function adminDashboard({ }) {
         } catch (error) {
             toast.success(({ id }) => (
                 <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                    <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+                    <Image
+                        src="/assets/img/wrong.png"
+                        alt="Wrong Icon"
+                        width={30}
+                        height={30}
+                        style={{
+                            marginRight: '10px'
+                        }}
+                    />
                     <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
                     <button
                         onClick={() => toast.dismiss(id)}
@@ -139,22 +136,16 @@ export default function adminDashboard({ }) {
             console.error("Error occurred:", error);
         }
     }
-    const [isAssignModalOpen, setIAssignsModalOpen] = useState(false);
-    const [isAssignMemId, setIsAssignId] = useState("");
-    const openAssignpopup = async () => {
-        setIAssignsModalOpen(true)
-    }
+    const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+    const isAssignMemId = "";
     const closeAssignpopup = async () => {
-        setIAssignsModalOpen(false)
+        setIsAssignModalOpen(false)
     }
-
-
     const [isTimeSheetModal, setTimeSheetModal] = useState(false);
     const [timesheetId, settimesheetId] = useState("");
     const onViewClick = (id) => {
         settimesheetId(id)
         openTimesheetpopup();
-        //router.push(`/employeeTimeSheet/${id}`);
     };
 
     const openTimesheetpopup = async () => {

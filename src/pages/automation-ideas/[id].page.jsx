@@ -7,19 +7,21 @@ import { fetchWithToken } from '../Auth/fetchWithToken';
 import Tracking from './Traking/Traking';
 import ClaimComponent from '../Components/Automation/claimdetail';
 import HistoryComponent from '../Components/Automation/claimhistory';
-import ClaimDocumentComponent from '../Components/Automation/documentdetails';
-import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 
 const DynamicForm = dynamic(() => import('../Components/CommanForm'), { ssr: false });
 
-export default function index({userFormdata}) {
+export default function AutomationId({userFormdata}) {
     const router = useRouter();
     const [claimDetails, setClaimDetails] = useState([]);
     const [cid, setCId] = useState('');
     useEffect(() => {
           const { id } = router.query;
+          // eslint-disable-next-line react-hooks/immutability
           fetchInfo(id);
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCId(id)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [router.query.id]);;
 
 
@@ -34,13 +36,14 @@ export default function index({userFormdata}) {
                 }
             }
         } catch (error) { 
-            // console.error(error); 
+            console.error(error); 
         }
     };
 
     const initialContent = userFormdata
     const [content, setContent] = useState(initialContent);
 
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
         for (let i = 0; i < updatedArray.section.length; i++) {
@@ -59,7 +62,7 @@ export default function index({userFormdata}) {
         setContent(updatedArray);
     };
 
-    const submitformdata = async (formdata ,fileData) => {
+    const submitformdata = async () => {
         const formattedData = {};
         const formattedData2 = {};
         content.section.forEach(section => {

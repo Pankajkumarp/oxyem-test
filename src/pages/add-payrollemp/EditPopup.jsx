@@ -16,6 +16,7 @@ export default function EditPopup({
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setValue(tdsValue || 0);
         setReason(tdsReason || "");
         setErrors({});

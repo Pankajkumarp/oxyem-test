@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { InputContext } from './InputContext.jsx';
 import Notificationtext from '../../commancomponents/Notificationtext';
-export default function SearchResults({searchTerm1, section, employelist}) {
+export default function SearchResults({searchTerm1, employelist}) {
 	const router = useRouter();
-	const { globalSearch, handleChange } = useContext(InputContext);
+	const { globalSearch } = useContext(InputContext);
 	
 	const [fillterresultlist, setfillterResultlist] = useState('');
 	 
 
   useEffect(() => {
     if (searchTerm1.length < 1) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setfillterResultlist([]);
         return;
     }
@@ -37,7 +38,8 @@ export default function SearchResults({searchTerm1, section, employelist}) {
 		<>
 			{fillterresultlist.length > 0 ? (
 				<>
-						{fillterresultlist && fillterresultlist.map((item, index) => (
+						{fillterresultlist && fillterresultlist.map((item) => (
+							// eslint-disable-next-line react/jsx-key
 							<Notificationtext id={item.id} name={item.name} imageUrl={item.profileimg} profilelink={item.slug} toptext={item.name} maintext={""} bottomtext={item.serchtype} iconsize={"38"}/>
 						))}
 					

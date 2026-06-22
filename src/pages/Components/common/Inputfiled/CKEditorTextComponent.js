@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable react-hooks/refs */
 import React, { useState, useEffect, useRef } from 'react';
-import { axiosJWT } from '../../../Auth/AddAuthorization';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 
 const CKEditorTextComponent = ({
-  type,
   readonly,
   isDisabled,
   placeholder,
@@ -33,7 +34,6 @@ const CKEditorTextComponent = ({
     setEditorLoaded(true);
   }, []);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const isRequired = validations.some(v => v.type === "required");
 
   const [textData, settextData] = useState(value);

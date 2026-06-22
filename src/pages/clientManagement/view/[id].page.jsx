@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import dynamic from 'next/dynamic';
@@ -17,9 +20,8 @@ const Activity = dynamic(() => import('./activity'), {
     ssr: false
 });
 import { IoArrowBackOutline } from "react-icons/io5";
-export default function viewClient({ userFormdata }) {
+export default function ViewClient({ userFormdata }) {
     const router = useRouter();
-    const [formvalue, setFormvalue] = useState();
     const [data, setData] = useState({});
     const [businessTypes, setBusinessTypes] = useState([]);
     const [businessTypeName, setBusinessTypeName] = useState("");
@@ -39,7 +41,7 @@ export default function viewClient({ userFormdata }) {
 
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
@@ -47,6 +49,7 @@ export default function viewClient({ userFormdata }) {
         const { id } = router.query;
         fetchClientInfo(id);
         setIdClient(id)
+        // eslint-disable-next-line react-hooks/immutability
         fetchBusinessType()
     }, [id]);
 
@@ -196,6 +199,7 @@ export default function viewClient({ userFormdata }) {
                 setEditForm(false)
             }
         } catch (error) {
+            console.error(error)
         }
 
     };
@@ -391,7 +395,7 @@ export default function viewClient({ userFormdata }) {
                                                             ) : (null)}
                                                         </div>
                                                         <div className="address-list">
-                                                            {data?.addressInfoData?.map((item, index) => {
+                                                            {data?.addressInfoData?.map((item) => {
 
                                                                 return (
                                                                     <div className="address-card" key={item.addressId}>
@@ -497,6 +501,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

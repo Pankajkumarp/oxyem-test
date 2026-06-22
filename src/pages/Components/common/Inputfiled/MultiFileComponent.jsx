@@ -9,6 +9,7 @@ export default function FileComponent({ label, validations = [], onChange, files
   const dropRef = useRef(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedFiles(files || []);
   }, [files]);
 
@@ -60,6 +61,7 @@ export default function FileComponent({ label, validations = [], onChange, files
       dropArea.removeEventListener('dragover', handleDragOver);
       dropArea.removeEventListener('drop', handleDrop);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFileChange = (event) => {

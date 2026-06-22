@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SelectComponent from '../SelectOption/SelectComponent'; // Updated import
 
-export default function CategoryComponent({ label, isDisabled, value, onChange }) {
+export default function CategoryComponent({ isDisabled, value, onChange }) {
     const [selectedProduct, setSelectedProduct] = useState(value?.product || null);
     const [selectedCategory, setSelectedCategory] = useState(value?.category || null);
     const [selectedSubCategory, setSelectedSubCategory] = useState(value?.subcategory || null);
@@ -61,13 +61,11 @@ export default function CategoryComponent({ label, isDisabled, value, onChange }
 
     // Generate product options
     const productOptions = products.map(prod => ({ value: prod.value, label: prod.label }));
-    console.log("Product Options:", productOptions); // Debugging log
 
     // Generate category options based on selected product
     const categoryOptions = selectedProduct
         ? products.find(prod => prod.value === selectedProduct.value)?.categories?.map(cat => ({ value: cat.value, label: cat.label })) || []
         : [];
-    console.log("Category Options:", categoryOptions); // Debugging log
 
     // Generate subcategory options based on selected category
     const subCategoryOptions = selectedCategory
@@ -75,7 +73,6 @@ export default function CategoryComponent({ label, isDisabled, value, onChange }
             ?.categories.find(cat => cat.value === selectedCategory.value)
             ?.subcategories.map(subcat => ({ value: subcat, label: subcat })) || []
         : [];
-    console.log("Subcategory Options:", subCategoryOptions); // Debugging log
 
     return (
         <div>

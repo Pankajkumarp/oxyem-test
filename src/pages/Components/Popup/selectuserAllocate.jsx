@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import ReactModal from 'react-modal';
 import React, { useState, useEffect } from "react";
 import Select from 'react-select';
@@ -19,10 +20,9 @@ const customStyles = {
     }
 };
 
-export default function selectuserAllocate({
+export default function SelectuserAllocate({
     isOpen,
     closeModal,
-    labelText = "Allocate Team Members",
     userdata = [],
     submitvaluerec,
     projectStartDate,

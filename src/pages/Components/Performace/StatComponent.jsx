@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link';
 import {FaAward } from 'react-icons/fa';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 export default function StatComponent({initiateCycleBtn}) {
@@ -18,10 +17,11 @@ export default function StatComponent({initiateCycleBtn}) {
                 }
             }
         } catch (error) {
-
+console.error(error)
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchStatData();
     }, []);
     return (

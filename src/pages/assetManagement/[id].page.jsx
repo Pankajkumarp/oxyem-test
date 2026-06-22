@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { axiosJWT } from '../Auth/AddAuthorization';
@@ -8,16 +9,16 @@ import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
 
 
 
-export default function index({userFormdata}) {
+export default function AssetManagementId({userFormdata}) {
     const router = useRouter();
     const [details, setClaimDetails] = useState([]);
     const [cid, setCId] = useState('');
-    const headingContent = 'Edit Assets';
-    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/permission/addGroup';
 
     useEffect(() => {
           const { id } = router.query;
+          // eslint-disable-next-line react-hooks/immutability
           fetchInfo(id);
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCId(id)
       }, [router.query.id]);
 
@@ -34,6 +35,7 @@ export default function index({userFormdata}) {
                 }
             }
         } catch (error) { 
+            console.error(error)
             
         }
     };
@@ -94,11 +96,12 @@ export default function index({userFormdata}) {
             }
     
             // Update the state with the modified content
+            // eslint-disable-next-line react-hooks/immutability
             getChangessField(updatedFormData)
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setContent(updatedFormData);
             setStoreArray(updatedFormData);
             
-        } else {
         }
     }, [details]); // The effect depends on details only, since content is updated internally
     
@@ -239,6 +242,7 @@ export default function index({userFormdata}) {
         if (Warranty === "Warranty Information") {
             const Warrantyinfo = value[0].fields[3].value
             
+            // eslint-disable-next-line no-undef
             const filteredContent = filterSectionsWarrantyType(AdduserContent, Warrantyinfo);
             const changeV = {
                 "formType": "createAssets",
@@ -304,8 +308,6 @@ export default function index({userFormdata}) {
                     myFile.forEach((file) => {
                       formData.append('file', file);
                     });
-                  } else {
-                    
                   }
     
                 const response = await axiosJWT.post(apiUrl, formData, {
@@ -321,9 +323,6 @@ export default function index({userFormdata}) {
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                const errors = error.response.data.errors || [];
-                const errorMessage = errors.map(err => err.msg).join('.</br>') || 'Failed to submit the form. Please try again later.';
-                
                 ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
             } else {
                 // ToastNotification({ message: 'Failed to submit the form. Please try again later.' });

@@ -12,7 +12,7 @@ export default function PolicyManagement({ userFormdata }) {
   const AdduserContent = userFormdata
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [getFileinfo, setGetFileinfo] = useState("");
-  const handlesubmitApiData = async (newArray, value) => {
+  const handlesubmitApiData = async (newArray) => {
     const section = newArray.section[0];
     const apipayload = {};
     section.fields.forEach(field => {

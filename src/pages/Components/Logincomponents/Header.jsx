@@ -1,5 +1,5 @@
-import Link from 'next/link';
-export default function Header({languageContent}) {
+/* eslint-disable @next/next/no-img-element */
+export default function Header() {
   return (
     <div className="login-header">
 		<div className="container">

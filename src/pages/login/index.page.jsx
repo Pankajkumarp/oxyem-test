@@ -5,12 +5,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head.js';
 import Cookies from 'js-cookie';
-import { LoginPageContent as enContent, logoContent as logoText, copyRightText as footercr } from '../../common/content_en';
+import {copyRightText as footercr } from '../../common/content_en';
 import axios from "axios";
 import SecTab from '../Components/Employee/SecTab';
 import Qrcode from '../Components/Logincomponents/Qrcode.jsx';
 import OTPInput from '../Components/Logincomponents/OTPInput.jsx';
-import Navbar from '../Components/Navbar/index.page.jsx';
 import LoginButton from "./login-button.jsx";
 
 
@@ -24,7 +23,7 @@ export default function Login({ loginFormdata1 }) {
 	const [apiData, setApiData] = useState({});
 	const [errorres, setErrorres] = useState('');
 
-	const getleaveoption = async (value) => {
+	const getleaveoption = async () => {
 	}
 	function waitForCookie(cookieName, timeout = 3000, interval = 100) {
 	return new Promise((resolve, reject) => {
@@ -280,8 +279,7 @@ export default function Login({ loginFormdata1 }) {
 		</>
 	)
 }
-export async function getServerSideProps(context) {
-
+export async function getServerSideProps() {
 	const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 	const response = await axios.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "Login" } })
 	let loginFormdata1 = response.data.data

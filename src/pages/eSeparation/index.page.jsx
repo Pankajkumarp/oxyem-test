@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi';
 import { useRouter } from 'next/router';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import SeparationRecallmodal from '../Components/Popup/SeparationRecallmodal';
 import { axiosJWT } from '../Auth/AddAuthorization';
-import SearchFilter from '../Components/SearchFilter/SearchFilter.jsx';
-import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
-import dynamic from "next/dynamic";
-import SelectComponent from '../Components/common/SelectOption/SelectComponent.jsx';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function Index() {
     const router = useRouter();
@@ -21,7 +17,7 @@ export default function Index() {
         router.push(`/eSeparation/view/${id}`);
     };
     const [listheader, setListHeaders] = useState([]);
-      const [status, setStatus] = useState();
+      const status = '';
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handlerecallvalueClick = async (id) => {
         setIdSeparation(id);
@@ -56,14 +52,9 @@ export default function Index() {
                 }, 400);
             }
         } catch (error) {
-
+          console.error(error)
         }
     };
-    const [searchfilter, setSearchfilter] = useState({});
-          const searchFilterData = async (value) => {
-              console.log("value", value)
-              setSearchfilter(value);
-          }
      const fetchData = async () => {
             try {
                 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -73,15 +64,14 @@ export default function Index() {
             });
                 const responsedata = response.data.data || {};
                const listheader = responsedata || {};
-                console.log(listheader);
                setListHeaders(listheader);
              } catch (error) {
-    
+                console.error(error)
             }
         };
 
  useEffect(() => {
-      console.log("User changed to tab:", activeTab);
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           fetchData();
 
   }, [activeTab]);

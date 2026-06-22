@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import CustomDataTable from '../Datatable/tablewithApi.jsx';
 import { useRouter } from 'next/router';
 import DeleteModalProject from '../Popup/DeleteModalProject.jsx';
 
-export default function ProjectList({empId,searchfilter}) {
+export default function ProjectList({searchfilter}) {
 
     const router = useRouter();
-
-    const [data, setData] = useState([]);
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const handleEditClick = (id) => {
         router.push(`/projects/edit/${id}`);
@@ -35,10 +33,9 @@ export default function ProjectList({empId,searchfilter}) {
             });
             if (response) {
                 setIsModalOpenDelete(false);
-                fetchData();
             }
         } catch (error) {
-
+            console.error(error)
         }
     }
 	    const onViewClick = (id) => {

@@ -14,6 +14,7 @@ export default function AddClaim({userFormdata}) {
   const [content, setContent] = useState(userFormdata);
 
 
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
 
@@ -88,9 +89,9 @@ export default function AddClaim({userFormdata}) {
           formData.append('moduleId', id);
           const apiUrle = process.env.NEXT_PUBLIC_API_BASE_URL;
           const apiUrl = apiUrle + '/claims/uploadDocuments';
-          const response = await axiosJWT.post(apiUrl, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+          await axiosJWT.post(apiUrl, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         }
-      } catch (error) { }
+      } catch (error) {console.error(error)}
     }
     
 	useEffect(() => {

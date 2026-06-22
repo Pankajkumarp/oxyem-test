@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
-const MonthSelect = ({ label, name, isDisabled, validations = [], options, value, onChange, showImage, pagename }) => {
+const MonthSelect = ({ label, validations = [], onChange }) => {
 
   const isRequired = validations.some(validation => validation.type === "required");
 
@@ -48,7 +48,7 @@ const MonthSelect = ({ label, name, isDisabled, validations = [], options, value
           },
           backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
         }),
-        indicatorSeparator: (provided, state) => ({
+        indicatorSeparator: (provided) => ({
           ...provided,
           backgroundColor: 'var(--dropdownhoverbg)',
           fontWeight: 'var(--dropdownfontweight)',

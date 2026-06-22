@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import MUIDataTable from "mui-datatables";
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
@@ -23,7 +24,7 @@ const DynamicForm = dynamic(() => import('../../Components/CommanForm.jsx'), {
 const Notes = dynamic(() => import('../../Components/Popup/Notes'), {
     ssr: false
 });
-export default function createClientNew({ userFormdata }) {  // Default to empty array if not provided
+export default function CreateClientNew({ userFormdata }) {  // Default to empty array if not provided
     const router = useRouter();
     const showButton = "";
     const pagename = "createPricing";
@@ -62,6 +63,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
     const [tabArray, setTabArray] = useState([]);
     useEffect(() => {
         if (!tabArray.includes(activeTab) && activeTab !== null) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTabArray((prevTabArray) => [...prevTabArray, activeTab]);
         }
     }, [activeTab]);
@@ -78,11 +80,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
         }
     }, [activeTab]);
 
-    const [isTabclick, setisTabclick] = useState(true);
-    const [tableSection, settableSection] = useState("show");
-
-
-    const [existingData, setexistingData] = useState([]);
+    const tableSection = "show";
     // Merge existing data with form fields
     const mergeDataWithFields = (fields, existingData) => {
         const existingDataMap = existingData.reduce((acc, item) => {
@@ -95,8 +93,6 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
             return acc;
         }, {});
     };
-    const initialData = mergeDataWithFields(fields, existingData);
-
 
     const options = {
         responsive: "standard",
@@ -187,13 +183,6 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
     };
 
 
-    const addRow = () => {
-        const newRow = mergeDataWithFields(fields, existingData);
-        if (activeTab === "Address Information") {
-            setAddressInfo([...addressInfoData, newRow]);
-        }
-    };
-
 
 
     useEffect(() => {
@@ -202,6 +191,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
 
         if (initialSection && initialSection.Subsection.length > 0) {
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setfields(initialSection.Subsection[0].fields);
 
             // Initialize data for the active tab only if it's empty
@@ -224,7 +214,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
         setAddressInfo(prevData => {
             const isFirstEmpty = prevData[0]?.addressId === "" && prevData[0]?.contactPersonName === "" && prevData[0]?.adressDetails === "";
             if (isFirstEmpty) {
-                return prevData.map((item, index) => ({
+                return prevData.map((item) => ({
                     ...item,
                 }));
             } else {
@@ -275,7 +265,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
             filter: field.isfilter,
             sort: field.issort,
             display: ['adressDetails2', 'adressDetails3', 'addressId'].includes(field.name) ? 'excluded' : 'true',
-            customBodyRender: (value, tableMeta, updateValue) => {
+            customBodyRender: (value, tableMeta) => {
 				const rowIndex = tableMeta.rowIndex;
                 const error = errors[field.name] ? errors[field.name][rowIndex] : undefined;
 
@@ -379,7 +369,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
                     return value;
                 }
             },
-            customHeadRender: (columnMeta, updateColumn) => {
+            customHeadRender: (columnMeta) => {
                 if (field.name === "srNo") {
                     return (
                         <th className="custom-class-for-invocie custom-class-for-srNo">
@@ -410,6 +400,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
             updatedData = [...addressInfoData];
         }
         if (activeTab === "Client Information") {
+            /* empty */
         } else {
             updatedData[rowIndex] = {
                 ...updatedData[rowIndex],
@@ -465,7 +456,9 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
 
     const handleChangess = (currentIndex) => {
         const nextIndex = currentIndex + 1;
+        // eslint-disable-next-line no-undef
         if (nextIndex < content.section.length) {
+            // eslint-disable-next-line no-undef
             setActiveTab(content.section[nextIndex].SectionName);
         }
     };
@@ -590,6 +583,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
                 }
             }
         } catch (error) {
+            console.error(error)   
         }
     };
     const removeError = (key) => {
@@ -615,7 +609,7 @@ export default function createClientNew({ userFormdata }) {  // Default to empty
     }
 
 
-    const getInstantValue = async (fieldName, value) => {
+    const getInstantValue = async () => {
         
     };
 
@@ -938,6 +932,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

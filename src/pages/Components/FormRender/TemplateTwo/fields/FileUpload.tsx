@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useCallback, useState, useEffect } from "react";
 import { useController } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
-import { FiUploadCloud, FiTrash2, FiEye } from "react-icons/fi";
+import { FiUploadCloud, FiTrash2 } from "react-icons/fi";
 
 export default function FileUpload({ field, control, errors }: any) {
   const { field: controllerField } = useController({
@@ -47,6 +49,7 @@ const onDrop = useCallback((acceptedFiles: File[]) => {
   );
 
   setPreviews((prev) => [...prev, ...newPreviews]);
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [files]);
 
 

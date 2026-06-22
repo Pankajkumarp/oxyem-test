@@ -16,10 +16,7 @@ export default function AddClaim() {
   const [content, setContent] = useState([]);
 
   useEffect(() => {
-    fetchForm();
-  }, []);
-
-  const fetchForm = async () => {
+      const fetchForm = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "addAutomationIdeas" } });
@@ -28,13 +25,18 @@ export default function AddClaim() {
         setContent(response.data.data);
       }
     } catch (error) {
-    //   console.error("Error occurred during API call:", error);
+        console.error(error)
     }
   };
+    fetchForm();
+  }, []);
 
 
 
 
+
+
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
 
@@ -58,7 +60,7 @@ export default function AddClaim() {
         setContent(updatedArray);
     };
 
-    const submitformdata = async (formdata) => {
+    const submitformdata = async () => {
         const formattedData = {};
         content.section.forEach(section => {
           section.Subsection.forEach(subsection => {

@@ -4,15 +4,11 @@ import Select from 'react-select';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
-import { useRouter } from 'next/router'
-import { FaTimes } from "react-icons/fa";
 import Head from 'next/head';
-import { MdPlaylistAddCheck } from "react-icons/md";
-import { FaRegCheckCircle } from "react-icons/fa";
-import { LuSheet } from "react-icons/lu";
-import { MdErrorOutline } from "react-icons/md";
-export default function employeeTimeSheet({ userFormdata }) {  // Default to empty array if not provided
-  const router = useRouter();
+import { FaRegCheckCircle, FaTimes } from "react-icons/fa";
+import { MdErrorOutline, MdPlaylistAddCheck } from "react-icons/md";
+import Image from 'next/image';
+export default function EmployeeTimeSheet() {
 
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -20,12 +16,6 @@ export default function employeeTimeSheet({ userFormdata }) {  // Default to emp
   const [dateoption, setDateOptions] = useState([]);
   const [sectionButton, setSectionButton] = useState([]);
 
-  const renderedButtons = sectionButton.map((button, index) => {
-    if (button.isEnabled) {
-      return `<button key=${index}>${button.type}</button>`;
-    }
-    return null;
-  });
   useEffect(() => {
     const fetchtimeOptions = async () => {
       try {
@@ -59,7 +49,7 @@ export default function employeeTimeSheet({ userFormdata }) {  // Default to emp
   const [pendingHours, setPendingHours] = useState(0);
   const [leaveHours, setLeaveHours] = useState(0);
   const [holidayHours, setHolidayHours] = useState(0);
-const [invalidCells, setInvalidCells] = useState({});
+  const [invalidCells, setInvalidCells] = useState({});
 
   const transformedData = fillterData.map(item => item.map(subItem => subItem.value));
 
@@ -76,44 +66,44 @@ const [invalidCells, setInvalidCells] = useState({});
       if (response) {
         const data = response.data.data.data;
         let planned = 0;
-let submitted = 0;
-let pending = 0;
-let leave = 0;
-let holiday = 0;
+        let submitted = 0;
+        let pending = 0;
+        let leave = 0;
+        let holiday = 0;
 
-data.forEach(task => {
-  const projectName = task.projectName;
+        data.forEach(task => {
+          const projectName = task.projectName;
 
-  const isLeaveProject = projectName === 'Leave';
-  const isHolidayProject = projectName === 'Holiday';
-  const isNormalProject = !isLeaveProject && !isHolidayProject;
-  if (isNormalProject) {
-    planned += Number(task.totalEffortsAllocated) || 0;
-  }
+          const isLeaveProject = projectName === 'Leave';
+          const isHolidayProject = projectName === 'Holiday';
+          const isNormalProject = !isLeaveProject && !isHolidayProject;
+          if (isNormalProject) {
+            planned += Number(task.totalEffortsAllocated) || 0;
+          }
 
-  task.taskAssignedDays.forEach(day => {
-    const effort = Number(day.effort) || 0;
-    if (isLeaveProject) {
-      leave += effort;
-      return;
-    }
-    if (isHolidayProject) {
-      holiday += effort;
-      return;
-    }
-    submitted += effort;
-  });
-});
+          task.taskAssignedDays.forEach(day => {
+            const effort = Number(day.effort) || 0;
+            if (isLeaveProject) {
+              leave += effort;
+              return;
+            }
+            if (isHolidayProject) {
+              holiday += effort;
+              return;
+            }
+            submitted += effort;
+          });
+        });
 
-// ---------- Pending ----------
-pending = planned - submitted;
+        // ---------- Pending ----------
+        pending = planned - submitted;
 
-// ---------- Set state ----------
-setPlanedHours(planned);
-setSubmitHours(submitted);
-setPendingHours(pending);
-setLeaveHours(leave);
-setHolidayHours(holiday);
+        // ---------- Set state ----------
+        setPlanedHours(planned);
+        setSubmitHours(submitted);
+        setPendingHours(pending);
+        setLeaveHours(leave);
+        setHolidayHours(holiday);
         const button = response.data.data.button;
         setSectionButton(button)
         const tableHeaders = [
@@ -156,7 +146,7 @@ setHolidayHours(holiday);
         const formattedData = data.map((task, index) => {
 
           // Calculate total effort
-          const totalEffort = task.taskAssignedDays.reduce((sum, day) => sum + parseFloat(day.effort), 0);
+          const totalEffort = task.taskAssignedDays.reduce((sum, day) => sum + Number.parseFloat(day.effort), 0);
           const remainingEffort = task.totalEffortsAllocated - totalEffort;
 
           // Format taskAssignedDays
@@ -172,7 +162,7 @@ setHolidayHours(holiday);
             { name: "idTaskProject", value: task.idTaskProject },
             { name: "idTaskSubmission", value: task.idTaskSubmission ? task.idTaskSubmission : "" },
             { name: "idSubTask", value: task.idSubTask ? task.idSubTask : "" },
-            { name: "isSubTask", value: task.isSubTask ? task.isSubTask :false },
+            { name: "isSubTask", value: task.isSubTask ? task.isSubTask : false },
             { name: "startDate", value: task.startDate },
             { name: "endDate", value: task.endDate },
             { name: "sn", value: (index + 1).toString() },
@@ -212,12 +202,15 @@ setHolidayHours(holiday);
       console.error('Error fetching options:', error);
     }
   };
-  useEffect(() => {
-
+useEffect(() => {
+  const fetchData = async () => {
     if (datevalue !== "") {
-      fetchtabledata(datevalue);
+      await fetchtabledata(datevalue);
     }
-  }, [datevalue]);
+  };
+
+  fetchData();
+}, [datevalue]);
 
   const dateonChange = (selectedOption) => {
     if (selectedOption) {
@@ -229,38 +222,38 @@ setHolidayHours(holiday);
   const handleDataCancel = () => {
     fetchtabledata(datevalue);
   };
-const validateTimesheet = () => {
-  const errors = {};
-  let hasError = false;
+  const validateTimesheet = () => {
+    const errors = {};
+    let hasError = false;
 
-  // remove total row
-  const rows = fillterData.slice(0, -1);
+    // remove total row
+    const rows = fillterData.slice(0, -1);
 
-  rows.forEach((row, rowIndex) => {
-    row.forEach(cell => {
-      if (
-        cell.type === 'taskAssignedDays' &&
-        cell.isFreezable === false &&
-        Number(cell.value) <= 0
-      ) {
-        const key = `${rowIndex}-${cell.name}`;
-        errors[key] = true;
-        hasError = true;
-      }
+    rows.forEach((row, rowIndex) => {
+      row.forEach(cell => {
+        if (
+          cell.type === 'taskAssignedDays' &&
+          cell.isFreezable === false &&
+          Number(cell.value) <= 0
+        ) {
+          const key = `${rowIndex}-${cell.name}`;
+          errors[key] = true;
+          hasError = true;
+        }
+      });
     });
-  });
 
-  setInvalidCells(errors);
-  return !hasError;
-};
+    setInvalidCells(errors);
+    return !hasError;
+  };
 
-const [errorsMessage, setErrorMessage] = useState("");
+  const [errorsMessage, setErrorsMessage] = useState("");
   const handleDataSave = async (value) => {
-    setErrorMessage("")
+    setErrorsMessage("")
     if ((value === 'submit' || value === 'draft') && !validateTimesheet()) {
-      setErrorMessage('Please fill all required effort fields before submitting.')
-  return;
-}
+      setErrorsMessage('Please fill all required effort fields before submitting.')
+      return;
+    }
 
 
     fillterData.pop();
@@ -287,9 +280,9 @@ const [errorsMessage, setErrorMessage] = useState("");
     try {
       const response = await axiosJWT.post(`${apiUrl}/timesheet/timesheetSubmit`, transformedData);
 
-      if (response && response.data) {
+      if (response?.data) {
         const message = response.data.message;
-        setErrorMessage("")
+        setErrorsMessage("")
         toast.success(({ id }) => (
           <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
             <FaRegCheckCircle style={{
@@ -322,14 +315,20 @@ const [errorsMessage, setErrorMessage] = useState("");
           },
         });
         setTimeout(() => {
-          window.location.reload();
+          globalThis.location.reload();
         }, 5000);
       }
     } catch (error) {
       const errormessage = 'Error connecting to the backend. Please try after Sometime.';
       toast.success(({ id }) => (
         <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-          <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+          <Image
+            src="/assets/img/wrong.png"
+            alt="icon"
+            width={30}
+            height={30}
+            style={{ marginRight: '10px' }}
+          />
           <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
           <button
             onClick={() => toast.dismiss(id)}
@@ -376,7 +375,7 @@ const [errorsMessage, setErrorMessage] = useState("");
     };
 
     const transformedData = fillterData.map(item => transformItem(item));
-    const idTaskSubmissions = [...new Set(transformedData.map(item => item.idTaskSubmission).filter(id => id))];
+    const idTaskSubmissions = [...new Set(transformedData.map(item => item.idTaskSubmission).filter(Boolean))];
     const payload = {
       "timesheetIds": idTaskSubmissions
     }
@@ -417,14 +416,20 @@ const [errorsMessage, setErrorMessage] = useState("");
           },
         });
         setTimeout(() => {
-          window.location.reload();
+          globalThis.location.reload();
         }, 5000);
       }
     } catch (error) {
       const errormessage = 'Error connecting to the backend. Please try after Sometime.';
       toast.success(({ id }) => (
         <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-          <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+          <Image
+            src="/assets/img/wrong.png"
+            alt="icon"
+            width={30}
+            height={30}
+            style={{ marginRight: '10px' }}
+          />
           <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
           <button
             onClick={() => toast.dismiss(id)}
@@ -455,254 +460,254 @@ const [errorsMessage, setErrorMessage] = useState("");
 
 
 
-const handleDataChange = (rowIndex, field, value) => {
-  const updatedData = fillterData.map(row =>
-    row.map(cell => ({ ...cell }))
-  );
-
-  const rowToUpdate = updatedData[rowIndex];
-
-  // Update changed cell
-  rowToUpdate.forEach(cell => {
-    if (cell.name === field) {
-      cell.value = value;
-    }
-  });
-
-  let totalEffort = 0;
-  let totalAllocationEffort = 0;
-
-  rowToUpdate.forEach(cell => {
-    if (cell.type === 'taskAssignedDays') {
-      const effort = parseFloat(cell.value);
-      totalEffort += isNaN(effort) ? 0 : effort;
-    }
-
-    if (cell.name === 'totalEffortsAllocated') {
-      totalAllocationEffort = parseFloat(cell.value) || 0;
-    }
-  });
-
-  const format = num =>
-    Number.isInteger(num) ? num.toString() : num.toFixed(2);
-
-  rowToUpdate.forEach(cell => {
-    if (cell.name === 'totalEffortsSubmitted') {
-      cell.value = format(totalEffort);
-    }
-
-    if (cell.name === 'remainEffortsAllocated') {
-      cell.value = format(totalAllocationEffort - totalEffort);
-    }
-  });
-
-  // remove total row
-  updatedData.pop();
-
-  // recompute footer totals
-  const names = [...new Set(updatedData.flatMap(r => r.map(c => c.name)))];
-
-  const totalRow = names.map(name => {
-    if (
-      ["idTaskProject", "sn", "projectName", "TaskName", "idTaskSubmission", "startDate", "endDate"]
-        .includes(name)
-    ) {
-      return { name, value: "Total" };
-    }
-
-    const sum = updatedData
-      .flatMap(r => r.filter(c => c.name === name))
-      .reduce((acc, c) => acc + (parseFloat(c.value) || 0), 0);
-
-    return { name, value: format(sum) };
-  });
-
-  setFillterData([...updatedData, totalRow]);
-};
-
-
-const isZeroOrEmpty = (v) =>
-  v === '' || v === null || v === undefined || Number(v) <= 0;
-
-
-const columns = filltercolums.map(col => ({
-  name: col.name,
-  label: col.label,
-  options: {
-    filter: col.isfilter,
-    sort: col.issort,
-    display: ['idTaskProject', 'idTaskSubmission', 'startDate', 'endDate','idSubTask','isSubTask']
-      .includes(col.name)
-      ? 'excluded'
-      : 'true',
-    // ✅ ADD CLASS TO <th>
-    setCellHeaderProps: () => {
-      const baseClass = 'th-common-head';
-
-      const specificClass =
-        col.name === 'projectName'
-          ? 'th-project-name-head'
-          : col.name === 'taskName'
-          ? 'th-taskName-name-head'
-          : col.name === 'percentageAllocation'
-          ? 'th-percentageAllocation-name-head'
-          : col.name === 'sn'
-          ? 'th-sn-name-head'
-          : col.name === 'totalEffortsSubmitted'
-          ? 'th-total-effort'
-          : col.name === 'totalEffortsAllocated'
-          ? 'th-alloc-effort'
-          : col.name === 'remainEffortsAllocated'
-          ? 'th-pending-effort'
-          : '';
-
-      return {
-        className: `${baseClass} ${specificClass}`.trim()
-      };
-    },
-    // ✅ ADD CLASS TO <td>
-setCellProps: (value) => {
-  let className = '';
-
-  // ===== existing column classes =====
-  if (col.name === 'totalEffortsSubmitted') {
-    className = 'td-total-effort';
-  }
-
-  if (col.name === 'totalEffortsAllocated') {
-    className = 'td-alloc-effort';
-  }
-
-  if (col.name === 'remainEffortsAllocated') {
-    className = 'td-pending-effort';
-
-    // ✅ negative highlight
-    if (Number(value) < 0) {
-      className += ' time_hightlight_test_minus';
-    }
-  }
-
-  // ===== ✅ CENTER ONLY NUMERIC TD =====
-  const isNumberValue =
-    value !== null &&
-    value !== '' &&
-    !isNaN(Number(value));
-
-  if (isNumberValue) {
-    className += (className ? ' ' : '') + 'text-center-row';
-  }
-
-  return { className };
-},
-
-
-customBodyRender: (value, tableMeta, updateValue) => {
-  const rowData = fillterData[tableMeta.rowIndex];
-  const cell = rowData[tableMeta.columnIndex];
-
-  const projectName =
-    rowData.find(c => c.name === 'projectName')?.value;
-
-  const isLeaveRow = projectName === 'Leave';
-  const isHolidayRow = projectName === 'Holiday';
-
-  const isDateCell = cell?.type === 'taskAssignedDays';
-  const isEditable = isDateCell && cell.isFreezable === false;
-
-  let className = 'form-control timesheet-emp';
-
-  // ✅ LEAVE
-  if (isLeaveRow && isDateCell && Number(value) > 0) {
-    className += ' td-leave-project-value';
-  }
-
-  // ✅ HOLIDAY
-  if (isHolidayRow && isDateCell && Number(value) > 0) {
-    className += ' td-holiday-project-value';
-  }
-
-  // ✅ Submitted
-  if (isEditable && Number(value) > 0) {
-  className += ' td-submitted-project-value';
-  }
-  // ✅ Submitted
-if (
-    isEditable &&
-    (
-      value === null ||
-      value === undefined ||
-      value === '' ||
-      Number(value) <= 0
-    )
-  ) {
-    className += ' td-pending-project-value';
-  }
-
-  // ---------- Editable days ----------
-if (isEditable) {
-  const cellKey = `${tableMeta.rowIndex}-${cell.name}`;
-  const isInvalid =
-    invalidCells[cellKey] && isZeroOrEmpty(value);
-
-  return (
-    <input
-      type="number"
-      min={0}
-      value={value ?? ''}
-      className={`${className} ${isInvalid ? 'input-error-s-t' : ''}`}
-
-      /* ✅ USE onClick instead of onFocus */
-      onClick={() => {
-        if (isZeroOrEmpty(value)) {
-          setInvalidCells(prev => ({
-            ...prev,
-            [cellKey]: true
-          }));
-        }
-      }}
-
-      onChange={(e) => {
-        const v = Math.max(0, Number(e.target.value) || 0);
-
-        updateValue(v);
-        handleDataChange(tableMeta.rowIndex, cell.name, v);
-
-        /* ✅ CLEAR ERROR WHEN VALID */
-        if (v > 0) {
-          setInvalidCells(prev => {
-            const copy = { ...prev };
-            delete copy[cellKey];
-            return copy;
-          });
-        }
-      }}
-    />
-  );
-}
-
-
-  // ---------- Disabled days ----------
-  if (isDateCell && cell.isFreezable === true) {
-    return (
-      <input
-        className={className}
-        value={value || ''}
-        disabled
-      />
+  const handleDataChange = (rowIndex, field, value) => {
+    const updatedData = fillterData.map(row =>
+      row.map(cell => ({ ...cell }))
     );
-  }
 
-  return value;
-}
+    const rowToUpdate = updatedData[rowIndex];
+
+    // Update changed cell
+    rowToUpdate.forEach(cell => {
+      if (cell.name === field) {
+        cell.value = value;
+      }
+    });
+
+    let totalEffort = 0;
+    let totalAllocationEffort = 0;
+
+    rowToUpdate.forEach(cell => {
+      if (cell.type === 'taskAssignedDays') {
+        const effort = Number.parseFloatseFloat(cell.value);
+        totalEffort += Number.isNaN(effort) ? 0 : effort;
+      }
+
+      if (cell.name === 'totalEffortsAllocated') {
+        totalAllocationEffort = Number.parseFloatseFloat(cell.value) || 0;
+      }
+    });
+
+    const format = num =>
+      Number.isInteger(num) ? num.toString() : num.toFixed(2);
+
+    rowToUpdate.forEach(cell => {
+      if (cell.name === 'totalEffortsSubmitted') {
+        cell.value = format(totalEffort);
+      }
+
+      if (cell.name === 'remainEffortsAllocated') {
+        cell.value = format(totalAllocationEffort - totalEffort);
+      }
+    });
+
+    // remove total row
+    updatedData.pop();
+
+    // recompute footer totals
+    const names = [...new Set(updatedData.flatMap(r => r.map(c => c.name)))];
+
+    const totalRow = names.map(name => {
+      if (
+        ["idTaskProject", "sn", "projectName", "TaskName", "idTaskSubmission", "startDate", "endDate"]
+          .includes(name)
+      ) {
+        return { name, value: "Total" };
+      }
+
+      const sum = updatedData
+        .flatMap(r => r.filter(c => c.name === name))
+        .reduce((acc, c) => acc + (Number.parseFloatseFloat(c.value) || 0), 0);
+
+      return { name, value: format(sum) };
+    });
+
+    setFillterData([...updatedData, totalRow]);
+  };
 
 
-  }
-}));
+  const isZeroOrEmpty = (v) =>
+    v === '' || v === null || v === undefined || Number(v) <= 0;
+
+
+  const columns = filltercolums.map(col => ({
+    name: col.name,
+    label: col.label,
+    options: {
+      filter: col.isfilter,
+      sort: col.issort,
+      display: ['idTaskProject', 'idTaskSubmission', 'startDate', 'endDate', 'idSubTask', 'isSubTask']
+        .includes(col.name)
+        ? 'excluded'
+        : 'true',
+      // ✅ ADD CLASS TO <th>
+      setCellHeaderProps: () => {
+        const baseClass = 'th-common-head';
+
+        const specificClass =
+          col.name === 'projectName'
+            ? 'th-project-name-head'
+            : col.name === 'taskName'
+              ? 'th-taskName-name-head'
+              : col.name === 'percentageAllocation'
+                ? 'th-percentageAllocation-name-head'
+                : col.name === 'sn'
+                  ? 'th-sn-name-head'
+                  : col.name === 'totalEffortsSubmitted'
+                    ? 'th-total-effort'
+                    : col.name === 'totalEffortsAllocated'
+                      ? 'th-alloc-effort'
+                      : col.name === 'remainEffortsAllocated'
+                        ? 'th-pending-effort'
+                        : '';
+
+        return {
+          className: `${baseClass} ${specificClass}`.trim()
+        };
+      },
+      // ✅ ADD CLASS TO <td>
+      setCellProps: (value) => {
+        let className = '';
+
+        // ===== existing column classes =====
+        if (col.name === 'totalEffortsSubmitted') {
+          className = 'td-total-effort';
+        }
+
+        if (col.name === 'totalEffortsAllocated') {
+          className = 'td-alloc-effort';
+        }
+
+        if (col.name === 'remainEffortsAllocated') {
+          className = 'td-pending-effort';
+
+          // ✅ negative highlight
+          if (Number(value) < 0) {
+            className += ' time_hightlight_test_minus';
+          }
+        }
+
+        // ===== ✅ CENTER ONLY NUMERIC TD =====
+        const isNumberValue =
+          value !== null &&
+          value !== '' &&
+          !isNaN(Number(value));
+
+        if (isNumberValue) {
+          className += (className ? ' ' : '') + 'text-center-row';
+        }
+
+        return { className };
+      },
+
+
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = fillterData[tableMeta.rowIndex];
+        const cell = rowData[tableMeta.columnIndex];
+
+        const projectName =
+          rowData.find(c => c.name === 'projectName')?.value;
+
+        const isLeaveRow = projectName === 'Leave';
+        const isHolidayRow = projectName === 'Holiday';
+
+        const isDateCell = cell?.type === 'taskAssignedDays';
+        const isEditable = isDateCell && cell.isFreezable === false;
+
+        let className = 'form-control timesheet-emp';
+
+        // ✅ LEAVE
+        if (isLeaveRow && isDateCell && Number(value) > 0) {
+          className += ' td-leave-project-value';
+        }
+
+        // ✅ HOLIDAY
+        if (isHolidayRow && isDateCell && Number(value) > 0) {
+          className += ' td-holiday-project-value';
+        }
+
+        // ✅ Submitted
+        if (isEditable && Number(value) > 0) {
+          className += ' td-submitted-project-value';
+        }
+        // ✅ Submitted
+        if (
+          isEditable &&
+          (
+            value === null ||
+            value === undefined ||
+            value === '' ||
+            Number(value) <= 0
+          )
+        ) {
+          className += ' td-pending-project-value';
+        }
+
+        // ---------- Editable days ----------
+        if (isEditable) {
+          const cellKey = `${tableMeta.rowIndex}-${cell.name}`;
+          const isInvalid =
+            invalidCells[cellKey] && isZeroOrEmpty(value);
+
+          return (
+            <input
+              type="number"
+              min={0}
+              value={value ?? ''}
+              className={`${className} ${isInvalid ? 'input-error-s-t' : ''}`}
+
+              /* ✅ USE onClick instead of onFocus */
+              onClick={() => {
+                if (isZeroOrEmpty(value)) {
+                  setInvalidCells(prev => ({
+                    ...prev,
+                    [cellKey]: true
+                  }));
+                }
+              }}
+
+              onChange={(e) => {
+                const v = Math.max(0, Number(e.target.value) || 0);
+
+                updateValue(v);
+                handleDataChange(tableMeta.rowIndex, cell.name, v);
+
+                /* ✅ CLEAR ERROR WHEN VALID */
+                if (v > 0) {
+                  setInvalidCells(prev => {
+                    const copy = { ...prev };
+                    delete copy[cellKey];
+                    return copy;
+                  });
+                }
+              }}
+            />
+          );
+        }
+
+
+        // ---------- Disabled days ----------
+        if (isDateCell && cell.isFreezable === true) {
+          return (
+            <input
+              className={className}
+              value={value || ''}
+              disabled
+            />
+          );
+        }
+
+        return value;
+      }
+
+
+    }
+  }));
 
 
 
   const options = {
-    responsive: "standard", 
+    responsive: "standard",
     filterType: 'checkbox',
     search: false,
     filter: false,
@@ -712,7 +717,6 @@ if (isEditable) {
     selectableRows: 'none', // Hide checkbox for selecting rows
     setRowProps: (row, dataIndex, rowIndex) => {
 
-      const rowCount = transformedData.length;
       // Define your row coloring logic here
       let backgroundColor = '';
       let className = '';
@@ -764,7 +768,12 @@ if (isEditable) {
                             <div className='timesheet-submit-view-header'>
                               <div className='timesheet-submit-head-box timesheet-head-plan-hours'>
                                 <div className='head-overview-icon'>
-                                  <img src='/assets/img/plan-hours.png' alt='Plan hours' />
+                                  <Image
+                                    src="/assets/img/plan-hours.png"
+                                    alt="Plan hours"
+                                    width={45}
+                                    height={45}
+                                  />
                                 </div>
                                 <div className='head-overview-text'>
                                   <h2 className='head-text-box'>Planned</h2>
@@ -773,7 +782,12 @@ if (isEditable) {
                               </div>
                               <div className='timesheet-submit-head-box timesheet-head-submitted'>
                                 <div className='head-overview-icon'>
-                                  <img src='/assets/img/submited-hours.png' alt='Submit hours' />
+                                  <Image
+                                    src="/assets/img/submited-hours.png"
+                                    alt="Submit hours"
+                                    width={45}
+                                    height={45}
+                                  />
                                 </div>
                                 <div className='head-overview-text'>
                                   <h2 className='head-text-box'>Submitted</h2>
@@ -782,7 +796,12 @@ if (isEditable) {
                               </div>
                               <div className='timesheet-submit-head-box timesheet-head-pending'>
                                 <div className='head-overview-icon'>
-                                  <img src='/assets/img/pending-hours.png' alt='Pending Hours' />
+                                  <Image
+                                    src="/assets/img/pending-hours.png"
+                                    alt="Pending hours"
+                                    width={45}
+                                    height={45}
+                                  />
                                 </div>
                                 <div className='head-overview-text'>
                                   <h2 className='head-text-box'>Pending</h2>
@@ -794,7 +813,12 @@ if (isEditable) {
                               </div>
                               <div className='timesheet-submit-head-box timesheet-head-leave-taken'>
                                 <div className='head-overview-icon'>
-                                  <img src='/assets/img/leave-hours.png' alt='Leave Hours' />
+                                  <Image
+                                    src="/assets/img/Leave-hours.png"
+                                    alt="Leave hours"
+                                    width={45}
+                                    height={45}
+                                  />
                                 </div>
                                 <div className='head-overview-text'>
                                   <h2 className='head-text-box'>Leave</h2>
@@ -806,7 +830,12 @@ if (isEditable) {
                               </div>
                               <div className='timesheet-submit-head-box timesheet-head-holiday'>
                                 <div className='head-overview-icon'>
-                                  <img src='/assets/img/holiday-hours.png' alt='Holiday Hours' />
+                                  <Image
+                                    src="/assets/img/holiday-hours.png"
+                                    alt="Holiday hours"
+                                    width={45}
+                                    height={45}
+                                  />
                                 </div>
                                 <div className='head-overview-text'>
                                   <h2 className='head-text-box'>Holiday</h2>
@@ -832,7 +861,13 @@ if (isEditable) {
                               <div className="card-body -body skolrup-learning-card-body oxyem-time-managment">
                                 <div className="row align-items-center">
                                   <div className="col-12 col-md-5 col-lg-3 col-xxl-2 p-0">
-                                    <h6 className='mb-0 select-submitsheet-text'><img src='/assets/img/timesheet-schedule.png' alt='Timesheet schedule' /> Select Timesheet</h6>
+                                    <h6 className='mb-0 select-submitsheet-text'>
+                                      <Image
+                                        src="/assets/img/timesheet-schedule.png"
+                                        alt="Timesheet schedule"
+                                        width={30}
+                                        height={30}
+                                      /> Select Timesheet</h6>
                                   </div>
                                   <div className="col-12 col-md-6 col-lg-5 col-xxl-4">
 
@@ -845,8 +880,6 @@ if (isEditable) {
                                       getOptionValue={(option) => option.value}
                                       className="oxyem-custom-dropdown"
                                       placeholder="Select"
-                                      //closeMenuOnSelect={!isMulti} 
-                                      //hideSelectedOptions={!isMulti}
                                       styles={{
                                         control: (provided, state) => ({
                                           ...provided,
@@ -857,28 +890,34 @@ if (isEditable) {
                                           },
                                           backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
                                         }),
-                                        indicatorSeparator: (provided, state) => ({
+                                        indicatorSeparator: (provided) => ({
                                           ...provided,
                                           backgroundColor: 'var(--dropdownhoverbg)',
                                           fontWeight: 'var(--dropdownfontweight)',
                                         }),
-                                        option: (provided, state) => ({
-                                          ...provided,
-                                          padding: 'var(--dropdownpadding)',
-                                          cursor: 'var(--dropdowncursorstyle)',
-                                          fontWeight: 'var(--dropdownfontweight)',
-                                          backgroundColor: state.isSelected
-                                            ? 'var(--dropdownselectedbgcolor)'
-                                            : state.isFocused
-                                              ? 'var(--dropdownhoverbg)'
-                                              : 'var(--dropdowntransparentcolor)',
-                                          color: state.isSelected ? 'var(--dropdownselectedcolor)' : 'var(--dropdowninheritcolor)',
-                                          ':hover': {
-                                            backgroundColor: 'var(--dropdownhoverbg)',
-                                            color: 'var(--dropdownhovercolor)',
+                                        option: (provided, state) => {
+                                          let backgroundColor = 'var(--dropdowntransparentcolor)';
+                                          let color = 'var(--dropdowninheritcolor)';
+                                          if (state.isSelected) {
+                                            backgroundColor = 'var(--dropdownselectedbgcolor)';
+                                            color = 'var(--dropdownselectedcolor)';
+                                          } else if (state.isFocused) {
+                                            backgroundColor = 'var(--dropdownhoverbg)';
+                                          }
+                                          return {
+                                            ...provided,
+                                            padding: 'var(--dropdownpadding)',
+                                            cursor: 'var(--dropdowncursorstyle)',
                                             fontWeight: 'var(--dropdownfontweight)',
-                                          },
-                                        }),
+                                            backgroundColor,
+                                            color,
+                                            ':hover': {
+                                              backgroundColor: 'var(--dropdownhoverbg)',
+                                              color: 'var(--dropdownhovercolor)',
+                                              fontWeight: 'var(--dropdownfontweight)',
+                                            },
+                                          };
+                                        },
                                       }}
                                     />
                                   </div>
@@ -889,17 +928,17 @@ if (isEditable) {
                           <div className="row">
                             <div className="col-12">
                               <div className="user-text oxyem-time-managment_table">
-{errorsMessage && (
-  <div className="alert alert-danger alert-dismissible fade show oxyem-submit-timesheet-error" role="alert">
-    <MdErrorOutline /> {errorsMessage}
-    <button
-      type="button"
-      className="btn-close"
-      aria-label="Close"
-      onClick={() => setErrorMessage('')}
-    />
-  </div>
-)}
+                                {errorsMessage && (
+                                  <div className="alert alert-danger alert-dismissible fade show oxyem-submit-timesheet-error" role="alert">
+                                    <MdErrorOutline /> {errorsMessage}
+                                    <button
+                                      type="button"
+                                      className="btn-close"
+                                      aria-label="Close"
+                                      onClick={() => setErrorsMessage('')}
+                                    />
+                                  </div>
+                                )}
                                 <MUIDataTable
                                   title={""}
                                   data={transformedData}
@@ -912,15 +951,15 @@ if (isEditable) {
                                   {sectionButton.map((button, index) => {
                                     if (button.isEnabled) {
                                       if (button.type === "submit") {
-                                        return <button type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("submit")}>{button.type}</button>;
+                                        return <button  key={index} type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("submit")}>{button.type}</button>;
                                       } else if (button.type === "save") {
-                                        return <button type="submit" className="btn btn-oxyem mx-2" onClick={() => handleDataSave("draft")}>{button.type}</button>;
+                                        return <button  key={index} type="submit" className="btn btn-oxyem mx-2" onClick={() => handleDataSave("draft")}>{button.type}</button>;
                                       } else if (button.type === "cancel") {
-                                        return <button type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
+                                        return <button  key={index} type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
                                       } else if (button.type === "recall") {
-                                        return <button type="submit" className="btn btn-oxyem btn-recall-btn mx-2" onClick={handleDatarecall}>{button.type}</button>
+                                        return <button  key={index} type="submit" className="btn btn-oxyem btn-recall-btn mx-2" onClick={handleDatarecall}>{button.type}</button>
                                       } else {
-                                        return <button type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
+                                        return <button  key={index} type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
                                       }
                                     }
                                     return null;

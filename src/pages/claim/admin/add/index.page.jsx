@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import Breadcrumbs from "../../../Components/Breadcrumbs/Breadcrumbsdiscription";
 import { CLAIM_MANAGEMENT_TEXT } from "../../../../constants/ClaimManagementText";
 import ClaimSidebarPanel from "../../ClaimSidebarPanel";
 
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { axiosJWT } from "../../../Auth/AddAuthorization";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -16,6 +15,7 @@ export default function AddAdminClaim() {
   const [formShow, setFormShow] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     fetchForm();
   }, []);
 
@@ -31,6 +31,7 @@ export default function AddAdminClaim() {
         setFormShow(true)
       }
     } catch (error) {
+      console.error(error)
     }
   };
 
@@ -39,7 +40,7 @@ const submitformdata = async (data) => {
   setSubmitLoading(true)
   try {
     const repairInvoiceFiles = data.repairInvoice || [];
-    const { repairInvoice, ...formattedData } = data;
+    const { ...formattedData } = data;
 
     const apiUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL + "/claims/manageClaims";

@@ -35,7 +35,7 @@ export const fetchWithToken = async (url, params = {}, context) => {
                     throw new Error('Failed to refresh token');
                 }
             } catch (refreshError) {
-                throw new Error('Failed to refresh token');
+                throw new Error('Failed to refresh token', refreshError);
             }
         } else {
             console.error("API Error: ", error.response ? error.response.data : error);

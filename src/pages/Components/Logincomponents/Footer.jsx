@@ -1,4 +1,4 @@
-export default function Footer({footercr}) {
+export default function Footer() {
     const currentYear = new Date().getFullYear();
   return (
     <>
@@ -14,8 +14,8 @@ export default function Footer({footercr}) {
                     <a href="https://twitter.com/InfoOxytal"><span><i className="fa-brands fa-twitter"></i></span></a></li><li><a href="https://www.linkedin.com/company/oxytal"><span>
                       <i className="fa-brands fa-linkedin"></i></span></a></li></ul></div><div className="col-md-3 get_in_touch_footer"><h2 className="footer__widget-title">Get In Touch</h2><ul className="footer__contact"><li>Ballydeague, Ballyhooly, Co Cork, Ireland</li><li><a className="phone" href="tel:353866034988">( 353 ) 86 603 4988</a></li><li><a href="mailto:info@oxytal.com">info@oxytal.com</a></li></ul></div><div className="col-md-3 useful_links_footer"><h2 className="footer__widget-title">Useful Links</h2>
                       <ul className="footer__link">
-                      <li><a href="https://www.oxytal.com" target="_blank">Oxytal</a></li>
-                      <li><a href="https://www.oxytal.com/privacy-policy" target="_blank">Privacy Policy</a></li>
+                      <li><a href="https://www.oxytal.com" target="_blank" rel="noreferrer">Oxytal</a></li>
+                      <li><a href="https://www.oxytal.com/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a></li>
 
                       </ul>
                     </div></div></div></div></div>

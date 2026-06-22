@@ -7,7 +7,7 @@ import View from '../Components/Popup/jobInfo';
 import History from './history';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
-export default function manageJob() {
+export default function ManageJob() {
     const router = useRouter();
     const [isModalOpenHistory, setIsModalOpenHistory] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function manageJob() {
     const onEditClick = (id) => {
         router.push('manageJob/' + id);
     };
-    const handleApprrovereq = (id) => {
+    const handleApprrovereq = () => {
 
     };
 

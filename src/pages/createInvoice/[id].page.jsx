@@ -14,7 +14,7 @@ const Notes = dynamic(() => import('../Components/Popup/Notes'), {
     ssr: false
 });
 import { format } from "date-fns";
-export default function opportunity() {
+export default function CreateInvoiceId() {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const d = new Date(dateStr);
@@ -144,7 +144,6 @@ export default function opportunity() {
             taxpercent: value?.taxValue,
             customerinfodata: Customerinfodata,
             lineItemsData: value?.lineItemsData,
-            lineItemsData: value?.lineItemsData,
             template: typeof value.template === 'object' && value.template !== null
                 ? value.template.value
                 : value.template,
@@ -208,6 +207,7 @@ export default function opportunity() {
 
             }
         } catch (error) {
+            console.error(error)
             setSubmitLoading(false)
         }
     };
@@ -226,7 +226,9 @@ export default function opportunity() {
     const [formShow, setFormShow] = useState(false);
     const { id } = router.query;
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIdInvoice(id)
+        // eslint-disable-next-line react-hooks/immutability
         fetchForm();
     }, [id]);
     const mergeFormWithData = (formSchema, data) => {
@@ -291,6 +293,7 @@ export default function opportunity() {
                 fetchInvoiceInfo(id, response.data.data)
             }
         } catch (error) {
+             console.error(error)
         }
     };
     const fetchInvoiceInfo = async (value, responseData) => {
@@ -312,7 +315,7 @@ export default function opportunity() {
 
             }
         } catch (error) {
-
+             console.error(error)
         }
     };
 
@@ -342,7 +345,6 @@ export default function opportunity() {
     const closeNotesModal = async () => {
         setIsNotesModalOpen(false)
     }
-    console.log("sideBarData", sideBarData)
     return (
         <>
             <Head>

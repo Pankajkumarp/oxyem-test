@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import CustomDataTable from '../Datatable/tablewithApi';
 import OpportunityHistroy from '../Popup/pricingHistroy';
 function SummaryView() {
@@ -15,7 +15,7 @@ function SummaryView() {
     setOpportunityId(id);
     setIsModalHistroyOpen(true)
   };
-  const closeHistroyClick = (id) => {
+  const closeHistroyClick = () => {
     setIsModalHistroyOpen(false)
   };
   const onEditClick = (id) => {

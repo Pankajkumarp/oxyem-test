@@ -4,7 +4,6 @@ import StarRatingComponent from '../Inputfiled/StarRatingComponent';
 
 export default function RatingComponent({ documentType, onChange, value,isDisabled}) {
   const [questions, setQuestions] = useState([]);
-  const [error, setError] = useState(null);
   const [ratings, setRatings] = useState({}); // Store ratings per question ID
 
   const fetchOptions = async () => {
@@ -13,11 +12,12 @@ export default function RatingComponent({ documentType, onChange, value,isDisabl
       const response = await axiosJWT.get(`${apiUrl}/jobs/onboardQuestions`);
       setQuestions(response.data.data || []);
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOptions();
   }, []);
 
@@ -29,6 +29,7 @@ export default function RatingComponent({ documentType, onChange, value,isDisabl
           matchedRatings[question.idQuestion] = value[question.idQuestion];
         }
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRatings(prevRatings => ({ ...prevRatings, ...matchedRatings }));
     }
   }, [value, questions]);

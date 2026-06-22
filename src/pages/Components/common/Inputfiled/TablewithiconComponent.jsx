@@ -1,12 +1,10 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
-import LabelMandatory from '../Label/LabelMandatory';
-import LabelNormal from '../Label/LabelNormal';
 import Profile from '../../commancomponents/profile';
 import View from '../../Popup/TimeManMember';
 import { IoPersonAddOutline } from "react-icons/io5";
 import { axiosJWT } from '../../../Auth/AddAuthorization';
-export default function TextwithiconComponent({ name, type, placeholder, label, value, validations = [], onChange, projectid, projectStauts  }) {
-  const isRequired = validations.some(validation => validation.type === "required");
+export default function TextwithiconComponent({ name, label, value, onChange, projectid, projectStauts  }) {
   const [userdetails, setuserdetails] = useState([]);
 
   useEffect(() => {
@@ -27,7 +25,7 @@ export default function TextwithiconComponent({ name, type, placeholder, label, 
       }
     };
     fetchOptions();
-  }, [name]);
+  }, [name, projectid]);
 
 
 
@@ -47,6 +45,7 @@ export default function TextwithiconComponent({ name, type, placeholder, label, 
     const selectedOptions = value.map(val => userdetails.find(option => option.id === val)).filter(Boolean);
 
     setselectuser(selectedOptions)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const enterfields = () => {
@@ -55,8 +54,6 @@ export default function TextwithiconComponent({ name, type, placeholder, label, 
   const closeModalInputselect = () => {
     setIsModalOpeninput(false);
   };
-
-  const [selectuserdetail, setselectuserdetail] = useState();
   const submitvaluerec = (value) => {
 
 
@@ -90,6 +87,7 @@ export default function TextwithiconComponent({ name, type, placeholder, label, 
     if(value){
     submitvaluerec(value);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userdetails]);
 
   const submitdeleteval = (value) => {
@@ -113,7 +111,8 @@ export default function TextwithiconComponent({ name, type, placeholder, label, 
       <View isOpen={isModalOpeninput} labelText={label} closeModal={closeModalInputselect} userdata={userdetails} submitvaluerec={submitvaluerec} selectuser={selectuser} submitdeleteval={submitdeleteval} value={value} dynamicform={"Team_allocation"} getsubmitonchangeformdata={getsubmitonchangeformdata} />
       <div className="oxyem-project-members">
         <ul className="oxyem-team-members">
-          {selectuser.slice(0, 4).map((detail, index) => (
+          {selectuser.slice(0, 4).map((detail) => (
+            // eslint-disable-next-line react/jsx-key
             <li> <Profile name={detail.userName} imageurl={detail.imageUrl} size={"30"} profilelink={detail.profilelink} /></li>
           ))}
           {selectuser.length > 4 && (

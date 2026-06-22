@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosJWT } from "../Auth/AddAuthorization";
-import { FaCheckCircle, FaClock, FaHistory, FaLock, FaMoneyBillWave, FaInfoCircle, FaEdit } from "react-icons/fa";
+import { FaMoneyBillWave} from "react-icons/fa";
 import dynamic from "next/dynamic";
 import Profile from "../Components/commancomponents/profile";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -38,9 +38,6 @@ export default function PayrollEdit({allData}) {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [errorMessage, seterrorMessage] = useState("");
-    const currentYear = new Date().getFullYear();
-    const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
-    const currentMonthYear = `${currentYear}-${currentMonth}`
     const [content, setContent] = useState(null);
     const [previewData, setPreviewData] = useState({});
     const [currency, setcurrency] = useState("");
@@ -51,7 +48,7 @@ export default function PayrollEdit({allData}) {
     const [showData, setShowData] = useState(false);
     const [idSalary, setIdSalary] = useState(allData?.idSalary);
     const [isWithoutActualTax, setIsWithoutActualTax] = useState(false);
-    const [salaryInfo, setSalaryInfo] = useState(allData?.salaryInfo);
+    const salaryInfo =  allData?.salaryInfo;
 
     const formatMonthYear = (value) => {
         if (!value) return "";
@@ -145,12 +142,13 @@ export default function PayrollEdit({allData}) {
                         setContent(prev => mergeSalaryValues(prev, responseData));
                         setShowData(true)
                     }
-                } catch (error) { }
+                } catch (error) {console.error(error)}
             };
             getPrefilledData();
         }
     }, [idEmployee?.value, applicableFrom]);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
         fetchForm();
     }, []);
 
@@ -207,6 +205,7 @@ const mergeDynamicExtraFields = (salaryData, content) => {
             setDraftDeductions({});
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const onClose = async () => { seterrorMessage("") }
@@ -280,10 +279,6 @@ const mergeDynamicExtraFields = (salaryData, content) => {
 
     const totalEarnings = basicSalary + fixedAllowances + dynamicAllowances;
     const totalDeductions = employerContribution + otherDeductions + dynamicDeductions;
-
-    const ctc = totalEarnings + employerContribution;
-
-
 
 
     const initializedRef = React.useRef(false);
@@ -412,7 +407,7 @@ useEffect(() => {
 });
             }
         } catch (error) {
-            toast.error('Error connecting to the backend. Please try after Sometime.');
+            console.error(error)
         }
     };
     const [draftErrors, setDraftErrors] = useState({});
@@ -718,6 +713,7 @@ const submitTdsOverride = (value, reason) => {
                 router.push('/payrollManagement');
             }
         } catch (err) {
+            console.error(err)
             alert("Error saving draft");
         }
     };
@@ -733,6 +729,7 @@ const submitTdsOverride = (value, reason) => {
                 router.push('/payrollManagement');
             }
         } catch (err) {
+            console.error(err)
             alert("Error saving payroll");
         }
     };

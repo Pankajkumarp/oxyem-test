@@ -5,7 +5,6 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function SelectComponent({ label, validations = [], value, onChange, data }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     
@@ -29,8 +28,6 @@ export default function SelectComponent({ label, validations = [], value, onChan
         if (!departmentValue) {
           throw new Error('Department value is missing');
         }
-        console.log('up',departmentValue);
-
         const response = await axiosJWT.get(`${apiUrl}/dropdowns`, { 
           params: { 
             isFor: 'function',
@@ -45,8 +42,7 @@ export default function SelectComponent({ label, validations = [], value, onChan
 
         setOptions(optionsData);
       } catch (error) {
-        // console.error('Error fetching options:', error);
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 

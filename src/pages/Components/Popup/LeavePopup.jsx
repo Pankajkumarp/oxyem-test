@@ -1,21 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai";
 import Modal from 'react-modal';
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 export default function LeavePopup({ isOpen, closeModal }) {
-  const [show, setShow] = useState(true);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   return (
     <>
      

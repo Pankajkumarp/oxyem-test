@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../../Components/Datatable/tablewithApi';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import OpportunityPop from '../../Components/Popup/opportunityPopup';
 import OpportunityHistroy from '../../Components/Popup/opportunityHistroy';
@@ -13,9 +13,8 @@ import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import pageTitles from '../../../common/pageTitles';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-export default function opportunityView() {
+export default function OpportunityView() {
   const router = useRouter();
-  const [isrefresh, setRefresh] = useState(true);
   const [opportunityId, setOpportunityId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalHistroyOpen, setIsModalHistroyOpen] = useState(false);
@@ -26,46 +25,29 @@ export default function opportunityView() {
   const onViewClick = (id) => {
     router.push(`/opportunity/view/${id}`);
   };
-  const closeViewClick = (id) => {
+  const closeViewClick = () => {
     setIsModalOpen(false)
   };
   const onHistoryClick = async (id) => {
     setOpportunityId(id);
     setIsModalHistroyOpen(true)
   };
-  const closeHistroyClick = (id) => {
+  const closeHistroyClick = () => {
     setIsModalHistroyOpen(false)
   };
   const onEditClick = (id) => {
     router.push(`/opportunity/${id}`);
   };
-  const handleApprrovereq = (id) => { };
-
-  const handleDecommissionreq = async (data) => {
-  };
-
-  const onDeleteClick = (id) => {
-
-  };
-
-
+  const handleApprrovereq = () => { };
+  const handleDecommissionreq = async () => {};
+  const onDeleteClick = () => {};
   const [opportunityStats, setOpportunityStats] = useState({});
-
   const fetchOpportunityStats = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       // 🔹 Later replace dummy with real API call
       const response = await axiosJWT.get(`${apiUrl}/opportunity/stats`);
       const responsedata = response.data.data || {};
-
-      // ✅ Dummy stats data (based on your table)
-      // const responsedata = {
-      //   totalOpen: 1,
-      //   totalWon: 6,
-      //   totalLost: 0,
-      //   totalWonAmountFY: 167,
-      // };
-
       setOpportunityStats(responsedata);
     } catch (error) {
       console.error("Error fetching opportunity stats:", error);
@@ -73,6 +55,7 @@ export default function opportunityView() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOpportunityStats();
   }, []);
 
@@ -136,8 +119,10 @@ useEffect(() => {
                 const category = opportunityChartResponse.clientStatus.categories[config.dataPointIndex];
                 if (!category) return;
                 requestAnimationFrame(() => {
+                  // eslint-disable-next-line react-hooks/immutability
                   setSearchfilter({ clientName: category });
                   setActiveTab(1);
+                  // eslint-disable-next-line react-hooks/immutability
                   setActiveStatus(category);
                 });
               }
@@ -254,19 +239,14 @@ useEffect(() => {
 
   const [searchfilter, setSearchfilter] = useState({});
   const [activeStatus, setActiveStatus] = useState(null);
-  const [activeTableTab, setActiveTableTab] = useState("");
-
   const handleShowDataForStatus = (filterKey) => {
     setActiveTab(1); // switch to table tab
-    setActiveTableTab(filterKey);
     setActiveStatus(filterKey);
 
     if (filterKey === "clr") {
       setSearchfilter({});
       setActiveStatus(null);
     } else {
-      let filter = {};
-
       switch (filterKey) {
         case "All":
           setSearchfilter(null);
@@ -483,7 +463,7 @@ useEffect(() => {
                                 </div>
                               )}</div>
                               <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                {isrefresh && (
+
                                   <CustomDataTable
                                     title={""}
                                     onViewClick={onViewClick}
@@ -497,7 +477,6 @@ useEffect(() => {
                                     searchfilter={searchfilter}
 
                                   />
-                                )}
                               </div>
                             </div>
                           </div>

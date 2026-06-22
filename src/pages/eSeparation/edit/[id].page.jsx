@@ -4,17 +4,16 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
-import { ToastNotification, ToastContainer } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import CustomDataTable from '../../Components/Datatable/tablewithApi';
 import axios from 'axios';
-import Head from 'next/head';
 import FormalitiesView from '../../Components/Popup/FormalitiesView';
 const DynamicForm = dynamic(() => import('../../Components/CommanForm'), { ssr: false });
 const Notes = dynamic(() => import('../../Components/Popup/Notes'), {
     ssr: false
 });
 import { FaTimes } from "react-icons/fa";
-export default function index({ userFormdata }) {
+export default function EseparetionEdit({ userFormdata }) {
     const pagename = "timeManagement"
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -77,17 +76,16 @@ export default function index({ userFormdata }) {
                         opportunitySection.buttons = [];
                     }
                     setStautsInfo(fetchedData.status)
-
-
                 }
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIdSeparation(id)
         fetchSeparationInfo(id);
     }, [id]);
@@ -95,15 +93,13 @@ export default function index({ userFormdata }) {
         //if (tabArray.includes(tab)) {
         if (activeTab !== tab) {
             setActiveTab(tab);
-
-
             //}
         } else {
             console.log(`${tab} is not in the tabArray`);
         }
 
     };
-    const [sectionerrors, setSectionErrors] = useState({});
+    const sectionerrors = {};
 
     const handleChangeValue = (fieldName, value) => {
         if (fieldName === "separationStatus") {
@@ -192,7 +188,7 @@ export default function index({ userFormdata }) {
         setContent(updatedArray);
     };
 
-    const submitformdata = async (formdata) => {
+    const submitformdata = async () => {
         const formattedData = {};
         content.section.forEach(section => {
             if (section.SectionName === 'Separation Details') {
@@ -273,16 +269,12 @@ export default function index({ userFormdata }) {
         }
     };
 
-    const onViewClick = (id) => {
+    const onViewClick = () => {
         //router.push(`/claim/${id}`);
     };
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
         // Delete action implementation
     };
-    const handleHistoryClick = async (id) => {
-
-    };
-
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const openNotesModal = async () => {
         setIsNotesModalOpen(true)
@@ -290,9 +282,9 @@ export default function index({ userFormdata }) {
     const closeNotesModal = async () => {
         setIsNotesModalOpen(false)
     }
-    const onHistoryClick = async (id) => {
+    const onHistoryClick = async () => {
     };
-    const onEditClick = (id) => {
+    const onEditClick = () => {
         // router.push(`/opportunity/${id}`);
     };
     const [idFormalities, setIdFormalities] = useState("");
@@ -301,10 +293,10 @@ export default function index({ userFormdata }) {
         setIdFormalities(id)
         onFormalitesModal();
     };
-    const onFormalitesModal = (id) => {
+    const onFormalitesModal = () => {
         setIsFormalitiesOpen(true)
     };
-    const closeFormalitesModal = (id) => {
+    const closeFormalitesModal = () => {
         setIsFormalitiesOpen(false)
     };
 
@@ -339,9 +331,12 @@ export default function index({ userFormdata }) {
                 ToastNotification({ message: 'Failed to update approval. Please try again later.' });
             }
         } catch (error) {
+            console.error(error)
         }
 
     };
+        const handleChangess = () => {};
+    const removeError = () => {};
     return (
         <>
             <FormalitiesView isOpen={isFormalitiesOpen} closeModal={closeFormalitesModal} id={idFormalities} type={"eSeparation"} handleApproveSubmit={handleApproveSubmit} approvalLevel={approvalLevel}/>
@@ -507,6 +502,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

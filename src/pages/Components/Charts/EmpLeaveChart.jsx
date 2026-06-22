@@ -94,7 +94,7 @@ const EmpLeaveChart = () => {
           },
         });
       } catch (error) {
-        // console.error('Error fetching annual leave data:', error);
+         console.error('Error fetching annual leave data:', error);
       }
     };
 
@@ -103,7 +103,6 @@ const EmpLeaveChart = () => {
 
   const [ischartopen, setIsChartOpen] = useState(false);
     const [anualChartData, setAnualChartData] = useState();
-    const [monthlyTrendData, setMonthlyTrend] = useState();
     const [monthlyData, setMonthlyData] = useState();
     const currentMonth = new Date().toLocaleString('default', { month: 'short' });
     const currentYear = new Date().getFullYear().toString();
@@ -112,16 +111,12 @@ const EmpLeaveChart = () => {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
 
-    const [setMouth, setMonthValue] = useState(currentMonth); // State to manage active tab index
-    const [setYear, setYearValue] = useState(currentYear);
+    const setMouth = currentMonth; // State to manage active tab index
+    const setYear = currentYear;
   useEffect(() => {
           // if (setMouth && setYear) {
               if (setMouth && setYear ) {
               const getgraphData = async () => {
-                  const apipayload = {
-                      "month": setMouth,
-                      "year": setYear
-                  }
                   try {
                       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                       const response = await axiosJWT.get(`${apiUrl}/graphstats`, 
@@ -131,7 +126,6 @@ const EmpLeaveChart = () => {
                       if (response) {
                           const yearchart = response.data.data.annual
                           const monthchart = response.data.data.month
-                          const monthlytrendchart = response.data.data.monthlyTrend
   
                           setMonthlyData(
                               {
@@ -171,47 +165,7 @@ const EmpLeaveChart = () => {
                                   },
                               }
                           )
-                          setMonthlyTrend(
-                              {
-                                  series: [{
-                                      name: "Total Attendance",
-                                      data: monthlytrendchart.data
-                                  }],
-                                  options: {
-                                      chart: {
-                                          height: 350,
-                                          type: 'line',
-                                          zoom: {
-                                              enabled: false
-                                          }
-                                      },
-                                      dataLabels: {
-                                          enabled: false
-                                      },
-                                      stroke: {
-                      width: 1,
-                                          curve: 'straight',
-                                          colors: ['#156082']  // Specify the line color you want here
-                                      },
-                                      markers: {
-                                          colors: '#156082'  // Specify the hover pointer color here
-                                      },
-                                      title: {
-                                          text: '',
-                                          align: 'left'
-                                      },
-                                      grid: {
-                                          row: {
-                                              colors: ['#f3f3f3', 'transparent'],
-                                              opacity: 0.5
-                                          },
-                                      },
-                                      xaxis: {
-                                          categories: monthlytrendchart.days
-                                      }
-                                  },
-                              }
-                          )
+
                           setAnualChartData(
                               {
                                   series: yearchart.data,
@@ -284,111 +238,6 @@ const EmpLeaveChart = () => {
           }
       }, [setMouth, setYear]);
 
-  const annualAttend = {
-    chart: {
-      type: 'bar',
-      height: 350,
-      stacked: true,
-      toolbar: {
-        show: true,
-      },
-      zoom: {
-        enabled: true,
-      },
-    },
-    title: {
-      text: "Annual Attendance Record 2024",
-      align: 'center', // Center the title
-      margin: 20, // Space between the title and chart
-      style: {
-        fontSize: '13px', // Font size
-        fontFamily: 'Helvetica Now MT Micro Regular', // Font family
-        fontWeight: '500', // Font weight
-        color: '#263238', // Font color
-      },
-    },
-    series: [
-      {
-        name: 'Persent',
-        data: [14, 22, 16, 18, 21, 23, 17, 18],
-      },
-      {
-        name: 'Absent',
-        data: [1, 2, 1, 0, 0, 3, 0, 2],
-      }
-    ],
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          legend: {
-            position: 'bottom',
-            offsetX: -10,
-            offsetY: 0,
-          },
-        },
-      },
-    ],
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        borderRadius: 0,
-        borderRadiusApplication: 'end',
-        borderRadiusWhenStacked: 'last',
-
-      },
-    },
-    xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'], // X-axis categories
-    },
-
-    colors: ['#156082', '#f77837'],
-    legend: {
-      position: 'bottom', // This will set the default legend position
-    },
-    fill: {
-      opacity: 1,
-    },
-  };
-
-  const monthlyStatus = {
-    series: [100, 3, 20],
-    chart: {
-      type: 'donut',
-      width: 600, // Set the desired width
-      height: 400 // Set the desired height
-    },
-    title: {
-      text: "Monthly Status",
-      align: 'center', // Center the title
-      margin: 20, // Space between the title and chart
-      style: {
-        fontSize: '13px', // Font size
-        fontFamily: 'Helvetica Now MT Micro Regular', // Font family
-        fontWeight: '500', // Font weight
-        color: '#263238', // Font color
-      },
-    },
-    labels: ['Present', 'Not available', 'Absent'],
-    colors: ['#156082', '#fcb040', '#ed6a58'],
-    responsive: [
-
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 250, // Width for smaller screens
-          },
-          legend: {
-            position: 'bottom',
-          },
-        },
-      },
-    ],
-    legend: {
-      position: 'bottom', // This will set the default legend position
-    },
-  };
 
   return (
     <>

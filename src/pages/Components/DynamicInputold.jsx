@@ -1,10 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { getFieldByName, updatedSubsection } from '../../common/commonFunctions';
-import axios from "axios";
-import RadioComponent from './common/Inputfiled/RadioComponent';
-import moment from 'moment-timezone';
-import { axiosJWT } from '../Auth/AddAuthorization';
 
 const components = { 
   'Text': dynamic(() => import('./common/Inputfiled/TextComponent')),
@@ -34,15 +29,11 @@ const components = {
   'CreateSingleSelect': dynamic(() => import('./common/SelectComponent/CreateSingleSelectComponent')),
 };
 
-const CommanForm = ({ fields, handleChangess, handleChangeValue, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick, pagename }) => {
-  //console.log("feildvalueddddddddd", fields)
-
+const CommanForm = ({ fields, handleChangess, handleChangeValue, submitformdata, actionid, handleGetformvalueClick }) => {
   const [errors, setErrors] = useState({});
-  const [errorres, setErrorres] = useState('');
+  const errorres = '';
   const [submitdata, setSubmitdata] = useState({});
   const [formData, setFormData] = useState({});
-  const [currentFormData, setCurrentFormData] = useState({});
-  const [fieldUpdate, setfieldUpdate] = useState([]);
 
   const extractFields = (fields) => {
     let result = {};
@@ -55,23 +46,13 @@ const CommanForm = ({ fields, handleChangess, handleChangeValue, submitformdata,
   };
 
   useEffect(() => {
-    console.log()
     const extractedData = extractFields(fields);
-    
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData(extractedData);
   }, [fields]);
 
   const handleChange = async (fieldName, value) => {
-
-    let getfieldarry = await updatedSubsection(fields, fieldName, value)
-    setfieldUpdate(getfieldarry)
-
-
     setFormData(prevFormData => ({
-      ...prevFormData,
-      [fieldName]: value,
-    }));
-    setCurrentFormData(prevFormData => ({
       ...prevFormData,
       [fieldName]: value,
     }));
@@ -131,8 +112,6 @@ const CommanForm = ({ fields, handleChangess, handleChangeValue, submitformdata,
     try {
       const validationErrors = await handleValidation();
 
-      console.log(submitdata);
-
       if (Object.keys(validationErrors).length === 0) {
        
         handleChangess(submitdata);
@@ -142,25 +121,13 @@ const CommanForm = ({ fields, handleChangess, handleChangeValue, submitformdata,
       } else {
         setErrors(validationErrors);
       }
-    } catch (error) {
+    } catch (error) {console.error(error)
       // Handle error response
     }
   };
 
   const handleCancel = () => {
-    const updateAllFields = () => {
-      fields.Subsection.forEach(subsection => {
-        subsection.fields.forEach(field => {
-          field.value = '';
-        });
-      });
-      return fields;
-    };
-  
-    const updatedFields = updateAllFields();
-    setfieldUpdate(updatedFields);
     setFormData({});
-    setCurrentFormData({});
     setSubmitdata({});
     setErrors({});
   };

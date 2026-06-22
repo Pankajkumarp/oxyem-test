@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { RiMapPin2Line } from "react-icons/ri";
 import { MdMailOutline, MdAddCall } from "react-icons/md";
@@ -7,7 +6,7 @@ import { CgLogIn } from "react-icons/cg";
 import { IoMenu, IoCloseSharp } from "react-icons/io5";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-export default function privacypolicy() {
+export default function Privacypolicy() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     async function handleOpenMenu() {
@@ -422,7 +421,7 @@ export default function privacypolicy() {
                 </div>
                 <div className="copyright-area">
                     <div className="container">
-                        <p>Copyright © 2024 Oxytal Limited. All Rights Reserved </p>
+                        <p>Copyright © 2026 Oxytal Limited. All Rights Reserved </p>
                     </div>
                 </div>
             </footer>

@@ -48,6 +48,7 @@ export default function SendEmailModal({ isOpen, closeModal, id ,pagename,email 
   // }, [isOpen, id]);
   useEffect(() => {
     if (pagename === 'onboardingProcess' && email !== '') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEmails(email);
     }
     else if(isOpen || pagename !== 'onboardingProcess' ){

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect, useRef } from 'react';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import Profile from '../../commancomponents/profile';
@@ -11,7 +13,6 @@ export default function AssignMemberComponent({
   validations = [],
   value,
   onChange,
-  documentType,
   placeholder
 }) {
   const isRequired = validations.some(validation => validation.type === "required");
@@ -19,7 +20,6 @@ export default function AssignMemberComponent({
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(value);
   const [selectOptionLabel, setSelectOptionLabel] = useState(placeholder);
-  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const imgUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
 
@@ -42,7 +42,7 @@ export default function AssignMemberComponent({
           setFilteredOptions(optionsData);
         }
       } catch (error) {
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
     fetchOptions();

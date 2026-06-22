@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../../Components/Datatable/tablewithApi';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import PerformaceHistroy from '../../Components/Popup/performaceHistroy';
 import { FaAward } from "react-icons/fa";
 import Head from 'next/head';
 import { axiosJWT } from '../../Auth/AddAuthorization';
-export default function opportunityView() {
+export default function OpportunityAction() {
   const router = useRouter();
-  const [isrefresh, setRefresh] = useState(true);
   const [performanceId, setPerformanceId] = useState("");
-  const [isHistroyOpen, setHistroyOpen] = useState(false); ({});
+  const [isHistroyOpen, setHistroyOpen] = useState(false);
   const [isStatData, isSetStatData] = useState({});
   const fetchStatData = async () => {
     try {
@@ -23,6 +22,7 @@ export default function opportunityView() {
 
       }
     } catch (error) {
+      console.error(error)
     }
   };
   const onViewClick = (id) => {
@@ -32,7 +32,7 @@ export default function opportunityView() {
     setPerformanceId(id);
     setHistroyOpen(true)
   };
-  const closeHistroyClick = (id) => {
+  const closeHistroyClick = () => {
     setHistroyOpen(false)
   };
   const onEditClick = (id) => {
@@ -40,6 +40,7 @@ export default function opportunityView() {
   };
   useEffect(() => {
     const mainElement = document.querySelector('body');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchStatData();
     if (mainElement) {
       mainElement.setAttribute('id', 'performance-module');
@@ -88,7 +89,6 @@ export default function opportunityView() {
                       <div className="center-part">
                         <div className="card-body oxyem-mobile-card-body">
                           <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                            {isrefresh && (
                               <CustomDataTable
                                 title={""}
                                 onViewClick={onViewClick}
@@ -96,7 +96,6 @@ export default function opportunityView() {
                                 onEditClick={onEditClick}
                                 dashboradApi={'/performance/getPendingPerformanceList'}
                               />
-                            )}
                           </div>
                         </div>
                       </div>

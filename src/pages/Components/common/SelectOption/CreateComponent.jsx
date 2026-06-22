@@ -88,7 +88,7 @@ export default function CreateComponent({ label, name, isDisabled, validations =
             },
             backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
           }),
-          indicatorSeparator: (provided, state) => ({
+          indicatorSeparator: (provided) => ({
             ...provided,
             backgroundColor: 'var(--dropdownhoverbg)',
             fontWeight: 'var(--dropdownfontweight)',

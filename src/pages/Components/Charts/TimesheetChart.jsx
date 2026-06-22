@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import SelectComponent from '../common/SelectOption/SelectComponent.jsx';
-import claimSummary from '../../Components/Charts/EmpClaimChart.jsx';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 const TimesheetChart = ({ activeTab }) => {
   const [showStat, setShowStat] = useState(false);
@@ -22,40 +21,17 @@ const TimesheetChart = ({ activeTab }) => {
         setStatData(dataCome)
         setShowStat(true)
       }
-    } catch (error) {
-
-    }
+    } catch (error) {console.error(error)}
   };
 
-
-
-  // const [setEmployee, setEmployeeValue] = useState(""); // State to manage active tab index
-  // const onChangeclaim = (value) => {
-  //   console.log(value)
-  //   if (value !== null) {
-  //     setEmployeeValue(value.value); // Update active tab index when a tab is clicked
-  //   } else {
-  //     setEmployeeValue();
-  //   }
-  // };
-  const [setEmployeeadd, setEmployeeValueadd] = useState("");
-  const onChangeadd = (value) => {
-    console.log(value)
-    if (value !== null) {
-      setEmployeeValueadd(value.value); // Update active tab index when a tab is clicked
-    } else {
-      setEmployeeValueadd();
-    }
-  };
   useEffect(() => {
     if (activeTab === "Employees" || activeTab === "All") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchClientData("attendanceVsTimesheet");
     }
   }, [activeTab]);
   const [employeeList, setEmployeeList] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  console.log("this is s selected empl", selectedEmployee)
-  console.log("this is empl", employeeList)
 
   const onEmployeeChange = (value) => {
     if (value) {
@@ -81,7 +57,6 @@ const TimesheetChart = ({ activeTab }) => {
           setEmployeeList(optionsData);
           if (optionsData.length > 0) {
             // setEmployeeValue(optionsData[-1].value); 
-            // setEmployeeValueadd(optionsData[0].value); // Set the first item
             setSelectedEmployee(null);
           }
         }
@@ -160,9 +135,7 @@ const TimesheetChart = ({ activeTab }) => {
         )
         setShowMounthGraph(true)
       }
-    } catch (error) {
-
-    }
+    } catch (error) {console.error(error)}
   };
 
 
@@ -172,12 +145,9 @@ const TimesheetChart = ({ activeTab }) => {
   //                 const response = await axiosJWT.get(`${apiUrl}/claims/graphStats`, {
   //                     params: { isFor: 'admin', showAll: 'all', idEmployee: selectedEmployee }
   //                 });
-
-  //                 // console.log(response,"this si sactual responce from api")
   //                 // const claimSummaryData = response.data.data.claimSummary;
   //                 // setClaimSummary(claimSummaryData);
   //                 // setIsChartOpen(true);
-  //                 // console.log(claimSummary)
   //                 const claimSummaryData = response.data.data.claimSummary;
   // let finalClaimSummary = claimSummaryData;
 
@@ -218,13 +188,9 @@ const TimesheetChart = ({ activeTab }) => {
 
       const response = await axiosJWT.get(`${apiUrl}/claims/graphStats`, { params });
 
-      console.log("✅ API Response:", response.data);
-
       const claimSummaryData = response.data.data.claimSummary;
       setClaimSummary(claimSummaryData || {});
       setIsChartOpen(true);
-      console.log("🎯 claimSummary set to:", claimSummaryData);
-
     } catch (error) {
       console.error('Error fetching chart data:', error);
     }
@@ -299,14 +265,12 @@ const TimesheetChart = ({ activeTab }) => {
         )
         setShowYearGraph(true)
       }
-    } catch (error) {
-
-    }
+    } catch (error) {console.error(error)}
   };
   useEffect(() => {
     if (activeTab === "Employees") {
-      fetchChartData(); // always
-      console.log(claimSummary, "this is")
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchChartData(); 
       //   if (!selectedEmployee) {
       //   // Clear graphs only
       //   setShowYearGraph(false);

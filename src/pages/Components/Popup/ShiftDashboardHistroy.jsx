@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
 import { FaRegClock } from "react-icons/fa";
 import { MdOutlineLocationOn } from "react-icons/md";
@@ -9,17 +8,6 @@ import Drawer from 'react-modern-drawer'
 
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 const getCurrentTimeZone = () => {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
@@ -36,6 +24,7 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
     if (localTime === "Invalid date") return ""; // Return empty string if the date is invalid
     return localTime;
   } catch (error) {
+    console.error(error)
     return ""; // Return empty string in case of any error during conversion
   }
 };
@@ -43,7 +32,7 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
 const convertUtcTodayName = (utcDateTime, timeZone) => {
   return moment(utcDateTime).tz(timeZone).format('dddd'); // Format to day name and time
 };
-const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpadateClick }) => {
+const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId }) => {
   const timeZone = getCurrentTimeZone();
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [attendanceDetails, setAttendanceDetails] = useState([]);
@@ -64,7 +53,6 @@ const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpa
   const [checkInTime, setcheckInTime] = useState("");
   const [checkOutTime, setcheckOutTime] = useState("");
   const [checkTotalTime, setcheckTotalTime] = useState("");
-  const [getidAttendance, setGetidAttendance] = useState("");
   const [ShiftData, setShiftData] = useState("");
   const [ShiftactionDetails, setShiftactionDetails] = useState([]);
 
@@ -79,7 +67,6 @@ const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpa
       if (response && response.data && response.data.data && response.data.data.details) {
         setAttendanceDetails(response.data.data.details);
         setAttendanceDate(response.data.data.CreatedDate)
-        setGetidAttendance(response.data.data.idAttendance)
         setdayDetail(convertUtcTodayName(response.data.data.CreatedDate, timeZone))
         setshiftDetail(response.data.data.currentshiftDetail)
         setcheckInTime(response.data.data.checkin)
@@ -91,23 +78,19 @@ const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpa
         
       }
     } catch (error) {
+      console.error(error)
       // console.error("Error occurred while fetching attendance details:", error);
     }
   };
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
     }
   }, [isOpen, isHistroyId]);
 
-  const handleupdate = () => {
-    handleUpadateClick(getidAttendance);
-};
 
-console.log(`Attendance`, ShiftactionDetails);
-  
-  
   return (
     <Drawer
     open={isOpen}

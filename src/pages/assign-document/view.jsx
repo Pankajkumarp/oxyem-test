@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import Drawer from 'react-modern-drawer';
@@ -5,7 +6,7 @@ import 'react-modern-drawer/dist/index.css';
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { IoDownloadOutline } from 'react-icons/io5';
-const assignDocuView = ({ isOpen, closeModal, isDoc }) => {
+const AssignDocuView = ({ isOpen, closeModal, isDoc }) => {
 
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -24,11 +25,13 @@ const assignDocuView = ({ isOpen, closeModal, isDoc }) => {
         }
       }
     } catch (error) {
+      console.error(error)
     }
   };
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getDocumentDetails(isDoc);
       document.body.classList.add("hide-body-scroll");
     } else {
@@ -36,6 +39,7 @@ const assignDocuView = ({ isOpen, closeModal, isDoc }) => {
       setStatus("")
       setDocummentView({})
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isDoc]);
   const renderdocTypeImag = (value) => {
     const getImage = () => {
@@ -110,7 +114,7 @@ const assignDocuView = ({ isOpen, closeModal, isDoc }) => {
       link.click();
 
     } catch (error) {
-      // console.error('Error downloading the file', error);
+      console.error(error)
     }
   };
   return (
@@ -160,4 +164,4 @@ const assignDocuView = ({ isOpen, closeModal, isDoc }) => {
   );
 };
 
-export default assignDocuView;
+export default AssignDocuView;

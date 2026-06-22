@@ -10,7 +10,7 @@ import pageTitles from '../../common/pageTitles.js';
 import { FaRegCheckCircle } from "react-icons/fa";
 import FormRenderer from "../Components/FormRender/TemplateTwo/FormRenderer";
 import { format } from "date-fns";
-export default function opportunity() {
+export default function CreateInvoiceId() {
     const formatDate = (dateStr) => {
                 if (!dateStr) return "";
                 const d = new Date(dateStr);
@@ -142,7 +142,6 @@ export default function opportunity() {
             taxpercent: value?.taxValue,
             customerinfodata: Customerinfodata,
             lineItemsData: value?.lineItemsData,
-            lineItemsData: value?.lineItemsData,
             template: typeof value.template === 'object' && value.template !== null
                 ? value.template.value
                 : value.template,
@@ -206,6 +205,7 @@ export default function opportunity() {
 
             }
         } catch (error) {
+            console.error(error)
             setSubmitLoading(false)
         }
     };
@@ -223,6 +223,7 @@ export default function opportunity() {
     const [content, setContent] = useState([]);
     const [formShow, setFormShow] = useState(false);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
         fetchForm();
     }, []);
     const fetchForm = async () => {
@@ -237,6 +238,7 @@ export default function opportunity() {
                 setFormShow(true)
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const handleCancelClick = async () => {

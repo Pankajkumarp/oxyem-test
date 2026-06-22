@@ -1,6 +1,5 @@
 
-import { useRouter } from 'next/router'
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbsdiscription';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';

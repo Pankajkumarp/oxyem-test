@@ -5,7 +5,7 @@ import { MdMailOutline, MdAddCall } from "react-icons/md";
 import Navbar from '../Components/Navbar/index.page';
 import Head from 'next/head';
 
-export default function home() {
+export default function Home() {
      useEffect(() => {
     const items = document.querySelectorAll(".animate");
 
@@ -392,11 +392,11 @@ export default function home() {
                 </section>
 				
 				
-               <section class="cta-bar">
+               <section className="cta-bar">
   <h3>Have any questions? We’re here to help.</h3>
-  <a href="#" class="cta-btn">
+  <a href="#" className="cta-btn">
     Contact Us
-    <span class="arrow">→</span>
+    <span className="arrow">→</span>
   </a>
 </section>
 				

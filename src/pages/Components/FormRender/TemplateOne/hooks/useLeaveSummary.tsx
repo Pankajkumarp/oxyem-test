@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import { axiosJWT } from "../../../../Auth/AddAuthorization";
 
@@ -70,6 +72,7 @@ const effectiveToDate = isSingleDayLeave ? fromDate : toDate;
 
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setApiMessage(null);
 
     if (

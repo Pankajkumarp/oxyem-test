@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
-import { FaRegClock } from "react-icons/fa";
-import { MdOutlineLocationOn } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
-import Profile from '../commancomponents/profile';
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
 
-const opportunityHistroy = ({ isOpen, closeModal, opportunityId }) => {
+const OpportunityHistroy = ({ isOpen, closeModal, opportunityId }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [opportunityValue, setOpportunityValue] = useState([]);
@@ -35,6 +30,7 @@ const opportunityHistroy = ({ isOpen, closeModal, opportunityId }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(opportunityId);
       document.body.classList.add("hide-body-scroll");
     } else {
@@ -86,4 +82,4 @@ const opportunityHistroy = ({ isOpen, closeModal, opportunityId }) => {
   );
 };
 
-export default opportunityHistroy;
+export default OpportunityHistroy;

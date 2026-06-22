@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/immutability */
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi';
@@ -12,7 +14,7 @@ import dynamic from 'next/dynamic';
 import pageTitles from '../../common/pageTitles.js';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function assetManagement() {
+export default function AssetManagement() {
     const router = useRouter();
     const [isHistroyId, setIsHistroyId] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,7 +46,7 @@ export default function assetManagement() {
 
         }
     };
-    const handleApprrovereq = (id) => { };
+    const handleApprrovereq = () => { };
 
     const handleDecommissionreq = async (data) => {
         const formattedData = {
@@ -105,6 +107,7 @@ export default function assetManagement() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchAssetStats();
     }, []);
 
@@ -121,7 +124,6 @@ useEffect(() => {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/asset/getcharts`);
       const assetChartResponse = response.data.data || {};
-      console.log(assetChartResponse,"this is responce")
 
       // 🚀 Dummy API Response (for now)
       // const assetChartResponse = {
@@ -270,19 +272,15 @@ useEffect(() => {
 
      const [searchfilter, setSearchfilter] = useState({});
       const [activeStatus, setActiveStatus] = useState(null);
-      const [activeTableTab, setActiveTableTab] = useState("");
     
       const handleShowDataForStatus = (filterKey) => {
         setActiveTab(1); // switch to table tab
-        setActiveTableTab(filterKey);
         setActiveStatus(filterKey);
     
         if (filterKey === "clr") {
           setSearchfilter({});
           setActiveStatus(null);
         } else {
-          let filter = {};
-    
           switch (filterKey) {
             case "All":
               setSearchfilter({});

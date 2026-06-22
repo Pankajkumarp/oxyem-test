@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FaPlus } from "react-icons/fa6";
 import { Tooltip } from 'react-tooltip';
 
-export default function Breadcrumbsdiscription({ maintext, addlink, tooltipcontent, pagename, discription, icon, bottomLink, imageLink, name, additionalTxt }) {
+export default function Breadcrumbsdiscription({ maintext, addlink, tooltipcontent, discription, icon, bottomLink, imageLink, name, additionalTxt }) {
   return (
     <div className="page-header oxyem-custom-breadcrumb oxyem-custom-breadcrum-dis">
       <div className="col-12 col-lg-12 col-xl-12 d-flex">

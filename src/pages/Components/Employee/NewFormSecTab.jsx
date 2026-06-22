@@ -13,7 +13,6 @@ export default function NewFormSecTab({ AdduserContent, headingContent, getleave
   const [content, setContent] = useState(AdduserContent); // State to hold the content
   const [activeTab, setActiveTab] = useState(AdduserContent.section[0].SectionName);
   const hasMultipleSections = Array.isArray(content.section) && content.section.length > 1;
-  //console.log("jfffffff", hasMultipleSections)
 
   const sectionname = AdduserContent.section[0].name
   const handleTabClick = (tab) => {
@@ -57,11 +56,7 @@ export default function NewFormSecTab({ AdduserContent, headingContent, getleave
 
 
   useEffect(() => {
-    // You can perform additional actions based on newArray here
-   // const newArray = convertToArray(sourceArray);
-    //console.log("neww",content)
-    // console.log("ghghhghghghg22", AdduserContent)
-    //getsubmitformdata(newArray);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent(AdduserContent)
   }, [AdduserContent]);
 
@@ -114,34 +109,16 @@ export default function NewFormSecTab({ AdduserContent, headingContent, getleave
     }
   };
 
-  const updateFieldValues = (content, data) => {
-    content.section.forEach((section) => {
-      section.Subsection.forEach((subsection) => {
-        subsection.fields.forEach((field) => {
-          if (data[field.name]) {
-            if (['Location', 'Department', 'Role'].includes(field.type) && typeof data[field.name] === 'object') {
-              field.value = data[field.name].label; // Use the label for these field types
-            } else {
-              field.value = typeof data[field.name] === 'object' ? data[field.name].value : data[field.name];
-            }
-          }
-        });
-      });
-    });
-  };
-
 
   const submitformdata = (value) => {
-
     const newArray = convertToArray(AdduserContent);
-    console.log("newArray", newArray)
-    console.log("AdduserContent", AdduserContent)
     getsubmitformdata(newArray, value)
 
 
   };
   const submitformdataPreview = () => {
 
+    // eslint-disable-next-line no-undef
     const newArray = convertToArray(sourceArray);
     getsubmitformdatapreview(newArray)
 
@@ -150,6 +127,7 @@ export default function NewFormSecTab({ AdduserContent, headingContent, getleave
 
   const handlesubmitbyDocumment = (value) => {
     // Convert sourceArray to newArray
+    // eslint-disable-next-line no-undef
     const newArray = convertToArray(sourceArray);
 
     // Find the index of the "Documents" section

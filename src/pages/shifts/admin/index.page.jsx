@@ -9,12 +9,12 @@ import { MdManageHistory } from "react-icons/md";
 import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import SelectComponent from '../../Components/common/SelectOption/SelectComponent.jsx';
-export default function index() {
+export default function ShiftAdmin() {
 
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHistroyId, setIsHistroyId] = useState("");
-    const [listheader, setListHeaders] = useState([]);
+    const [listheader, setListheader] = useState([]);
 
     const openDetailpopup = async () => {
         setIsModalOpen(true)
@@ -52,7 +52,7 @@ export default function index() {
         router.push(`/employeeDashboard/${id}`);
     };
 
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
 
     };
 
@@ -60,20 +60,7 @@ export default function index() {
         router.push(`/attendance/${id}`);
     }
 
-    const fetchData = async () => {
-        try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const response = await axiosJWT.get(`${apiUrl}/empAttendanceShift`, { params: { statsFor: 'admin', isFor: 'stats' } });
-            const responsedata = response.data.data || {};
-            const listheader = responsedata.listheader || {};
-            console.log(listheader)
 
-            setListHeaders(listheader);
-
-        } catch (error) {
-
-        }
-    };
 
     const optionsmonth = [
         { value: 'Jan', label: 'January' },
@@ -96,7 +83,7 @@ export default function index() {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
 
-    const [setMouth, setMonthValue] = useState(currentMonth);
+    const [setMouth, setSetMouth] = useState(currentMonth);
     const [setYear, setYearValue] = useState(currentYear);
 
     const onChangeYear = (value) => {
@@ -109,9 +96,9 @@ export default function index() {
 
     const onChangeMonth = (value) => {
         if (value !== null) {
-            setMonthValue(value.value); // Update active tab index when a tab is clicked
+            setSetMouth(value.value); // Update active tab index when a tab is clicked
         } else {
-            setMonthValue();
+            setSetMouth();
         }
     };
 
@@ -122,9 +109,6 @@ export default function index() {
             const chartData = async () => {
                 try {
                     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-                    // const response = await axiosJWT.get(`${apiUrl}/shiftGarph`, {
-                    //     params: { isGraph: 'admin' }
-                    // });
 
                     const response = await axiosJWT.get(`${apiUrl}/shiftGarph`,
                         {
@@ -203,7 +187,7 @@ export default function index() {
                     setIsChartOpen(true);
 
                 } catch (error) {
-                    // console.error('Error fetching chart data:', error);
+                    console.error(error)
                 }
             };
             chartData();
@@ -211,6 +195,17 @@ export default function index() {
     }, [setMouth, setYear]);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+                const response = await axiosJWT.get(`${apiUrl}/empAttendanceShift`, { params: { statsFor: 'admin', isFor: 'stats' } });
+                const responsedata = response.data.data || {};
+                const listheader = responsedata.listheader || {};
+                setListheader(listheader);
+            } catch (error) {
+                console.error(error)
+            }
+        };
         fetchData();
     }, [activeTab]);
     useEffect(() => {
@@ -268,7 +263,6 @@ export default function index() {
                                                                 <div
                                                                     className="stats-info stats-info-cus"
                                                                     onClick={() => {
-                                                                        // setStatus("Active");
                                                                         setActiveTab(1);
                                                                     }}                               >
                                                                     <div className="ox-colored-box-1">
@@ -285,7 +279,6 @@ export default function index() {
                                                                 <div
                                                                     className="stats-info stats-info-cus"
                                                                     onClick={() => {
-                                                                        // setStatus("Active");
                                                                         setActiveTab(1);
                                                                     }}                               >
                                                                     <div className="ox-colored-box-2">
@@ -303,7 +296,6 @@ export default function index() {
                                                                 <div
                                                                     className="stats-info stats-info-cus"
                                                                     onClick={() => {
-                                                                        // setStatus("Active");
                                                                         setActiveTab(1);
                                                                     }}                               >
                                                                     <div className="ox-colored-box-3">
@@ -320,7 +312,6 @@ export default function index() {
                                                                 <div
                                                                     className="stats-info stats-info-cus"
                                                                     onClick={() => {
-                                                                        // setStatus("Active");
                                                                         setActiveTab(1);
                                                                     }}                               >
                                                                     <div className="ox-colored-box-4">
@@ -375,7 +366,7 @@ export default function index() {
                                                                         <div className='graph-top-head'>
                                                                             <h3>Shift type</h3>
                                                                         </div>
-                                                                        <Chart options={monthlyData.options} series={monthlyData.series} type="pie" height={330} />
+                                                                        <Chart options={monthlyData?.options} series={monthlyData?.series} type="pie" height={330} />
                                                                     </div>
                                                                 </div>
 

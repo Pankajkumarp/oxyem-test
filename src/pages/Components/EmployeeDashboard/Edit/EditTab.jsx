@@ -1,20 +1,7 @@
 import React, { useState } from 'react';
-import ReactModal from 'react-modal';
 import DocumentTypeComponent from '../../common/SelectComponent/DocumentTypeComponnet'; // Adjusted import
 import FileComponent from '../../common/Inputfiled/FileComponent'; // Adjusted import
 import Drawer from 'react-modern-drawer';
-
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 
 const DocumentComponent = ({ isOpen, closeModal ,handleSubmitByDocument}) => {
   const [document, setDocument] = useState({ type: '', files: [] });

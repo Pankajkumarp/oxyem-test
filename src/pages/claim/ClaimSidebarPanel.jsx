@@ -44,17 +44,17 @@ export default function ClaimSidebarPanel() {
 
           <ul className="list-unstyled ps-1">
             <li className="mb-1">
-              <span className="li-icon">✅</span> <span class="li-text"><b>Submit original, legible receipts </b>showing vendor name, date, and amount.</span>
+              <span className="li-icon">✅</span> <span className="li-text"><b>Submit original, legible receipts </b>showing vendor name, date, and amount.</span>
             </li>
             <li className="mb-1">
-              <span className="li-icon">✅</span> <span class="li-text"><b>Claim only eligible expenses </b>as per company policy and approved categories.</span>
+              <span className="li-icon">✅</span> <span className="li-text"><b>Claim only eligible expenses </b>as per company policy and approved categories.</span>
             </li>
             <li className="mb-1">
-              <span className="li-icon">✅</span> <span class="li-text"><b>Submit claims within the allowed period </b>from the expense date.</span>
+              <span className="li-icon">✅</span> <span className="li-text"><b>Submit claims within the allowed period </b>from the expense date.</span>
             </li>
              
             <li className="mb-1">
-              <span className="li-icon">✅</span> <span class="li-text"><b>Duplicate or split claims are strictly prohibited</b> and will be rejected.</span>
+              <span className="li-icon">✅</span> <span className="li-text"><b>Duplicate or split claims are strictly prohibited</b> and will be rejected.</span>
             </li>
           </ul>
 

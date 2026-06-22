@@ -1,3 +1,7 @@
+/* eslint-disable @next/next/no-page-custom-font */
+/* eslint-disable @next/next/no-css-tags */
+/* eslint-disable @next/next/no-sync-scripts */
+/* eslint-disable react-hooks/rules-of-hooks */
 // import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +24,7 @@ const msalInstance = new PublicClientApplication({
 export default function _app({ Component, pageProps }: AppProps) {
 useAutoLogout();
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []); 
 
@@ -31,6 +36,7 @@ useAutoLogout();
         router.push(`/home`)    
       }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.asPath]);
   if (router.route === "/home" || router.route === "/") {
     return (

@@ -1,6 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router';
 import MUIDataTable from "mui-datatables";
 import { FaRegEye } from "react-icons/fa6";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -46,11 +48,12 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
       if (localTime === "Invalid date") return ""; // Return empty string if the date is invalid
       return localTime;
   } catch (error) {
+    console.error(error)
       return ""; // Return empty string in case of any error during conversion
   }
 };
 
-export default function tablewithApi({ title, ismodule, onEditClick, onSubmitClick, responseData, onDeleteClick, onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick, handlerdelayvalueClick, handleViewAssignReq, pagename, dashboradApi, refreshtable,ifForvalue,updatelist, year ,utctimeconditionpage ,empId ,handleDecommissionreq,assetsparms,refreshAfterEdit ,handleDeallocationreq ,handleSubmitAllocation,checkboxbuttonName ,idBoa, onEmailClick,idJobApplicant, idProject, idSeparation, onConfirmClick ,searchfilter,tableStatus ,tabParamsInObj ,idClaim,status,empType,GetTotalSum,isShowFor,documentFor, onProcessClick, perPage, onDelayClick, onApproveClick, idMilestone, isStatusFor}) {
+export default function TablewithApi({ title, ismodule, onEditClick, onSubmitClick, responseData, onDeleteClick, onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick, handleViewAssignReq, pagename, dashboradApi, refreshtable,ifForvalue,updatelist, year ,utctimeconditionpage ,empId ,handleDecommissionreq,assetsparms,refreshAfterEdit ,handleDeallocationreq ,handleSubmitAllocation,checkboxbuttonName ,idBoa, onEmailClick,idJobApplicant, idProject, idSeparation, onConfirmClick ,searchfilter,tableStatus ,tabParamsInObj ,idClaim,status,empType,GetTotalSum,isShowFor,documentFor, onProcessClick, perPage, onDelayClick, onApproveClick, isStatusFor}) {
 
   const timeZone = getCurrentTimeZone();
   const [data, setData] = useState([]); 
@@ -61,16 +64,12 @@ export default function tablewithApi({ title, ismodule, onEditClick, onSubmitCli
   const [filterList, setFilterList] = useState({});
   const [columnss, setcolumns] = useState([]);
   const [apisamedata, setapisamedata] = useState([]);
-  const webUrl = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const baseImageUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
   const [searchValue, setSearchValue] = useState("");
-
-
-  const [idLeave, setIdLeave] = useState("");
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [validationError, setValidationError] = useState('');
+  const validationError = '';
 
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectedIdsAsset, setSelectedIdsAsset] = useState([]);
@@ -101,9 +100,6 @@ export default function tablewithApi({ title, ismodule, onEditClick, onSubmitCli
   const closeModalrecallModalreject = () => {
     setIsModalOpenreject(false);
   };
-const closeModaldelayModalreject = () => {
-    setIsModalOpenreject(false);
-  };
   const handleRejectClick = () => {
     setIsModalOpenreject(true);
   }
@@ -120,10 +116,10 @@ const closeModaldelayModalreject = () => {
 
   useEffect(() => {
     if (responseData) {
-      setRespdata(responseData)
-      setMessageType(respdata.type)
-      setMessage(respdata.message)
+      setMessageType(responseData.type)
+      setMessage(responseData.message)
       if (messageType == "success" && responseData.popup == "recall") {
+        // eslint-disable-next-line react-hooks/immutability
         setisModalOpenrecall(false);
 
       }
@@ -132,10 +128,10 @@ const closeModaldelayModalreject = () => {
 
  useEffect(() => {
     if (responseData) {
-      setRespdata(responseData)
-      setMessageType(respdata.type)
-      setMessage(respdata.message)
+      setMessageType(responseData.type)
+      setMessage(responseData.message)
       if (messageType == "success" && responseData.popup == "delay") {
+        // eslint-disable-next-line react-hooks/immutability
         setisModalOpendelay(false);
 
       }
@@ -154,14 +150,14 @@ const closeModaldelayModalreject = () => {
       let cleanedSearchFilter = {};
       if (searchfilter && typeof searchfilter === 'object') {
         cleanedSearchFilter = Object.fromEntries(
-        Object.entries(searchfilter).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+        Object.entries(searchfilter).filter(([v]) => v !== '' && v !== null && v !== undefined)
       );
       }
 
       let cleanedtabParamsInObj = {};
       if (tabParamsInObj && typeof tabParamsInObj === 'object') {
         cleanedtabParamsInObj = Object.fromEntries(
-        Object.entries(tabParamsInObj).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+        Object.entries(tabParamsInObj).filter(([v]) => v !== '' && v !== null && v !== undefined)
       );
       }
 
@@ -236,7 +232,7 @@ const closeModaldelayModalreject = () => {
       selectedIds,
       purpose,
       data,
-      (successMessage) => {
+      () => {
         // Handle success message
         setSelectedIds([])
 		fetchData(page, rowsPerPage, sortOrder, filterList);
@@ -250,7 +246,7 @@ const closeModaldelayModalreject = () => {
       selectedIds,
       purpose,
       data,
-      (successMessage) => {
+      () => {
         // Handle success message
         setSelectedIds([])
 		fetchData(page, rowsPerPage, sortOrder, filterList);
@@ -265,7 +261,7 @@ const closeModaldelayModalreject = () => {
       selectedIdsAsset,
       purpose,
       data,
-      (successMessage) => {
+      () => {
         // Handle success message
         setSelectedIdsAsset([])
 		fetchData(page, rowsPerPage, sortOrder, filterList);
@@ -281,7 +277,7 @@ const closeModaldelayModalreject = () => {
   const closeModalDecommission = () => {
     setisModalDecommission(false);
   };
-  const handleDecommissionClick = async (data, value, updatedvalue) => {
+  const handleDecommissionClick = async (data) => {
     let id = data[1]
     setDecommissionId(id)
     setisModalDecommission(true)
@@ -300,7 +296,7 @@ const closeModaldelayModalreject = () => {
 
   const [isModalDeallocation, setisModalDeallocation] = useState(false);
   const [deallocationId, setDeallocationId] = useState([]);
-  const handledDeallocationClick = async (data, value, updatedvalue) => {
+  const handledDeallocationClick = async (data) => {
     let id = data[1]
     setDeallocationId(id)
     setisModalDeallocation(true)
@@ -356,14 +352,14 @@ const closeModaldelayModalreject = () => {
           });
           break;
         case 'filterChange':
-          const newFilterList = {};
+          { const newFilterList = {};
           tableState.filterList.forEach((value, index) => {
             if (value.length) {
               newFilterList[tableState.columns[index].name] = value;
             }
           });
           setFilterList(newFilterList);
-          break;
+          break; }
         case 'search':
           setSearchValue(tableState.searchText);
           break;
@@ -679,7 +675,7 @@ const closeModaldelayModalreject = () => {
       </div>
     );
   };
-  const renderStatus = (value, section) => {
+  const renderStatus = (value) => {
     if (pagename === "basketofallow") {
       let icon;
       switch (value) {
@@ -704,10 +700,11 @@ const closeModaldelayModalreject = () => {
       return <span className={`oxyem-mark-${value}`}>{value}</span>;
     }
   };
-  const renderdownloadButon = (value, tableMeta, updateValue) => {
+  const renderdownloadButon = (value) => {
+    // eslint-disable-next-line react/no-unknown-property
     return <span className={`oxyem-mark-doc-img`} download href={value} data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"Download"}>  <IoDownloadOutline style={{ cursor: 'pointer' }} size={20} color='#2196f3' onClick={() => handleDownloadClickWithPath(value)} /></span>;
   };
-const renderdocTypeImag = (value, tableMeta, updateValue) => {
+const renderdocTypeImag = (value) => {
   const getImage = () => {
     switch (value?.toLowerCase()) {
       case "pdf":
@@ -738,18 +735,18 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
   );
 };
 
-  const renderDoc = (value, tableMeta, updateValue) => {
+  const renderDoc = (value) => {
     return <Link className={`oxyem-mark-doc-img`} download href={value} data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"Download"}>  <IoDownloadOutline style={{ cursor: 'pointer' }} size={20} color='#FA7E12' onClick={() => handleDownloadClick(value)} /></Link>;
   };
-   const renderpolicyDoc = (value, tableMeta, updateValue) => {
+   const renderpolicyDoc = (value) => {
 	   const policyBaseurl = process.env.NEXT_PUBLIC_POLICY_IMAGE_BASE_URL
     const urlvalue = `${policyBaseurl}/${value}`;
     return <a className={`oxyem-mark-doc-img`} download href={urlvalue} data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"Download"}>  <IoDownloadOutline style={{ cursor: 'pointer' }} size={20} color='#FA7E12' /></a>;
   };
-  const renderwithiconStatus = (value, tableMeta, updateValue) => {
+  const renderwithiconStatus = (value, tableMeta) => {
     return <span className={`oxyem-mark-${value}`} onClick={() => handleRowClick(tableMeta.rowData)} data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"View Slip"}>  <FaRegEye /> {value}</span>;
   };
-  const renderassignedMembers = (value, tableMeta, updateValue) => {
+  const renderassignedMembers = (value, tableMeta) => {
     return (
       <>
         <button className='oxyem-mark-assignmem' onClick={() => handleassignedMemClick(tableMeta.rowData)}>
@@ -758,7 +755,7 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
       </>
     );
   };
-  const renderassigncountMembers = (value, tableMeta, updateValue) => {
+  const renderassigncountMembers = (value, tableMeta) => {
     return (
       <>
       {value?(
@@ -768,7 +765,7 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
       </>
     );
   };
-  const rendertaskInformation = (value, tableMeta, updateValue) => {
+  const rendertaskInformation = (value, tableMeta) => {
     return (
       <>
         <button className='oxyem-mark-assignmem' onClick={() => handleRowClick(tableMeta.rowData)}>
@@ -777,7 +774,7 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
       </>
     );
   };
-  const rendercustomProfile = (value, tableMeta, updateValue) => {
+  const rendercustomProfile = (value, tableMeta) => {
     const rowIndex = tableMeta.rowIndex;
     const profileData = apisamedata[rowIndex].find(item => item.name === 'Name' || item.name === 'idEmployee' || item.name === 'employeeName');
 
@@ -790,7 +787,7 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
       </span>
     );
   };
-  const rendercustomMangerProfile = (value, tableMeta, updateValue) => {
+  const rendercustomMangerProfile = (value, tableMeta) => {
     const rowIndex = tableMeta.rowIndex;
     const profileData = apisamedata[rowIndex].find(item => item.name === 'Name' || item.name === 'idEmployee' || item.name === "pManager" || item.name === 'employeeName');
     const profilePicture = profileData?.profilePicPath || profileData?.profilePicPath || "";
@@ -803,7 +800,7 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
     );
   };
 
-  const rendercustomProfileUserList = (value, tableMeta, updateValue) => {
+  const rendercustomProfileUserList = (value, tableMeta) => {
     const rowIndex = tableMeta.rowIndex;
     const profileData = apisamedata[rowIndex].find(item => item.name === 'empName');
 
@@ -874,19 +871,19 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
         ? renderpolicyDoc(value, tableMeta, updateValue)
         : null
                             : column.name === 'uploadInvoice' || column.name === 'ducumentPath' || column.name === 'offerLetterPath' || column.name === 'Uploadfile'
-                            ? (value, tableMeta, updateValue) => (
+                            ? (value) => (
                               value && value.length > 0 ? (
                                 <IoDownloadOutline style={{ cursor: 'pointer' }} size={20} color='#FA7E12' onClick={() => handleDownloadClickWithPath(value)} />
                               ) : null
                             )
                             : column.name === 'completetab'
-                            ? (value, tableMeta, updateValue) => (
+                            ? (value) => (
                               value && value.length > 0 ? ( 
                                 value === "A" ? <p className='job-stage'>Applied</p> : value === "J" ? <p className='job-stage'>Joined</p>  : value === "TI" ? <p className='job-stage'>Technical interview</p>: value === "S" ? <p className='job-stage'>Shortlisted</p> : value === "O" ? <p className='job-stage'>Offer letter</p>: value ==="MI" ? <p className='job-stage'>Management interview</p>:value 
                               ) : value ==="" ? <p className='job-stage'>Applied</p> : null
                             )
                             : column.name === 'certificatePath'
-                            ? (value, tableMeta, updateValue) => (
+                            ? (value, tableMeta) => (
                               value && value.length > 0 ? (
                                 <DelayedCertificateDownload value={value} tableMeta={tableMeta} />
                               ) : null
@@ -944,7 +941,7 @@ const renderdocTypeImag = (value, tableMeta, updateValue) => {
         link.click();
 
     } catch (error) {
-        // console.error('Error downloading the file', error);
+         console.error('Error downloading the file', error);
     }
 };
 
@@ -953,7 +950,7 @@ const getFileName = (path) => {
 };
   
 
-  const handleRowClick = (data, value, updatedvalue) => {
+  const handleRowClick = (data) => {
     let id = data[1]
     let name = data[2]
     if (ismodule === "leave") {
@@ -963,14 +960,14 @@ const getFileName = (path) => {
     }
 
   };
-  const handleassignedMemClick = (data, value, updatedvalue) => {
+  const handleassignedMemClick = (data) => {
     let id = data[1]
     handleViewAssignReq(id)
 
   };
 
 
-  const handleRowEditClick = async (data, value, updatedvalue) => {
+  const handleRowEditClick = async (data) => {
     let id = data[1]
     if(pagename === "payrollView"){
       onEditClick(id, data)
@@ -979,7 +976,7 @@ const getFileName = (path) => {
     }
 
   };
-  const handleRowprocessClick = async (data, value, updatedvalue) => {
+  const handleRowprocessClick = async (data) => {
     let id = data[1]
     onProcessClick(id)
 
@@ -994,27 +991,27 @@ const getFileName = (path) => {
     setIsUploadModalOpen(false)
   }
 
-  const handleRowUploadClick = async (data, value, updatedvalue) => {
+  const handleRowUploadClick = async (data) => {
     let id = data[1]
     openUploadDetailpopup(id)
   };
 
-  const handleRowConfirmClick = async (data, value, updatedvalue) => {
+  const handleRowConfirmClick = async (data) => {
     let id = data[1]
     onConfirmClick(id)
 
   };
 
-  const handleRowHistoryClick = async (data, value, updatedvalue) => {
+  const handleRowHistoryClick = async (data) => {
     let id = data[1]
     onHistoryClick(id)
 
   };
-  const handleRowEmailClick = async (data, value, updatedvalue) => {
+  const handleRowEmailClick = async (data) => {
     let id = data[1]
     onEmailClick(id)
   };
-  const handleRowDeleteClick = async (data, value, updatedvalue) => {
+  const handleRowDeleteClick = async (data) => {
     let id = data[1]
     let name = data[2]
     onDeleteClick(id, name)
@@ -1025,11 +1022,9 @@ const getFileName = (path) => {
   const [isModalOpendelay, setisModalOpendelay] = useState(false);
 
 
-  const handleRowrecallClick = (data, value) => {
+  const handleRowrecallClick = (data) => {
     let id = data[1]
     handlerecallvalueClick(id)
-    setIdLeave(value);
-
   };
   const closeModalrecallModal = () => {
     setisModalOpenrecall(false);
@@ -1039,12 +1034,12 @@ const getFileName = (path) => {
     onSubmitClick(id)
 
   };
-    const handleRowdelayClick = (data, value) => {
+    const handleRowdelayClick = (data) => {
     let id = data[1]
    onDelayClick(id)
 
   };
-     const handleRowApproveClick = (data, value) => {
+     const handleRowApproveClick = (data) => {
     let id = data[1]
    onApproveClick(id)
 

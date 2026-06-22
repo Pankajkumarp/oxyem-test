@@ -25,7 +25,7 @@ export default function NormalTable({ apiPath, searchfilter, showCheckbox, oncli
         let cleanedSearchFilter = {};
         if (searchfilter && typeof searchfilter === 'object') {
             cleanedSearchFilter = Object.fromEntries(
-                Object.entries(searchfilter).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+                Object.entries(searchfilter).filter(([v]) => v !== '' && v !== null && v !== undefined)
             );
         }
         try {
@@ -57,7 +57,9 @@ export default function NormalTable({ apiPath, searchfilter, showCheckbox, oncli
 
     // 🔹 TRIGGER API
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, rowsPerPage, sortConfig, search, apiPath, searchfilter]);
 
     const totalPages = Math.ceil(users.totalCount / rowsPerPage);

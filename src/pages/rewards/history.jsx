@@ -2,17 +2,13 @@ import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
-import Rating from 'react-rating';
-import { FaRegStar, FaStar } from 'react-icons/fa';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 const AssetHistory = ({ isOpen, closeModal ,isHistroyId ,datafor}) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoading = false;
 
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [assetHistoryData, setAssetHistory] = useState([]);
-  const [currentStatus, setStatus] = useState('');
-  const [questions, setQuestions] = useState([]);
   const getAttendanceDetails = async (id) => {
     try {
       const response = await axiosJWT.get(`${apiUrl}/reward/viewHistory`, {
@@ -23,39 +19,26 @@ const AssetHistory = ({ isOpen, closeModal ,isHistroyId ,datafor}) => {
         const history = response.data.data.data;
         if (Array.isArray(history) && history.length > 0) {
           setAssetHistory(history);
-          setStatus(history[0]?.status || '');
         } else {
           setAssetHistory([]);
-          setStatus('');
         }
       }
     } catch (error) {
-      
+      console.error(error)
       setAssetHistory([]);
-      setStatus('');
       
     }
   };
 
-  const fetchOptions = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axiosJWT.get(`${apiUrl}/jobs/onboardQuestions`);
-        setQuestions(response.data.data || []);
-      } catch (error) {
-        setError(error.message || 'Failed to fetch options');
-      }
-    };
 
   useEffect(() => {
     if (isOpen) {
-      fetchOptions();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
       document.body.classList.add("hide-body-scroll");
     } else {
       document.body.classList.remove("hide-body-scroll");
       setAssetHistory([]);
-      setStatus('');
       
     }
   }, [isOpen, isHistroyId]);

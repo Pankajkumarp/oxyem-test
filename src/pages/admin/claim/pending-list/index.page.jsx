@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
-import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { toast } from 'react-hot-toast';
+import { FaTimes } from "react-icons/fa";
 import View from '../../../Components/Popup/ClaimHistory.jsx';
 
 import Head from 'next/head';
 import pageTitles from '../../../../common/pageTitles.js';
 
-export default function index() {
+export default function ClamPending() {
 
     const router = useRouter();
-    const [updleavelist, setUpdUserList] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
+    const updleavelist = [];
+    const formcolumn= [];
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHistroyId, setIsHistroyId] = useState("");
     
@@ -44,9 +44,7 @@ export default function index() {
         router.push(`/admin/claim/${id}`);
     };
 
-    const onDeleteClick = (id) => {
-        
-    };
+    const onDeleteClick = () => {};
 
     const handleApprrovereq = async (id, type, data, onSuccess) => {
         const apipayload ={
@@ -91,7 +89,6 @@ export default function index() {
                         color: '#4caf50',
                     },
                 });
-                fetchData();
             }
 
         } catch (error) {
@@ -121,6 +118,7 @@ export default function index() {
                     color: '#FF000F',
                 },
             });
+            console.error(error)
             // Handle the error if any
             
         }

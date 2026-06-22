@@ -1,17 +1,11 @@
-
-import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from "axios";
 import SecTab from '../Components/Employee/SecTab';
 import { Toaster } from 'react-hot-toast';
 
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
-export default function onboardingProcess({ payrollForm }) {
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-
-    const router = useRouter();
-    const data = router.query.data;
-    const [storeArray, setStoreArray] = useState(payrollForm);
+export default function OnboardingProcess({ payrollForm }) {
+    const storeArray = payrollForm;
     const [AdduserContent, setAdduserContent] = useState(payrollForm);
     const filterSectionsBasedOnAssetType = (content, assetType) => {
 
@@ -129,8 +123,7 @@ export default function onboardingProcess({ payrollForm }) {
         }
 
     };
-    const getsubmitformdata = async (value) => {
-        console.log("kfkf", value)
+    const getsubmitformdata = async () => {
     };
 
 
@@ -179,7 +172,7 @@ export default function onboardingProcess({ payrollForm }) {
 
     );
 }
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "onboardingProcess" } })

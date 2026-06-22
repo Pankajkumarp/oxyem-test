@@ -103,7 +103,7 @@ export default function SelectComponent({ label, name, isDisabled, validations =
             },
             backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
           }),
-          indicatorSeparator: (provided, state) => ({
+          indicatorSeparator: (provided) => ({
             ...provided,
             backgroundColor: 'var(--dropdownhoverbg)',
             fontWeight: 'var(--dropdownfontweight)',

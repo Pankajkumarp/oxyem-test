@@ -7,6 +7,7 @@ export default function CommanRadioButtonComponent({ value, placeholder, options
     };
     const [textData, settextData] = useState(value);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         settextData(value);
     }, [value]);
     return (

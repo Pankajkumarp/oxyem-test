@@ -22,7 +22,7 @@ export default function Index() {
         openDetailpopup();
     };
     const onViewClick = (id) => { router.push(`/groups/${id}`); };
-    const onDeleteClick = (id) => {};
+    const onDeleteClick = () => {};
 
     return (
         <>

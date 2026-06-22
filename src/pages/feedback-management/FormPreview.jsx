@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaStar } from 'react-icons/fa';
 import Select from 'react-select';
 
@@ -13,9 +13,6 @@ export default function FormPreview({ data }) {
     }),
     placeholder: base => ({ ...base, color: '#6c757d' }),
   };
-
-   const [rows, setRows] = useState(4);
-  const [cols, setCols] = useState(4);
 
   
 

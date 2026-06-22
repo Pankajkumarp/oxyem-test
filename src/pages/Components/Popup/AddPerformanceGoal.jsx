@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import authenticatedRequest from '../../Auth/authenticatedRequest.jsx';
-import axios from "axios";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import { GoGoal } from "react-icons/go";
-import { Toaster, toast } from 'react-hot-toast';
+import {  toast } from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
 import { FaRegCheckCircle } from "react-icons/fa";
 const DynamicForm = dynamic(() => import('../CommanForm.jsx'), {
@@ -18,7 +17,6 @@ const AddPerformanceGoal = ({ isOpen, closeModal, refreshData, goalNameId, click
   const [AdduserContent, setAdduserContent] = useState();
   const [isFormShow, setisFormShow] = useState(false);
   const [activeTab, setActiveTab] = useState();
-  const [error, setError] = useState();
   const fetchNameForm = async (goalNameId, formData) => {
     try {
       const response = await authenticatedRequest({
@@ -27,7 +25,6 @@ const AddPerformanceGoal = ({ isOpen, closeModal, refreshData, goalNameId, click
         params: { idGoalMaster: goalNameId }
       });
       if (response) {
-        const idGoalMaster = response.data.data.idGoalMaster
         const rsValue = response.data.data.goalInfo
         const commentInfo = response.data.data.commentInfo
         const updatedContent = formData;
@@ -238,7 +235,7 @@ const AddPerformanceGoal = ({ isOpen, closeModal, refreshData, goalNameId, click
         setisFormShow(true)
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   };
   const fetchForm = async () => {
@@ -262,7 +259,7 @@ const AddPerformanceGoal = ({ isOpen, closeModal, refreshData, goalNameId, click
 
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   };
 
@@ -270,6 +267,7 @@ const AddPerformanceGoal = ({ isOpen, closeModal, refreshData, goalNameId, click
 
     if (isOpen) {
       document.body.classList.add('remove_scroll');
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchForm();
     } else {
       document.body.classList.remove('remove_scroll');
@@ -279,7 +277,7 @@ const AddPerformanceGoal = ({ isOpen, closeModal, refreshData, goalNameId, click
     };
   }, [isOpen]);
 
-  const handleChangeValue = async (fieldName, value) => {
+  const handleChangeValue = async () => {
     let typeOfLevelValue = "";
     let goalTypeValue = "";
     let targetValue = "";
@@ -311,10 +309,6 @@ const AddPerformanceGoal = ({ isOpen, closeModal, refreshData, goalNameId, click
         section.Subsection.forEach(subsection => {
           subsection.fields.forEach(field => {
             if (field.name === 'goalName') {
-              const array = {
-                typeOfLevel: typeOfLevelValue,
-                goalType: goalTypeValue
-              }
               field.dependentId = "";
             }
           });

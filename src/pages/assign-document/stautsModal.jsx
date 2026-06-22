@@ -4,7 +4,7 @@ import Drawer from 'react-modern-drawer';
 import { FcProcess } from "react-icons/fc";
 import 'react-modern-drawer/dist/index.css';
 
-export default function stautsModal({ isOpen, closeModal, isDoc, CallStatusApi }) {
+export default function StautsModal({ isOpen, closeModal, isDoc, CallStatusApi }) {
     const [idDocumment, setIdDocumment] = useState("");
     const handleSubmit = () => {
         const data = {
@@ -24,6 +24,7 @@ export default function stautsModal({ isOpen, closeModal, isDoc, CallStatusApi }
     useEffect(() => {
         if (isOpen) {
             document.body.classList.add("hide-body-scroll");
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIdDocumment(isDoc);
         } else {
             document.body.classList.remove("hide-body-scroll");

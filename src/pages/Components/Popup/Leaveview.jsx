@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
-import { FaRegClock } from "react-icons/fa";
-import { MdOutlineLocationOn } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
-import Profile from '../commancomponents/profile';
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
 
-const Leaveview = ({ isOpen, closeModal, isviewId, section, handleUpadateClick }) => {
+const Leaveview = ({ isOpen, closeModal, isviewId }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-  const [attendanceDate, setAttendanceDate] = useState([]);
-
-  const [EmployeeDetails, setEmployeeDetails] = useState([]);
   const [leaveHistory, setleaveHistory] = useState({});
-  console.log("233", EmployeeDetails)
 
   const getAttendanceDetails = async (id) => {
     try {
@@ -28,9 +18,7 @@ const Leaveview = ({ isOpen, closeModal, isviewId, section, handleUpadateClick }
         },
       });
       if (response && response.data && response.data.data) {
-        console.log("0987", response.data.data)
         setleaveHistory(response.data.data)
-        setEmployeeDetails(response.data.data.allLeavesByEmp[0].section[0].fields);
       }
     } catch (error) {
       console.error("Error occurred while fetching attendance details:", error);
@@ -39,24 +27,13 @@ const Leaveview = ({ isOpen, closeModal, isviewId, section, handleUpadateClick }
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isviewId);
 		document.body.classList.add("hide-body-scroll");
     } else {
 		document.body.classList.remove("hide-body-scroll");
     }
   }, [isOpen, isviewId]);
-
-  const handleupdate = () => {
-    handleUpadateClick(getidAttendance);
-  };
-
-  const filteredDetails = EmployeeDetails.filter(
-    (item) => item.name !== "isDelete" && item.name !== "remainingLeaves"
-  );
-
-  const orderedDetails = [
-    ...filteredDetails.filter((item) => item.name !== "idEmployee")
-  ];
 
 
   return (

@@ -5,7 +5,6 @@ import "react-modern-drawer/dist/index.css";
 
 const customStyles = {
   content: {
-    background: "#fff",
     top: "0",
     left: "30%",
     right: "auto",
@@ -17,7 +16,7 @@ const customStyles = {
   },
 };
 
-const AssetHistory = ({ isOpen, closeModal, isHistroyId, datafor }) => {
+const AssetHistory = ({ isOpen, closeModal, isHistroyId }) => {
   return (
     <Drawer
       open={isOpen}

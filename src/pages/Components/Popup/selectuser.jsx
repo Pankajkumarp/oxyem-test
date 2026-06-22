@@ -1,9 +1,9 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import ReactModal from 'react-modal';
 import React, { useState, useEffect } from "react";
 import Select from 'react-select';
 import { MdClose } from "react-icons/md";
 import Profile from '../commancomponents/profile';
-import ButtonPrimary from '../common/Buttons/ButtonPrimaryComponent';
 
 
 const customStyles = {
@@ -19,7 +19,7 @@ const customStyles = {
 };
 
 
-export default function selectuser({ isOpen, closeModal, labelText, userdata, value, submitvaluerec, selectuser, submitdeleteval }) {
+export default function SelectuserEmp({ isOpen, closeModal, labelText, userdata, value, submitvaluerec, selectuser, submitdeleteval }) {
     const [options, setOptions] = useState([]);
     useEffect(() => {
         const convertdata = userdata.slice(0, 3).map(item => ({
@@ -164,7 +164,7 @@ export default function selectuser({ isOpen, closeModal, labelText, userdata, va
                                                         borderColor: state.isFocused ? 'var(--dropdownhoverbg)' : provided.borderColor // Ensure hover state does not override focus state
                                                     }
                                                 }),
-                                                indicatorSeparator: (provided, state) => ({
+                                                indicatorSeparator: (provided) => ({
                                                     ...provided,
                                                     backgroundColor: 'var(--dropdownhoverbg)' // Change border color when clicked to show options
                                                 }),
@@ -197,7 +197,8 @@ export default function selectuser({ isOpen, closeModal, labelText, userdata, va
                                     role="tabpanel"
                                     aria-labelledby="profile-tab"
                                 >
-                                    {selectuser.map((detail, index) => (
+                                    {selectuser.map((detail) => (
+                                        // eslint-disable-next-line react/jsx-key
                                         <div className='oxyem-pop-up-del'>
                                             <div className='row'>
                                                 <div className='col-8'>

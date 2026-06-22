@@ -5,9 +5,9 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function SelectComponent({ label,isDisabled, validations = [], onChange, value ,documentType,selectedAsset }) {
   const [options, setOptions] = useState([]);
   const [selectedoption, setSelected] = useState(value);
-  const [error, setError] = useState(null);
 
 useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   setSelected(selectedAsset);
   }, [selectedAsset]);
 
@@ -27,12 +27,12 @@ useEffect(() => {
 
         setOptions(optionsData);
       } catch (error) {
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 
     fetchOptions();
-  }, []);
+  }, [documentType]);
 
   const handleSelectChange = (selectedValue) => {
     setSelected(selectedValue);

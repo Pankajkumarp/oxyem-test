@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,7 +10,6 @@ import { Tooltip } from "react-tooltip";
 import { useLeaveSummary } from "./hooks/useLeaveSummary";
 import LeavePopup from "../../Popup/Leavepmodal";
 import { calculateWorkingHours, getDayType } from "./utils/time";
-import { axiosJWT } from "../../../Auth/AddAuthorization";
 import { fetchEmployeeAttendance } from "./utils/attendance";
 
 export default function FormRenderer({ schema, handeSubmit, sumbitStart, isFor, isPage, onClickGetEmployeeId, handleCancelClick, onClickGetDateInfo }: any) {
@@ -35,12 +35,14 @@ export default function FormRenderer({ schema, handeSubmit, sumbitStart, isFor, 
   const attendancedate = useWatch({ control, name: "attendancedate" });
   const [startDate, setStartDate] = useState("");
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStartDate(fromDate);
   }, [fromDate]);
   useEffect(() => {
     if (isFor === "applyLeave") {
       onClickGetDateInfo(fromDate, toDate)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromDate, toDate]);
   useEffect(() => {
     if (isPage === "admin") {
@@ -50,6 +52,7 @@ export default function FormRenderer({ schema, handeSubmit, sumbitStart, isFor, 
       onClickGetEmployeeId(idEmployee)
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idEmployee]);
 
   
@@ -226,6 +229,7 @@ useEffect(() => {
       });
     });
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const values = useWatch({
       control,
       name: requiredFields

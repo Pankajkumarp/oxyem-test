@@ -41,6 +41,7 @@ export default function Index() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFeedbackList([]);
     fetchInfo();
   }, []);
@@ -70,6 +71,7 @@ export default function Index() {
 
   useEffect(() => {
     if (activeTab === 1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchInfoChart();
     } else {
       fetchInfo();

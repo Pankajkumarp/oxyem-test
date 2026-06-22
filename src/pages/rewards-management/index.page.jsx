@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs'
 import { axiosJWT } from '../Auth/AddAuthorization';
 import View from './View';
@@ -9,30 +8,23 @@ import { Tooltip } from 'react-tooltip';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 
-export default function index() {
-    const router = useRouter();
+export default function RewardMain() {
 const [awardsData, setAwardsData] = useState([]);
     
-    const fetchOptions = async () => {
+  
+    useEffect(() => {
+        const fetchOptions = async () => {
         try {
           const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
           const response = await axiosJWT.get(`${apiUrl}/reward/rewardslist`);
           setAwardsData(response.data.data || []);
         } catch (error) {
-        //   setError(error.message || 'Failed to fetch options');
+        console.error(error)
         }
       };
-  
-    useEffect(() => {
         fetchOptions();
     }, []);
 
-    const handelredirectAddPage = (id, description ,path) => {
-        router.push({
-            pathname: `/rewards-management/${id}`, 
-            query: { title: description , path: path} // Passing title as a query param
-        }, `/rewards-management/${id}`); // Hides the query param in the URL
-    };
     
     const [isHistroyId, setHistroyId] = useState('');
     const [awardImg, setPath] = useState('');

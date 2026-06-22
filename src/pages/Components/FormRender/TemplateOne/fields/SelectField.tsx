@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -22,7 +25,7 @@ export default function SelectField({ field, control, errors, idEmployee }: any)
         setOptions(optionsData);
       }
     } catch (error) {
-
+console.error(error)
     }
   };
   const fetchLeaveOptions = async (value) => {
@@ -39,7 +42,7 @@ export default function SelectField({ field, control, errors, idEmployee }: any)
         setOptions(optionsData);
       }
     } catch (error) {
-
+console.error(error)
     }
   };
   const fetchEmployeeOptions = async (value) => {
@@ -57,7 +60,7 @@ export default function SelectField({ field, control, errors, idEmployee }: any)
         setOptions(optionsData);
       }
     } catch (error) {
-
+console.error(error)
     }
   };
   useEffect(() => {
@@ -135,7 +138,7 @@ export default function SelectField({ field, control, errors, idEmployee }: any)
                 },
                 backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
               }),
-              indicatorSeparator: (provided, state) => ({
+              indicatorSeparator: (provided) => ({
                 ...provided,
                 backgroundColor: 'var(--dropdownhoverbg)',
                 fontWeight: 'var(--dropdownfontweight)',

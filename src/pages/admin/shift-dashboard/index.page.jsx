@@ -12,7 +12,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 import SelectComponent from '../../Components/common/SelectOption/SelectComponent.jsx';
 
-export default function index() {
+export default function ShifDashboard() {
 
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function index() {
     });
 
 
-    const [activeTab, setActiveTab] = useState(1); // State to manage active tab index
+    const activeTab =1; // State to manage active tab index
     
 
     const onViewClick = (id) => {
@@ -51,9 +51,7 @@ export default function index() {
         router.push(`/employeeDashboard/${id}`);
     };
 
-    const onDeleteClick = (id) => {
-        
-      };
+    const onDeleteClick = () => {};
 
       const handleUpadateClick = async (id) => {
         router.push(`/attendance/${id}`);
@@ -188,7 +186,7 @@ export default function index() {
             setIsChartOpen(true);
     
         } catch (error) {
-            // console.error('Error fetching chart data:', error);
+            console.error('Error fetching chart data:', error);
         }
     };
     chartData();

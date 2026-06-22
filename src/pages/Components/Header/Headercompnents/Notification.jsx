@@ -9,7 +9,6 @@ const NotificationDropdown = () => {
 
   const socket = useContext(SocketContext);
   const [notifications, setNotifications] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [count, setCount] = useState(0);
 
@@ -18,7 +17,6 @@ const NotificationDropdown = () => {
 		axiosJWT.get(`${apiUrl}/taskbar/getAllNotifications` , { params: { "isfor": "notify" } })
 			.then((response) => {
 				setNotifications(response.data.data);
-				setIsLoading(false)
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error);
@@ -46,9 +44,7 @@ if(!count){
 
   useEffect(() => {
 		socket.on("msg-recieve", (msg) => {
-			setBelcolor("#004D95")
 			setCount(count => count + 1); // Increment the count
-			toast.success(msg, toastOptions);
 			setNotifications((prevNotifications) => [...prevNotifications, { title: "New Message", body: msg, time: new Date().toLocaleString() }]);
 		});
 	}, [socket]);

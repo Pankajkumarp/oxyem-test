@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs'
 import CustomDataTable from '../Components/Datatable/tablewithApi.jsx';
 import Histroy from './history';
@@ -8,8 +7,7 @@ import StautsModal from './stautsModal';
 import Head from 'next/head';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 
-export default function assignDocument() {
-  const router = useRouter();
+export default function AssignDocument() {
   const [isDoc, setIsDoc] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const onHistoryClick = (id) => {

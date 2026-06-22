@@ -5,7 +5,6 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function ExistingShift({ label, validations = [], value, onChange, data }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -49,7 +48,7 @@ export default function ExistingShift({ label, validations = [], value, onChange
         // Ensure the selected option is set correctly
         setSelectedSubject(initialSelectedOption || (optionsData.length > 0 ? optionsData[0] : null));
       } catch (error) {
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 

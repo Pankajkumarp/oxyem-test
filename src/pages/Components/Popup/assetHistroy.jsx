@@ -1,24 +1,11 @@
-import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
+import React, { useEffect } from "react";
 import { MdClose } from "react-icons/md";
-import { FaRegClock } from "react-icons/fa";
-import { MdOutlineLocationOn } from "react-icons/md";
-import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
-import Profile from '../commancomponents/profile';
-//import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
 
-const assetHistroy = ({ isOpen, closeModal, isviewId, section, handleUpadateClick }) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-  const [attendanceDate, setAttendanceDate] = useState([]);
-
-  const [EmployeeDetails, setEmployeeDetails] = useState([]);
-  const [assetHistory, setAssetsHistory] = useState(
-    {
+const AssetHistroy = ({ isOpen, closeModal, isviewId }) => {
+  const assetHistory = {
       "Type": "Employee Asset Alloction Histroy",
       "leavestatus": "updated",
       "leaveRequests": [
@@ -42,26 +29,6 @@ const assetHistroy = ({ isOpen, closeModal, isviewId, section, handleUpadateClic
           }
       ]
   }
-  );
-  console.log("233", EmployeeDetails)
-
-  const getAttendanceDetails = async (id) => {
-    try {
-      const response = await axiosJWT.get(`${apiUrl}/leave/history`, {
-        params: {
-          idLeave: id,
-        },
-      });
-      if (response && response.data && response.data.data) {
-        console.log("0987", response.data.data)
-        setleaveHistory(response.data.data)
-        setEmployeeDetails(response.data.data.allLeavesByEmp[0].section[0].fields);
-      }
-    } catch (error) {
-      console.error("Error occurred while fetching attendance details:", error);
-    }
-  };
-
   useEffect(() => {
     if (isOpen) {
       //getAttendanceDetails(isviewId);
@@ -70,19 +37,6 @@ const assetHistroy = ({ isOpen, closeModal, isviewId, section, handleUpadateClic
 		document.body.classList.remove("hide-body-scroll");
     }
   }, [isOpen, isviewId]);
-
-  const handleupdate = () => {
-    handleUpadateClick(getidAttendance);
-  };
-
-  const filteredDetails = EmployeeDetails.filter(
-    (item) => item.name !== "isDelete" && item.name !== "remainingLeaves"
-  );
-
-  const orderedDetails = [
-    ...filteredDetails.filter((item) => item.name !== "idEmployee")
-  ];
-
 
   return (
     <Drawer
@@ -164,4 +118,4 @@ const assetHistroy = ({ isOpen, closeModal, isviewId, section, handleUpadateClic
   );
 };
 
-export default assetHistroy;
+export default AssetHistroy;

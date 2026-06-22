@@ -23,8 +23,11 @@ export default function VerifyTicketPage({ userFormdata }) {
   const [tId, setTId] = useState('');
   useEffect(() => {
     const { id } = router.query;
+    // eslint-disable-next-line react-hooks/immutability
     fetchInfo(id);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTId(id)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query.id]);
 
   const fetchInfo = async (value) => {
@@ -45,6 +48,7 @@ export default function VerifyTicketPage({ userFormdata }) {
 
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatusTrack(ticketDetails.status);
   }, [ticketDetails]);
 
@@ -67,7 +71,7 @@ export default function VerifyTicketPage({ userFormdata }) {
 
   };
 
-  const submitaddnlinfo = async (value) => {
+  const submitaddnlinfo = async () => {
     const formattedData = {};
     const formattedData2 = {};
     // Convert the data to the required format
@@ -106,7 +110,7 @@ export default function VerifyTicketPage({ userFormdata }) {
       }
     }
   };
-  const submitonhold = async (value) => {
+  const submitonhold = async () => {
     const formattedData = {};
     const formattedData2 = {};
     // Convert the data to the required format
@@ -202,6 +206,7 @@ export default function VerifyTicketPage({ userFormdata }) {
         });
       }
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setContent(updatedForm);
     }
   }, [ticketDetails, userFormdata]);

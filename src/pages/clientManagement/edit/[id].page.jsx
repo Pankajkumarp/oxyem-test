@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import MUIDataTable from "mui-datatables";
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
@@ -23,7 +25,7 @@ const DynamicForm = dynamic(() => import('../../Components/CommanForm.jsx'), {
 const Notes = dynamic(() => import('../../Components/Popup/Notes'), {
     ssr: false
 });
-export default function editClient({ userFormdata }) {  // Default to empty array if not provided
+export default function EditClient({ userFormdata }) {  // Default to empty array if not provided
     const router = useRouter();
     const showButton = "";
     const pagename = "createPricing";
@@ -103,7 +105,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
 
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
@@ -113,11 +115,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
         setIdClient(id)
     }, [id]);
 
-    const [isTabclick, setisTabclick] = useState(true);
-    const [tableSection, settableSection] = useState("show");
-
-
-    const [existingData, setexistingData] = useState([]);
+    const tableSection = "show";
     // Merge existing data with form fields
     const mergeDataWithFields = (fields, existingData) => {
         const existingDataMap = existingData.reduce((acc, item) => {
@@ -130,7 +128,6 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
             return acc;
         }, {});
     };
-    const initialData = mergeDataWithFields(fields, existingData);
 
 
     const options = {
@@ -219,15 +216,6 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
     };
 
 
-    const addRow = () => {
-        const newRow = mergeDataWithFields(fields, existingData);
-        if (activeTab === "Address Information") {
-            setAddressInfo([...addressInfoData, newRow]);
-        }
-    };
-
-
-
     useEffect(() => {
 
         const initialSection = formvalue.section.find(section => section.SectionName === activeTab);
@@ -256,7 +244,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
         setAddressInfo(prevData => {
             const isFirstEmpty = prevData[0]?.addressId === "" && prevData[0]?.contactPersonName === "" && prevData[0]?.adressDetails === "";
             if (isFirstEmpty) {
-                return prevData.map((item, index) => ({
+                return prevData.map((item) => ({
                     ...item,
                 }));
             } else {
@@ -308,7 +296,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
             filter: field.isfilter,
             sort: field.issort,
             display: ['adressDetails2', 'adressDetails3', 'addressId'].includes(field.name) ? 'excluded' : 'true',
-            customBodyRender: (value, tableMeta, updateValue) => {
+            customBodyRender: (value, tableMeta) => {
 				const rowIndex = tableMeta.rowIndex;
                 const error = errors[field.name] ? errors[field.name][rowIndex] : undefined;
 
@@ -412,7 +400,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
                     return value;
                 }
             },
-            customHeadRender: (columnMeta, updateColumn) => {
+            customHeadRender: (columnMeta) => {
                 if (field.name === "srNo") {
                     return (
                         <th className="custom-class-for-invocie custom-class-for-srNo">
@@ -443,6 +431,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
             updatedData = [...addressInfoData];
         }
         if (activeTab === "Client Information") {
+            /* empty */
         } else {
             updatedData[rowIndex] = {
                 ...updatedData[rowIndex],
@@ -498,7 +487,9 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
 
     const handleChangess = (currentIndex) => {
         const nextIndex = currentIndex + 1;
+        // eslint-disable-next-line no-undef
         if (nextIndex < content.section.length) {
+            // eslint-disable-next-line no-undef
             setActiveTab(content.section[nextIndex].SectionName);
         }
     };
@@ -616,6 +607,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
                 }
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const removeError = (key) => {
@@ -641,9 +633,7 @@ export default function editClient({ userFormdata }) {  // Default to empty arra
     }
 
 
-    const getInstantValue = async (fieldName, value) => {
-
-    };
+    const getInstantValue = async () => {};
 
     const formatDate = (date) => {
         const day = String(date.getDate()).padStart(2, '0'); // Add leading zero if day < 10
@@ -961,6 +951,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

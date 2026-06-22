@@ -34,7 +34,9 @@ export default function KanbanBoard({ idTimesheet, mentionUser }: Readonly<Kanba
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [columns, setColumns] = useState<Column[]>([]);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
-  const getListDetails = async (id) => {
+
+  useEffect(() => {
+      const getListDetails = async (id) => {
     try {
       const response = await axiosJWT.get(`${apiUrl}/timesheet/getTaskBoard`, {
         params: { id },
@@ -68,9 +70,8 @@ const formattedMilestones: Milestone[] = apiData.columnData.map((item) => ({
       console.error("Error fetching board:", error);
     }
   };
-  useEffect(() => {
     getListDetails(idTimesheet)
-  }, [idTimesheet]);
+  }, [apiUrl, idTimesheet]);
   const [activeMilestone, setActiveMilestone] = useState<Milestone | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
@@ -197,13 +198,13 @@ const formattedMilestones: Milestone[] = apiData.columnData.map((item) => ({
         onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
         <div className="d-flex gap-1 overflow-auto">
           {columns.map((column) => (
-            <KanbanColumn key={column.id} column={column} milestones={getMilestonesForColumn(column.id)} idTimesheet={idTimesheet} mentionUser={mentionUser}/>
+            <KanbanColumn key={column.id} column={column} milestones={getMilestonesForColumn(column.id)}  mentionUser={mentionUser}/>
           ))}
         </div>
         <DragOverlay dropAnimation={{ duration: 150, easing: "ease" }}>
           {activeMilestone ? (
             <div style={{ transform: "rotate(1deg) scale(1.03)", opacity: 0.95 }}>
-              <MilestoneCard milestone={activeMilestone} isDragging />
+              <MilestoneCard milestone={activeMilestone} isDragging onOpenModal={undefined} />
             </div>
           ) : null}
         </DragOverlay>

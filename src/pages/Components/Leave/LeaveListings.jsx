@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { FaEdit, FaEye } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 export default function LeaveListings({ leavelisting }) {
   //  const history = useHistory();
   const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;

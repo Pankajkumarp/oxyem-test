@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbs';
 import NormalTable from './NormalTable';
@@ -12,7 +14,7 @@ import { FaCheck } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import { Toaster, toast } from 'react-hot-toast';
-export default function createGroup() {
+export default function CreateGroup() {
     const [groupName, setGroupName] = useState("");
     const [roleIds, setRoleIds] = useState([]);
     const [userIds, setUserIds] = useState([]);

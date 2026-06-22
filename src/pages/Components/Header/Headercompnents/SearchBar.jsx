@@ -9,6 +9,7 @@ export default function SearchBar({employelist}) {
 
     const inputRef = useRef();
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
         window.addEventListener('mousedown', handleClickOutside);
 
         return () => {

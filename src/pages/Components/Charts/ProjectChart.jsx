@@ -141,11 +141,12 @@ const ProjectChart = ({ activeTab }) => {
 
       }
     } catch (error) {
-
+      console.error(error)
     }
   };
   useEffect(() => {
     if (activeTab === "Projects") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchClientData("projects");
     }
   }, [activeTab]);

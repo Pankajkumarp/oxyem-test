@@ -3,37 +3,22 @@ import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import authenticatedRequest from '../../Auth/authenticatedRequest.jsx';
-import axios from "axios";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import { GoGoal } from "react-icons/go";
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
 import { FaRegCheckCircle } from "react-icons/fa";
 const DynamicForm = dynamic(() => import('../CommanForm.jsx'), {
   ssr: false
 });
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
-const AddPerformance = ({ isOpen, closeModal, id, isAFor, refreshData }) => {
+const AddPerformance = ({ isOpen, closeModal, id, refreshData }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [AdduserContent, setAdduserContent] = useState();
   const [isFormShow, setisFormShow] = useState(false);
-  const [getSectionName, setGetSectionName] = useState(isAFor);
   const [activeTab, setActiveTab] = useState();
-  const [error, setError] = useState();
   const fetchForm = async () => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await authenticatedRequest({
         method: 'GET',
         url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/getDynamicForm`,
@@ -57,7 +42,7 @@ const AddPerformance = ({ isOpen, closeModal, id, isAFor, refreshData }) => {
         setisFormShow(true)
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   };
   const [behaviourRemain, setBehaviourRemain] = useState();
@@ -81,7 +66,7 @@ const AddPerformance = ({ isOpen, closeModal, id, isAFor, refreshData }) => {
         }
       }
     } catch (error) {
-
+      console.error(error)
     }
   };
   const fetchNameForm = async () => {
@@ -95,13 +80,13 @@ const AddPerformance = ({ isOpen, closeModal, id, isAFor, refreshData }) => {
         setAllGoalInfo(response.data.data)
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   };
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchForm();
     fetchNameForm();
-    setGetSectionName(isAFor)
     if (isOpen) {
       fetchGoalForm();
       document.body.classList.add('remove_scroll');
@@ -124,10 +109,6 @@ const AddPerformance = ({ isOpen, closeModal, id, isAFor, refreshData }) => {
     );
   };
 
-
-  const setGoalNameDisabled = (disabled) => {
-    updateField('goalName', field => field.isDisabled = disabled);
-  };
 
   const setFieldVisibilityAndValidations = (goalTypeValue) => {
     const showRewardFields = goalTypeValue === "2b297dfa-6d63-4d2a-b90a-832a991d9020";
@@ -293,6 +274,7 @@ const AddPerformance = ({ isOpen, closeModal, id, isAFor, refreshData }) => {
           });
           return section;
         });
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAdduserContent(updatedContent);
       }
       if (typeOfLevelValueId !== "" && goalTypeId !== "" && goalNameId !== "") {
@@ -405,7 +387,7 @@ const AddPerformance = ({ isOpen, closeModal, id, isAFor, refreshData }) => {
         }
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
     return null;
   };

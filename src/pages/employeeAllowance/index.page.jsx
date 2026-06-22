@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablenew.jsx';
-import { axiosJWT } from '../Auth/AddAuthorization.jsx';
-import { useRouter } from 'next/router';
-import { Toaster, toast } from 'react-hot-toast';
-export default function employeeAllowance({ showOnlylist }) {
-    const router = useRouter();
-    const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { Toaster } from 'react-hot-toast';
+export default function employeeAllowance() {
 
     const columnss = [
         { "lebel": "Sr No", "name": "srNo", "issort": false },

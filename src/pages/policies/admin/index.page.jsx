@@ -7,29 +7,18 @@ import { axiosJWT } from '../../Auth/AddAuthorization';
 import DeleteModal from '../../Components/Popup/PolicyDeleteModal';
 import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles.js';
-export default function adminPolicies() {
+export default function AdminPolicies() {
   const router = useRouter();
-  const [isHistroyId, setIsHistroyId] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpenInfo, setIsModalInfoOpen] = useState(false);
   const [listheader, setListHeaders] = useState([]);
   
-  const onViewClick = (id) => {
-    setIsHistroyId(id);
-    setIsModalInfoOpen(true)
-  };
+  const onViewClick = () => {};
 const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
     const handleTabClick = (index) => {
       setActiveTab(index); // Update active tab index when a tab is clicked
     };
-  const openDetailpopup = async () => { setIsModalOpen(true); };
+  const openDetailpopup = async () => {};
 
-  const closeDetailpopup = async () => { setIsModalOpen(false) }
-
-  const closeInfopopup = async () => { setIsModalInfoOpen(false) }
-
-  const onHistoryClick = async (id) => {
-    setIsHistroyId(id);
+  const onHistoryClick = async () => {
     openDetailpopup();
   };
 
@@ -39,7 +28,7 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
 
     }
   };
-  const handleApprrovereq = (id) => { };
+  const handleApprrovereq = () => { };
 
   const handleDecommissionreq = async (data) => {
     const formattedData = {
@@ -84,7 +73,7 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
     setIsPolicyId(id);
     setPIsModalOpen(true)
   };
-  const closeDetailpopupRe = (id) => {
+  const closeDetailpopupRe = () => {
     setPIsModalOpen(false)
   };
   const [isDeleted, setIsDeleted] = useState(true);
@@ -116,15 +105,14 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
                 const response = await axiosJWT.get(`${apiUrl}/policy/policystats`);
                 const responsedata = response.data.data || {};
                const listheader = responsedata || {};
-                console.log(listheader);
                setListHeaders(listheader);
              } catch (error) {
-    
+    console.error(error)
             }
         };
 
  useEffect(() => {
-      console.log("User changed to tab:", activeTab);
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           fetchData();
 
   }, [activeTab]);

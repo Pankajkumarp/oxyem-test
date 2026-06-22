@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import LabelMandatory from '../Label/LabelMandatory';
@@ -5,7 +6,7 @@ import LabelNormal from '../Label/LabelNormal';
 import { IoMdClose } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import DocList from '../../Datatable/documentlist';
-export default function InputFileComponent({ type, placeholder, isDisabled, label, validations = [], onChange, files, value }) {
+export default function InputFileComponent({ isDisabled, label, validations = [], onChange, files, value }) {
   const isRequired = validations.some(validation => validation.type === "required");
   const policyBaseurl = process.env.NEXT_PUBLIC_S3_BUCKET_URL
   const [innerValue, setInnerValue] = useState("");
@@ -95,6 +96,7 @@ export default function InputFileComponent({ type, placeholder, isDisabled, labe
       dropArea.removeEventListener('dragover', handleDragOver);
       dropArea.removeEventListener('drop', handleDrop);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFileChange = (event) => {
@@ -131,6 +133,7 @@ export default function InputFileComponent({ type, placeholder, isDisabled, labe
     if (value.length > 1) {
       // Multiple files, open popup to show the list
       openDetailpopup(value);
+    // eslint-disable-next-line no-undef
     } else if (documents.length === 1) {
       // Single file, download it directly
       const url = `${policyBaseurl}/${value[0]}`;

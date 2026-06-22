@@ -1,10 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useCallback, useState, useEffect } from "react";
 import { useController } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
-import { FiUploadCloud, FiTrash2, FiEye } from "react-icons/fi";
+import { FiUploadCloud, FiTrash2 } from "react-icons/fi";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function FileUpload({ field, control, errors }: any) {
   const { field: controllerField } = useController({
     name: field.name,
@@ -53,6 +56,7 @@ const onDrop = useCallback((acceptedFiles: File[]) => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     accept: field.allowedFormats?.reduce((acc: any, ext: string) => {
       acc[`image/${ext}`] = [];
       acc[`application/${ext}`] = [];

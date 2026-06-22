@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 
 type CheckbokwithInputProps = {
@@ -14,19 +15,19 @@ export default function CheckbokwithInput({
   setValue,
   errors = {},
   isDisable = false
-}: CheckbokwithInputProps) {
+}: Readonly<CheckbokwithInputProps>) {
   const handleCheck = (option: string, checked: boolean) => {
     const newVal = { ...value };
-    if (!checked) {
-      delete newVal[option]; // remove option if unchecked
-    } else {
+    if (checked) {
       newVal[option] = 1; // default value
+    } else {
+      delete newVal[option]; // remove option if unchecked
     }
     setValue(field.name, newVal);
   };
 
   const handleInputChange = (option: string, val: number) => {
-  const safeValue = isNaN(val) || val < 1 ? 1 : val;
+  const safeValue = Number.isNaN(val) || val < 1 ? 1 : val;
   setValue(field.name, { ...value, [option]: safeValue });
 };
 

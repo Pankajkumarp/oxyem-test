@@ -8,7 +8,6 @@ export default function EducationInfo({ empId, apiBaseUrl,showbutton }) {
   const [educationInfo, setEducationInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [errorMsg, setErrorMsg] = useState('');
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [Formdata, setFormData] = useState([]);
@@ -53,6 +52,7 @@ export default function EducationInfo({ empId, apiBaseUrl,showbutton }) {
         }
       }
     } catch (error) {
+      console.error(error)
       setError('An error occurred while fetching education information');
     } finally {
       setLoading(false);
@@ -60,8 +60,9 @@ export default function EducationInfo({ empId, apiBaseUrl,showbutton }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchEducationInfo();
-    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empId]);
 
   const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);

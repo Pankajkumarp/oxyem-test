@@ -54,6 +54,7 @@ const AlertWithButton = ({ message, type = "warning", actionLabel, onAction }) =
           <button
             className="btn btn-primary"
             onClick={() => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
               onAction && onAction();
               setVisible(false);
             }}

@@ -16,7 +16,6 @@ export default function Projectallocation({ userFormdata }) {
     const [getID, setGetID] = useState("")
 
     const [AdduserContent, setAdduserContent] = useState(userFormdata);
-    const [apiResponse, setapiResponse] = useState();
     const [btpstpvalue, setBtpStpvalue] = useState({});
 
 
@@ -39,6 +38,7 @@ export default function Projectallocation({ userFormdata }) {
                     return result;
                 }, {});
                 setBtpStpvalue(extractedData)
+                // eslint-disable-next-line react-hooks/immutability
                 const mergedArray = mergeData(userFormdata, apiResponse);
                 const summarySection = mergedArray.section.find(section => section.SectionName === "Summary");
                 if (summarySection) {
@@ -50,15 +50,15 @@ export default function Projectallocation({ userFormdata }) {
                     });
                 }
                 setAdduserContent(mergedArray)
-                setapiResponse(apiResponse);
             }
 
         } catch (error) {
-
+            console.error(error)
         }
     }
     useEffect(() => {
         const { id } = router.query; // Extract the "id" parameter from the query object
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGetID(id)
         getProjectValue(id)
 
@@ -156,11 +156,10 @@ export default function Projectallocation({ userFormdata }) {
                     });
                 }
                 setAdduserContent(mergedArray)
-                setapiResponse(apiResponse);
             }
 
         } catch (error) {
-
+           console.error(error)
         }
     }
 

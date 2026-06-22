@@ -144,6 +144,7 @@ const FinancialChart = ({ activeTab }) => {
 
   useEffect(() => {
     if (activeTab === "Financial" && selectedCurrency) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchFinancialData();
     }
   }, [activeTab, selectedCurrency]);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import Link from 'next/link';
 import { axiosJWT } from '../../../Auth/AddAuthorization';

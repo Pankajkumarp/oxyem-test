@@ -4,7 +4,6 @@ import Select from 'react-select';
 import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../Auth/AddAuthorization';
 import { ToastNotification } from '../Components/EmployeeDashboard/Alert/ToastNotification';
-import { Toaster } from 'react-hot-toast';
 
 const customStyles = {
     content: {
@@ -38,13 +37,13 @@ export default function SelectUser({ isOpen, closeModal ,idShare ,selectedStatus
     if (selectedStatus) {
         // find matching option object based on selectedStatus string
         const matchedOption = options.find(opt => opt.value === selectedStatus);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedOption(matchedOption || null);
     }
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [selectedStatus]);
 
     const handleSubmit = async () => {
-        console.log("Selected:", selectedOption);
-
         const payload = {
             status:selectedOption.value,
             idShare: idShare

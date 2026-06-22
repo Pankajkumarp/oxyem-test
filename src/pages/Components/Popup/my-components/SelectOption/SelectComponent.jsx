@@ -38,7 +38,7 @@ export default function SelectComponent({label, validations = []}) {
               borderColor: state.isFocused ? 'var(--dropdownhoverbg)' : provided.borderColor // Ensure hover state does not override focus state
             }
           }),
-          indicatorSeparator: (provided, state) => ({
+          indicatorSeparator: (provided) => ({
             ...provided,
             backgroundColor: 'var(--dropdownhoverbg)' // Change border color when clicked to show options
           }),

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { IoDownloadOutline } from "react-icons/io5";
 import MUIDataTable from "mui-datatables";
 import { axiosJWT } from '../../Auth/AddAuthorization';
 
 export default function DocumentTable({ activeTab, allData }) {
   const [columns, setColumns] = useState([]);
   const [info, setInfo] = useState([]);
-  const [error, setError] = useState(null);
+  const error = null;
   
   
     const handleDownloadClick = async (path) => {
@@ -55,6 +54,7 @@ export default function DocumentTable({ activeTab, allData }) {
       return obj;
     });
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setColumns(columns);
     setInfo(info);
   }
@@ -86,8 +86,6 @@ const tableColumns = columns.map(column => ({
       style={{ cursor: "pointer", color: "#004D95" }}
       onClick={() => {
         const docs = rowData?.documents;
-
-        console.log("docs:", docs);
 
         // ✅ CASE 1: array of objects
         if (Array.isArray(docs) && docs[0]?.path) {

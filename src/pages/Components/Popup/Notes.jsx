@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable react-hooks/refs */
 import React, { useContext, useState, useEffect, useRef, useMemo  } from "react";
 import { MdClose } from "react-icons/md";
 import Drawer from 'react-modern-drawer'
@@ -20,10 +23,7 @@ const Editor = editorRef.current?.Editor;
         Editor: require("ckeditor5-custom-build")
       };
     }, []);
-    const [editorLoaded, setEditorLoaded] = useState(false);
-    useEffect(() => {
-        setEditorLoaded(true);
-      }, []);
+
   const [opportunityId, setOpportunity] = useState(id);
   useEffect(() => {
     setOpportunity(id)
@@ -86,11 +86,12 @@ const Editor = editorRef.current?.Editor;
 }, 1000);
       }
     } catch (error) {
+      console.error(error)
     }
   };
 
   useEffect(() => {
-    socket.on("commentAdded", (id, text) => {
+    socket.on("commentAdded", (id) => {
       const socketid = id.id
       if (socketid === opportunityId) {
         getExistingDetails(opportunityId);

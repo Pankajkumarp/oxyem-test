@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import Head from 'next/head';
 import 'react-datepicker/dist/react-datepicker.css';
 import currencySymbolMap from 'currency-symbol-map';
-import numberToWords from 'number-to-words';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { format } from "date-fns";
 import { FaTimes } from "react-icons/fa";
@@ -21,7 +20,7 @@ import TemplateFourInvoice from '../../Components/FormRender/TemplateTwo/fields/
 const Notes = dynamic(() => import('../../Components/Popup/Notes'), {
     ssr: false
 });
-export default function opportunity() {
+export default function CreateInvoiceViewId() {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const d = new Date(dateStr);
@@ -48,19 +47,14 @@ export default function opportunity() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [showPopup]);
-    const [open, setOpen] = useState(false);
     const router = useRouter();
     const [activeTab, setActiveTab] = useState("customerInformation");
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [templateFor, setTemplateFor] = useState("");
     const [templateData, setTemplateData] = useState({});
-    const [invoiceData, setInvoiceData] = useState({});
-    const [tableData, settableData] = useState({});
     const [allData, setAllData] = useState({});
     const [taxpercent, setTaxpercent] = useState(0);
     const [idInvoice, setIdInvoice] = useState("");
-    const [idInvoiceNo, setIdInvoiceNo] = useState("");
-    const [currencySymbol, setCurrencySymbol] = useState("");
     const [dataStatus, setDataStatus] = useState("");
     const { id } = router.query;
     const fetchInvoiceInfo = async (value) => {
@@ -73,22 +67,19 @@ export default function opportunity() {
                     setAllData(fetchedData)
                     setTemplateData(fetchedData.invoicePreview)
                     setTemplateFor(fetchedData?.template)
-                    setCurrencySymbol(fetchedData.currencyName)
-                    setIdInvoiceNo(fetchedData.invoiceNumber)
                     setDataStatus(fetchedData.status)
-                    setInvoiceData(fetchedData.invoicePreview.invoiceData)
-                    settableData(fetchedData.invoicePreview.tableData)
                     setTaxpercent(fetchedData.taxpercent)
                 }
 
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchInvoiceInfo(id);
         setIdInvoice(id)
     }, [id]);
@@ -107,11 +98,6 @@ export default function opportunity() {
     const closeNotesModal = async () => {
         setIsNotesModalOpen(false)
     }
-
-    const symbol = currencySymbolMap(currencySymbol);
-    const convertNumberToWords = (number) => {
-        return numberToWords.toWords(number);
-    };
 
     const handleWonClick = async () => {
         const payload = {
@@ -400,7 +386,7 @@ export default function opportunity() {
                                                                                                     {allData?.invoicePreview?.invoiceData?.BTP && (
                                                                                                         <div className="address-card">
                                                                                                             <div className='client-address-section'>
-                                                                                                                <span class="badge light mark-bg-BTP">Billing</span>
+                                                                                                                <span className="badge light mark-bg-BTP">Billing</span>
                                                                                                                 <p className='mt-1'>{allData.invoicePreview.invoiceData.BTP}</p>
                                                                                                             </div>
                                                                                                         </div>
@@ -408,7 +394,7 @@ export default function opportunity() {
                                                                                                     {allData?.invoicePreview?.invoiceData?.STP && (
                                                                                                         <div className="address-card">
                                                                                                             <div className='client-address-section'>
-                                                                                                                <span class="badge light mark-bg-SHTP">Shipping</span>
+                                                                                                                <span className="badge light mark-bg-SHTP">Shipping</span>
                                                                                                                 <p className='mt-1'>{allData.invoicePreview.invoiceData.STP}</p>
                                                                                                             </div>
                                                                                                         </div>
@@ -462,7 +448,7 @@ export default function opportunity() {
                                                                                                         <tr key={index}>
                                                                                                             <td>{index + 1}</td>
                                                                                                             <td>{item.description}</td>
-                                                                                                            <td className="text-end" s>
+                                                                                                            <td className="text-end" >
                                                                                                                 {currencySymbolMap(allData?.invoicePreview?.invoiceData?.currencyType)} {item.totalAmount}
                                                                                                             </td>
                                                                                                         </tr>

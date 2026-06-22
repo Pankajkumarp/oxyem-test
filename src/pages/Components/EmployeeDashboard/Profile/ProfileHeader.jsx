@@ -1,15 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
-import { IoLocationSharp } from "react-icons/io5";
-import { MdEdit, MdEmail, MdOutlineEdit } from "react-icons/md";
-import { FaPhone } from "react-icons/fa6";
+import { MdEdit } from "react-icons/md";
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import Edit from '../Edit/Edit';
 import Address from '../Edit/Address';
-import { FaRegEdit } from "react-icons/fa";
 import { Tooltip } from 'react-tooltip'
-import { GrTooltip } from "react-icons/gr";
 import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
-import AlertWithButton from '../Alert/AlerWithbutton';
 import styles from './ProfileHeader.module.css';
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -36,15 +33,13 @@ export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handel
     const [viewData, setViewData] = useState(null);
     const [editData, setEditData] = useState(null);
     const [formData, setFormData] = useState([]);
-    const [form, setFormDataAdd] = useState([]);
+    const form = [];
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isEditOpenADD, setIsEditOpenADD] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('');
     const [Imgpa, setImg] = useState('../assets/img/avatar-10.jpg');
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef(null);
     const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
-    const [showAddressAlert, setShowAddressAlert] = useState(false);
     const [hasShownAddressAlert, setHasShownAddressAlert] = useState(false);
 
     useEffect(() => {
@@ -53,7 +48,7 @@ export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handel
             !viewData.address &&
             !hasShownAddressAlert
         ) {
-            setShowAddressAlert(true);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setHasShownAddressAlert(true);
         }
     }, [viewData, hasShownAddressAlert]);
@@ -67,31 +62,11 @@ export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handel
         setIsEditOpen(false);
     };
 
-    const openEditModalADD = () => {
-        fetchFormAdd();
-        setIsEditOpenADD(true);
-    };
 
     const closeEditModalADD = () => {
         setIsEditOpenADD(false);
     };
 
-    const convertImageToBase64ViaCanvas = (url) => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                resolve(canvas.toDataURL('image/png'));
-            };
-            img.onerror = () => reject(new Error('Image load failed'));
-            img.src = url;
-        });
-    };
 
     const [ImgBase64, setImgBase64] = useState('');
     const fetchPersonalInfo = async () => {
@@ -131,7 +106,9 @@ export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handel
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchPersonalInfo();
+        // eslint-disable-next-line react-hooks/immutability
         fetchForm();
     }, [empId]);
 
@@ -196,19 +173,6 @@ export default function ProfileHeader({ empId, apiBaseUrl, hitAddressApi, handel
     const handleEditIconClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click(); // Trigger the file input click
-        }
-    };
-
-    const fetchFormAdd = async () => {
-        try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "addressInformation" } });
-
-            if (response.status === 200 && response.data.data) {
-                setFormDataAdd(response.data.data);
-            }
-        } catch (error) {
-            console.error("Error occurred during API call:", error);
         }
     };
 

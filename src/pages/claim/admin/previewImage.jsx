@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { MdClose } from "react-icons/md";
 
 import Drawer from 'react-modern-drawer'

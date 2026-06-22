@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/static-components */
 import React, { useState, useEffect, useRef } from "react";
 
 export default function RenderChart({ showGraph, chartData, totalCostGraph, colors }) {

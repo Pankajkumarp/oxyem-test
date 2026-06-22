@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import { axiosJWT } from '../Auth/AddAuthorization';
@@ -45,6 +45,7 @@ export default function AddClaim({userFormdata}) {
     }
     setContent(updatedArray);
 };
+  const handleChangess = () => {};
 
 
 const [SubmitButtonloader, setSubmitButtonloader] = useState(false);

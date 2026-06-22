@@ -5,7 +5,7 @@ import EmployeeSection from '../create-group/inner';
 import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import axios from 'axios';
 
-export default function index({userFormdata ,errorMessage, previousUrl}) { 
+export default function Group({userFormdata ,errorMessage, previousUrl}) { 
     const router = useRouter();
     const [details, setClaimDetails] = useState([]);
     const [cid, setCId] = useState('');
@@ -20,7 +20,9 @@ export default function index({userFormdata ,errorMessage, previousUrl}) {
       
     useEffect(() => {
           const { id } = router.query;
+          // eslint-disable-next-line react-hooks/immutability
           fetchInfo(id);
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCId(id)
       }, [router.query.id]);
 
@@ -37,7 +39,7 @@ export default function index({userFormdata ,errorMessage, previousUrl}) {
                 }
             }
         } catch (error) { 
-            
+            console.error(error)
         }
     };
 
@@ -85,9 +87,7 @@ export default function index({userFormdata ,errorMessage, previousUrl}) {
                             
                             assignedPermissionsField.availableOption = []; // Set to an empty array if no permissions are available
                         }
-                    } else {
-                        
-                    }
+                    } 
                 }
             }
 
@@ -123,8 +123,6 @@ export default function index({userFormdata ,errorMessage, previousUrl}) {
                             
                             assignedRolesField.availableOption = []; // Set to an empty array if no permissions are available
                         }
-                    } else {
-                        
                     }
                 }
             }
@@ -159,14 +157,13 @@ export default function index({userFormdata ,errorMessage, previousUrl}) {
                             
                             assignedPermissionsField.availableOption = []; // Set to an empty array if no permissions are available
                         }
-                    } else {
-                        
                     }
                 }
             }
 
             // End sections
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setContent(updatedFormData); // Update the state with the modified form data
         }
     }, [details]); // Effect runs whenever 'details' changes
@@ -215,7 +212,6 @@ export default function index({userFormdata ,errorMessage, previousUrl}) {
             if (error.response && error.response.status === 400) {
                 const errors = error.response.data.errors || [];
                 ToastNotification({ message: errors });
-                console.log(errors);
             }
         }
     };
@@ -278,7 +274,7 @@ export default function index({userFormdata ,errorMessage, previousUrl}) {
         userFormdata = response.data.data;
       }
     } catch (error) {
-      
+      console.error(error)
     }
   
     return {

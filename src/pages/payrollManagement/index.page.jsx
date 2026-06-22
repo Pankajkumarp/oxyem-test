@@ -14,15 +14,13 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import pageTitles from "../../common/pageTitles.js";
 import { MdOutlineFileDownload } from "react-icons/md";
 
-export default function payrollManagement() {
+export default function PayrollManagement() {
   const router = useRouter();
   const [columnss, setDatacoloum] = useState([]);
   const [data, setRowData] = useState([]);
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [listheader, setListHeaders] = useState([]);
-  const [activeStatus, setActiveStatus] = useState(null);
   const [status, setStatus] = useState();
-  const [activeTableTab, setActiveTableTab] = useState("");
   const [ischartopen, setIsChartOpen] = useState(false);
   const [monthlyData, setMonthlyData] = useState();
   const [monthlyPaymentData, setMonthlyPaymentData] = useState();
@@ -32,14 +30,9 @@ export default function payrollManagement() {
 
   const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
   const handleTabClick = (index) => {
-    setActiveTab(index); // Update active tab index when a tab is clicked
-    //    if (index === 0) {
-    //   setStatus(null); // Clear status when switching to dashboard
-    // }
+    setActiveTab(index);
   };
-  const handleEditClick = (id) => {
-    router.push(`/attendance/${id}`);
-  };
+
   const formatIndianAmount = (value) => {
   if (value >= 10000000) {
     return (value / 10000000).toFixed(1).replace(/\.0$/, '') + 'Cr';
@@ -52,24 +45,12 @@ export default function payrollManagement() {
   }
   return value;
 };
-const onChangeYear = (value) => {
-  if (value) {
-    setYearValue(value.value);
-  } else {
-    setYearValue(null);
-  }
-}; 
-  //  const fetchData = async (status = "") => {
-  //   try {
-  //     const response = await axiosJWT.get(`${apiUrl}/payroll/getSalaryDetails`,
-  //     status ? { params: { status } } : undefined );
   const fetchData = async () => {
     try {
       const response = await axiosJWT.get(`${apiUrl}/payroll/getSalaryDetails`);
       if (response) {
         setDatacoloum(response.data.data.formcolumns);
         const salaryDetails = response.data.data.salaryDetails;
-        console.log(salaryDetails);
         setRowData(salaryDetails);
       }
  
@@ -82,7 +63,6 @@ const onChangeYear = (value) => {
 
       if (responsestats) {
         const listheader = responsestats.data.data;
-        console.log(listheader);
         // const listheader = responsedata.listheader || {};
         setListHeaders(listheader);
       }
@@ -284,18 +264,21 @@ const onChangeYear = (value) => {
             setIsChartOpen(false);
           }
         } catch (error) {
-          // Handle error
+          console.error(error)
         }
       };
 
       chartData();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchData();
 
     }
   }, [selectedCurrency, activeTab]);
 
   useEffect(() => {
+    // eslint-disable-next-line no-undef
     if (activeTab === 1 && index === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatus(null);
       fetchData();
     }

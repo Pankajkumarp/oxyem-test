@@ -101,16 +101,14 @@ export default function LeaveList() {
                     }
                 ]);
                 setData(transformedArray)
-                console.log("table", response.data.data);  // Ensure to access the data from the response
             } catch (error) {
                 console.error("Error fetching data", error);
             }
         };
         fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-const onDeleteClick = (id) => {
-    console.log(id)
-  };
+const onDeleteClick = () => {};
 
   return (
     <div className="row">

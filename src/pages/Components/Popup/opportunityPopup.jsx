@@ -22,7 +22,6 @@ export default function OpportunityPopup({ isOpen, closeModal, opportunityId }) 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [status, setStatus] = useState("");
     const [summaryCost, setSummaryCost] = useState({});
-    console.log("summaryCost", summaryCost)
 
     const getAttendanceDetails = async (id) => {
         try {
@@ -42,6 +41,7 @@ export default function OpportunityPopup({ isOpen, closeModal, opportunityId }) 
 
     useEffect(() => {
         if (isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             getAttendanceDetails(opportunityId);
         }
     }, [isOpen, opportunityId]);

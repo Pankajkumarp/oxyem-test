@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MUIDataTable from "mui-datatables";
 import Select from 'react-select';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import AssignUserPopup from './add/AssignUserPopup';
@@ -37,19 +36,19 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
     const d = new Date(dateStr);
     return isNaN(d) ? "" : format(d, "dd MMM yyyy");
   };
-  const [existingData, setexistingData] = useState([]);
+  const existingData = [];
   const [formvalue, setFormvalue] = useState(userFormdata);
   const showButton = "";
   const pagename = "timeManagement";
   const [fields, setfields] = useState(formvalue.section[1].Subsection[0].fields);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setfields(formvalue.section[1].Subsection[0].fields)
   }, [formvalue]);
   const formbuttons = formvalue.section[1].buttons;
   const formfinalbuttons = formvalue.section[2].buttons;
   const [activeTab, setActiveTab] = useState(formvalue.section[0].SectionName);
   const [isTabclick, setisTabclick] = useState(true);
-  const [tableSection, settableSection] = useState("hide");
 
   const handleTabClick = (tab) => {
     if (isTabclick === true) {
@@ -98,9 +97,13 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
   const [endDateGet, setEndDateGet] = useState("");
   const [idAssignTaskId, setidAssignTaskId] = useState("");
   const [idProjectId, setidProjectId] = useState("");
-  const [projectNameValue, setprojectNameValue] = useState("");
   const [timesheetDescription, settimesheetDescription] = useState("");
-  const getProjectValue = async (id) => {
+
+
+
+  useEffect(() => {
+    const { id } = router.query; // Extract the "id" parameter from the query object
+      const getProjectValue = async (id) => {
     try {
       const response = await axiosJWT.get(
         `${apiUrl}/timesheet/viewTaskInfo`,
@@ -115,7 +118,6 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
       setidAssignTaskId(apiResponse.idAssignTask)
       setidProjectId(apiResponse.idProject)
       settimesheetDescription(apiResponse.timesheetDescription)
-      setprojectNameValue(apiResponse.projectName)
       const updatedFormValue = {
         ...formvalue,
         section: formvalue.section.map(section => {
@@ -163,16 +165,13 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
           autoExpanded[index] = true;
         }
       });
+      // eslint-disable-next-line react-hooks/immutability
       setExpandedRows(autoExpanded);
 
     } catch (error) {
       console.error("Error fetching project value", error);
     }
   };
-
-
-  useEffect(() => {
-    const { id } = router.query; // Extract the "id" parameter from the query object
     getProjectValue(id)
 
   }, [router.query.id]);
@@ -181,7 +180,9 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
     const newTaskOptionsR = taskOptions.filter(option =>
       !data.some(task => task.taskCode === option.value)
     );
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShoowTaskOptions(newTaskOptionsR)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -228,194 +229,6 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
   const [previousformvalue, setPreviousformvalue] = useState({});
 
 
-  // Generate columns dynamically from form fields
-  const columns = fields.map(field => ({
-    name: field.name,
-    label: field.label,
-    options: {
-      filter: field.isfilter,
-      sort: field.issort,
-      customBodyRender: (value, tableMeta, updateValue) => {
-        const rowErrors = errors[tableMeta.rowIndex] || {};
-        const error = rowErrors[field.name];
-        if (field.type === 'Text') {
-          return (
-            <>
-              <input
-                className={`form-control ${field.name === 'taskName' ? 'oxyem-custom-class-input' : ''}`}
-                value={value || ""}
-                disabled={field.isDisabled || ""}
-                placeholder={field.placeholder}
-                onChange={(e) => {
-                  updateValue(e.target.value);
-                  handleDataChange(tableMeta.rowIndex, field.name, e.target.value);
-                }}
-              />
-              {error && <div className="error">{error}</div>}
-            </>
-
-          );
-        } else if (field.type === 'srNo') {
-          return (
-            <span>{tableMeta.rowIndex + 1}</span>
-          )
-        } else if (field.type === 'dateCalculator') {
-          return (
-            <span className='date-f'>{value}</span>
-          )
-        } else if (field.type === 'Number') {
-          return (
-            <>
-              <input
-                className="form-control form-number-value"
-                type="number"
-                value={value ?? ""}
-                min={0}
-                max={100}
-                disabled={field.isDisabled}
-                placeholder={field.placeholder}
-                onChange={(e) => {
-                  let newValue = e.target.value;
-
-                  if (newValue === "") {
-                    updateValue("");
-                    handleDataChange(tableMeta.rowIndex, field.name, "");
-                    return;
-                  }
-
-                  newValue = Number(newValue);
-                  if (newValue < 0) return;
-                  if (newValue > 100) return;
-
-                  updateValue(newValue);
-                  handleDataChange(tableMeta.rowIndex, field.name, newValue);
-                }}
-              />
-              {error && <div className="error">{error}</div>}
-            </>
-
-          );
-        } else if (field.type === 'Projectlist') {
-          return (
-            <>
-              <Select
-                value={stateOptions.find(option => option.value === value)}
-                options={stateOptions}
-                isDisabled={field.isDisabled || ""}
-                onChange={(selectedOption) => {
-                  updateValue(selectedOption.value);
-                  handleDataChange(tableMeta.rowIndex, field.name, selectedOption.value);
-                }}
-                isClearable={true}
-                getOptionLabel={(option) => option.label}
-                getOptionValue={(option) => option.value}
-                className="oxyem-custom-dropdown"
-                placeholder="Select"
-                //closeMenuOnSelect={!isMulti} 
-                //hideSelectedOptions={!isMulti}
-                styles={reactSelectStyles}
-              />
-              {error && <div className="error">{error}</div>}
-            </>
-          );
-        } else if (field.type === 'Tasklist') {
-          return (
-            <>
-              <Select
-                value={taskOptions.find(option => option.value === value)}
-                options={showtaskOptions}
-                isDisabled={field.isDisabled || ""}
-                onChange={(selectedOption) => {
-                  updateValue(selectedOption ? selectedOption.value : "");
-                  handleDataChange(tableMeta.rowIndex, field.name, selectedOption ? selectedOption.value : "");
-                }}
-                isClearable={true}
-                getOptionLabel={(option) => option.label}
-                getOptionValue={(option) => option.value}
-                className="oxyem-custom-dropdown"
-                placeholder="Select"
-                maxMenuHeight={155}
-                //closeMenuOnSelect={!isMulti} 
-                //hideSelectedOptions={!isMulti}
-                styles={reactSelectStyles}
-              />
-              {error && <div className="error">{error}</div>}
-            </>
-          );
-        }
-        else if (field.type === 'Textwithicon') {
-          return (
-            <div className='oxtem-table-custom-pic'>
-              <AssignUserPopup
-                value={value || []}
-                projectid={previousformvalue.idProject || idGetProject}
-                onChange={(val, meta) => {
-                  updateValue(val);
-                  handleDataChange(
-                    tableMeta.rowIndex,
-                    field.name,
-                    val,
-                    meta
-                  );
-                }}
-              />
-              {error && <div className="error">{error}</div>}
-            </div>
-          );
-        } else if (field.type === 'Date') {
-          return (
-            <>
-              <DateTable
-                value={value || ""}
-                placeholder={field.placeholder}
-                otherAttributes={""}
-                onChange={(value) => {
-                  updateValue(value);
-                  handleDataChange(tableMeta.rowIndex, field.name, value);
-
-                }}
-                projectStartDate={previousformvalue.startDate || startDateGet}
-                projectEndDate={previousformvalue.endDate || endDateGet}
-                isModule={"AssignTaskNew"}
-              />
-              {error && <div className="error">{error}</div>}
-            </>
-          );
-        } else if (field.type === 'Status') {
-          return (
-            <>
-              <span className={`oxyem-table-mark-${value}`}>{value}</span>
-            </>
-          );
-        } else {
-          return value;
-        }
-      }
-    }
-  }));
-
-  const options = {
-    responsive: "standard",
-    filterType: 'checkbox',
-    search: false,
-    filter: false,
-    download: false,
-    print: false,
-    viewColumns: false,
-    selectableRows: 'none',
-    setRowProps: (row, dataIndex) => {
-      const hasError =
-        errors[dataIndex] &&
-        Object.values(errors[dataIndex]).some(Boolean);
-
-      return {
-        className: hasError ? 'error-row' : ''
-      };
-    }
-  };
-
-
-  const syncedPrimaryRef = useRef(new Set());
   const prevAssignedRef = useRef({})
   const buildEmployeeTasksPayload = (data, idEmployee) => {
     return data
@@ -489,6 +302,7 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
         invalidUsers
       };
     } catch (err) {
+      console.error(err)
       return {
         isValid: false,
         invalidUsers: [],
@@ -765,33 +579,14 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
     }
     setActiveTab("Review Timeline");
   }
-  const normalizedData = data.map((row) => {
-    console.log("fjgjg", data)
-    const updatedRow = { ...row };
-
-    const selectedOption = taskOptions.find(
-      opt => opt.value === row.taskCode
-    );
-
-    const parentTaskName = selectedOption?.label || "";
-    updatedRow.taskCode = row.taskCode;
-    if (Array.isArray(row.subTasks)) {
-      updatedRow.subTasks = row.subTasks.map((sub, index) => ({
-        ...sub,
-        taskCode: `${parentTaskName}-${String(index + 1).padStart(2, "0")}`
-      }));
-    }
-
-    return updatedRow;
-  });
   const formattedTaskList = data.map(task => {
-    const { subTasks, subTaskList, ...rest } = task;
+    const { subTasks, ...rest } = task;
 
     return {
       ...rest,
       subTasks: Array.isArray(subTasks)
         ? subTasks.map(sub => {
-          const { isSubTask, ...cleanSub } = sub;
+          const { ...cleanSub } = sub;
           return cleanSub;
         })
         : []
@@ -1037,7 +832,9 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
 
   const handleChangess = (currentIndex) => {
     const nextIndex = currentIndex + 1;
+    // eslint-disable-next-line no-undef
     if (nextIndex < content.section.length) {
+      // eslint-disable-next-line no-undef
       setActiveTab(content.section[nextIndex].SectionName);
     }
   };
@@ -1084,20 +881,8 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
 
     setPreviousformvalue(reciveData);
 
-    const mergedArrayV22 = [
-      { "attribute": "idProject", "attributevalue": value.idProject },
-      { "attribute": "startDate", "attributevalue": value.startDate },
-      { "attribute": "endDate", "attributevalue": value.endDate },
-      { "attribute": "projectCode", "attributevalue": matchedObject.projectCode }
-    ];
-
-    //const initialData = mergeDataWithFields(fields, mergedArrayV22);
-    //setData([initialData]);
-    //setexistingData(mergedArrayV22);
-
     setActiveTab("Allocate Effort");
     setisTabclick(true);
-    settableSection("show");
   };
   const removeError = (key) => {
     setSectionErrors((prevErrors) => {
@@ -1114,7 +899,9 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskTemplateConfig, settaskTemplateConfig] = useState([]);
 
-  const fetchApiText = async () => {
+
+  useEffect(() => {
+      const fetchApiText = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "taskTemplateConfig" } });
@@ -1122,10 +909,9 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
         settaskTemplateConfig(response.data.data.section)
       }
     } catch (err) {
-      ;
+      console.error(err)
     }
   };
-  useEffect(() => {
     fetchApiText();
 
   }, []);
@@ -1187,7 +973,7 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
           name: task.taskName || "Untitled Task",
           start,
           end,
-          progress: 100 || 0,
+          progress: 100 ,
           type: "task",
           status: "open",
           styles: {
@@ -1199,33 +985,6 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
       })
       .filter(Boolean);
   };
-
-
-  const deleteColumn = {
-    name: "delete",
-    label: " ",
-    options: {
-      filter: false,
-      sort: false,
-      empty: true,
-      customBodyRenderLite: (dataIndex) => {
-        return (
-          data.length > 1 && (
-            <span className="text-danger cursor-pointer table-del-btn">
-              <FaTrash
-                className="text-danger cursor-pointer"
-                title="Delete Row"
-                onClick={() => removeRowFromTable(dataIndex)}
-              />
-            </span>
-          )
-        );
-      },
-    },
-  };
-  const columnsWithDelete = [...columns, deleteColumn];
-
-
 
   const [expandedRows, setExpandedRows] = useState({});
   const toggleRow = (rowIndex) => {
@@ -1524,7 +1283,7 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
       })
     );
   };
-  const handleSubTaskChange = async (parentIndex, subIndex, field, value, meta = {}) => {
+  const handleSubTaskChange = async (parentIndex, subIndex, field, value) => {
     setData(prev =>
       prev.map((row, i) => {
         if (i !== parentIndex) return row;
@@ -1696,6 +1455,13 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
                                       {submitErrors}
                                     </div>
                                   )}
+                                  {/* {globalErrorsRef.current.length > 0 && (
+                                                <div className="alert alert-danger mb-3 mt-4">
+                                                  {globalErrorsRef.current.map((err, idx) => (
+                                                    <div key={idx} className='c-error-task'>{err}</div>
+                                                  ))}
+                                                </div>
+                                              )}*/}
                                   {formvalue.section.map((section, index) => (
                                     activeTab === section.SectionName && (
                                       <div key={index} className={`tab-pane ${activeTab === section.SectionName ? 'active' : ''}`}>
@@ -1755,15 +1521,9 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
                                                 </div>
                                               </div>
 
-                                              {globalErrorsRef.current.length > 0 && (
-                                                <div className="alert alert-danger mb-3 mt-4">
-                                                  {globalErrorsRef.current.map((err, idx) => (
-                                                    <div key={idx} className='c-error-task'>{err}</div>
-                                                  ))}
-                                                </div>
-                                              )}
+                                              
 
-                                              <div class="table-responsive table-responsive-timesheet-form">
+                                              <div className="table-responsive table-responsive-timesheet-form">
                                                 <table className="table oxyem-custom-table">
                                                   <thead>
                                                     <tr>

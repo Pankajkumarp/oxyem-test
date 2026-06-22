@@ -5,13 +5,13 @@ import { format } from 'date-fns';
 import { FaRegCalendarAlt } from "react-icons/fa";
 
 const DateTable = ({ placeholder, value, onChange , disabled}) => {
-  const isDisabled = false;
   const readonly = false;
   const [startDate, setStartDate] = useState(value);
   const datePickerRef = useRef(null); // Create a ref for the date picker input
 
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStartDate(value);
   }, [value]);
 
@@ -26,7 +26,7 @@ const DateTable = ({ placeholder, value, onChange , disabled}) => {
         console.log('Invalid date');
       }
     } catch (error) {
-      console.log('Error:', error.message);
+      console.error('Error:', error.message);
     }
     setStartDate(formattedDate)
     onChange(formattedDate);

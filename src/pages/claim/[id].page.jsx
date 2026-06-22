@@ -1,20 +1,23 @@
+/* eslint-disable react-hooks/immutability */
 import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router';
 import { axiosJWT } from '../Auth/AddAuthorization';
-import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import VerifyClaimPage from './admin/verify-claim';
 
-export default function index() {
+export default function ClaimId() {
     const router = useRouter();
     const [claimDetails, setClaimDetails] = useState([]);
-    const [claimid, setCalimId] = useState('');
+    const [claimid, setClaimid] = useState('');
 
     useEffect(() => {
         const { id } = router.query;
         fetchInfo(id);
-        setCalimId(id)
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setClaimid(id)
         fetchclaimAdmin(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.id]);;
 
     const [claimAdmin, setclaimAdmin] = useState({});
@@ -45,7 +48,7 @@ export default function index() {
                 }
             }
         } catch (error) {
-            // console.error(error); 
+            console.error(error); 
         }
     };
 
@@ -74,7 +77,7 @@ export default function index() {
                 }
             }
             const repairInvoiceFiles = value.documents || [];
-            const { documents, ...payload } = value;
+            const { ...payload } = value;
             const response = await axiosJWT.post(apiUrl, payload);
             if (response.status === 200) {
                 if (value.status === "infoprovided") {
@@ -85,7 +88,7 @@ export default function index() {
                 router.push(`/claim`);
             }
         } catch (error) {
-            if (error.response && error.response.status === 400) {
+            if (error.response?.status === 400) {
                 const errorMessage = error.response.data.errors || 'Failed to submit the form. Please try again later.';
                 ToastNotification({ message: errorMessage });
             } else {

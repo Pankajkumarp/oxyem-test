@@ -6,7 +6,6 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function RoledepartmentComponent({ label, validations = [], value, onChange, data }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
-  const [error, setError] = useState(null);
  
   useEffect(() => {
     const fetchOptions = async () => {
@@ -29,6 +28,7 @@ export default function RoledepartmentComponent({ label, validations = [], value
         // Extract the department value
         const departmentValue = departmentField.value.value;
         if (!departmentValue) {
+          /* empty */
         }
 
         const response = await axiosJWT.get(`${apiUrl}/dropdowns`, { 
@@ -42,7 +42,6 @@ export default function RoledepartmentComponent({ label, validations = [], value
           label: item.name,
           value: item.id,
         }));
-        console.log(optionsData,"this isoption ")
         setOptions(optionsData);
          setSelectedOption(null);
 
@@ -54,12 +53,12 @@ export default function RoledepartmentComponent({ label, validations = [], value
         }
       }
       } catch (error) {
-        console.error('Error fetching options:', error);
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 
     fetchOptions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleSelectChange = (selectedValue) => {

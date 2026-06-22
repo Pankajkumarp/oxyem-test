@@ -4,22 +4,18 @@ import CustomDataTable from '../../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
 import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import View from '../../../Components/Popup/ShiftDashboardHistroy.jsx';
 import Head from 'next/head';
 import { MdHourglassTop } from "react-icons/md";
+import Image from 'next/image'
 
-export default function index() {
-
+export default function PendingShift() {
     const router = useRouter();
     const [updleavelist, setUpdUserList] = useState([]);
     const [formcolumn, setFormColumn] = useState([]);
-    const [listheader, setListHeaders] = useState([]);
-
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHistroyId, setIsHistroyId] = useState("");
-
     const openDetailpopup = async () => {
         setIsModalOpen(true)
     }
@@ -41,9 +37,6 @@ export default function index() {
             const response = await axiosJWT.get(`${apiUrl}/pendingShift`);
 
             const responsedata = response.data.data || {};
-            const tablecolumn = responsedata.formcolumns || [];
-            const listheader = responsedata.listheader || {};
-            setListHeaders(listheader);
 
             const transformedArray = responsedata.shiftlist || [];
 
@@ -110,7 +103,7 @@ export default function index() {
                 },
             ];
 
-            const mappedArray = transformedArray.map((item, index) => {
+            const mappedArray = transformedArray.map((item) => {
                 const itemMap = {};
                 item.forEach(obj => {
                     itemMap[obj.name] = obj.value;
@@ -137,19 +130,23 @@ export default function index() {
             setFormColumn(columnData);
 
         } catch (error) {
-
+            console.error(error)
         }
     };
 
     useEffect(() => {
-        fetchData();
+        const fetchDatavalue = async () => {
+            await fetchData();
+        }
+
+        fetchDatavalue();
     }, []);
 
     const onViewClick = (id) => {
         router.push(`/employeeDashboard/${id}`);
     };
 
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
 
     };
 
@@ -159,8 +156,6 @@ export default function index() {
             "idAttendance": id,
             "rejectReason": data
         }
-
-        // console.log(onSuccess);
         const message = type === 'approved'
             ? 'You have successfully <strong>Approved</strong>!'
             : 'You have successfully <strong>Rejected</strong>!';
@@ -173,7 +168,15 @@ export default function index() {
                 onSuccess("clear");
                 toast.success(({ id }) => (
                     <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                        <img src='/assets/img/proposal-icon.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+                        <Image
+                            src="/assets/img/proposal-icon.png"
+                            alt="Proposal Icon"
+                            width={30}
+                            height={30}
+                            style={{
+                                marginRight: '10px'
+                            }}
+                        />
                         <span dangerouslySetInnerHTML={{ __html: message }}></span>
                         <button
                             onClick={() => toast.dismiss(id)}
@@ -204,7 +207,15 @@ export default function index() {
         } catch (error) {
             toast.success(({ id }) => (
                 <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                    <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+                    <Image
+                        src="/assets/img/wrong.png"
+                        alt="Wrong Icon"
+                        width={30}
+                        height={30}
+                        style={{
+                            marginRight: '10px'
+                        }}
+                    />
                     <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
                     <button
                         onClick={() => toast.dismiss(id)}
@@ -228,6 +239,7 @@ export default function index() {
                     color: '#FF000F',
                 },
             });
+            console.error(error)
             // Handle the error if any
 
         }

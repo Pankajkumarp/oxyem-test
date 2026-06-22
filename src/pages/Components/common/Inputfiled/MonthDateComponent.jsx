@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { FaRegCalendarAlt } from "react-icons/fa";
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 import { format } from 'date-fns';
 
-const DatePicker = ({ type, placeholder, readonly, isDisabled, label, value, validations = [], onChange, otherAttributes, showleave, selectEmpId }) => {
+const DatePicker = ({ readonly, isDisabled, label, value, validations = [], onChange }) => {
   const isRequired = validations.some(validation => validation.type === "required");
   // const [startDate, setStartDate] = useState(value ? value : new Date()); // Set initial state to current date if value is not provided
 
   const [startDate, setStartDate] = useState(''); 
   useEffect(() => {
     if (value !== "") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStartDate(value);
     }else{
       const startDate = new Date()
       setStartDate(startDate);
+      // eslint-disable-next-line react-hooks/immutability
       handleDateChange(startDate)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleDateChange = (date) => {
@@ -32,14 +34,12 @@ const DatePicker = ({ type, placeholder, readonly, isDisabled, label, value, val
         console.log('Invalid date');
       }
     } catch (error) {
-      console.log('Error:', error.message);
+      console.error('Error:', error.message);
     }
     setStartDate(formattedDate);
     onChange(formattedDate);
   };
 
-  // Set minDate to current date to disable previous dates
-  const minDate = new Date();
 
   return (
     <>

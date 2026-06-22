@@ -1,19 +1,19 @@
 
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import SecTab from '../Components/Employee/SecTab';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { Toaster } from 'react-hot-toast';
 
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function newJobpost({ payrollForm }) {
+export default function MangeJobpost({ payrollForm }) {
     const router = useRouter();
     const [AdduserContent, setAdduserContent] = useState(payrollForm);
 
     useEffect(() => {
         if (router.query.id) {
+            // eslint-disable-next-line react-hooks/immutability
             fetchJobDetails(router.query.id);
         }
     }, [router.query.id]);
@@ -29,6 +29,7 @@ export default function newJobpost({ payrollForm }) {
                 updateFormValues(fetchedJobData);
             }
         } catch (error) {
+            console.error(error)
         }
     };
     
@@ -37,7 +38,7 @@ export default function newJobpost({ payrollForm }) {
         updatedForm.section = updatedForm.section.map((section) => {
             section.Subsection = section.Subsection.map((subsection) => {
                 subsection.fields = subsection.fields.map((field) => {
-                    if (jobDetails.hasOwnProperty(field.name)) {
+                    if (Object.prototype.hasOwnProperty.call(jobDetails, field.name)) {
                         return {
                             ...field,
                             value: jobDetails[field.name], // Set value if matched
@@ -75,6 +76,7 @@ export default function newJobpost({ payrollForm }) {
                     router.push('/manageJob');
                 }
             } catch (error) {  
+                console.error(error)
             }
         };
 

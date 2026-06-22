@@ -8,7 +8,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
 import { HiUserGroup } from "react-icons/hi";
 
-export default function EmergencyInfo({ empId, apiBaseUrl, showbutton, getContactNumber }) {
+export default function EmergencyInfo({ empId, apiBaseUrl, getContactNumber }) {
     const [emergencyInfo, setEmergencyInfo] = useState([]);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [openSection, setOpenSection] = useState(true); // Set to true to open section by default
@@ -57,11 +57,14 @@ export default function EmergencyInfo({ empId, apiBaseUrl, showbutton, getContac
             }
         } catch (error) {
             setEmergencyInfo([])
+            console.error(error)
         }
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchEmergencyInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [empId]);
     const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
     const getsubmitformdata = async (value) => {
@@ -99,7 +102,7 @@ export default function EmergencyInfo({ empId, apiBaseUrl, showbutton, getContac
         setIsDeleteOpen(false);
     };
 
-    const deleteEmergencyContact = async (value) => {
+    const deleteEmergencyContact = async () => {
         try {
             const response = await axiosJWT.delete(`${apiBaseUrl}/emergencyContact`, {
                 data: {
@@ -107,13 +110,11 @@ export default function EmergencyInfo({ empId, apiBaseUrl, showbutton, getContac
                     idEmergencyContact: idEmergency
                 }
             });
-
             if (response.status === 200) {
                 fetchEmergencyInfo();
                 closeDeleteModal();
                 ToastNotification({ message: "Contact deleted successfully" });
             }
-
         } catch (error) {
             console.error("Error occurred during API call:", error);
         }

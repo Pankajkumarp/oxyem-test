@@ -9,7 +9,6 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
   const [topClients, setTopClients] = useState({});
   const [monthlyRevenueExpense, setMonthlyRevenueExpense] = useState({});
   const [topProjects, setTopProjects] = useState({});
-  const [currencyOptions, setCurrencyOptions] = useState([]);
   // const [selectedCurrency, setSelectedCurrency] = useState(null);
 
   const fetchClientFinancialData = async () => {
@@ -164,41 +163,9 @@ const ClientFinancialChart = ({ selectedCurrency }) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchClientFinancialData();
   }, [selectedCurrency]);
-
-  useEffect(() => {
-    const fetchCurrencyList = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axiosJWT.get(`${apiUrl}/dropdowns`, { params: { "isFor": "currencylist" } });
-        console.log(response, "this is responce")
-        const formattedOptions = response.data.data.map(item => ({
-          label: item.currencyName,
-          value: item.id,
-        }));
-        console.log(formattedOptions, "i am here ")
-        setCurrencyOptions(formattedOptions);
-        // Set default currency to IN
-        const inrOption = formattedOptions.find(option =>
-          option.label === "Indian Rupees - INR"
-        );
-
-        if (inrOption) {
-          setSelectedCurrency(inrOption.value);
-        }
-      } catch (error) {
-        console.error('Failed to fetch currency list', error);
-      }
-    };
-
-    fetchCurrencyList();
-  }, []);
-
-  const handleCurrencyChange = (selectedOption) => {
-    const value = selectedOption ? selectedOption.value : '';
-    setSelectedCurrency(value);
-  };
 
   return (
     <div className="row mb-3">

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { axiosJWT } from "../../Auth/AddAuthorization";
 import Profile from "../../rewards-management/profile";
 
-const UpcomingLeaveTab = ({ upcomingLeave }) => {
+const UpcomingLeaveTab = ( ) => {
   const [activeTab, setActiveTab] = useState(0);
   const [myReward, setReward] = useState([]);
   const [leaderBoards, setLeaderBoards] = useState([]);
@@ -118,7 +118,7 @@ const UpcomingLeaveTab = ({ upcomingLeave }) => {
                               <div className="left-panel panel">
                                 <Profile
                                   name={leaderBoard.employeeName}
-                                  imageurl={`${baseImageUrl}/${leaderBoard.profilePicPath}` || ""}
+                                  imageurl={`${baseImageUrl}/${leaderBoard.profilePicPath}`}
                                   size={"30"}
                                   profilelink={`${leaderBoard.profilePicPath}` || ""}
                                   role={""}

@@ -11,9 +11,9 @@ import { axiosJWT } from '../../Auth/AddAuthorization';
 import ViewPermission from './search/viewPermission';
 
 
-export default function administrative() {
+export default function Administrative() {
     const router = useRouter();
-    const onDeleteClick = (id) => { };
+    const onDeleteClick = () => { };
     useEffect(() => {
         const mainElement = document.querySelector('body');
         if (mainElement) {
@@ -61,11 +61,10 @@ export default function administrative() {
                 }, {});
                 setStatData(normalizedStats);
             }
-        } catch (error) {
-
-        }
+        } catch (error) {console.error(error)}
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchStatData();
     }, []);
     const ROLE_CARDS = [

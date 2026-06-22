@@ -4,21 +4,9 @@ import CustomDataTable from '../Components/Datatable/table.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
 
-export default function index() {
+export default function UserList() {
 
     const router = useRouter();
-
-    const [data, setData] = useState([]);
-
-      const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = date.getDate().toString().padStart(2, '0'); // Get day and pad it to 2 digits
-        const month = date.toLocaleString('en-US', { month: 'long' }); // Get full month name
-        const year = date.getFullYear(); // Get full year
-    
-        return `${day} ${month} ${year}`;
-    };
-
     const [updleavelist, setUpdUserList] = useState([]);
     const [formcolumn, setFormColumn] = useState([]);
     
@@ -30,13 +18,7 @@ useEffect(() => {
             const response = await axiosJWT.get(`${apiUrl}/employees`);
 
             const responsedata = response.data.data || {};
-            let tablecolumn = responsedata.formColumns || [];
-            
             const transformedArray = responsedata.employeeList || [];
-
-            tablecolumn = tablecolumn.filter(column => column.name !== 'idEmployee'); 
-            tablecolumn = tablecolumn.filter(column => column.name !== 'profilePicPath'); 
-
 
             const columnData = [
                 {
@@ -130,9 +112,7 @@ useEffect(() => {
         router.push(`/employeeDashboard/${id}`);
     };
 
-    const onDeleteClick = (id) => {
-        // console.log(id)
-      };
+    const onDeleteClick = () => {};
 
 
   return (

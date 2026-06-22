@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect, Suspense, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { getFieldByName, updatedSubsection, getFieldByName2 } from '../../common/commonFunctions';
-import axios from "axios";
+import { getFieldByName, updatedSubsection } from '../../common/commonFunctions';
 import RadioComponent from './common/Inputfiled/RadioComponent';
 import moment from 'moment-timezone';
 import { axiosJWT } from '../Auth/AddAuthorization';
@@ -88,17 +88,19 @@ const components = {
   'Attachment': dynamic(() => import('./common/Inputfiled/AttachmentComponent')),
 };
 
-const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChangeValue, content, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick, pagename, showButton, showleave, submitaddnlinfo, claimstatus, handleApprrovereqClaim, getChangessField, handleGetproject, handleAssetsformvalueClick, assetDocument, handleGetfiles, filegetpagename, getInstantValue, cancelClickAction, btpstpvalue, handleOnprocessBoarding, handelPreviewPdf, loaderSubmitButton, handleExportClick, getRewardData, handelAttendanceData, attachments, autofillData, isPageType, handlegetInfoClick, projectEndDatePM, projectStartDatePM }) => {
+const CommanForm = ({ fields, handleChangess, handleChangeValue, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick, pagename, showButton, showleave, submitaddnlinfo, handleApprrovereqClaim, getChangessField, handleGetproject, handleAssetsformvalueClick, handleGetfiles, filegetpagename, getInstantValue, cancelClickAction, btpstpvalue, handleOnprocessBoarding, handelPreviewPdf, loaderSubmitButton, handleExportClick, getRewardData, handelAttendanceData, attachments, autofillData, isPageType, handlegetInfoClick, projectEndDatePM, projectStartDatePM }) => {
 
   const [btnloader, setBtnLoader] = useState(false);
 
   const [btnloaderbelow, setBtnLoaderbelow] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBtnLoader(showButton)
   }, [showButton]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBtnLoaderbelow(loaderSubmitButton)
   }, [loaderSubmitButton]);
 
@@ -209,7 +211,7 @@ useEffect(() => {
             });
         })
         .catch(error => {
-
+      console.error(error)
         });
     }
   }, [fieldUpdate, formData.fromDate, formData.toDate, formData.idEmployee, lastToDate]); // Include lastToDate in the dependency array
@@ -293,17 +295,9 @@ useEffect(() => {
     return fields;
   }
 
-  const [fieldValues, setFieldValues] = useState({});
 
 
-  useEffect(() => {
-    if (attachments?.length > 0) {
-      setFieldValues(prev => ({
-        ...prev,
-        file: attachments
-      }));
-    }
-  }, [attachments]);
+
 
   const updateTitleAndPath = (fields, autofillData) => {
     fields.Subsection.forEach(subsection => {
@@ -334,7 +328,6 @@ useEffect(() => {
     });
     return fields;
   };
-  console.log("formData", formData);
 
   useEffect(() => {
     const hasValidFormData = fieldUpdate !== "" && (isModule === "createEmployee");
@@ -362,13 +355,13 @@ useEffect(() => {
                       setfieldUpdate(updatedFields);
                     })
                     .catch(error => {
-
+                         console.error(error)
                     });
                 });
             });
         })
         .catch(error => {
-
+            console.error(error)
         });
     }
   }, [formData.firstName, formData.lastName, formData.middleName, fieldUpdate, isModule]);
@@ -426,6 +419,7 @@ useEffect(() => {
           } catch (error) {
             const updatedFields = updateStartTime(fields, '');
             setfieldUpdate(updatedFields);
+            console.error(error)
           }
         }
       }
@@ -695,7 +689,7 @@ useEffect(() => {
             setfieldUpdate(updatedFields);
 
           } catch (error) {
-
+console.error(error)
           }
         }
       }
@@ -770,7 +764,7 @@ useEffect(() => {
         }
 
         if (pagename === "edit_allowcation") {
-
+/* empty */
         } else {
           if (pagename === "timeManagement") {
             submitformdata(formData);
@@ -801,7 +795,7 @@ useEffect(() => {
         setErrors(validationErrors);
       }
     } catch (error) {
-      // Handle error response
+      console.error(error)
     }
   };
 
@@ -815,7 +809,7 @@ useEffect(() => {
         setErrors(validationErrors);
       }
     } catch (error) {
-
+console.error(error)
     }
   };
   const handleValidationAddInfo = async () => {
@@ -829,9 +823,7 @@ useEffect(() => {
             if (validation.type === "required" && !value && validation.clkinfo !== "notRequired") {
               updatedErrors[field.name] = validation.message;
 
-            } else if (validation.type === "required" && validation.clkinfo === "notRequired") {
-
-            }
+            } else if (validation.type === "required" && validation.clkinfo === "notRequired") { /* empty */ }
           });
         });
       });
@@ -845,7 +837,7 @@ useEffect(() => {
               updatedErrors[field.name] = validation.message;
 
             } else if (validation.type === "required" && validation.clkinfo === "notRequired") {
-
+/* empty */
             }
           });
         });
@@ -870,10 +862,11 @@ useEffect(() => {
         setErrors(validationErrors);
       }
     } catch (error) {
+      console.error(error)
     }
   };
 
-  const handleChangeAdd = async (fieldName, value) => {
+  const handleChangeAdd = async () => {
 
 
   };
@@ -913,7 +906,7 @@ useEffect(() => {
       } else {
         setErrors(validationErrors);
       }
-    } catch (error) { }
+    } catch (error) {console.error(error)}
   };
 
   const handleUpdateOnboardStatus = async (e, buttonType, buttonvalue) => {
@@ -945,7 +938,7 @@ useEffect(() => {
       else if (pagename === "ticketInfo") {
         handleApprrovereqClaim(buttonType, formData);
       }
-    } catch (error) { }
+    } catch (error) {console.error(error)}
   };
 
   const [leaveInfo, setLeaveInfo] = useState([]);

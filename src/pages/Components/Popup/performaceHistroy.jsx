@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
-import { FaRegClock } from "react-icons/fa";
-import { MdOutlineLocationOn } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
-import Profile from '../commancomponents/profile';
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
 
-const performaceHistroy = ({ isOpen, closeModal, performanceId }) => {
+const PerformaceHistroy = ({ isOpen, closeModal, performanceId }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [performanceValue, setPerformanceValue] = useState([]);
@@ -35,6 +30,7 @@ const performaceHistroy = ({ isOpen, closeModal, performanceId }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(performanceId);
       document.body.classList.add("hide-body-scroll");
     } else {
@@ -134,4 +130,4 @@ const performaceHistroy = ({ isOpen, closeModal, performanceId }) => {
   );
 };
 
-export default performaceHistroy;
+export default PerformaceHistroy;

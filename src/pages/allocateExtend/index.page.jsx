@@ -1,6 +1,6 @@
 
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import SecTab from '../Components/Employee/SecTab.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { Toaster } from 'react-hot-toast';
@@ -9,15 +9,11 @@ import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function allocateExtend({ payrollForm }) {
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-
+export default function AllocateExtend({ payrollForm }) {
     const router = useRouter();
-    const data = router.query.data;
-    const [storeArray, setStoreArray] = useState(payrollForm);
-    const [AdduserContent, setAdduserContent] = useState(payrollForm);
+    const AdduserContent = payrollForm;
     
-    const getChangessField = async (value) => {};
+    const getChangessField = async () => {};
 
     function extractFields(data) {
         const result = {};

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 import { IoMdClose } from "react-icons/io";
-export default function InputFileComponent({ type, placeholder, label, validations = [], onChange, files, value }) {
+export default function InputFileComponent({ label, validations = [], onChange, files, value }) {
   const isRequired = validations.some(validation => validation.type === "required");
   const [innerValue, setInnerValue] = useState("");
   const [showValue, setShowValue] = useState(true);
@@ -12,6 +12,7 @@ export default function InputFileComponent({ type, placeholder, label, validatio
 
   useEffect(() => {
     if (value === "") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowValue(true)
     }else{
       if (typeof value === 'string') {
@@ -27,6 +28,7 @@ export default function InputFileComponent({ type, placeholder, label, validatio
 
   useEffect(() => {
     if (files) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedFiles(files);
     }
   }, [files]);
@@ -76,13 +78,13 @@ export default function InputFileComponent({ type, placeholder, label, validatio
       dropArea.removeEventListener('dragover', handleDragOver);
       dropArea.removeEventListener('drop', handleDrop);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files.length > 0) {
       const filesArray = Array.from(event.target.files);
       setSelectedFiles(filesArray);
-      console.log("filesArray", filesArray)
       onChange(filesArray); // Send the files array to the parent component
     }
   };

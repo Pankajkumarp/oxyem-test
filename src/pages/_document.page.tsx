@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/inline-script-id */
 import { Html, Head, Main, NextScript } from 'next/document'
 import Script from 'next/script'
  

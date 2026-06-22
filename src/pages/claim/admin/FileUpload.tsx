@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -38,6 +39,7 @@ export default function FileUpload({
       );
       setPreviews((prev) => [...prev, ...newPreviews]);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [files]
   );
 

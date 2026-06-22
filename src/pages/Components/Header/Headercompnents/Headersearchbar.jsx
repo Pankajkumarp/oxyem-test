@@ -1,18 +1,12 @@
-import React, {useContext, useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
 import SearchBar from './SearchBar';
-import { InputContext } from './InputContext.jsx';
-import  SearchResults from './SearchResults.jsx';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function Headersearchbar() {
-	const router = useRouter();
-	const { globalSearch } = useContext(InputContext);
 	const [employelist, setEmployelist] = useState('');
 
 
 	useEffect(() => {
-		const fetchProfileOptions = async (value) => {
+		const fetchProfileOptions = async () => {
 			try {
 				const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 				const response = await axiosJWT.get(`${apiUrl}/employees/employeesList`, { params: { "isFor": "" } })

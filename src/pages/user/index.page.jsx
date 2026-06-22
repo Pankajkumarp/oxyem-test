@@ -20,8 +20,6 @@ export default function User({ userFormdata, errorMessage, previousUrl }) {
   const headingContent = 'Create Account';
   const AdduserContent = userFormdata
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/employees';
-  const [empId, setEmpID] = useState('');
-  const [ErrorMsg, setErrorMsg] = useState('');
   const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
   const completehandleSubmit = async (value, myfiles, buttonval) => {
     setSubmitButtonLoading(true);
@@ -37,8 +35,6 @@ export default function User({ userFormdata, errorMessage, previousUrl }) {
 
         if (response.status === 200) {
           const employeeId = response.data.employeeId; // Ensure this matches your API response structure
-
-          setEmpID(employeeId);
           ToastNotification({ message: response.data.message });
           handeldocfiles(myfiles, employeeId);
           router.push(`/admin/user-list`);
@@ -46,31 +42,10 @@ export default function User({ userFormdata, errorMessage, previousUrl }) {
         }
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      if (error.response?.status === 400) {
         const errors = error.response.data.errors || [];
         const errorMessage = errors.map(err => err.msg).join('.</br>') || 'Failed to submit the form. Please try again later.';
-        //                   let errorMessage = 'Failed to submit the form. Please try again later.';
-
-        // if (error.response?.data) {
-        //   const { errors, message } = error.response.data;
-
-        //   if (Array.isArray(errors)) {
-        //     // case: [{ msg: "Error1" }, { msg: "Error2" }]
-        //     errorMessage = errors.map(err => err.msg || err).join('.</br>');
-        //   } else if (typeof errors === 'string') {
-        //     // case: "Single error string"
-        //     errorMessage = errors;
-        //   } else if (typeof message === 'string') {
-        //     // case: { message: "Something went wrong" }
-        //     errorMessage = message;
-        //   }
-        // }
-
-
-
-
         ToastNotification({ message: errorMessage });
-        console.log(errorMessage);
       } else {
         console.error('Error:', error);
         ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
@@ -90,8 +65,9 @@ export default function User({ userFormdata, errorMessage, previousUrl }) {
         const response = await axiosJWT.post(apiUrl, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-
-        console.log('Documents uploaded successfully', response.data);
+        if(response){
+          /* empty */
+        }
       }
     } catch (error) {
       console.error("Error occurred during API call:", error);
@@ -123,8 +99,6 @@ export default function User({ userFormdata, errorMessage, previousUrl }) {
                           <div className="center-part">
                             <div className="card-body oxyem-mobile-card-body">
                               <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                <p className='text-danger'>{ErrorMsg}</p>
-
                                 <EmployeeSection AdduserContent={AdduserContent} headingContent={headingContent} apiUrl={apiUrl} getsubmitformdatapreview={completehandleSubmit} handeldocfiles={handeldocfiles} loaderSubmitButton={SubmitButtonLoading} />
                               </div>
                             </div>
@@ -169,7 +143,7 @@ export async function getServerSideProps(context) {
       userFormdata = response.data.data;
     }
   } catch (error) {
-
+      console.error(error);
   }
 
   return {

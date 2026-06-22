@@ -16,55 +16,34 @@ export default function VerifyTicketPage({ userFormdata }) {
   const handleChangess = () => { };
   const handleApprrovereqTicket = () => { };
   const [ticketDetails, setTicketDetails] = useState([]);
-   const [statusTrack, setStatusTrack] = useState(''); 
-  const [tId, setTId] = useState('');
+  const [statusTrack, setStatusTrack] = useState('');
+  const { id } = router.query;
+  const tId = id;
   useEffect(() => {
-    const { id } = router.query;
-    fetchInfo(id);
-    setTId(id)
-  }, [router.query.id]);
+    const fetchInfo = async (value) => {
+      try {
+        if (value) {
+          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await axiosJWT.get(`${apiUrl}/ticket/ticketDetails`, { params: { idTicket: value } });    //, isfor: 'admin'
+          if (response.status === 200 && response.data.data) {
+            const fetchedData = response.data.data;
 
-  const fetchInfo = async (value) => {
-    try {
-      if (value) {
-        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axiosJWT.get(`${apiUrl}/ticket/ticketDetails`, { params: { idTicket: value } });    //, isfor: 'admin'
-        if (response.status === 200 && response.data.data) {
-          const fetchedData = response.data.data;
-          console.log("fetched data", fetchedData)
-
-          setTicketDetails(fetchedData);
+            setTicketDetails(fetchedData);
+          }
         }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
+    fetchInfo(id);
+  }, [id]);
+
+
 
   useEffect(() => {
-    setStatusTrack(ticketDetails.status);  
-  }, [ticketDetails]); 
-
-  // const [statusName, setStatusName] = useState("");
-
-  // useEffect(() => {
-  //   if (!ticketDetails.status) return;
-
-  //   const fetchStatusName = async () => {
-  //     try {
-  //       const response = await axios.get(`${apiUrl}/dropdowns`, {
-  //         params: { id: ticketDetails.status, isFor: "ticket_status" } // backend me filter karega
-  //       });
-  //       if (response.data?.data?.length > 0) {
-  //         setStatusName(response.data.data[0].name); // first result ka name
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching status name:", error);
-  //     }
-  //   };
-
-  //   fetchStatusName();
-  // }, [ticketDetails.status]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStatusTrack(ticketDetails.status);
+  }, [ticketDetails]);
 
   const initialContent = userFormdata
   const [content, setContent] = useState(initialContent);
@@ -87,169 +66,170 @@ export default function VerifyTicketPage({ userFormdata }) {
     setContent(updatedArray);
   };
 
- const submitformdata = async (value) => {
-  try {
-    const formattedData2 = {};
-
-    // Ticket id
-    formattedData2["idTicket"] = [tId];
-
-    // 🔹 If status is "inforeq", take comment + uploadDocument from form
-    if (ticketDetails.status === "inforeq") {
-      // value me dynamic form se values aa rahi hain
-      const additionalInfo = {};
-      content.section.forEach((section) => {
-        section.Subsection.forEach((subsection) => {
-          subsection.fields.forEach((field) => {
-            if (field.name === "comment") {
-              additionalInfo.comment = field.value || "";
-            }
-            if (field.name === "uploadDocument") {
-              additionalInfo.uploadDocument = field.value || "";
-            }
-          });
-        });
-      });
-
-      // backend ko bhejne ke liye merge karo
-      formattedData2["comment"] = additionalInfo.comment;
-      formattedData2["uploadDocument"] = additionalInfo.uploadDocument;
-  formattedData2["actionFor"] = "infoprovided";
-  formattedData2["idTicket"] = tId;
-
-    }
-   if (ticketDetails.status === "recalled") {
-  // sirf actionFor me submitted bhejna hai
-  formattedData2["actionFor"] = "submitted";
-  formattedData2["idTicket"] = tId;
-}
-
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_BASE_URL + "/ticket/updateStatus";
-    const response = await axiosJWT.post(apiUrl, formattedData2);
-
-    if (response.status === 200) {
-      ToastNotification({ message: response.data.message });
-      router.push(`/ticket`);
-    }
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.errors ||
-      "Failed to submit the form. Please try again later.";
-    ToastNotification({ message: errorMessage });
-  }
-};
-
-
-
-
-   const handleApprrovereqClaim = async (buttonType, formData) => {
-  const formattedData = {};
+  const submitformdata = async () => {
+    try {
       const formattedData2 = {};
-      // Convert the data to the required format
-      content.section.forEach(section => {
-        section.Subsection.forEach(subsection => {
-          subsection.fields.forEach(field => {
-  
-            // Check if the value is an object with a 'value' property
-            if (typeof field.value === 'object' && 'value' in field.value) {
-              formattedData[field.name] = field.value.value;
-            } else {
-              formattedData[field.name] = field.value;
-            }
+
+      // Ticket id
+      formattedData2["idTicket"] = [tId];
+
+      // 🔹 If status is "inforeq", take comment + uploadDocument from form
+      if (ticketDetails.status === "inforeq") {
+        // value me dynamic form se values aa rahi hain
+        const additionalInfo = {};
+        content.section.forEach((section) => {
+          section.Subsection.forEach((subsection) => {
+            subsection.fields.forEach((field) => {
+              if (field.name === "comment") {
+                additionalInfo.comment = field.value || "";
+              }
+              if (field.name === "uploadDocument") {
+                additionalInfo.uploadDocument = field.value || "";
+              }
+            });
           });
         });
-      });
-  
-      // Add additional keys
-      formattedData2["idTicket"] = tId;
-      formattedData2["actionFor"] = "recalled";
-      formattedData2["status"] = 'recalled';
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/ticket/updateStatus';
-        const response = await axiosJWT.post(apiUrl, formattedData2);
-        if (response.status === 200) {
-  
-          ToastNotification({ message: response.data.message });
-          router.push(`/ticket`);
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 400) {
-          const errorMessage = error.response.data.errors || 'Failed to submit the form. Please try again later.';
-          ToastNotification({ message: errorMessage });
-        } else {
-          ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
-        }
+
+        // backend ko bhejne ke liye merge karo
+        formattedData2["comment"] = additionalInfo.comment;
+        formattedData2["uploadDocument"] = additionalInfo.uploadDocument;
+        formattedData2["actionFor"] = "infoprovided";
+        formattedData2["idTicket"] = tId;
+
       }
-      };
+      if (ticketDetails.status === "recalled") {
+        // sirf actionFor me submitted bhejna hai
+        formattedData2["actionFor"] = "submitted";
+        formattedData2["idTicket"] = tId;
+      }
+
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL + "/ticket/updateStatus";
+      const response = await axiosJWT.post(apiUrl, formattedData2);
+
+      if (response.status === 200) {
+        ToastNotification({ message: response.data.message });
+        router.push(`/ticket`);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.errors ||
+        "Failed to submit the form. Please try again later.";
+      ToastNotification({ message: errorMessage });
+    }
+  };
+
+
+
+
+  const handleApprrovereqClaim = async () => {
+    const formattedData = {};
+    const formattedData2 = {};
+    // Convert the data to the required format
+    content.section.forEach(section => {
+      section.Subsection.forEach(subsection => {
+        subsection.fields.forEach(field => {
+
+          // Check if the value is an object with a 'value' property
+          if (typeof field.value === 'object' && 'value' in field.value) {
+            formattedData[field.name] = field.value.value;
+          } else {
+            formattedData[field.name] = field.value;
+          }
+        });
+      });
+    });
+
+    // Add additional keys
+    formattedData2["idTicket"] = tId;
+    formattedData2["actionFor"] = "recalled";
+    formattedData2["status"] = 'recalled';
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/ticket/updateStatus';
+      const response = await axiosJWT.post(apiUrl, formattedData2);
+      if (response.status === 200) {
+
+        ToastNotification({ message: response.data.message });
+        router.push(`/ticket`);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.errors || 'Failed to submit the form. Please try again later.';
+        ToastNotification({ message: errorMessage });
+      } else {
+        ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
+      }
+    }
+  };
 
   const cancelClickAction = () => {
-             router.push(`/ticket`);
-         };
-useEffect(() => {
-  if (ticketDetails?.status) {
-    const updatedForm = JSON.parse(JSON.stringify(userFormdata)); // deep clone
-    const allowedStatusForFields = "inforeq";
-    const allowedStatusForRecall = "submitted";
+    router.push(`/ticket`);
+  };
+  useEffect(() => {
+    if (ticketDetails?.status) {
+      const updatedForm = JSON.parse(JSON.stringify(userFormdata)); // deep clone
+      const allowedStatusForFields = "inforeq";
+      const allowedStatusForRecall = "submitted";
 
-    const statusLower = ticketDetails.status.toLowerCase();
+      const statusLower = ticketDetails.status.toLowerCase();
 
-    if (statusLower === "recalled") {
-      // Keep only Submit & Cancel buttons, remove all fields
-      if (Array.isArray(updatedForm.section)) {
-        updatedForm.section.forEach((section) => {
-          section.Subsection.forEach((subsec) => {
-            subsec.fields = []; // remove all fields
-          });
-
-          section.buttons = (section.buttons || []).filter(
-            (btn) => ["submit", "cancel"].includes(btn.type?.toLowerCase())
-          );
-        });
-      }
-    } 
-    else if (statusLower !== allowedStatusForFields) {
-      // Hide certain fields if not inforeq
-      if (Array.isArray(updatedForm.section)) {
-        updatedForm.section.forEach((section) => {
-          if (Array.isArray(section.Subsection)) {
+      if (statusLower === "recalled") {
+        // Keep only Submit & Cancel buttons, remove all fields
+        if (Array.isArray(updatedForm.section)) {
+          updatedForm.section.forEach((section) => {
             section.Subsection.forEach((subsec) => {
-              subsec.fields = (subsec.fields || []).filter(
-                (field) =>
-                  field.label !== "Additional Info" &&
-                  field.label !== "Upload Document"
-              );
+              subsec.fields = []; // remove all fields
             });
-          }
 
-          // Remove Submit button if not inforeq
-          section.buttons = (section.buttons || []).filter(
-            (btn) => btn.type?.toLowerCase() !== "submit"
-          );
+            section.buttons = (section.buttons || []).filter(
+              (btn) => ["submit", "cancel"].includes(btn.type?.toLowerCase())
+            );
+          });
+        }
+      }
+      else if (statusLower !== allowedStatusForFields) {
+        // Hide certain fields if not inforeq
+        if (Array.isArray(updatedForm.section)) {
+          updatedForm.section.forEach((section) => {
+            if (Array.isArray(section.Subsection)) {
+              section.Subsection.forEach((subsec) => {
+                subsec.fields = (subsec.fields || []).filter(
+                  (field) =>
+                    field.label !== "Additional Info" &&
+                    field.label !== "Upload Document"
+                );
+              });
+            }
 
-          // Remove Recall button if not submitted
+            // Remove Submit button if not inforeq
+            section.buttons = (section.buttons || []).filter(
+              (btn) => btn.type?.toLowerCase() !== "submit"
+            );
+
+            // Remove Recall button if not submitted
+            if (statusLower !== allowedStatusForRecall) {
+              section.buttons = section.buttons.filter(
+                (btn) => btn.label?.toLowerCase() !== "recall"
+              );
+            }
+          });
+        }
+      }
+      else {
+        // Inforeq case, still check recall button visibility
+        updatedForm.section.forEach((section) => {
           if (statusLower !== allowedStatusForRecall) {
-            section.buttons = section.buttons.filter(
+            section.buttons = (section.buttons || []).filter(
               (btn) => btn.label?.toLowerCase() !== "recall"
             );
           }
         });
       }
-    } 
-    else {
-      // Inforeq case, still check recall button visibility
-      updatedForm.section.forEach((section) => {
-        if (statusLower !== allowedStatusForRecall) {
-          section.buttons = (section.buttons || []).filter(
-            (btn) => btn.label?.toLowerCase() !== "recall"
-          );
-        }
-      });
-    }
 
-    setContent(updatedForm);
-  }
-}, [userFormdata, ticketDetails]);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setContent(updatedForm);
+    }
+  }, [userFormdata, ticketDetails]);
 
 
   return (

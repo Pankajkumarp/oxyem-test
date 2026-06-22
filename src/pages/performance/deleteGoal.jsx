@@ -3,13 +3,11 @@ import { MdClose } from "react-icons/md";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 import { MdDeleteForever } from "react-icons/md";
-const deleteGoal = ({ isOpen, closeModal, value, handleDelete }) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+const DeleteGoal = ({ isOpen, closeModal, value, handleDelete }) => {
   const [docummentDeleteData, setDocummentDelete] = useState({});
-  console.log("docummentDeleteData", docummentDeleteData);
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDocummentDelete(value);
       document.body.classList.add("hide-body-scroll");
     } else {
@@ -76,4 +74,4 @@ const deleteGoal = ({ isOpen, closeModal, value, handleDelete }) => {
   );
 };
 
-export default deleteGoal;
+export default DeleteGoal;

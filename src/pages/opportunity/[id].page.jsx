@@ -8,7 +8,7 @@ import { axiosJWT } from '../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
 import { useRouter } from 'next/router'
 import Head from 'next/head';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
@@ -32,7 +32,7 @@ const customDropdownStyles = {
         backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
 
     }),
-    indicatorSeparator: (provided, state) => ({
+    indicatorSeparator: (provided) => ({
         ...provided,
         backgroundColor: 'var(--dropdownhoverbg)',
         fontWeight: 'var(--dropdownfontweight)',
@@ -68,7 +68,7 @@ const customDropdownStyles = {
         whiteSpace: 'nowrap',
     }),
 };
-export default function opportunity({ userFormdata }) {  // Default to empty array if not provided
+export default function OpportunityId({ userFormdata }) {  // Default to empty array if not provided
 
     const router = useRouter();
     const showButton = "";
@@ -84,7 +84,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const [cuurencyId, setCurrencyId] = useState("");
     const [dataStatus, setDataStatus] = useState("");
     const [dataDocuments, setDataDocuments] = useState([]);
-    const [uploadedFiles, setUploadedFiles] = useState({});
     const { id } = router.query;
     const [dayCount, setDayCount] = useState("");
     const fetchOpportunityInfo = async (value) => {
@@ -93,18 +92,13 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                 const response = await axiosJWT.get(`${apiUrl}/opportunity/edit`, { params: { id: value } });
                 if (response.status === 200 && response.data.data) {
-
                     const fetchedData = response.data.data;
-
-
-                    console.log(fetchedData, "this is fetched data")
                     setDataOpportunity(fetchedData.dataOpportunity)
                     setDataStatus(fetchedData.status)
                     setCurrencyId(fetchedData.dataOpportunity.currencyType)
                     setDataEffort(fetchedData.dataEffort)
                     setDataOtherCost(fetchedData.dataOtherCost)
                     setDataDocuments(fetchedData.dataDocuments)
-
                     setSummaryCost(fetchedData.summaryCost)
                     const opportunitySection = formvalue.section.find(section => section.SectionName === "Opportunity Details");
                     const opportunitySubsection = opportunitySection.Subsection.find(subsection => subsection.SubsectionName === "Opportunity  Information");
@@ -114,16 +108,16 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                         }
                     });
                     setIsShow(true)
-                    console.log("cuurencyIdi", cuurencyId)
                 }
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchOpportunityInfo(id);
         setOpportunityId(id)
     }, [id]);
@@ -136,15 +130,14 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const [tabArray, setTabArray] = useState([]);
     useEffect(() => {
         if (!tabArray.includes(activeTab) && activeTab !== null) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTabArray((prevTabArray) => [...prevTabArray, activeTab]);
         }
     }, [activeTab]);
-
-    const [isTabclick, setisTabclick] = useState(true);
     const [tableSection, settableSection] = useState("show");
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const [existingData, setexistingData] = useState([]);
+    const existingData = [];
     // Merge existing data with form fields
     const mergeDataWithFields = (fields, existingData) => {
         const existingDataMap = existingData.reduce((acc, item) => {
@@ -157,8 +150,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             return acc;
         }, {});
     };
-    const initialData = mergeDataWithFields(fields, existingData);
-    const [data, setData] = useState([initialData]);
     const [departOptions, setDepartOptions] = useState([]);
     const [roleOptions, setRoleOptions] = useState([]);
     const [expenseOptions, setExpenseOptions] = useState([]);
@@ -244,7 +235,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
 
 
     const getRoleOptionsForUnit = async (unit, rowIndex) => {
-        const roleArray = dataEffort.map(item => item.role).filter(role => role); // filter out empty or null roles
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -372,36 +362,22 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
 
         if (initialSection && initialSection.Subsection.length > 0) {
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setfields(initialSection.Subsection[0].fields);
 
             // Initialize data for the active tab only if it's empty
 
             if (activeTab === "Opportunity Details" && dataOpportunity.length === 0) {
-
                 setDataOpportunity(initializeDataForTab(activeTab));
-
             } else if (activeTab === "Effort Details" && dataEffort.length === 0) {
-
                 setDataEffort(initializeDataForTab(activeTab));
-
             } else if (activeTab === "Other Cost" && dataOtherCost.length === 0) {
-
                 setDataOtherCost(initializeDataForTab(activeTab));
             } else if (activeTab === "Documents" && dataDocuments.length === 0) {
-
                 setDataDocuments(initializeDataForTab(activeTab));
-
             }
-
         }
-
     }, [activeTab]);
-
-
-
-
-
-
 
     const handleDeleteRow = (rowIndex) => {
         let updatedData;
@@ -423,7 +399,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             setDataDocuments(updatedData);
         }
     };
-    console.log("fields", fields)
     const columns = fields.map(field => ({
         name: field.name,
         label: field.label,
@@ -675,10 +650,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             const file = value;
             if (file) {
                 const fileKey = `${rowIndex}_${Date.now()}`;
-                setUploadedFiles(prev => ({
-                    ...prev,
-                    [fileKey]: file
-                }));
                 updatedData[rowIndex] = {
                     ...updatedData[rowIndex],
                     [fieldName]: file.name,
@@ -721,14 +692,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             }
             return newErrors;
         });
-
-        const existingClientField = formvalue.section[0].Subsection[0].fields.find(
-            field => field.name === "existingClient"
-        );
-        const clientNameField = formvalue.section[0].Subsection[0].fields.find(
-            field => field.name === "clientName"
-        );
-
         setFormvalue({ ...formvalue });
     };
 
@@ -755,6 +718,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                     overrideTotalCost: overrideTotalCost
                 };
             });
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setDataEffort(updatedData);
         }
 
@@ -799,7 +763,9 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
 
     const handleChangess = (currentIndex) => {
         const nextIndex = currentIndex + 1;
+        // eslint-disable-next-line no-undef
         if (nextIndex < content.section.length) {
+            // eslint-disable-next-line no-undef
             setActiveTab(content.section[nextIndex].SectionName);
         }
     };
@@ -904,7 +870,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                     clientNameField.isDisabled = true;
                 }
                 setFormvalue(updatedFormvalue);
-                setisTabclick(true);
                 settableSection("show");
                 const totalDays = response.data.totalDays;
 
@@ -923,7 +888,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                 }, 2000);
             }
         } catch (error) {
-            console.log("Error submitting form data:", error);
+            console.error("Error submitting form data:", error);
         }
     };
     const handleSubmit = async () => {
@@ -1001,6 +966,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
                 }
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const removeError = (key) => {
@@ -1018,7 +984,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     }
 
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-    const [isHistroyId, setIsHistroyId] = useState("");
     const openNotesModal = async () => {
         setIsNotesModalOpen(true)
     }
@@ -1032,6 +997,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
 useEffect(() => {
   if (activeTab !== "Effort Details") return;
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   setDataEffort(prev =>
     prev.map(row => ({
       ...row,
@@ -1442,6 +1408,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

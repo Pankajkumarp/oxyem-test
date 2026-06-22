@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useRef , useEffect} from "react";
@@ -18,6 +19,7 @@ export default function MonthYearPickerField({
   if (field.value) {
     setValue(field.name, field.value);
   }
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [field.value]);
   const datePickerRef = useRef<any>(null);
 

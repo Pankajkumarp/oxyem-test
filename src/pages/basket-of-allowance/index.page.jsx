@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/immutability */
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi.jsx';
@@ -12,10 +15,8 @@ import dynamic from 'next/dynamic';
 import pageTitles from '../../common/pageTitles.js';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function basketAllowance({ showOnlylist }) {
+export default function BasketAllowance( ) {
   const router = useRouter();
-  const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-  const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
@@ -23,9 +24,6 @@ export default function basketAllowance({ showOnlylist }) {
     setActiveTab(index); // Update active tab index when a tab is clicked
   };
 
-  const handleEditClick = (id) => {
-    router.push(`/attendance/${id}`);
-  };
 
   const onViewClick = (id) => {
     router.push(`/employeeAllowance/${id}`);
@@ -84,7 +82,6 @@ export default function basketAllowance({ showOnlylist }) {
           },
         });
 
-        fetchData();
       }
 
     } catch (error) {
@@ -114,6 +111,7 @@ export default function basketAllowance({ showOnlylist }) {
           color: '#FF000F',
         },
       });
+      console.error(error)
       // Handle the error if any
 
     }
@@ -149,6 +147,7 @@ export default function basketAllowance({ showOnlylist }) {
 
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAllowanceStats();
   }, []);
 
@@ -156,7 +155,6 @@ export default function basketAllowance({ showOnlylist }) {
   const [isChartOpen, setIsChartOpen] = useState(false);
 
   const [activeInactiveChartData, setActiveInactiveChartData] = useState();
-  const [employeeTypeChartData, setEmployeeTypeChartData] = useState();
   const [pfChartData, setPfChartData] = useState();
 
 useEffect(() => {
@@ -284,18 +282,15 @@ useEffect(() => {
 
   const [searchfilter, setSearchfilter] = useState({});
   const [activeStatus, setActiveStatus] = useState(null);
-  const [activeTableTab, setActiveTableTab] = useState("");
 
   const handleShowDataForStatus = (filterKey) => {
     setActiveTab(1); // switch to table tab
-    setActiveTableTab(filterKey);
     setActiveStatus(filterKey);
 
     if (filterKey === "clr") {
       setSearchfilter({});
       setActiveStatus(null);
     } else {
-      let filter = {};
 
       switch (filterKey) {
         case "All":

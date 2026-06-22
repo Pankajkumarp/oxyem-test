@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi.jsx';
@@ -14,13 +15,12 @@ import pageTitles from '../../common/pageTitles.js';
 
 import SelectComponent from '../Components/common/SelectOption/SelectComponent.jsx';
 import SearchFilter from '../Components/SearchFilter/SearchFilter.jsx';
-import { MdDeleteForever } from "react-icons/md";
 import Loader from '../Components/loader/loader.jsx';
-export default function index() {
+export default function ClaimDaashboard() {
 
     const router = useRouter();
-    const [updleavelist, setUpdUserList] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
+    const updleavelist = [];
+    const formcolumn = [];
     const [listheader, setListHeaders] = useState([]);
 
 
@@ -63,9 +63,9 @@ const [selectedCurrency, setSelectedCurrency] = useState(null);
             const response = await axiosJWT.get(`${apiUrl}/claims/claimStats`, { params: { "isFor": "employee" } });
             const responsedata = response.data.data || {};
             const listheader = responsedata.listheader || {};
-            console.log(listheader);
             setListHeaders(listheader);
         } catch (error) {
+            console.error(error)
 
         }
     };
@@ -122,6 +122,7 @@ const onChangeYear = (value) => {
 };  
 	const [isLoadingGraph, setIsLoadingGraph] = useState(false);
     useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setIsLoadingGraph(true);
         // if (setMouth && setYear && activeTab === 0) {
             const chartData = async () => {
@@ -235,6 +236,7 @@ tooltip: {
                     setIsChartOpen(true);
 					setIsLoadingGraph(false);
                 } catch (error) {
+                    console.error(error)
                     // Handle error
 
                 }
@@ -246,6 +248,7 @@ tooltip: {
     }, [selectedCurrency, setMouth, setYear, activeTab]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
         // chartData();
     }, []);
@@ -285,7 +288,7 @@ const handleCurrencyChange = (selectedOption) => {
         router.push(`/claim/${id}`);
     };
 
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
 
     };
 
@@ -363,6 +366,7 @@ const handleCurrencyChange = (selectedOption) => {
                     color: '#FF000F',
                 },
             });
+            console.error(error)
             // Handle the error if any
 
         }
@@ -400,6 +404,7 @@ const handleCurrencyChange = (selectedOption) => {
             if (response) {
                 setIsModalOpenRe(false)
                 fetchData();
+                const message = 'Successfully updated';
                 toast.success(({ id }) => (
                     <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
                         <img src='/assets/img/recall.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
@@ -455,15 +460,13 @@ const handleCurrencyChange = (selectedOption) => {
                     color: '#FF000F',
                 },
             });
-            let resparr = { type: "danger", message: error.message, popup: "recall" }
-            // setResponseData(resparr)
+            console.error(error)
         }
 
     };
 
     // handleShowDataForStatus
     const [searchfilter, setSearchfilter] = useState({});
-    const [activeTableTab, setActiveTableTab] = useState(""); // State to manage active tab index
 
     const [activeStatus, setActiveStatus] = useState(null);
 
@@ -475,7 +478,6 @@ const handleCurrencyChange = (selectedOption) => {
 
 
     const handleShowDataForStatus = (value) => {
-        setActiveTableTab(value);
         setActiveStatus(value);
         setActiveTab(1);
         if (value === "clr") {

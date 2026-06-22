@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 
-export default function TextComponent({ type, name, readonly, isDisabled, placeholder, label, value, validations = [], onChange }) {
+export default function TextComponent({ name, readonly, isDisabled, placeholder, label, value, validations = [], onChange }) {
   const isRequired = validations.some(validation => validation.type === "required");
 
   const [textData, settextData] = useState(value);
   useEffect(() => {
-    // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     settextData(value);
   }, [value]);
   
@@ -19,7 +19,7 @@ export default function TextComponent({ type, name, readonly, isDisabled, placeh
   return (
     <>
       {isRequired ? <LabelMandatory labelText={label} disabled={isDisabled}/> : <LabelNormal labelText={label} disabled={isDisabled}/>}
-      <input type='text' className={`form-control ${name === "idProjection" ? "hidetxtvale" : ""}`} autoComplete="off" placeholder={placeholder} value={textData} readonly={readonly} disabled={isDisabled} onChange={handleInputChange} />
+      <input type='text' className={`form-control ${name === "idProjection" ? "hidetxtvale" : ""}`} autoComplete="off" placeholder={placeholder} value={textData} readOnly={readonly} disabled={isDisabled} onChange={handleInputChange} />
     </>
   );
 }

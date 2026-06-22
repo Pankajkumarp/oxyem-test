@@ -4,7 +4,7 @@ import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 import { FaHistory } from "react-icons/fa";
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
-const assignDocuHistory = ({ isOpen, closeModal, isDoc }) => {
+const AssignDocuHistory = ({ isOpen, closeModal, isDoc }) => {
 
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -24,11 +24,13 @@ const assignDocuHistory = ({ isOpen, closeModal, isDoc }) => {
         }
       }
     } catch (error) {
+      console.error(error)
     }
   };
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getDocumentDetails(isDoc);
       document.body.classList.add("hide-body-scroll");
     } else {
@@ -36,6 +38,7 @@ const assignDocuHistory = ({ isOpen, closeModal, isDoc }) => {
       setStatus("")
       setDocummentHistory([])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isDoc]);
 
   return (
@@ -80,4 +83,4 @@ const assignDocuHistory = ({ isOpen, closeModal, isDoc }) => {
   );
 };
 
-export default assignDocuHistory;
+export default AssignDocuHistory;

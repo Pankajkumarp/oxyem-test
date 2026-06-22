@@ -8,18 +8,6 @@ const EmpPayrollChart = ({ empID }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [data, setSalaryStructue] = useState([]);
-  const [idEmp, setId] = useState('');
-  const [errorF, setErrorF] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const [allocationInfo, setallocationInfo] = useState([]);
-  const [allocationHeading, setallocationHeading] = useState([]);
-  const [fullData, setFullData] = useState({});
-  const [heading, setHeading] = useState('');
-  const [topHeader, setTopHeader] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [financialTable, setFinancialTable] = useState({});
-
   // 📊 Chart state
   const [chartData, setChartData] = useState({
     categories: [],
@@ -41,17 +29,6 @@ const EmpPayrollChart = ({ empID }) => {
 
       if (response && response.data) {
         const resData = response.data.data;
-
-        if (Object.keys(resData.finalProjection).length === 0) {
-          setErrorMessage(response.data.message);
-        } else {
-          setFinancialTable(resData.finalProjection || {});
-          setHeading(resData?.heading || '');
-          setTopHeader(resData?.header || []);
-          setFullData(resData);
-          setErrorMessage('');
-
-          // 📊 Set chart data from header
           const header = resData?.header;
           if (header) {
             const categories = Object.keys(header);
@@ -60,7 +37,6 @@ const EmpPayrollChart = ({ empID }) => {
             );
             setChartData({ categories, values });
           }
-        }
       }
     } catch (error) {
       console.error('Error fetching tax projection data:', error);
@@ -68,8 +44,6 @@ const EmpPayrollChart = ({ empID }) => {
   };
 
   const fetchtabledata = async (empID) => {
-    setErrorF('');
-    setLoading(true);
     try {
       const response = await axiosJWT.get(`${apiUrl}/payroll/getMyBoaHistory`, {
         params: {
@@ -79,29 +53,16 @@ const EmpPayrollChart = ({ empID }) => {
 
       if (response) {
         const salaryInfoe = response.data.data.salaryInfo;
-        const empInfoe = response.data.data.empInfo;
-
-        if (!Array.isArray(salaryInfoe) || !Array.isArray(empInfoe) ||
-    salaryInfoe.length === 0 || empInfoe.length === 0) {
-
-  setErrorF("Finance data is not available");
-}
-
         setSalaryStructue(salaryInfoe);
-        setallocationInfo(empInfoe);
-        setallocationHeading(response.data.data.heading);
       }
     } catch (error) {
       console.error('Error fetching payroll table data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     const initialize = async () => {
       if (empID !== '') {
-        setId(empID);
         await fetchtabledata(empID);
         fetchData(empID);
       }

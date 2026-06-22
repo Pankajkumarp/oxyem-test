@@ -1,19 +1,22 @@
+/* eslint-disable react-hooks/immutability */
 import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import { useRouter } from 'next/router';
 import VerifyClaimPage from './verify-claim.jsx';
-import { ToastNotification, ToastContainer } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 
-export default function index() {
+export default function ClaimAdminId() {
     const router = useRouter();
     const [claimDetails, setClaimDetails] = useState([]);
     const [claimid, setCalimId] = useState('');
     useEffect(() => {
         const { id } = router.query;
         fetchInfo(id);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCalimId(id);
         fetchclaimAdmin(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.id]);
 
 

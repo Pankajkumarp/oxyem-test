@@ -15,6 +15,7 @@ const RewardList = ({ viewMode }) => {
 
   useEffect(() => {
     // Reset page and clear rewards only when viewMode changes
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(0);
     setRewards([]);
     setHasMore(true);
@@ -24,6 +25,7 @@ const RewardList = ({ viewMode }) => {
   useEffect(() => {
     if (firstFetchRef.current) {
       firstFetchRef.current = false;
+      // eslint-disable-next-line react-hooks/immutability
       fetchRewards(0); // Fetch data only once when viewMode changes
     } else {
       fetchRewards(page);
@@ -44,6 +46,7 @@ const RewardList = ({ viewMode }) => {
       setHasMore(newData.length >= limit);
     } catch (error) {
       setHasMore(false);
+      console.error(error)
     }
     setLoading(false);
   };
@@ -105,7 +108,7 @@ const RewardList = ({ viewMode }) => {
             link.click();
     
         } catch (error) {
-            // console.error('Error downloading the file', error);
+             console.error('Error downloading the file', error);
         }
     };
     

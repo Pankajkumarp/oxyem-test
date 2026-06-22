@@ -1,8 +1,6 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from "react";
-import ReactModal from 'react-modal';
 import dynamic from 'next/dynamic';
-import { MdClose } from "react-icons/md";
-import EmployeeSection from "../../Employee/EmployeeSection.jsx";
 import Drawer from 'react-modern-drawer';
 
 //import styles 👇
@@ -11,18 +9,6 @@ import 'react-modern-drawer/dist/index.css';
 const DynamicForm = dynamic(() => import('../../CommanForm.jsx'), {
     ssr: false
 });
-
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 
 export default function Edit({ isOpen, closeModal, formData, getsubmitformdata, empId ,error ,addressid ,Dependentid ,loaderSubmitButton}) {
     const [content, setContent] = useState(formData);
@@ -176,6 +162,7 @@ export default function Edit({ isOpen, closeModal, formData, getsubmitformdata, 
     const handleChangess = (currentIndex) => {
         const nextIndex = currentIndex + 1;
         if (nextIndex < content.section.length) {
+            // eslint-disable-next-line no-undef
             setActiveTab(content.section[nextIndex].SectionName);
         }
     };

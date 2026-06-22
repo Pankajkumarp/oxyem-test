@@ -12,14 +12,14 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 import SelectComponent from '../Components/common/SelectOption/SelectComponent.jsx';
 
-export default function index() {
+export default function Myshift() {
 
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHistroyId, setIsHistroyId] = useState("");
     
-    const [updleavelist, setUpdUserList] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
+    const updleavelist = [];
+    const formcolumn = [];
     const [listheader, setListHeaders] = useState([]);
 
     const [ischartopen, setIsChartOpen] = useState(false);
@@ -66,10 +66,8 @@ export default function index() {
                 const responsedata = response.data.data || {};
                 const listheader = responsedata.listheader || {};
                 setListHeaders(listheader);
-                
-    
             } catch (error) {
-                
+                console.error(error)
             }
         };
     
@@ -144,8 +142,6 @@ export default function index() {
                 },
             });
 
-        // console.log(annualchart);
-
             setAnualChartData({
                 series: [{
                     name: '',
@@ -218,11 +214,9 @@ export default function index() {
                 },
                 
             });
-
             setIsChartOpen(true);
-
         } catch (error) {
-            
+           console.error(error) 
         }
     };
 
@@ -230,6 +224,7 @@ export default function index() {
     
 
 useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
     chartData();
 }, []);
@@ -238,14 +233,9 @@ useEffect(() => {
 
 
     const onViewClick = (id) => {
-
         router.push(`/employeeDashboard/${id}`);
     };
-
-    const onDeleteClick = (id) => {
-        
-      };
-
+    const onDeleteClick = () => {};
       const handleUpadateClick = async (id) => {
         router.push(`/attendance/${id}`);
     }

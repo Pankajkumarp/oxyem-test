@@ -1,4 +1,4 @@
-import {ApiError, ApiResponse, ClientError, IpInfo, IpregistryClient} from '@ipregistry/client';
+import { IpregistryClient} from '@ipregistry/client';
 export default async function handler(req, res) {
   try {
 	const client = new IpregistryClient('ira_lFI6hMNV4xfYgCItcw66J6SZxJA8nF4FpRp5');

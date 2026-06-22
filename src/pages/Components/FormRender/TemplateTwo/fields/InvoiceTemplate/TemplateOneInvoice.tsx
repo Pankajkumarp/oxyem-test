@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react'
 import currencySymbolMap from 'currency-symbol-map';
 import numberToWords from 'number-to-words';
 import { format } from "date-fns";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function TemplateOneInvoice({ InvoiceAllData }: any) {
     if (!InvoiceAllData || Object.keys(InvoiceAllData).length === 0) {
         return null;

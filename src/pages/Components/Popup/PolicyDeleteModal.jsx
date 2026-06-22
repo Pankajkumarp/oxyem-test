@@ -1,5 +1,5 @@
 import ReactModal from 'react-modal';
-import React, { useState } from "react";
+import React from "react";
 import { MdClose } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
 

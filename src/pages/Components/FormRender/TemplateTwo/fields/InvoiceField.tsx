@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -10,7 +12,7 @@ import TemplateTwoInvoice from './InvoiceTemplate/TemplateTwoInvoice';
 import TemplateThreeInvoice from './InvoiceTemplate/TemplateThreeInvoice';
 import TemplateFourInvoice from './InvoiceTemplate/TemplateFourInvoice';
 
-export default function InvoiceField({ field, control, errors, dynamicId, allValues, InvoiceAllData, setValue }: any) {
+export default function InvoiceField({ field, control, errors, dynamicId, InvoiceAllData, setValue }: any) {
   const [selectedTemplate, setSelectedTemplate] = useState(field.value || null);
   const [options, setOptions] = useState(field.option || []);
     useEffect(() => {
@@ -27,22 +29,23 @@ export default function InvoiceField({ field, control, errors, dynamicId, allVal
   const fetchOptions = async (value) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      let response = await axiosJWT.get(`${apiUrl}/dropdowns`, {
+      const response = await axiosJWT.get(`${apiUrl}/dropdowns`, {
         params: { isFor: value }
       });
       if (response.data.data) {
-        let optionsData = response.data.data.map((item) => ({
+        const optionsData = response.data.data.map((item) => ({
           label: item.name,
           value: item.id,
         }));
         setOptions(optionsData);
       }
     } catch (error) {
-
+      console.error(error)
     }
   };
   useEffect(() => {
     if (field.documentType) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchOptions(field.documentType);
     }
   }, [field.documentType, dynamicId]);
@@ -116,7 +119,7 @@ export default function InvoiceField({ field, control, errors, dynamicId, allVal
                   },
                   backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
                 }),
-                indicatorSeparator: (provided, state) => ({
+                indicatorSeparator: (provided) => ({
                   ...provided,
                   backgroundColor: 'var(--dropdownhoverbg)',
                   fontWeight: 'var(--dropdownfontweight)',

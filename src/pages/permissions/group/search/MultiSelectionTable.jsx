@@ -6,33 +6,6 @@ import { axiosJWT } from "../../../Auth/AddAuthorization.jsx";
 
 const ModuleRow = ({ item, level, expandedRows, setExpandedRows, rootModules, highlightChildren = false, }) => {
     const hasChildren = item.modules?.length > 0;
-    const getAllActiveIds = (mod) => {
-        if (!mod) return [];
-        let ids = mod.status !== "inactive" ? [mod.id] : [];
-        if (mod.modules) ids.push(...mod.modules.flatMap(getAllActiveIds));
-        return ids;
-    };
-    const getAncestors = (modules, targetId, ancestors = []) => {
-        for (let mod of modules) {
-            if (mod.id === targetId) return ancestors;
-            if (mod.modules) {
-                const res = getAncestors(mod.modules, targetId, [...ancestors, mod.id]);
-                if (res.length) return res;
-            }
-        }
-        return [];
-    };
-  
-    const findModuleById = (modules, id) => {
-        for (let mod of modules) {
-            if (mod.id === id) return mod;
-            if (mod.modules) {
-                const found = findModuleById(mod.modules, id);
-                if (found) return found;
-            }
-        }
-        return null;
-    };
     const toggleExpand = () => {
         setExpandedRows(prev =>
             prev.includes(item.id) ? prev.filter(id => id !== item.id) : [...prev, item.id]
@@ -89,6 +62,7 @@ export default function MultiSelectionTable({
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [sortConfig, setSortConfig] = useState({
         key: "name",
         direction: "asc",
@@ -99,7 +73,7 @@ export default function MultiSelectionTable({
 		let cleanedSearchFilter = {};
 		if (searchfilter && typeof searchfilter === 'object') {
 			cleanedSearchFilter = Object.fromEntries(
-			Object.entries(searchfilter).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+			Object.entries(searchfilter).filter(([ v]) => v !== '' && v !== null && v !== undefined)
 		);
 		}
         try {
@@ -132,27 +106,13 @@ export default function MultiSelectionTable({
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, rowsPerPage, sortConfig, search, apiPath, searchfilter]);
 
     const totalPages = Math.ceil(moduleInfo.totalCount / rowsPerPage);
     const currentModules = moduleInfo.modulesData;
-
-    /* ---------------- Selection Helpers ---------------- */
-
-    const getAllActiveIds = (mod) => {
-        if (!mod) return [];
-
-        let ids = mod.status !== "inactive" ? [mod.id] : [];
-
-        if (mod.modules?.length) {
-            ids.push(...mod.modules.flatMap(getAllActiveIds));
-        }
-
-        return ids;
-    };
-
-
 
     /* ---------------- Render ---------------- */
 

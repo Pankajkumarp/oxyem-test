@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import Drawer from 'react-modern-drawer';
@@ -205,7 +206,7 @@ const ImprovmentStrength = ({ isOpen, closeModal, id, refreshSummaryData, allStr
                         },
                         backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
                       }),
-                      indicatorSeparator: (provided, state) => ({
+                      indicatorSeparator: (provided) => ({
                         ...provided,
                         backgroundColor: '#7030a0',
                         fontWeight: 'var(--dropdownfontweight)',

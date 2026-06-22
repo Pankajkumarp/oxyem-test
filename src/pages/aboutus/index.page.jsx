@@ -1,17 +1,13 @@
 import Link from 'next/link';
 import Footer from '../Components/Logincomponents/Footer';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 import Head from 'next/head.js';
 import { copyRightText as footercr } from '../../common/content_en';
 import Navbar from '../Components/Navbar/index.page.jsx';
+import Image from "next/image";
 
 
 export default function aboutus() {
-	const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 	let footertext = footercr;
-	const router = useRouter();
 	const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
 	const webpath = basepath + 'aboutus'
 	return (
@@ -24,7 +20,7 @@ export default function aboutus() {
 			</Head>
 			<div className="main-wrapper">
 				<div className="about_page">
-					<Navbar page={"home"}/>
+					<Navbar page={"home"} />
 					<div className="about_page_inner">
 						<section className="about-section-bg-img">
 							<div className="overlayer-about">
@@ -49,7 +45,13 @@ export default function aboutus() {
 										<p>Know more about Oxytal at <Link target='_blank' href={"https://www.oxytal.com"}>www.oxytal.com</Link></p>
 									</div>
 									<div className="col-md-12 col-lg-6 text-center">
-										<img src="assets/img/about-img4.png" alt="home-image-2" width={"65%"} />
+										<Image
+											src="/assets/img/about-img4.png"
+											alt="Who We Are"
+											width={500}
+											height={500}
+											style={{ width: "65%", height: "auto" }}
+										/>
 									</div>
 								</div>
 							</div>
@@ -64,7 +66,12 @@ export default function aboutus() {
 									<div className="col-lg-6 col-xl-4">
 										<div className="about-box-single about-box-center">
 											<div className="about-img-box">
-												<img src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/allowance.png" alt="Payroll Management" />
+												<Image
+													src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/allowance.png"
+													alt="Payroll & Compensation"
+													width={100}
+													height={100}
+												/>
 											</div>
 											<div className="icon-box-content">
 												<h4 className="icon-box-title">Payroll & Compensation</h4>
@@ -76,7 +83,12 @@ export default function aboutus() {
 									<div className="col-lg-6 col-xl-4">
 										<div className="about-box-single about-box-center">
 											<div className="about-img-box">
-												<img src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/attendance.png" alt="Attendance Management" />
+												<Image
+													src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/attendance.png"
+													alt="Leave & Attendance"
+													width={100}
+													height={100}
+												/>
 											</div>
 											<div className="icon-box-content">
 												<h4 className="icon-box-title">Leave & Attendance</h4>
@@ -88,7 +100,12 @@ export default function aboutus() {
 									<div className="col-lg-6 col-xl-4">
 										<div className="about-box-single about-box-center">
 											<div className="about-img-box">
-												<img src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/shift-management.png" alt="Shift Management" />
+												<Image
+													src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/shift-management.png"
+													alt="Employee Lifecycle Management"
+													width={100}
+													height={100}
+												/>
 											</div>
 											<div className="icon-box-content">
 												<h4 className="icon-box-title">Employee Lifecycle Management</h4>
@@ -100,7 +117,12 @@ export default function aboutus() {
 									<div className="col-lg-6 col-xl-4">
 										<div className="about-box-single about-box-center">
 											<div className="about-img-box">
-												<img src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/user.png" alt="Performance Management" />
+												<Image
+													src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/user.png"
+													alt="Performance & Productivity"
+													width={100}
+													height={100}
+												/>
 											</div>
 											<div className="icon-box-content">
 												<h4 className="icon-box-title">Performance & Productivity</h4>
@@ -112,7 +134,12 @@ export default function aboutus() {
 									<div className="col-lg-6 col-xl-4">
 										<div className="about-box-single about-box-center">
 											<div className="about-img-box">
-												<img src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/report.png" alt="Reporting Management" />
+												<Image
+													src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/report.png"
+													alt="Reporting"
+													width={100}
+													height={100}
+												/>
 											</div>
 											<div className="icon-box-content">
 												<h4 className="icon-box-title">Reporting</h4>
@@ -124,7 +151,12 @@ export default function aboutus() {
 									<div className="col-lg-6 col-xl-4">
 										<div className="about-box-single about-box-center">
 											<div className="about-img-box">
-												<img src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/policy_mangment.png" alt="Policy Management" />
+												<Image
+													src="https://oxytal.s3.eu-west-1.amazonaws.com/Menu/policy_mangment.png"
+													alt="Claim & Policy Management"
+													width={100}
+													height={100}
+												/>
 											</div>
 											<div className="icon-box-content">
 												<h4 className="icon-box-title">Claim & Policy Management </h4>
@@ -140,15 +172,21 @@ export default function aboutus() {
 						<section className="about-section-space about_white">
 							<div className="container">
 								<div className="row align-items-center">
-								<div className="col-md-12 col-lg-6 text-center">
-										<img src="assets/img/innovation.webp" alt="home-image-2" width={"85%"} />
+									<div className="col-md-12 col-lg-6 text-center">
+										<Image
+											src="/assets/img/innovation.webp"
+											alt="Our Vision"
+											width={500}
+											height={500}
+											style={{ width: "85%", height: "auto" }}
+										/>
 									</div>
 									<div className="col-md-12 col-lg-6">
 										<h3 className="about-Single-section-title">Our Vision</h3>
 										<hr className="about_left" />
 										<p>To revolutionize the way businesses manage their employees by providing a <b>smart, data-driven, and automation-powered</b> HR platform that enhances productivity and employee satisfaction.</p>
 									</div>
-									
+
 								</div>
 							</div>
 						</section>

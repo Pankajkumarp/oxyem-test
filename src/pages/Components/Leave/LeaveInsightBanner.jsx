@@ -1,14 +1,9 @@
-import Link from "next/link";
-import { FcRefresh } from "react-icons/fc";
 import { FcOrgUnit } from "react-icons/fc";
 import { FcBookmark } from "react-icons/fc";
 
 export default function LeaveInsightBanner({
   totalLeaves,
   remainingLeaves,
-  peakMonth,
-  detailsUrl,
-  birthdayLeave,
   birthdayCominginDays,
   LOP,
 }) {

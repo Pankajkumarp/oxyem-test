@@ -1,14 +1,11 @@
-import React,{useState, useEffect } from 'react'
+import React from 'react'
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 
-export default function DateComponent({type, placeholder, label, value, validations = [] ,onChange,otherAttributes}) {
- // console.log("date",value)
- // const [isModalOpeninput, setIsModalOpeninput] = useState("2024-05-07");
+export default function DateComponent({ label, value, validations = [] ,onChange,otherAttributes}) {
   const isRequired = validations.some(validation => validation.type === "required");
   const handleInputChange = (e) => {
     const newValue = e.target.value;
-  //  console.log(newValue)
   onChange(newValue); // Notify parent component about value change
 };
 

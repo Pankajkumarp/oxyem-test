@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
-export default function payrollPreview() {
+export default function PayrollPreview() {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -26,12 +26,13 @@ export default function payrollPreview() {
             }
 
         } catch (error) {
-
+            console.error(error)
         }
     }
     useEffect(() => {
         const { id } = router.query; // Extract the "id" parameter from the query object
         if (id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             getProjectValue(id)
         }
 
@@ -136,7 +137,7 @@ export default function payrollPreview() {
                                                                     </div>
                                                                      </>
                                                               ) : (
-    <h6>Employee type is 'NonEmployee' - no Earning and Deduction information available.</h6>
+    <h6>Employee type is &apos;NonEmployee&apos; - no Earning and Deduction information available.</h6>
 )}
                                                                     <div className="col-md-12">
                                                                         <table className="table payroll_salary_info_table">

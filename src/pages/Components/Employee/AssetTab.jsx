@@ -25,9 +25,7 @@ export default function SecTab({
   converttoenable,
   showleave,
   getChangessField,
-  handleGetEmpDetail,
   handleGetproject,
-  LossOfPayApplicable,
   getsubmitformdatahitApi,
   assetid,
   handleExportClick,
@@ -86,10 +84,11 @@ export default function SecTab({
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent(AdduserContent);
   }, [AdduserContent]);
   
-  const filterSectionsBasedOnAssetType = (content, assetType) => {
+  const filterSectionsBasedOnAssetType = (content) => {
     if (!content || !Array.isArray(content.section)) {
       return content;
     }

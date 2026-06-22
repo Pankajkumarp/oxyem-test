@@ -30,6 +30,7 @@ export default function Loginform() {
 
 
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setdatamess(router.query.data)
 
 		Cookies.set('previousPath', router.asPath)
@@ -103,16 +104,12 @@ export default function Loginform() {
 			axios.post(`${apiUrl}/signin`, data)
 
 				.then(response => {
-					console.log("jo1")
-					const oneDay = 24 * 60 * 60 * 1000
 					const cookieName = 'accessToken';
 					const cookieName1 = 'refreshToken';
 					const accessToken1 = response.data.accessToken;
 					const refreshToken1 = response.data.refreshToken;
 					Cookies.set(cookieName, accessToken1, { secure: true });
 					Cookies.set(cookieName1, refreshToken1, { secure: true });
-					const accessToken = Cookies.get('accessToken');
-					//console.log(accessToken)
 					if (Oldpath) {
 						router.push(Oldpath);
 						Cookies.remove('Oldpath');
@@ -122,7 +119,6 @@ export default function Loginform() {
 				})
 
 				.catch(error => {
-					console.log("jo")
 					const errormessage = error.response.data.message;
 
 					if (error.code === 'ERR_NETWORK') {
@@ -171,37 +167,8 @@ export default function Loginform() {
 
 
 	};
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const closeModal = () => {
-		setIsModalOpen(false);
-	};
-	const handleClick = () => {
-		setIsModalOpen(true);
-	};
-	const handlegetmessage = (value) => {
-		Setverfiyerror("")
-		Setverfiyclick("")
-		Setverfiysuccess("")
-		setErrorNet(false)
-		setErrorNetGmail(false)
-		setErrorres("")
-		Setverfiymailsuccess(value);
 
-	};
-	const [value, setValue] = useState('');
-	const handleFormSubmit = (values) => {
-
-	};
-	const errorvalueget = (value) => {
-		setErrorNetGmail(true)
-		Setverfiyerror("")
-		Setverfiyclick("")
-		Setverfiymailsuccess("")
-		Setverfiysuccess("")
-		setErrorNet(false)
-		setErrorres("")
-	};
-
+	const handleClick = () => {};
 
 	return (
 		<>

@@ -2,27 +2,27 @@ import React from "react";
 import { Tooltip } from "react-tooltip";
 
 export default function Tracking({ claimDetails }) {
-  const { accountants, cfos, submittedBy, status } = claimDetails || {};
+  const {submittedBy, status } = claimDetails || {};
 
-  const generateListHtml = (items) => {
-    if (Array.isArray(items) && items.length > 0) {
-      return `<ul style="margin: 0; padding: 5px 0; list-style-type: none; text-align: left;">
-        ${items.map((item, index) => `<li>${index + 1}. ${item}</li>`).join("")}
-      </ul>`;
-    }
-
-    if (typeof items === "object" && items !== null && Object.keys(items).length > 0) {
-      return `<ul style="margin: 0; padding: 5px 0; list-style-type: none; text-align: left;">
-        ${Object.entries(items).map(([key, value]) => `<li>${key}: ${value}</li>`).join("")}
-      </ul>`;
-    }
-
-    if (typeof items === "string" || typeof items === "number" || typeof items === "boolean") {
-      return `<p>${items}</p>`;
-    }
-
-    return "<p>No data available</p>";
-  };
+  //const generateListHtml = (items) => {
+  //  if (Array.isArray(items) && items.length > 0) {
+  //    return `<ul style="margin: 0; padding: 5px 0; list-style-type: none; text-align: left;">
+  //      ${items.map((item, index) => `<li>${index + 1}. ${item}</li>`).join("")}
+  //    </ul>`;
+  //  }
+//
+  //  if (typeof items === "object" && items !== null && Object.keys(items).length > 0) {
+  //    return `<ul style="margin: 0; padding: 5px 0; list-style-type: none; text-align: left;">
+  //      ${Object.entries(items).map(([key, value]) => `<li>${key}: ${value}</li>`).join("")}
+  //    </ul>`;
+  //  }
+//
+  //  if (typeof items === "string" || typeof items === "number" || typeof items === "boolean") {
+  //    return `<p>${items}</p>`;
+  //  }
+//
+  //  return "<p>No data available</p>";
+  //};
 
   const getStatusClass = (step) => {
     switch (status) {

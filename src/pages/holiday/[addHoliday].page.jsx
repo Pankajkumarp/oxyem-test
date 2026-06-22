@@ -14,7 +14,7 @@ export default function Holiday({ leaveFormdata, errorMessage, previousUrl }) {
       router.push(previousUrl);
     }
   }, [errorMessage, router, previousUrl]);
-  const [AdduserContent, setAdduserContent] = useState(leaveFormdata);
+  const AdduserContent = leaveFormdata;
   const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
   const getsubmitformdata = async (value) => {
     setSubmitButtonLoading(true);
@@ -27,6 +27,7 @@ export default function Holiday({ leaveFormdata, errorMessage, previousUrl }) {
         ToastNotification({ message: response.data.message });
       }
     } catch (error) {
+      console.error(error)
       setSubmitButtonLoading(false);
     }
   };
@@ -98,7 +99,7 @@ export async function getServerSideProps(context) {
       leaveFormdata = response.data.data;
     }
   } catch (error) {
-
+console.error(error)
   }
 
   return {

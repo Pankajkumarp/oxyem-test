@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { Toaster } from 'react-hot-toast';
@@ -11,7 +10,7 @@ export default function TaxProjection() {
     const [financialTable, setFinancialTable] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const [allocationInfo, setAllocationInfo] = useState([]);
+    const allocationInfo = [];
     const [Heading, setHeading] = useState('');
     const [topheader, setTopHeader] = useState([]);
     const [fullData, setFullData] = useState([]);
@@ -36,7 +35,7 @@ export default function TaxProjection() {
                 }
             }
         } catch (error) {
-            // console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error);
         }
     };
 
@@ -56,11 +55,11 @@ export default function TaxProjection() {
                     fetchData(empId);
                 }
             } catch (error) {
-                // console.error('Error fetching profile options:', error);
+               console.error('Error fetching profile options:', error);
             }
         };
         fetchProfileOptions();
-    }, []);
+    }, [apiUrl]);
 
     
 

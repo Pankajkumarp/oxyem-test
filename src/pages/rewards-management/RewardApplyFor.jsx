@@ -51,7 +51,7 @@ const AssetHistory = ({ isOpen, closeModal, path, isHistroyId, description }) =>
                                         onClick={() => setSelectedOption('individual')}
                                     >
                                         <FaUser size={30} className="mb-2" />
-                                        <span className="reward-team-individual-name">Individual</span><span className="reward-team-individual-text">Recognize and appreciate individual team members' contributions, fostering motivation and a positive work culture.</span>
+                                        <span className="reward-team-individual-name">Individual</span><span className="reward-team-individual-text">Recognize and appreciate individual team members&apos; contributions, fostering motivation and a positive work culture.</span>
                                     </button>
 
                                     <button

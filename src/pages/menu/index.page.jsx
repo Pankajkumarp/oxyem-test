@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { axiosJWT } from '../Auth/AddAuthorization';
 import EmployeeSection from './inner';
@@ -11,7 +11,7 @@ export default function User({ userFormdata }) {
     const router = useRouter();
     const AdduserContent = userFormdata
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/permission/assignMenu';
-    const [ErrorMsg, setErrorMsg] = useState('');
+    const ErrorMsg = '';
 
     const completehandleSubmit = async (value) => {
         const formattedData = {};

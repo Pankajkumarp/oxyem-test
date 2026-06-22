@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-export default function ClaimHistoryEnhanced({ items1 = [] }) {
+export default function ClaimHistoryEnhanced() {
 
   // Track open collapsed threads
    const items = [

@@ -12,7 +12,7 @@ import { FaCheck } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { Toaster, toast } from 'react-hot-toast';
-export default function createGroup() {
+export default function CreateGroup() {
     const [groupName, setGroupName] = useState("");
     const [roleIds, setRoleIds] = useState([]);
     const [userIds, setUserIds] = useState([]);
@@ -47,12 +47,13 @@ export default function createGroup() {
                 }
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchpermissionInfo(id);
         setIdgroupId(id);
     }, [id]);
@@ -118,21 +119,25 @@ export default function createGroup() {
     };
     useEffect(() => {
         if (!submitted) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setErrors(prev => ({ ...prev, group: groupName.trim() === "" }));
     }, [groupName]);
 
     useEffect(() => {
         if (!submitted) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setErrors(prev => ({ ...prev, role: roleIds.length === 0 }));
     }, [roleIds]);
 
     useEffect(() => {
         if (!submitted) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setErrors(prev => ({ ...prev, user: userIds.length === 0 }));
     }, [userIds]);
 
     useEffect(() => {
         if (!submitted) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setErrors(prev => ({ ...prev, module: moduleIds.length === 0 }));
     }, [moduleIds]);
 

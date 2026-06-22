@@ -1,11 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState} from "react";
 import ReactModal from 'react-modal';
-import Select from 'react-select';
 import { MdClose } from "react-icons/md";
-import Profile from '../commancomponents/profile';
-import { FaPlus } from "react-icons/fa6";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { GrCheckboxSelected } from "react-icons/gr";
 const customStyles = {
     content: {
         background: '#fff',
@@ -21,7 +16,7 @@ const customStyles = {
     },
 };
 
-export default function assetInfo({ isOpen, closeModal }) {
+export default function AssetInfo({ isOpen, closeModal }) {
 
     const tabs = [
         { label: 'Asset Information', value: 'Asset' },

@@ -1,26 +1,21 @@
 import React, { useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import axios from "axios";
-import Cookies from 'js-cookie';
-import {useRouter} from 'next/router'
 const components = {     
- //'Select': dynamic(() => import('./common/SelectOption/SelectComponent')),
  'Button': dynamic(() => import('./common/Buttons/ButtonComponent')),
   'Email': dynamic(() => import('./common/Inputfiled/EmailComponent')),
   'Password': dynamic(() => import('./common/Inputfiled/PasswordComponent')),
 };
 
 const DynamicForm = ({ fields, apiurl, gethandleChange }) => { 
-  const router = useRouter()  
   const [errors, setErrors] = useState([]);
-  const [errorres, setErrorres] = useState('');
+  const errorres =  '';
   const allkeys = Object.fromEntries(fields.fields.map(item => [item.name, '']));
   const filteredObj = Object.fromEntries(
     Object.entries(allkeys).filter(([key, value]) => value !== undefined && key !== 'undefined')
   );
   const [formData, setFormData] = useState(filteredObj);
 
- // console.log(formData)
   const handleChange = (fieldName, value) => {
     setFormData((formData) => ({
       ...formData,
@@ -35,7 +30,6 @@ const DynamicForm = ({ fields, apiurl, gethandleChange }) => {
 
 
    const handleValidation  = async (formData) => { 
-  //  console.log("tttt", formData);
     const updatedErrors = {}; 
     fields.fields.forEach((mainitem) => { 
       mainitem.validations.forEach((item) => {       
@@ -60,7 +54,6 @@ const DynamicForm = ({ fields, apiurl, gethandleChange }) => {
      if (Object.keys(validationErrors).length === 0) {    
 		  const response = await axios.post(`${apiurl}`, formData)
       const apiresponse = response.data != "" ? response.data :"";
-      //console.log("yyy",apiresponse.qrimage)
       gethandleChange(apiresponse)
      } else {
       // Update state with validation errors
@@ -70,8 +63,7 @@ const DynamicForm = ({ fields, apiurl, gethandleChange }) => {
 			
 		} catch (error) {    
       
-			const errormessage  = error.response.data
-     // console.log("666",errormessage)  
+			const errormessage  = error.response.data 
 			gethandleChange(errormessage)
 		  // Handle network error or other exceptions
 		  }

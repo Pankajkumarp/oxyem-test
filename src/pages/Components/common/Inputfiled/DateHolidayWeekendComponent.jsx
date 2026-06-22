@@ -91,12 +91,15 @@ const isWeekend = (date) => {
 
 useEffect(() => {
   if (days.length === 0) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchInfo();
   }
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
   const isRequired = validations.some(validation => validation.type === "required");
   const datePickerRef = useRef(null);
   useEffect(() => {
+// eslint-disable-next-line react-hooks/set-state-in-effect
 setStartDate(value ? new Date(value) : null);
 }, [value]);
 
@@ -111,7 +114,7 @@ setStartDate(value ? new Date(value) : null);
         console.log('Invalid date');
       }
     } catch (error) {
-      console.log('Error:', error.message);
+      console.error('Error:', error.message);
     }
     setStartDate(date);
     onChange(formattedDate);

@@ -1,23 +1,10 @@
 import React, { useEffect } from 'react';
 import { jsPDF } from 'jspdf';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
-import { useRouter } from 'next/router';
 import { Tooltip } from 'react-tooltip';
 import Select from '../../Components/common/SelectOption/SelectComponent';
 
 export default function Index() {
-    const router = useRouter();
-
-    const columnData = [
-        { label: 'Sr No', name: 'srno' },
-        { label: 'Id', name: 'id' },
-        { label: 'Product Name', name: 'productName' },
-        { label: 'Product Code', name: 'productCode' },
-        { label: 'Size', name: 'size' },
-        { label: 'Properties', name: 'properties' },
-        { label: 'Status', name: 'status' }
-    ];
-
     const mockData = [
         [
             { name: 'srno', value: 1 },
@@ -40,8 +27,6 @@ export default function Index() {
     ];
 
     const generatePDF = (template) => {
-
-        console.log(template);
         const doc = new jsPDF();
         const lineHeight = 10;
         let yOffset = 20;
@@ -55,7 +40,7 @@ export default function Index() {
             doc.text('---------------------------------------------', 10, yOffset);
             yOffset += lineHeight;
 
-            mockData.forEach((row, index) => {
+            mockData.forEach((row) => {
                 row.forEach((col) => {
                     doc.text(`${col.name}: ${col.value}`, 10, yOffset);
                     yOffset += lineHeight;
@@ -69,7 +54,7 @@ export default function Index() {
             yOffset += lineHeight;
 
             doc.setFontSize(14);
-            mockData.forEach((row, index) => {
+            mockData.forEach((row) => {
                 doc.text(`Product: ${row.find(col => col.name === 'productName').value}`, 10, yOffset);
                 yOffset += lineHeight;
 

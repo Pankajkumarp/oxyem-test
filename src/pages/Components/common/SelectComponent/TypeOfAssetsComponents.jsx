@@ -1,11 +1,11 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
 import SelectRole from '../SelectOption/SelectComponent';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 
-export default function SelectComponent({ label, validations = [], value, onChange, data, pagename, name ,selectedAsset }) {
+export default function SelectComponent({ label, validations = [], onChange, data, pagename, name ,selectedAsset }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(selectedAsset);
-  const [error, setError] = useState(null);
   const [initialDepartmentValue, setInitialDepartmentValue] = useState('');
 
 
@@ -25,7 +25,7 @@ export default function SelectComponent({ label, validations = [], value, onChan
         }));
         setOptions(optionsData);
       } catch (error) {
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 
@@ -53,7 +53,7 @@ export default function SelectComponent({ label, validations = [], value, onChan
         fetchOptions(departmentValue);
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   }, [data, initialDepartmentValue,selectedAsset]);
 

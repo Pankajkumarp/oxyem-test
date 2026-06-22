@@ -1,7 +1,7 @@
 import React from 'react';
 import { IoDownloadOutline } from 'react-icons/io5';
 
-export default function DocumentDetails({ documents, claimDetails }) {
+export default function DocumentDetails({ documents }) {
   const handleDownload = (filePath) => {
     const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
     const fileUrl = `${baseUrl}/${filePath}`;

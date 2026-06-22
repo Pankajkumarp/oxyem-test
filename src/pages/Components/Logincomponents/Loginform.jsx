@@ -1,8 +1,6 @@
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
 import {useRouter} from 'next/router'
-import React, { useState, useEffect } from 'react';
-import axios from "axios";
+import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import Qrcode  from './Qrcode.jsx';
 import OTPInput  from './OTPInput.jsx';
@@ -18,7 +16,6 @@ export default function Loginform({languageContent,formDataArr}) {
 	const [showlogin, setshowlogin] = useState(true);
 	const [showOTP, setShowOTP] = useState(false);
 	const [showQRCode, setShowQRCode] = useState(false);
-	const [datamess, setdatamess] = useState();	
 	const [apiData, setApiData] = useState({});
 	const [errorres, setErrorres] = useState('');
 	const gethandleChange = (value) => {
@@ -32,15 +29,13 @@ export default function Loginform({languageContent,formDataArr}) {
 			
 		setshowlogin(false)
 		setShowQRCode(true)
-		}else if(value.accessToken != "" && value.accessToken != undefined){		
-			const oneDay = 24 * 60 * 60 * 1000
+		}else if(value.accessToken != "" && value.accessToken != undefined){	
 			const cookieName = 'accessToken';
 			const cookieName1 = 'refreshToken';
 			const accessToken1 = value.accessToken;
 			const refreshToken1 = value.refreshToken;
 			Cookies.set(cookieName, accessToken1, { secure: true});
 			Cookies.set(cookieName1, refreshToken1, { secure: true});
-			const accessToken = Cookies.get('accessToken');
 			router.push('/Dashboard');
 		}else{
 			
@@ -52,7 +47,7 @@ export default function Loginform({languageContent,formDataArr}) {
 		
 	}	
 	
-  const [errors, setErrors] = useState({});	
+  const errors = {};	
 
 	
 
@@ -102,8 +97,6 @@ export default function Loginform({languageContent,formDataArr}) {
          <OTPInput lenth ={6} apiData = {apiData} gethandleChange={gethandleChange} />
         </div>
         }
-	
-   
 		</>
   )
 }

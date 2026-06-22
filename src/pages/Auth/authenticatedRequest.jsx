@@ -31,7 +31,7 @@ const authenticatedRequest = async (axiosConfig) => {
 
                 return await makeRequest(newAccessToken);
             } catch (refreshError) {
-                throw new Error('Session expired. Please log in again.');
+                throw new Error('Session expired. Please log in again.', refreshError);
             }
         } else {
             throw error;

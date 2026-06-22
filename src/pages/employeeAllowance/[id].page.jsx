@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router';
 import DataTable from './DataTable';
-export default function employeeAllowance({ showOnlylist }) {
+export default function EmployeeAllowance() {
     const router = useRouter();
     const [empID, setempID] = useState("");
     useEffect(() => {
         if (router.query.id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setempID(router.query.id)
         }
     }, [router.query.id]);

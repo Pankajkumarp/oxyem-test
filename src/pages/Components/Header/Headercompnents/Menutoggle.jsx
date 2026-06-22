@@ -1,5 +1,5 @@
 import { useState } from 'react';  // Import useState
-import { CgMenuLeft, CgMenuRight } from "react-icons/cg";
+import { CgMenuLeft } from "react-icons/cg";
 import { RxCross2 } from "react-icons/rx";
 export default function MenuToggle() {
   const [showCross, setShowCross] = useState(false);

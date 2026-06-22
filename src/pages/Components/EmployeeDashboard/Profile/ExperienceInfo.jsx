@@ -5,7 +5,7 @@ import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
 import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
 import { GiBriefcase } from 'react-icons/gi';
 
-export default function ExperienceInfo({ empId ,showbutton}) {
+export default function ExperienceInfo({ empId }) {
     const [experienceInfo, setExperienceInfo] = useState([]);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [Formdata, setFormData] = useState([]);
@@ -54,8 +54,10 @@ export default function ExperienceInfo({ empId ,showbutton}) {
         
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchExperienceInfo();
         
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [empId]);
 
 

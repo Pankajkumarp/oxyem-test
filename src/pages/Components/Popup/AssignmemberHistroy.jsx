@@ -29,6 +29,7 @@ const AssignmemberHistroy = ({ isOpen, closeModal, isHistroyId }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
 		document.body.classList.add("hide-body-scroll");
     } else {
@@ -78,6 +79,7 @@ const AssignmemberHistroy = ({ isOpen, closeModal, isHistroyId }) => {
                   </div>
                 </div>
                 {assignMemberDetails.map((detail, index) => (
+                  // eslint-disable-next-line react/jsx-key
                   <div className='oxyem-pop-up-member-assign'>
                     <div className='row align-items-center'>
                     <div className='col-2'>

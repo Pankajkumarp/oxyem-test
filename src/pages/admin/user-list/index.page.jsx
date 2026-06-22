@@ -1,3 +1,4 @@
+/* eslint-disable valid-typeof */
 import React, { useEffect, useState } from "react";
 import Breadcrumbs from "../../Components/Breadcrumbs/Breadcrumbsdiscription";
 import CustomDataTable from "../../Components/Datatable/tablewithApi.jsx";
@@ -8,11 +9,11 @@ import dynamic from "next/dynamic";
 import { FaUsers } from "react-icons/fa";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export default function index() {
+export default function UserList() {
   // const EmployeeChart = ({ activeTab }) => {
   const router = useRouter();
-  const [updleavelist, setUpdUserList] = useState([]);
-  const [formcolumn, setFormColumn] = useState([]);
+  const updleavelist =[];
+  const  formcolumn = [];
   const [emptypefilter, setEmptypefilter] = useState();
   const [employeeTypeCounts, setEmployeeTypeCounts] = useState({});
   const [status, setStatus] = useState();
@@ -35,10 +36,8 @@ export default function index() {
     router.push(`/employeeDashboard/${id}`);
   };
 
-  const onDeleteClick = (id) => {
-    // console.log(id)
-  };
-  const fetchClientData = async (value) => {
+  const onDeleteClick = () => {};
+  const fetchClientData = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/getDashboardDetails`, {
@@ -316,18 +315,20 @@ export default function index() {
           setShowGraph(true);
         }
       }
-    } catch (error) { }
+    } catch (error) {console.error(error)}
   };
   useEffect(() => {
-    if (activeTab === 1 && index === 0) {
+    if (activeTab === 1 ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatus(null);
       setEmptypefilter(null);    // Clear the filter
 
       fetchClientData();
     }
-  }, []);
+  }, [activeTab]);
   useEffect(() => {
     if (activeTab === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchClientData("dashboard");
     }
   }, [activeTab]);
@@ -403,7 +404,6 @@ export default function index() {
                             <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                               <div
                                 className="stats-info stats-info-cus"
-                                //   onClick={() => handleTabClick(1)}
                                 onClick={() => {
                                   setEmptypefilter("Permanent");
                                   setStatus("Active");
@@ -627,5 +627,3 @@ export default function index() {
     </>
   );
 }
-// };
-// export default EmployeeChart;

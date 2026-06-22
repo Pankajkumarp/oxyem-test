@@ -1,29 +1,25 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
 import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import View from '../../Components/Popup/ClaimHistory.jsx';
 import dynamic from 'next/dynamic';
-
-
-
 import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles.js';
-
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
 import SelectComponent from '../../Components/common/SelectOption/SelectComponent.jsx';
 import SearchFilter from '../../Components/SearchFilter/SearchFilter.jsx';
-import { MdDeleteForever } from "react-icons/md";
 import Loader from '../../Components/loader/loader.jsx';
-export default function index() {
+export default function ClaimAdmin() {
 
     const router = useRouter();
-    const [updleavelist, setUpdUserList] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
+    const updleavelist = [];
+    const formcolumn = [];
     const [listheader, setListHeaders] = useState([]);
     const [selectedCurrency, setSelectedCurrency] = useState(null);
     const [currencyOptions, setCurrencyOptions] = useState([]);
@@ -66,11 +62,10 @@ export default function index() {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await axiosJWT.get(`${apiUrl}/claims/claimStats`, { params: { "isFor": "admin" } });
             const responsedata = response.data.data || {};
-            console.log("this is responce")
             const listheader = responsedata.listheader || {};
             setListHeaders(listheader);
         } catch (error) {
-
+            console.error(error)
         }
     };
     const formatIndianAmount = (value) => {
@@ -310,8 +305,7 @@ export default function index() {
                 setIsChartOpen(true);
                 setIsLoadingGraph(false);
             } catch (error) {
-                // Handle error
-
+                console.error(error)
             }
         };
 
@@ -363,7 +357,7 @@ export default function index() {
         router.push(`/claim/admin/${id}`);
     };
 
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
 
     };
 
@@ -440,6 +434,7 @@ export default function index() {
                     color: '#FF000F',
                 },
             });
+            console.error(error)
             // Handle the error if any
 
         }
@@ -456,7 +451,6 @@ export default function index() {
     const [activeStatus, setActiveStatus] = useState(null);
     const [searchfilter, setSearchfilter] = useState({});
     const searchFilterData = async (value) => {
-        console.log("value", value)
         setSearchfilter(value);
     }
 
@@ -713,13 +707,13 @@ export default function index() {
                                                     <SearchFilter searchFilterData={searchFilterData} formType={"searchFilterClaimAdmin"} />
 
                                                     <ul className="nav-tabs nav nav-tabs-bottom oxyem-graph-tab">
-                                                        <li class={`nav-item ${activeTableTab === 0 ? 'active' : ''}`}>
-                                                            <a class={`nav-link`} onClick={() => handleTableTabClick(0)}>
+                                                        <li className={`nav-item ${activeTableTab === 0 ? 'active' : ''}`}>
+                                                            <a className={`nav-link`} onClick={() => handleTableTabClick(0)}>
                                                                 <div className="skolrup-profile-tab-link">Pending</div>
                                                             </a>
                                                         </li>
-                                                        <li class={`nav-item ${activeTableTab === 1 ? 'active' : ''}`}>
-                                                            <a class={`nav-link`} onClick={() => handleTableTabClick(1)}>
+                                                        <li className={`nav-item ${activeTableTab === 1 ? 'active' : ''}`}>
+                                                            <a className={`nav-link`} onClick={() => handleTableTabClick(1)}>
                                                                 <div className="skolrup-profile-tab-link">Paid</div>
                                                             </a>
                                                         </li>

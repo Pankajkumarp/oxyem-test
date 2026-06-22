@@ -31,19 +31,18 @@ export default function Index() {
         router.push(`/automation-ideas/${id}`);
     };
 
-    const onDeleteClick = (id) => {
-        // Delete action implementation
-    };
+    const onDeleteClick = () => {};
 
     const closeDetailpopup = async () => {
         setIsModalOpen(false)
     }
-    const handleUpadateClick = async (id) => {
+    const handleUpadateClick = async () => {
         // router.push(`/attendance/${id}`);
     }
 
     // 📊 Chart States
     const [isIdeaChartOpen, setIsIdeaChartOpen] = useState(true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [searchfilter, setSearchfilter] = useState({});
     const [activeStatus, setActiveStatus] = useState(null);
 
@@ -55,7 +54,6 @@ export default function Index() {
     useEffect(() => {
         const getIdeaCharts = async () => {
             try {
-                console.log("Fetching idea chart data...");
                 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                 const response = await axiosJWT.get(`${apiUrl}/automationIdea/getcharts`, { params: { isFor: "" } });
                 const ideaChartResponse = response.data.data;
@@ -192,7 +190,6 @@ export default function Index() {
             setSearchfilter({});
             setActiveStatus(null);
         } else {
-            let filter = {};
 
             switch (filterKey) {
                 case "All":

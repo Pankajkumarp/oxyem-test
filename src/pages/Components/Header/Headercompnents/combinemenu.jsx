@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { TbGridDots } from "react-icons/tb";
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import { FaSearch } from "react-icons/fa";
 export default function Combinemenu() {
-  const router = useRouter();
   const [showDiv, setShowDiv] = useState(false);
   const toggleDiv = () => {
     setShowDiv(!showDiv);
@@ -13,6 +11,7 @@ export default function Combinemenu() {
   const inputRef = useRef();
   const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     window.addEventListener('mousedown', handleClickOutside);
     return () => {
       window.removeEventListener('mousedown', handleClickOutside);
@@ -27,12 +26,12 @@ export default function Combinemenu() {
     }
 
   };
-  const handleClickLinkside = (id, e) => {
+  const handleClickLinkside = (id) => {
     sessionStorage.setItem('Clickid', JSON.stringify(id));
     setShowDiv(false);
   };
 
-  const [preiconData, seticonPreData] = useState([
+  const preiconData = [
     {
       "id": "3bfd9900-ebe2-4ca5-926a-e73107b2fe11",
       "menuName": "Dashboard",
@@ -96,7 +95,7 @@ export default function Combinemenu() {
       "children": "",
       "menuImage": "https://oxytal.s3.eu-west-1.amazonaws.com/Menu/report.png"
     }
-  ]);
+  ];
   const [iconData, seticonData] = useState(preiconData);
   useEffect(() => {
     const fetchMenuOptions = async () => {
@@ -124,6 +123,7 @@ export default function Combinemenu() {
     if (storedIconData === null) {
       fetchMenuOptions()
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       seticonData(parsedData)
       if (parsedData.length === 0) {
         fetchMenuOptions()

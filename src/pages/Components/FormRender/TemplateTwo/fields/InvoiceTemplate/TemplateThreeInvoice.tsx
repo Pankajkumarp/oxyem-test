@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react'
 import currencySymbolMap from 'currency-symbol-map';
-import numberToWords from 'number-to-words';
 import { format } from "date-fns";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function TemplateThreeInvoice({ InvoiceAllData }: any) {
     if (!InvoiceAllData || Object.keys(InvoiceAllData).length === 0) {
         return null;
@@ -34,9 +35,6 @@ export default function TemplateThreeInvoice({ InvoiceAllData }: any) {
     const invoiceNumber = InvoiceAllData?.invoiceNumber;
     const invoiceDueDate = InvoiceAllData?.invoiceData?.invoiceDueDate;
 
-    const convertNumberToWords = (number) => {
-        return numberToWords.toWords(number);
-    };
     const symbol = currencySymbolMap(currencySymbol);
     const formatDate = (dateStr: string | Date) => {
         if (!dateStr) return "";

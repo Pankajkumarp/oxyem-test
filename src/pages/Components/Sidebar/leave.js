@@ -1,5 +1,4 @@
 import * as  FaIcons from "react-icons/fa";
-import * as  GiIcons from "react-icons/gi";
 export const leave = [
     {
         "title": "Admin",

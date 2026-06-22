@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect  } from "react";
 import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
 import { FaSearch } from "react-icons/fa";
@@ -122,6 +123,7 @@ export default function MultiSelectionTable({
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [sortConfig, setSortConfig] = useState({
         key: "name",
         direction: "asc",
@@ -158,6 +160,7 @@ export default function MultiSelectionTable({
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
     }, [currentPage, rowsPerPage, sortConfig, search]);
 

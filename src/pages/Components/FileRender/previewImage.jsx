@@ -20,6 +20,7 @@ export default function previewImage({ isOpen, closeModal ,previewDoc }) {
                     </div>
                     <div className="modal-body mt-4">
                         {previewDoc.type === "image" && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={previewDoc.url}
             alt={previewDoc.name}

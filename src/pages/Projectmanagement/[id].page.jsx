@@ -13,6 +13,7 @@ export default function Projectmanagement({ userFormdata }) {
     const [AdduserContent, setAdduserContent] = useState(userFormdata);
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const apidata = {
         "feature": "Project_management",
         "section": [
@@ -75,14 +76,13 @@ export default function Projectmanagement({ userFormdata }) {
         ]
     }
 
-    console.log("11 formdata", userFormdata)
-    console.log("22 apidata", apidata)
     const handlesubmitApiData = async (value) => {
-        console.log("Documents section api:", value);
         try {
           const response = await axios.post(`${apiUrl}/Projectmanagement`, value);
           // Handle the response if needed
-          console.log("Response:", response.data);
+          if(response){
+             /* empty */
+          }
         } catch (error) {
           // Handle the error if any
           console.error("Error occurred:", error);
@@ -129,8 +129,8 @@ export default function Projectmanagement({ userFormdata }) {
      // const updatedFormData = mergeFormDataWithApiData(userFormdata, apidata);
      useEffect(() => {
         const updatedFormData = mergeFormDataWithApiData(userFormdata, apidata);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAdduserContent(updatedFormData)
-        console.log("dummy jason data", updatedFormData)
     }, [userFormdata, apidata]);
 
 

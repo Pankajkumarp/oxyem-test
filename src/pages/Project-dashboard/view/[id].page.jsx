@@ -3,20 +3,14 @@ import SecTab from '../../Components/Employee/SecTab';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router'
-import { FaEdit } from "react-icons/fa";
 import { fetchWithToken } from '../../Auth/fetchWithToken.jsx';
 export default function Projectallocation({ userFormdata }) {
     const router = useRouter(); 
-
     const headingContent = '';
     const [btpdata, setBtpData] = useState([]); // State to hold the content
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
     const [getID, setGetID] = useState("")
-
     const [AdduserContent, setAdduserContent] = useState(userFormdata);
-    const [apiResponse, setapiResponse] = useState();
-
 
     const getProjectValue = async (id) => {
         try {
@@ -28,6 +22,7 @@ export default function Projectallocation({ userFormdata }) {
             });
             if (response) {
                 const apiResponse = response.data.data
+                // eslint-disable-next-line react-hooks/immutability
                 const mergedArray = mergeData(userFormdata, apiResponse);
 				const summarySection = mergedArray.section.find(section => section.SectionName === "Summary");
                 // Check if the section exists and update the value
@@ -40,18 +35,18 @@ export default function Projectallocation({ userFormdata }) {
                     });
                 }
                 setAdduserContent(mergedArray)
-                setapiResponse(apiResponse); 
             }
-
         } catch (error) {
-
+            console.error(error)
         }
     }
     useEffect(() => {
         const { id } = router.query; // Extract the "id" parameter from the query object
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGetID(id)
         getProjectValue(id)
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.id]);
 
     const handlesubmitApiData = async (value) => {
@@ -64,8 +59,9 @@ export default function Projectallocation({ userFormdata }) {
         try {
             const response = await axiosJWT.put(`${apiUrl}/project`, apipayload);
             // Handle the response if needed
-            console.log("Response:", response.data);
+            if(response){
             router.push(`/Project-dashborad`);    
+            }
 
         } catch (error) {
             // Handle the error if any
@@ -114,19 +110,16 @@ export default function Projectallocation({ userFormdata }) {
                     });
                 }
             setAdduserContent(mergedArray)
-            setapiResponse(apiResponse); 
         }
 
     } catch (error) {
-
+        console.error(error)
     }
 }
 
 const [showButton, setShowButton] = useState("hide")
     // Function to merge data
     function mergeData(formArray, dataArray) {
-        console.log("formData", formArray)
-        console.log("dataArray", dataArray)
         // Iterate over each section in the dataArray
         dataArray.section.forEach(dataSection => {
             // Iterate over each field in the section
@@ -147,14 +140,13 @@ const [showButton, setShowButton] = useState("hide")
         formArray.section.forEach(formSection => {
             formSection.Subsection.forEach(subSection => {
                 subSection.fields.forEach(formField => {
-                    if (!formField.hasOwnProperty('isDisabled')) {
+                    if (!Object.prototype.hasOwnProperty.call(formField, 'isDisabled')) {
                         formField.isDisabled = "true";
                     }
                 });
             });
         });
         setShowButton("hide")
-        console.log("meargdata", formArray)
         return formArray;
     }
 

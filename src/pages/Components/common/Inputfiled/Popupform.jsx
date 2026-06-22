@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaPlus } from "react-icons/fa";
 import ViewPopup from '../../Popup/PopupForm';
-export default function Popupform({ type, placeholder, label, value, validations = [], onChange, actionid }) {
+export default function Popupform({ actionid }) {
   const [isModalOpeninput, setIsModalOpeninput] = useState(false);
   const closeModalInputselect = () => {
     setIsModalOpeninput(false);

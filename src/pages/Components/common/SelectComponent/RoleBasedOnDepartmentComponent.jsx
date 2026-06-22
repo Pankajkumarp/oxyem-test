@@ -5,10 +5,10 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function SelectComponent({ label, validations = [], value, onChange, data, pagename, name, selectedAsset }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
-  const [error, setError] = useState(null);
   const [initialDepartmentValue, setInitialDepartmentValue] = useState('');
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedOption(selectedAsset);
   }, [selectedAsset]);
 
@@ -48,7 +48,7 @@ export default function SelectComponent({ label, validations = [], value, onChan
         }));
         setOptions(optionsData);
       } catch (error) {
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 
@@ -72,11 +72,12 @@ export default function SelectComponent({ label, validations = [], value, onChan
 
       // Only fetch options if the department value changes
       if (departmentValue !== initialDepartmentValue) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setInitialDepartmentValue(departmentValue);
         fetchOptions(departmentValue);
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   }, [data, initialDepartmentValue]);
 

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -49,7 +51,7 @@ export default function SelectField({ field, control, errors, dynamicId, setValu
         setOptions(optionsData);
       }
     } catch (error) {
-
+      console.error(error)
     }
   };
   const fetchEmployeeOptions = async (value) => {
@@ -67,12 +69,13 @@ export default function SelectField({ field, control, errors, dynamicId, setValu
         setOptions(optionsData);
       }
     } catch (error) {
-
+       console.error(error)
     }
   };
   useEffect(() => {
     if (field.documentType) {
       if (field.documentType === "employeelist") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchEmployeeOptions(field.documentType);
       } else {
         fetchOptions(field.documentType);
@@ -144,7 +147,7 @@ export default function SelectField({ field, control, errors, dynamicId, setValu
                 },
                 backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
               }),
-              indicatorSeparator: (provided, state) => ({
+              indicatorSeparator: (provided) => ({
                 ...provided,
                 backgroundColor: 'var(--dropdownhoverbg)',
                 fontWeight: 'var(--dropdownfontweight)',

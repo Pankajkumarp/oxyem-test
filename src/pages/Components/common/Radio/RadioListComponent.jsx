@@ -5,7 +5,6 @@ export default function RadioButtonComponentLabel({
     isDisabled = false,
     options = [],
     value = '',
-    validations = [],
     onChange = () => {},
 }) {
     

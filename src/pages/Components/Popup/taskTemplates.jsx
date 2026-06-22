@@ -4,7 +4,7 @@ import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import { TbSubtask } from "react-icons/tb";
 
-const taskTemplates = ({ isOpen, closeModal, templateArray, getSelectTemplate}) => {
+const TaskTemplates = ({ isOpen, closeModal, templateArray, getSelectTemplate}) => {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [error, setError] = useState("");
 const handleSelect = (value) => {
@@ -92,4 +92,4 @@ const handleSelect = (value) => {
   );
 };
 
-export default taskTemplates;
+export default TaskTemplates;

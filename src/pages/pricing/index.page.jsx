@@ -1,7 +1,4 @@
-import Link from 'next/link';
 import Footer from '../Components/Logincomponents/Footer';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 import Head from 'next/head.js';
 import { copyRightText as footercr } from '../../common/content_en';
 import Navbar from '../Components/Navbar/index.page.jsx';
@@ -11,7 +8,6 @@ import PricingSection from "../Components/Pricing/PricingSection";
 export default function pricing() {
 
 	let footertext = footercr;
-	const router = useRouter();
 	const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
 	const webpath = basepath + 'pricing'
 	return (

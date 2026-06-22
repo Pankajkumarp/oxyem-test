@@ -1,9 +1,6 @@
 import ReactModal from 'react-modal';
 import React, { useState, useEffect } from "react";
-import Select from 'react-select';
 import { MdClose } from "react-icons/md";
-import Profile from '../commancomponents/profile';
-import ButtonPrimary from '../common/Buttons/ButtonPrimaryComponent';
 import SecTab from '../Employee/SecTab';
 import Apialert from '../Errorcomponents/Apierror'
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
@@ -40,6 +37,7 @@ export default function PopupForm({ isOpen, closeModal, labelText, dynamicform, 
 
     useEffect(() => {
         if (isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             hitapidata();
         }
     }, [isOpen]);
@@ -74,6 +72,7 @@ export default function PopupForm({ isOpen, closeModal, labelText, dynamicform, 
     };
     useEffect(() => {
         if (section === "allocationEdit") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             getapidataResponse();
         }
     }, [isOpen, alloctionid]);

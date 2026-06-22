@@ -1,7 +1,6 @@
 
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react';
-import axios from "axios";
+import React, { useState } from 'react';
 import SecTab from '../Components/Employee/SecTab';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification.jsx';
@@ -10,12 +9,9 @@ import FillterForm from '../Components/Popup/FillterForm';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function allocateAssets({ payrollForm }) {
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-
+export default function AllocateAssets({ payrollForm }) {
     const router = useRouter();
-    const data = router.query.data;
-    const [storeArray, setStoreArray] = useState(payrollForm);
+    const storeArray = payrollForm;
     const [AdduserContent, setAdduserContent] = useState(payrollForm);
 
     const filterSectionsBasedOnAssetType = (content, assetType) => {

@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Select from '../SelectOption/CreateSingleSelect';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 
-export default function CreateGoalComponent ({ label, isDisabled, validations = [], value, onChange, documentType, dependentId }) {
+export default function CreateGoalComponent ({ label, isDisabled, validations = [], value, onChange, dependentId }) {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(value);
-  const [error, setError] = useState(null);
-
   // Fetch options from the API
   useEffect(() => {
     const fetchOptions = async () => {
@@ -36,7 +34,7 @@ export default function CreateGoalComponent ({ label, isDisabled, validations = 
           });
         }
       } catch (error) {
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
     if (dependentId && dependentId.typeOfLevel && dependentId.goalType) {
@@ -47,6 +45,7 @@ export default function CreateGoalComponent ({ label, isDisabled, validations = 
   // Check if the value is new and add it to options if necessary
   useEffect(() => {
     if (value && value.__isNew__) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOptions((prevOptions) => {
         if (!prevOptions.some(option => option.value === value.value)) {
           return [

@@ -14,6 +14,7 @@ export default function PreviewPopupComponent({ isOpen, closeModal, previewData,
         }
     }, [isOpen]);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setInputData(previewData || {});
         setShowInfo(true);
     }, [previewData]);
@@ -157,8 +158,8 @@ const deductionColClass =
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    {transformedData.earnings.map((item, index) => (
-                                                                        <tr key={index}>
+                                                                    {transformedData.earnings.map((item) => (
+                                                                        <tr key={item.description}>
                                                                             <td>{item.description}</td>
                                                                             <td className="text-end">{transformedData.currency} {item.amount}</td>
                                                                         </tr>
@@ -176,8 +177,8 @@ const deductionColClass =
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    {transformedData.deductions.map((item, index) => (
-                                                                        <tr key={index}>
+                                                                    {transformedData.deductions.map((item) => (
+                                                                        <tr key={item.description}>
                                                                             <td>{item.description}</td>
                                                                             <td className="text-end">{transformedData.currency} {item.amount}</td>
                                                                         </tr>
@@ -198,8 +199,8 @@ const deductionColClass =
                                                                         </thead>
                                                                         <tbody>
                                                                             {Array.isArray(transformedData?.otherAllowance) &&
-                                                                                transformedData.otherAllowance.map((item, index) => (
-                                                                                    <tr key={index}>
+                                                                                transformedData.otherAllowance.map((item) => (
+                                                                                    <tr key={item?.name?.label || item?.name}>
                                                                                         <td>{item?.name?.label || item?.name}</td>
                                                                                         <td className="text-end">{transformedData.currency} {item.attributeValue}</td>
                                                                                     </tr>
@@ -223,8 +224,8 @@ const deductionColClass =
                                                                         </thead>
                                                                         <tbody>
                                                                             {Array.isArray(transformedData?.deductionOtherAllowance) &&
-                                                                                transformedData.deductionOtherAllowance.map((item, index) => (
-                                                                                    <tr key={index}>
+                                                                                transformedData.deductionOtherAllowance.map((item) => (
+                                                                                    <tr key={item?.name?.label || item?.name}>
                                                                                         <td>{item?.name?.label || item?.name}</td>
                                                                                         <td className="text-end">{transformedData.currency} {item.attributeValue}</td>
                                                                                     </tr>

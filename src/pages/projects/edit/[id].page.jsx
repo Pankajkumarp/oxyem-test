@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import SecTab from '../../Components/Employee/SecTab';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
@@ -6,7 +7,7 @@ import { useRouter } from 'next/router'
 import { Toaster, toast } from 'react-hot-toast';
 import { FaTimes } from "react-icons/fa";
 import { fetchWithToken } from '../../Auth/fetchWithToken.jsx';
-export default function editProject({ userFormdata }) {
+export default function EditProject({ userFormdata }) {
     const router = useRouter();
 
     const headingContent = '';
@@ -16,7 +17,6 @@ export default function editProject({ userFormdata }) {
     const [getID, setGetID] = useState("")
 
     const [AdduserContent, setAdduserContent] = useState(userFormdata);
-    const [apiResponse, setapiResponse] = useState();
     const [btpstpvalue, setBtpStpvalue] = useState({});
 
 
@@ -39,6 +39,7 @@ export default function editProject({ userFormdata }) {
                     return result;
                 }, {});
                 setBtpStpvalue(extractedData)
+                // eslint-disable-next-line react-hooks/immutability
                 const mergedArray = mergeData(userFormdata, apiResponse);
                 const summarySection = mergedArray.section.find(section => section.SectionName === "Summary");
                 if (summarySection) {
@@ -50,18 +51,19 @@ export default function editProject({ userFormdata }) {
                     });
                 }
                 setAdduserContent(mergedArray)
-                setapiResponse(apiResponse);
             }
 
         } catch (error) {
-
+console.error(error)
         }
     }
     useEffect(() => {
         const { id } = router.query; // Extract the "id" parameter from the query object
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGetID(id)
         getProjectValue(id)
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.id]);
 
     const handlesubmitApiData = async (value) => {
@@ -156,12 +158,9 @@ export default function editProject({ userFormdata }) {
                     });
                 }
                 setAdduserContent(mergedArray)
-                setapiResponse(apiResponse);
             }
 
-        } catch (error) {
-
-        }
+        } catch (error) {console.error(error)}
     }
 
     const [showButton, setShowButton] = useState("")

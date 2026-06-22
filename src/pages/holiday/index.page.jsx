@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbsdiscription.jsx';
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Tooltip } from 'react-tooltip';
 import CustomDataTable from '../Components/Datatable/tablewithApi.jsx';
 import Head from 'next/head';
-import pageTitles from '../../common/pageTitles.js';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import SelectOptionComponent from '../Components/common/SelectComponent/SelectOptionComponent.jsx';
 import { MdEventAvailable } from "react-icons/md";
@@ -44,10 +43,12 @@ const Holiday = () => {
         setholidays(fetchedData);
       }
     } catch (error) {
+      console.error(error)
     }
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchInfo();
   }, []);
 
@@ -156,23 +157,17 @@ const Holiday = () => {
     }
   };
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchHolidayStats();
   }, []);
-
-  const [searchfilter, setSearchfilter] = useState({});
   const [activeStatus, setActiveStatus] = useState(null);
-  const [activeTableTab, setActiveTableTab] = useState("");
 
   const handleShowDataForStatus = (filterKey) => {
-    setActiveTableTab(filterKey);
     setActiveStatus(filterKey);
 
     if (filterKey === "clr") {
-      setSearchfilter({});
       setActiveStatus(null);
     } else {
-      let filter = {};
-
       switch (filterKey) {
         case "Total":
           // Show all holidays
@@ -180,24 +175,22 @@ const Holiday = () => {
           break;
 
         case "Mandatory":
-          // setSearchfilter({ type: "Mandatory" });
+          
 
           break;
 
         case "Optional":
 
-          // setSearchfilter({ type: "Optional" });
 
           break;
 
         case "Upcoming":
 
-          // setSearchfilter({ type: "Upcoming" });
 
           break;
 
         default:
-          filter = {};
+          
           break;
       }
 

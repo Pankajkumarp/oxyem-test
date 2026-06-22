@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import authenticatedRequest from '../../../Auth/authenticatedRequest.jsx';
-export default function StatusTextRadioComponent({ options, value = '', name, onChange, isDisabled, label, placeholder, validations, documentType, pagename }) {
+export default function StatusTextRadioComponent({ value = '', name, onChange, isDisabled, label, documentType, pagename }) {
   const [selectedValue, setSelectedValue] = useState(value);
   const [valueOptions, setValueOptions] = useState([]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedValue(value);
   }, [value]);
   useEffect(() => {
@@ -29,12 +30,12 @@ export default function StatusTextRadioComponent({ options, value = '', name, on
           setValueOptions(optionsData);
         }
       } catch (error) {
-
-        //setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 
     fetchOptions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleChange = (event) => {
     const newValue = event.target.value;

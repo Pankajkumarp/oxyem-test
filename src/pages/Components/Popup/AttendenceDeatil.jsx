@@ -32,6 +32,7 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
     if (localTime === "Invalid date") return ""; // Return empty string if the date is invalid
     return localTime;
   } catch (error) {
+    console.error(error)
     return ""; // Return empty string in case of any error during conversion
   }
 };
@@ -86,6 +87,7 @@ const AttendanceDetail = ({ isOpen, closeModal, isHistroyId, section, handleUpad
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
     }
   }, [isOpen, isHistroyId]);

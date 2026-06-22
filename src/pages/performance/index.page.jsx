@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
-import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { Toaster, toast } from 'react-hot-toast';
 import Head from 'next/head';
-import Rating from 'react-rating';
-import { FaRegStar, FaStar, FaTimes, FaAward } from 'react-icons/fa';
 import Profile from '../Components/commancomponents/profile';
 import Link from 'next/link';
 import SecTab from '../Components/Employee/AssetTab.jsx';
-import axios from "axios";
 import StatusComponent from './StatusInput.jsx';
-import { FaAnglesDown, FaAnglesUp } from "react-icons/fa6";
 import StatComponent from '../Components/Performace/StatComponent.jsx';
 import authenticatedRequest from '../Auth/authenticatedRequest.jsx';
-import { FaRegCheckCircle } from "react-icons/fa";
-export default function performanceReview({ }) {
-    const router = useRouter();
+export default function PerformanceReview() {
     const [activeTab, setActiveTab] = useState("active");
     const handleTabClick = (index) => {
         setActiveTab(index); // Update active tab index when a tab is clicked
@@ -34,8 +25,7 @@ export default function performanceReview({ }) {
                 const responseData = response.data.data
                 setActiveTabData(responseData)
             }
-        } catch (error) {
-        }
+        } catch (error) {console.error(error)}
     };
     const [historicalTabData, setHistoricalTabData] = useState([]);
     const fetchHistoricalTabData = async () => {
@@ -49,11 +39,11 @@ export default function performanceReview({ }) {
                 const responseData = response.data.data
                 setHistoricalTabData(responseData)
             }
-        } catch (error) {
-        }
+        } catch (error) {console.error(error)}
     };
     useEffect(() => {
         if (activeTab === "historical") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchHistoricalTabData();
         } else {
             fetchActiveTabData();
@@ -83,7 +73,7 @@ export default function performanceReview({ }) {
                 setisFormShow(true)
             }
         } catch (error) {
-            setError(error.message || 'Failed to fetch options');
+            {console.error(error)}
         }
     };
 
@@ -112,7 +102,6 @@ export default function performanceReview({ }) {
             if (response) {
                 
                 const message = response.data?.errorMessage;
-console.log(message)
                 setisFormShow(false)
                 setIsSearchVisible(false)
                 fetchActiveTabData()
@@ -196,13 +185,13 @@ console.log(message)
                                         </div>
                                     ) : (null)}
                                     <ul className="nav-tabs nav nav-tabs-bottom  oxyem-graph-tab">
-                                        <li class={`nav-item ${activeTab === "active" ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick("active")}>
+                                        <li className={`nav-item ${activeTab === "active" ? 'active' : ''}`}>
+                                            <a className={`nav-link`} onClick={() => handleTabClick("active")}>
                                                 <div className="skolrup-profile-tab-link">Active</div>
                                             </a>
                                         </li>
-                                        <li class={`nav-item ${activeTab === "historical" ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick("historical")}>
+                                        <li className={`nav-item ${activeTab === "historical" ? 'active' : ''}`}>
+                                            <a className={`nav-link`} onClick={() => handleTabClick("historical")}>
                                                 <div className="skolrup-profile-tab-link">Historical</div>
                                             </a>
                                         </li>
@@ -230,8 +219,8 @@ console.log(message)
                                                     {activeTabData.map((item) => (
                                                         <div key={item.id} className="col-md-4 col-lg-3">
                                                             <div className="performace_dashborad_box">
-															<span class={`finacial_year_box`}>{item.financialYear}</span>
-																<span class={`box_status_bar_s oxyem-mark-${item.status}`}>{item.status}</span>
+															<span className={`finacial_year_box`}>{item.financialYear}</span>
+																<span className={`box_status_bar_s oxyem-mark-${item.status}`}>{item.status}</span>
                                                                 <div className="performace_dashborad_box_img">
                                                                     <img src="/assets/img/star-comment.png" alt="star-comment" />
                                                                 </div>
@@ -269,8 +258,8 @@ console.log(message)
                                                     {historicalTabData.map((item) => (
                                                         <div key={item.id} className="col-md-6 col-lg-4">
                                                             <div className="performace_dashborad_box">
-															<span class={`finacial_year_box`}>{item.financialYear}</span>
-																<span class={`box_status_bar_s oxyem-mark-${item.status}`}>{item.status}</span>
+															<span className={`finacial_year_box`}>{item.financialYear}</span>
+																<span className={`box_status_bar_s oxyem-mark-${item.status}`}>{item.status}</span>
                                                                 <div className="performace_dashborad_box_img">
                                                                     <img src="/assets/img/star-comment.png" alt="star-comment" />
                                                                 </div>

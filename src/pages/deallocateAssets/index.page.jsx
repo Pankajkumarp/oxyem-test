@@ -1,7 +1,6 @@
 
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react';
-import axios from "axios";
+import React from 'react';
 import SecTab from '../Components/Employee/SecTab';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { Toaster } from 'react-hot-toast';
@@ -9,12 +8,10 @@ import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function deallocateAssets({ payrollForm }) {
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
+export default function DeallocateAssets({ payrollForm }) {
 
     const router = useRouter();
-    const data = router.query.data;
-    const [AdduserContent, setAdduserContent] = useState(payrollForm);
+    const AdduserContent = payrollForm;
     
 
     const getsubmitformdata = async (value) => {
@@ -53,7 +50,7 @@ export default function deallocateAssets({ payrollForm }) {
                 // Uncomment the following line if you want to show a toast notification
                 // ToastNotification({ message: errorMessage });
     
-                console.log(errorMessage);
+                console.error(errorMessage);
             } else {
                 console.error('Error:', error);
                 // Uncomment the following line if you want to show a toast notification

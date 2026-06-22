@@ -37,6 +37,7 @@ export default function Preview({ isOpen, closeModal, pdfData }) {
                 const blob = new Blob([pdfData], { type: 'application/pdf' });
                 url = URL.createObjectURL(blob);
             }
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setPdfUrl(url);
         }
     }, [pdfData]);

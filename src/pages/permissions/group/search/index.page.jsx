@@ -19,7 +19,7 @@ const selectStyles = {
         },
         backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
     }),
-    indicatorSeparator: (provided, state) => ({
+    indicatorSeparator: (provided) => ({
         ...provided, 
         backgroundColor: 'var(--dropdownhoverbg)',
         fontWeight: 'var(--dropdownfontweight)',
@@ -43,7 +43,7 @@ const selectStyles = {
     }),
 };
 
-export default function assignGroup() {
+export default function AssignGroup() {
 	const [searchfilter, setSearchfilter] = useState({
   idGroup: "",
   idRole: "",
@@ -59,7 +59,6 @@ const handleFilterChange = (key) => (selected) => {
 
     const [activeTab, setActiveTab] = useState("group");
     const router = useRouter();
-    const [error, setError] = useState("");
     useEffect(() => {
         const mainElement = document.querySelector('body');
         if (mainElement) {
@@ -128,6 +127,7 @@ const handleFilterChange = (key) => (selected) => {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchGroupData();
         fetchRoleData();
         fetchUserData();

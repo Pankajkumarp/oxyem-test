@@ -1,12 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/immutability */
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi';
-import { useRouter } from 'next/router';
-import HistroyView from '../Components/Popup/assetHistroy';
 import EditAllocation from '../Components/Popup/EditAllocation';
 import { axiosJWT } from '../Auth/AddAuthorization';
-import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { toast } from 'react-hot-toast';
+import { FaTimes } from "react-icons/fa";
 import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import View from './history';
 import Head from 'next/head';
@@ -16,7 +16,6 @@ import pageTitles from '../../common/pageTitles.js';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function AllocationManagement() {
-    const router = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isviewId, setIsViewId] = useState("");
@@ -28,9 +27,7 @@ export default function AllocationManagement() {
         setActiveTab(index); // Update active tab index when a tab is clicked
     };
 
-    const onViewClick = (id) => {
-        // router.push(`/payrollPreview`);
-    };
+    const onViewClick = () => {};
 
     const onHistoryClick = async (id) => {
         setIsViewId(id);
@@ -93,6 +90,7 @@ export default function AllocationManagement() {
                 }, 2000); // 2000ms = 2 seconds
             }
         } catch (error) {
+            console.error(error)
             // Handle error
         }
     };
@@ -173,6 +171,7 @@ export default function AllocationManagement() {
                     color: '#FF000F',
                 },
             });
+            console.error(error)
             // Handle the error if any
 
         }
@@ -225,7 +224,7 @@ export default function AllocationManagement() {
                 // Uncomment the following line if you want to show a toast notification
                 // ToastNotification({ message: errorMessage });
 
-                console.log(errorMessage);
+                console.error(errorMessage);
             } else {
                 console.error('Error:', error);
                 // Uncomment the following line if you want to show a toast notification
@@ -257,6 +256,7 @@ export default function AllocationManagement() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchAssetAllocationStats();
     }, []);
 
@@ -426,18 +426,15 @@ export default function AllocationManagement() {
 
     const [searchfilter, setSearchfilter] = useState({});
     const [activeStatus, setActiveStatus] = useState(null);
-    const [activeTableTab, setActiveTableTab] = useState("");
 
     const handleShowDataForStatus = (filterKey) => {
         setActiveTab(1); // switch to table tab
-        setActiveTableTab(filterKey);
         setActiveStatus(filterKey);
 
         if (filterKey === "clr") {
             setSearchfilter({});
             setActiveStatus(null);
         } else {
-            let filter = {};
 
             switch (filterKey) {
                 case "Deallocated":

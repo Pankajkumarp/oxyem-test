@@ -1,11 +1,9 @@
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbsdiscription';
-import { useRouter } from 'next/router'
 import Head from 'next/head';
 import axios from 'axios';
 import StepForm from './StepForm';
 
 export default function opportunity({ userFormdata }) {  // Default to empty array if not provided
-    console.log("userFormdata", userFormdata);
     return (
         <>
             <Head>
@@ -50,6 +48,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

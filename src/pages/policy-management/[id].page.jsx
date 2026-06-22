@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SecTab from '../Components/Employee/SecTab';
 import { axiosJWT } from '../Auth/AddAuthorization';
@@ -39,17 +39,17 @@ export default function EditPolicy({ userFormdata }) {
         }
       }
     } catch (error) {
-
+      console.error(error)
     }
   };
   useEffect(() => {
     const { id } = router.query;
-    console.log(id)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchInfo(id)
   }, [router.query.id]);
 
   const [getFileinfo, setGetFileinfo] = useState("");
-  const handlesubmitApiData = async (newArray, value) => {
+  const handlesubmitApiData = async (newArray) => {
     const section = newArray.section[0];
     const apipayload = {};
     section.fields.forEach(field => {

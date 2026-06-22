@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import SecTab from '../../Components/Employee/SecTab';
@@ -26,6 +26,7 @@ export default function User({ leaveFormdata }) {
     }
 
     return data[0].fields.reduce((acc, field) => {
+      // eslint-disable-next-line no-prototype-builtins
       if (field && field.name && field.hasOwnProperty('attributeValue')) {
         acc[field.name] = field.attributeValue;
       }
@@ -66,8 +67,7 @@ export default function User({ leaveFormdata }) {
         }
 
       } catch (error) {
-
-        setError(error.message || 'Failed to fetch options');
+console.error(error)
       }
     }
   };
@@ -235,7 +235,6 @@ export default function User({ leaveFormdata }) {
   const handleDataCancel = async () => {
     router.push(`/basket-of-allowance`);
   }
-  const [error, setError] = useState(null);
   const [tableHeader, setTableHeader] = useState([]);
   const [buttonType, setButtonType] = useState([]);
   const [showButton, setshowButton] = useState(false);
@@ -286,15 +285,16 @@ export default function User({ leaveFormdata }) {
       }
 
     } catch (error) {
-
-      setError(error.message || 'Failed to fetch options');
+console.error(error)
     }
   };
 
   useEffect(() => {
     if (empInfo && empInfo.idEmployee) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchOptions();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empInfo.idEmployee, empInfo.applicableFrom]);
 
   useEffect(() => {

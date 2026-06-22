@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { format } from "date-fns";
@@ -44,7 +45,7 @@ export default function PricingRender({ data, pricingId, diffInDays, dataStatus 
             : "0.00";
 
     const [documentData, setDocumentData] = useState([]);
-    const getUploadList = async (id) => {
+    const getUploadList = async () => {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         try {
             const response = await axiosJWT.get(`${apiUrl}/getDocumentList`, {
@@ -62,13 +63,14 @@ export default function PricingRender({ data, pricingId, diffInDays, dataStatus 
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         getUploadList(pricingId);
     }, [pricingId]);
 
 
     if (!data) return null;
 
-    const { datapricinginfo, OpportunitySummary, dataEffort, milestoneDetails, dataOpportunity } = data;
+    const { datapricinginfo, OpportunitySummary, milestoneDetails } = data;
 
 
     const hasValidOtherCost = (item) => {
@@ -113,6 +115,7 @@ export default function PricingRender({ data, pricingId, diffInDays, dataStatus 
                 return acc;
             }, {});
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGroupedMap(grouped);
         setShowGraph(true);
     }, [financialInfoUSD]);
@@ -219,7 +222,7 @@ export default function PricingRender({ data, pricingId, diffInDays, dataStatus 
                             null
                         )}
 
-                        <span class="status-bars">
+                        <span className="status-bars">
                             <span></span>
                             <span></span>
                         </span>

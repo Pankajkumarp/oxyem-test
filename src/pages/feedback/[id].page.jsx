@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { axiosJWT } from '../Auth/AddAuthorization';
 import DynamicForm from './DynmicForm';
 
-export default function page() {
+export default function FeedbackId() {
   const router = useRouter();
   const [formDetails, setFormDetails] = useState(null);
   const [onlyView ,setOnlyView] = useState("")
@@ -29,9 +29,6 @@ export default function page() {
     fetch();
   }
 }, [id]);
-
-
-  console.log(onlyView)
   return (
     <div>
       <DynamicForm formData={formDetails} shareId={id} onlyView={onlyView}/>

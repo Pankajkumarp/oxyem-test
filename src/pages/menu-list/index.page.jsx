@@ -32,7 +32,7 @@ export default function EmployeeSection() {
       router.push(`/menu/${id}?editfor=${tab}`); 
     };
 
-    const onDeleteClick = (id) => {};
+    const onDeleteClick = () => {};
 
     
   return (

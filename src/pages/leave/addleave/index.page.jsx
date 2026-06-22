@@ -2,22 +2,21 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react';
 import Apialert from '../../Components/Errorcomponents/Apierror'
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FaTimes } from "react-icons/fa";
-import { fetchWithToken } from '../../Auth/fetchWithToken.jsx';
 import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles.js';
 import { FaRegCheckCircle } from "react-icons/fa";
-import { FaCalendarPlus } from "react-icons/fa";
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription.jsx';
 import FormRenderer from "../../Components/FormRender/TemplateOne/FormRenderer";
 import { IoPersonOutline } from "react-icons/io5";
 import Profile from '../../Components/commancomponents/profile.jsx';
 import { FaUserFriends } from "react-icons/fa";
-export default function addleave() {
+export default function Addleave() {
     const [formShow, setFormShow] = useState(false);
     const [leaveFormdata, setLeaveFormdata] = useState({});
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
         fetchForm();
     }, []);
 
@@ -32,8 +31,7 @@ export default function addleave() {
                 setLeaveFormdata(response.data.data);
                 setFormShow(true)
             }
-        } catch (error) {
-        }
+        } catch (error) {console.error(error)}
     };
     const getToday = () => {
         const today = new Date();
@@ -52,10 +50,10 @@ export default function addleave() {
             if (response) {
                 setEmpLeaveInfo(response.data.data || {});
             }
-        } catch (error) {
-        }
+        } catch (error) {console.error(error)}
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchLeaveEmp()
     }, [fromDate, toDate]);
     const fetchStatForm = async () => {
@@ -67,8 +65,7 @@ export default function addleave() {
             if (response) {
                 setToplist(response.data.data || {});
             }
-        } catch (error) {
-        }
+        } catch (error) {console.error(error)}
     };
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -92,7 +89,7 @@ export default function addleave() {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    const [errorMessage, seterrorMessage] = useState("");
+    const errorMessage = "";
 
     const [SubmitLoading, setSubmitLoading] = useState(false);
     const transformLeavePayload = (values) => {
@@ -102,7 +99,7 @@ export default function addleave() {
                 {
                     SectionName: "leave",
                     fields: Object.entries(values)
-                        .filter(([_, value]) => value !== "" && value !== null)
+                        .filter(([value]) => value !== "" && value !== null)
                         .map(([key, value]) => ({
                             name: key,
                             attributeValue: value
@@ -267,7 +264,7 @@ export default function addleave() {
                                                     type={alert.type}
                                                     message={alert.message}
                                                     show={alert.show} />
-                                                {errorMessage !== "" ? (<div className="alert alert-danger alert-dismissible fade show" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button></div>) : (null)}
+                                                {errorMessage !== "" ? (<div className="alert alert-danger alert-dismissible fade show" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close"></button></div>) : (null)}
                                                 <FormRenderer schema={leaveFormdata} handeSubmit={submitformdata} sumbitStart={SubmitLoading} isFor={"applyLeave"} handleCancelClick={handleCancelClick} onClickGetDateInfo={onClickGetDateInfo} />
                                             </div>
                                         ) : (<div className="w-100 h-100 comman-form-loader-wrapper">

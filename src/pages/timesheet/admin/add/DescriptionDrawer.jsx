@@ -12,23 +12,29 @@ const DescriptionDrawer = ({
 }) => {
 
     const editorRef = useRef(null);
+    // eslint-disable-next-line react-hooks/refs
     const CKEditor = editorRef.current?.CKEditor;
+    // eslint-disable-next-line react-hooks/refs
     const Editor = editorRef.current?.Editor;
 
     useEffect(() => {
         editorRef.current = {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             CKEditor: require("@ckeditor/ckeditor5-react").CKEditor,
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             Editor: require("ckeditor5-custom-build")
         };
     }, []);
     const [editorLoaded, setEditorLoaded] = useState(false);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setEditorLoaded(true);
     }, []);
     const [value, setValue] = useState("");
 
     useEffect(() => {
         if (isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setValue(initialValue || "");
         }
     }, [isOpen, initialValue]);
@@ -90,7 +96,9 @@ const DescriptionDrawer = ({
 
                 <div className="drawer-body">
                     {editorLoaded && (
+                        // eslint-disable-next-line react-hooks/refs
                         <CKEditor
+                            // eslint-disable-next-line react-hooks/refs
                             editor={Editor}
                             data={value}
                             config={editorConfig}

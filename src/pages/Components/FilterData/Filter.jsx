@@ -1,7 +1,6 @@
 import React from 'react'
 import SecTab from '../Employee/SecTab';
-export default function Filter({ userFormdata }) {
-    console.log("Documents section api333:", userFormdata);
+export default function Filter() {
     const headingContent = '';
     
     const AdduserContent = {
@@ -96,10 +95,7 @@ export default function Filter({ userFormdata }) {
             }
         ]
     }
-    const handlesubmitApiData = async (value) => {
-        console.log("Documents section api:", value);
-        
-      };
+    const handlesubmitApiData = async () => {};
   return (
     <div className='row'>
         <SecTab AdduserContent={AdduserContent} headingContent={headingContent} handlesubmitApiData={handlesubmitApiData}/>

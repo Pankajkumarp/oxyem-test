@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { FaPlus } from "react-icons/fa6";
 import AddPerformanceGoal from '../../Components/Popup/AddPerformanceGoal';
-export default function index() {
+export default function GoalName() {
     useEffect(() => {
         const mainElement = document.querySelector('body');
         if (mainElement) {
@@ -17,13 +16,8 @@ export default function index() {
             }
         };
     }, []);
-    const router = useRouter();
-    const onViewClick = (id) => {
-        //router.push(`/employeeDashboard/${id}`);
-    };
-    const onDeleteClick = (id) => {
-        // console.log(id)
-    };
+    const onViewClick = () => {};
+    const onDeleteClick = () => {};
     const [listShow, setIslistShow] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleAddGoalName = async () => {

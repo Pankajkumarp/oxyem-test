@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import Breadcrumbs from "../Components/Breadcrumbs/Breadcrumbsdiscription";
 import CustomDataTable from "../Components/Datatable/tablewithApi.jsx";
 import { axiosJWT } from "../Auth/AddAuthorization.jsx";
 import { useRouter } from "next/router";
-import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 import View from "../Components/Popup/AttendenceHistroy";
 import dynamic from "next/dynamic";
@@ -14,7 +16,7 @@ import { Toaster, toast } from "react-hot-toast";
 import Head from "next/head";
 import pageTitles from "../../common/pageTitles.js";
 import SearchFilter from "../Components/SearchFilter/SearchFilter.jsx";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { FaRegCheckCircle, FaTimes } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
 import Loader from "../Components/loader/loader.jsx";
 import { ATTENDENCE_MANAGEMENT_TEXT } from "../../constants/AttendenceManagementText.js";
@@ -37,11 +39,12 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
     if (localTime === "Invalid date") return ""; // Return empty string if the date is invalid
     return localTime;
   } catch (error) {
+    console.error(error)
     return ""; // Return empty string in case of any error during conversion
   }
 };
 
-export default function Leaveview({ }) {
+export default function Leaveview() {
   const timeZone = getCurrentTimeZone();
   const router = useRouter();
   const [datacoloum, setDatacoloum] = useState([]);
@@ -49,11 +52,8 @@ export default function Leaveview({ }) {
   const [toplist, setToplist] = useState({});
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isClient, setIsClient] = useState(false);
-  const [isCheckIn, setIsCheckIn] = useState(true);
   const [Isaddress, setAddress] = useState();
 
-  const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-  const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [timeDate, setTimeDate] = useState("");
   const formatDateTime = (date) => {
@@ -67,6 +67,7 @@ export default function Leaveview({ }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
@@ -128,7 +129,6 @@ export default function Leaveview({ }) {
     });
   };
   const [idShift, setidShift] = useState("");
-  const [shiftDetails, setshiftDetails] = useState({});
   const [idsent, setIdSent] = useState("");
   const [punchmode, setPunchmode] = useState(true);
   const [aiPayload, setAiPayload] = useState({});
@@ -147,7 +147,6 @@ export default function Leaveview({ }) {
         setIdSent(response.data.data.latestAttendance.idAttendance || "");
         setPunchmode(response.data.data.latestAttendance.mode || "");
         setidShift(response.data.data.shiftDetails.idShift || "");
-        setshiftDetails(response.data.data.shiftDetails || "");
         setToplist(response.data.data.attendancesummary || {});
         const sortedColumns = response.data.data.formcolumns
           ? sortColumns(response.data.data.formcolumns)
@@ -215,6 +214,7 @@ export default function Leaveview({ }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, []);
 
@@ -289,7 +289,6 @@ export default function Leaveview({ }) {
           }
         );
 
-        setIsCheckIn(false);
         fetchData();
       }
     } catch (error) {
@@ -398,10 +397,6 @@ export default function Leaveview({ }) {
     // if (setMouth && setYear) {
     if (setMouth && setYear && activeTab === 0) {
       const getgraphData = async () => {
-        const apipayload = {
-          month: setMouth,
-          year: setYear,
-        };
         try {
           const response = await axiosJWT.get(`${apiUrl}/graphstats`, {
             params: { month: setMouth, year: setYear, isFor: "self" },
@@ -597,21 +592,19 @@ export default function Leaveview({ }) {
   }, []);
 
   const [activeStatus, setActiveStatus] = useState(null);
-  const [activeTableTabStatus, setActiveTableTabStatus] = useState(null);
 
   const handleShowDataForStatus = (filterKey) => {
     setActiveTab(1); // switch to table tab
-    setActiveTableTabStatus(filterKey);
     setActiveStatus(filterKey);
 
     if (filterKey === "clr") {
       setSearchfilter({});
       setActiveStatus(null);
     } else {
-      let filter = {};
 
       switch (filterKey) {
         case "leavesOnToday":
+          // eslint-disable-next-line no-case-declarations
           const today = new Date().toISOString().split("T")[0];
           setSearchfilter({ currentDate: today });
           break;
@@ -627,12 +620,10 @@ export default function Leaveview({ }) {
       }
 
       // setSearchfilter(filter);
-      // console.log("Applied filter:", filter);
     }
   };
   const [loading, setLoading] = useState(false);
   const [aiRisks, setAiRisks] = useState([]);
-  const [isModalAIOpen, setIsModalAIOpen] = useState(false);
 
   const prompt = `Attendance Prompt: 
 Deep analyze the following employee attendance data. Generate the output in three sections with a maximum of three crisp points each with max 6 words:
@@ -681,8 +672,9 @@ const generateAIContent = async () => {
           return;
         }
         localStorage.removeItem(STORAGE_KEY);
-      } catch (err) {
+      } catch (error) {
         localStorage.removeItem(STORAGE_KEY);
+        console.error(error)
       }
     }
     const res = await fetch("/api/generateinsights", {

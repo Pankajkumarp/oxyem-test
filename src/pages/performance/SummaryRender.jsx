@@ -13,16 +13,15 @@ import Files from "react-files";
 import { axiosJWT } from "../Auth/AddAuthorization";
 import { MdDownload } from "react-icons/md";
 import { GrDocumentUpdate } from "react-icons/gr";
-import { FaCircleChevronUp, FaCircleChevronDown } from "react-icons/fa6";
 import SelectComponent from "../Components/common/SelectOption/SelectComponent";
 import { IoMdHappy } from "react-icons/io";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { FaRegCheckCircle} from "react-icons/fa";
 const SummaryRenderer = ({
     summaryValue,
     id,
     refreshSummaryData,
     handleCancel,
-    handleNext,
     buttonArray,
     renderLength,
     handleCycleInitiate
@@ -32,7 +31,6 @@ const SummaryRenderer = ({
     const [behaviorData, setbehaviorData] = useState([]);
     const [learningData, setlearningData] = useState([]);
     const [recommendedRating, setRecommendedRating] = useState({});
-    const [summaryData, setSummaryData] = useState(summaryValue);
     const [allStrengthImprove, setallStrengthImprove] = useState([]);
     const [strengthsData, setStrengthsData] = useState([]);
     const [improvementData, setImprovementData] = useState([]);
@@ -46,11 +44,11 @@ const SummaryRenderer = ({
     const [finalMsg, setFinalMsg] = useState("");
     const [canCycleInitiate, setCycleInitiate] = useState(false);
     useEffect(() => {
-        setSummaryData(summaryValue);
         if (summaryValue && summaryValue.summary) {
             const performanceData = summaryValue.summary.filter(
                 (item) => item.name === "Performance Goals"
             );
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setperformanceData(performanceData);
             const behaviorData = summaryValue.summary.filter(
                 (item) => item.name === "Behavior Goals"
@@ -424,7 +422,7 @@ const SummaryRenderer = ({
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {filesData.map((file, index) => (
+                                            {filesData.map((file) => (
                                                 <tr className="bottom_table_line" key={file.fileName}>
                                                     <td className="name_ic">
                                                         <div className="highlight_t_s">

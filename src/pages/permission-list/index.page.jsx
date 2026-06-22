@@ -21,7 +21,7 @@ export default function Index() {
         openDetailpopup();
     };
     const onViewClick = (id) => { router.push(`/edit-permission/${id}`); };
-    const onDeleteClick = (id) => {};
+    const onDeleteClick = () => {};
 
     return (
         <>

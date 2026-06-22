@@ -8,9 +8,7 @@ import { axiosJWT } from '../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
 import { useRouter } from 'next/router'
 import Head from 'next/head';
-import pageTitles from '../../common/pageTitles.js';
-import { GrDocumentNotes } from "react-icons/gr";
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import axios from 'axios';
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -24,8 +22,7 @@ const Notes = dynamic(() => import('../Components/Popup/Notes'), {
     ssr: false
 });
 import { countWorkingDays } from "../Components/Hooks/countWorkingDays";
-export default function opportunity({ userFormdata }) {  // Default to empty array if not provided
-
+export default function Opportunity({ userFormdata }) {
     const router = useRouter();
     const showButton = "";
     const pagename = "timeManagement";
@@ -40,7 +37,7 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
 
         }),
-        indicatorSeparator: (provided, state) => ({
+        indicatorSeparator: (provided) => ({
             ...provided,
             backgroundColor: 'var(--dropdownhoverbg)',
             fontWeight: 'var(--dropdownfontweight)',
@@ -80,20 +77,11 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
     const [dayCount, setDayCount] = useState("");
     const [formvalue, setFormvalue] = useState(userFormdata);
     const [dataDocuments, setDataDocuments] = useState([]);
-    const [uploadedFiles, setUploadedFiles] = useState({});
     const [calculate, setcalculate] = useState(false);
     const [fields, setfields] = useState([]);
     const formbuttons = formvalue.section[1].buttons;
     const formsubmitbuttons = formvalue.section[3].buttons;
     const [activeTab, setActiveTab] = useState(formvalue.section[0].SectionName);
-    // const [tabArray, setTabArray] = useState([]);
-    // useEffect(() => {
-    //     if (!tabArray.includes(activeTab) && activeTab !== null) {
-    //         setTabArray((prevTabArray) => [...prevTabArray, activeTab]);
-    //     }
-    // }, [activeTab]);
-    const [tabArray, setTabArray] = useState([]);
-
     // replace the old activeTab effect with this:
     useEffect(() => {
         if (!Array.isArray(formvalue?.section)) return;
@@ -103,20 +91,18 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             .filter(s => s.isVisible)
             .map(s => s.SectionName);
 
-        setTabArray(initialTabs);
-
         // Ensure activeTab is valid — fallback to first visible section if not
         if (!initialTabs.includes(activeTab)) {
             const firstVisible = initialTabs[0] || null;
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             if (firstVisible) setActiveTab(firstVisible);
         }
     }, [formvalue]);
 
-    const [isTabclick, setisTabclick] = useState(true);
     const [tableSection, settableSection] = useState("show");
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const [existingData, setexistingData] = useState([]);
+    const existingData = [];
     // Merge existing data with form fields
     const mergeDataWithFields = (fields, existingData) => {
         const existingDataMap = existingData.reduce((acc, item) => {
@@ -129,8 +115,6 @@ export default function opportunity({ userFormdata }) {  // Default to empty arr
             return acc;
         }, {});
     };
-    const initialData = mergeDataWithFields(fields, existingData);
-    const [data, setData] = useState([initialData]);
     const [departOptions, setDepartOptions] = useState([]);
     const [roleOptions, setRoleOptions] = useState([]);
 
@@ -337,6 +321,7 @@ setDataEffort(prev =>
 
         if (initialSection && initialSection.Subsection.length > 0) {
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setfields(initialSection.Subsection[0].fields);
 
             // Initialize data for the active tab only if it's empty
@@ -573,10 +558,6 @@ setDataEffort(prev =>
             const file = value;
             if (file) {
                 const fileKey = `${rowIndex}_${Date.now()}`;
-                setUploadedFiles(prev => ({
-                    ...prev,
-                    [fileKey]: file
-                }));
                 updatedData[rowIndex] = {
                     ...updatedData[rowIndex],
                     [fieldName]: file.name,
@@ -682,12 +663,6 @@ setDataEffort(prev =>
             return newErrors;
         });
 
-        const existingClientField = formvalue.section[0].Subsection[0].fields.find(
-            field => field.name === "existingClient"
-        );
-        const clientNameField = formvalue.section[0].Subsection[0].fields.find(
-            field => field.name === "clientName"
-        );
         setFormvalue({ ...formvalue });
     };
 
@@ -714,6 +689,7 @@ setDataEffort(prev =>
                     overrideTotalCost: overrideTotalCost
                 };
             });
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setDataEffort(updatedData);
         }
 
@@ -756,7 +732,9 @@ setDataEffort(prev =>
 
     const handleChangess = (currentIndex) => {
         const nextIndex = currentIndex + 1;
+        // eslint-disable-next-line no-undef
         if (nextIndex < content.section.length) {
+            // eslint-disable-next-line no-undef
             setActiveTab(content.section[nextIndex].SectionName);
         }
     };
@@ -857,7 +835,6 @@ setDataEffort(prev =>
                     clientNameField.isDisabled = true;
                 }
                 setFormvalue(updatedFormvalue);
-                setisTabclick(true);
                 settableSection("show");
                 const totalDays = response.data.totalDays;
 
@@ -876,7 +853,7 @@ setDataEffort(prev =>
                 }, 2000);
             }
         } catch (error) {
-            console.log("Error submitting form data:", error);
+            console.error("Error submitting form data:", error);
         }
     };
     const handleSubmit = async () => {
@@ -963,6 +940,7 @@ setDataEffort(prev =>
                 }
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const removeError = (key) => {
@@ -980,7 +958,6 @@ setDataEffort(prev =>
     }
 
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-    const [isHistroyId, setIsHistroyId] = useState("");
     const openNotesModal = async () => {
         setIsNotesModalOpen(true)
     }
@@ -992,6 +969,7 @@ setDataEffort(prev =>
         setDayCount(days)
     }
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDataEffort(prev =>
             prev.map(row => ({
                 ...row,
@@ -1238,7 +1216,7 @@ setDataEffort(prev =>
                                                                                                                         <div className="card_financial_top">
                                                                                                                             <h5 className="card-title">{sectionTitle}</h5>
                                                                                                                             <p className="card-text-cus">
-                                                                                                                                {Object.entries(sectionData).map(([key, value], index) => {
+                                                                                                                                {Object.entries(sectionData).map(([key, value]) => {
                                                                                                                                     if (key === "total") {
                                                                                                                                         return <>{value}</>;
                                                                                                                                     }
@@ -1274,7 +1252,7 @@ setDataEffort(prev =>
                                                                                                                         <div className="card_financial_top">
                                                                                                                             <h5 className="card-title">{sectionTitle}</h5>
                                                                                                                             <p className="card-text-cus">
-                                                                                                                                {Object.entries(sectionData).map(([key, value], index) => {
+                                                                                                                                {Object.entries(sectionData).map(([key, value]) => {
                                                                                                                                     if (key === "total") {
                                                                                                                                         return <>{value}</>;
                                                                                                                                     }
@@ -1310,7 +1288,7 @@ setDataEffort(prev =>
                                                                                                                         <div className="card_financial_top">
                                                                                                                             <h5 className="card-title">{sectionTitle}</h5>
                                                                                                                             <p className="card-text-cus">
-                                                                                                                                {Object.entries(sectionData).map(([key, value], index) => {
+                                                                                                                                {Object.entries(sectionData).map(([key, value]) => {
                                                                                                                                     if (key === "total") {
                                                                                                                                         return <>{value}</>;
                                                                                                                                     }
@@ -1442,6 +1420,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

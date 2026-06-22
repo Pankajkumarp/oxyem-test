@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useRef } from "react";
 import ReactModal from 'react-modal';
 import { MdClose } from "react-icons/md";
 import Link from "next/link";

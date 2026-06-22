@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
-import { FaRegClock } from "react-icons/fa";
-import { MdOutlineLocationOn } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
-import Profile from '../commancomponents/profile';
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
  
-const BasketofAllowance = ({ isOpen, closeModal, isviewId, section, handleUpadateClick }) => {
+const BasketofAllowance = ({ isOpen, closeModal, isviewId}) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [histroyValue, setHistroyValue] = useState([]);
@@ -35,6 +30,7 @@ const BasketofAllowance = ({ isOpen, closeModal, isviewId, section, handleUpadat
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isviewId);
 		document.body.classList.add("hide-body-scroll");
     } else {

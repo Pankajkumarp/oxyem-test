@@ -5,7 +5,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
-const MyEditor = ({ type, readonly, isDisabled, placeholder, label, value, validations = [], onChange }) => {
+const MyEditor = ({ placeholder, label, value, validations = [], onChange }) => {
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
 
     const isRequired = validations.some(validation => validation.type === "required");
@@ -13,6 +13,7 @@ const MyEditor = ({ type, readonly, isDisabled, placeholder, label, value, valid
     const [textData, settextData] = useState(value);
     useEffect(() => {
       // Synchronize internal state with props
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       settextData(value);
     }, [value]);
     

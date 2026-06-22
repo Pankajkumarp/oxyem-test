@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import axios from "axios";
-import Header from '../Components/Logincomponents/Header';
 import { copyRightText as footercr } from '../../common/content_en';
 import Footer from '../Components/Logincomponents/Footer';
 import { IoCheckmark } from "react-icons/io5";
@@ -29,7 +28,6 @@ export default function ChangePassword() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(validationSchema)
@@ -76,6 +74,7 @@ export default function ChangePassword() {
       hasSpecialChar &&
       Object.keys(errors).length === 0;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsFormValid(formValid);
   }, [password, confirmPassword, hasNumber, hasLower, hasUpper, hasMinLength, hasMaxLength, hasSpecialChar, errors]);
 
@@ -98,8 +97,11 @@ export default function ChangePassword() {
     
     try {
       const response = await axios.post(`${apiUrl}/users/updatepwd`, payload);
+      if(response){
       router.push('/login');
+      }
     } catch (error) {
+      console.error(error)
       // Handle the error appropriately here
       // console.error('Failed to update password:', error.response?.data?.message || error.message);
     }

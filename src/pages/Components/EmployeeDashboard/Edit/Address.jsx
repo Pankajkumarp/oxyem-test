@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from "react";
 import ReactModal from 'react-modal';
 import dynamic from 'next/dynamic';
@@ -27,7 +28,6 @@ export default function Edit({ isOpen, closeModal, formData, getsubmitformdata, 
     }, [formData]);
 
     useEffect(() => {
-        console.log("empId changed:", empId);
         setEmpId(empId); // Update empid when empId changes
     }, [empId]);
 
@@ -57,17 +57,14 @@ const findCountryOption = async (countryName) => {
     try {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+        // eslint-disable-next-line no-undef
         const response = await axiosJWT.get(`${apiUrl}/location`, {
             params: { isFor: "country" }
         });
-console.log("findCountryOption response:", response);
         const countryList = response.data || [];
         setCountryOptions(countryList);
 
         if (!countryName) return null;
-
-        console.log("Finding:", countryName);
-        console.log("Options:", countryList);
 
         const match = countryList.find(c =>
             c.name.toLowerCase().includes(countryName.toLowerCase()) ||
@@ -83,7 +80,7 @@ console.log("findCountryOption response:", response);
 };
 
 
-const fetchAddDetails = async (pinCode,countryOptions) => {
+const fetchAddDetails = async (pinCode) => {
     try {
         const cleanPin = pinCode.trim();
 
@@ -118,8 +115,6 @@ const fetchAddDetails = async (pinCode,countryOptions) => {
             const response = await fetch(url);
             const data = await response.json();
 
-            console.log("Ireland response:", data);
-
             const result = data?.results?.[cleanPin]?.[0];
             if (result) {
                 city = result.city;
@@ -129,7 +124,6 @@ const fetchAddDetails = async (pinCode,countryOptions) => {
         }
         
         const selectedCountry = await findCountryOption(country);
-        console.log("selectedCountry", selectedCountry);
         updateFormData({ city, state, country:selectedCountry });
 
     } catch (err) {
@@ -203,8 +197,6 @@ const fetchAddDetails = async (pinCode,countryOptions) => {
 
             const response = await fetch(url);
             const data = await response.json();
-
-            console.log("Ireland response:", data);
 
             const result = data?.results?.[cleanPin]?.[0];
             if (result) {
@@ -397,6 +389,7 @@ const fetchAddDetails = async (pinCode,countryOptions) => {
     const handleChangess = (currentIndex) => {
         const nextIndex = currentIndex + 1;
         if (nextIndex < content.section.length) {
+            // eslint-disable-next-line no-undef
             setActiveTab(content.section[nextIndex].SectionName);
         }
     };

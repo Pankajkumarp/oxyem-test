@@ -7,25 +7,11 @@ import { axiosJWT } from '../Auth/AddAuthorization';
 import DeleteModal from '../Components/Popup/PolicyDeleteModal';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
-export default function policydashboard() {
+export default function Policydashboard() {
   const router = useRouter();
-  const [isHistroyId, setIsHistroyId] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpenInfo, setIsModalInfoOpen] = useState(false);
-
-  const onViewClick = (id) => {
-    setIsHistroyId(id);
-    setIsModalInfoOpen(true)
-  };
-
-  const openDetailpopup = async () => { setIsModalOpen(true); };
-
-  const closeDetailpopup = async () => { setIsModalOpen(false) }
-
-  const closeInfopopup = async () => { setIsModalInfoOpen(false) }
-
-  const onHistoryClick = async (id) => {
-    setIsHistroyId(id);
+  const onViewClick = () => {};
+  const openDetailpopup = async () => {};
+  const onHistoryClick = async () => {
     openDetailpopup();
   };
 
@@ -35,13 +21,11 @@ export default function policydashboard() {
 
     }
   };
-  const handleApprrovereq = (id) => { };
-
+  const handleApprrovereq = () => { };
   const handleDecommissionreq = async (data) => {
     const formattedData = {
-      idAsset: [data.idEmployee] // Set idEmployee in idAsset array
+      idAsset: [data.idEmployee]
     };
-
     data.section.forEach(section => {
       section.fields.forEach(field => {
         // Skip radio objects
@@ -80,7 +64,7 @@ export default function policydashboard() {
     setIsPolicyId(id);
     setPIsModalOpen(true)
   };
-  const closeDetailpopupRe = (id) => {
+  const closeDetailpopupRe = () => {
     setPIsModalOpen(false)
   };
   const [isDeleted, setIsDeleted] = useState(true);
@@ -139,8 +123,6 @@ export default function policydashboard() {
         </div>
       </div>
       <ToastContainer />
-
     </>
-
   );
 }

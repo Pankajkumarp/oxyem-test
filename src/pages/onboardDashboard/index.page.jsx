@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import View from './history';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
-export default function onboardDashboard() {
+export default function OnboardDashboard() {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHistroyId, setHistroyId] = useState(false);
@@ -17,13 +16,8 @@ export default function onboardDashboard() {
         setHistroyId(id);
         setIsModalOpen(true);
     };
-    const onEditClick = (id) => {
-
-    };
-    const handleApprrovereq = (id) => {
-
-    };
-
+    const onEditClick = () => {};
+    const handleApprrovereq = () => {};
     const closeDetailpopup = async () => {
         setIsModalOpen(false);
     };

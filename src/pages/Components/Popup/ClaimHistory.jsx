@@ -1,64 +1,14 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
-import { FaRegClock } from "react-icons/fa";
-import { MdOutlineLocationOn } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
-import HistoryComponent from '../../Components/Claim/claimhistory';
 
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
-const getCurrentTimeZone = () => {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
 
-const convertUtcToLocalTime = (utcTime, timeZone) => {
-  // Early return for invalid or empty time
-  if (!utcTime || utcTime.trim() === "") return "";
 
-  try {
-    const today = moment.utc().format('YYYY-MM-DD');  // Get today's date in UTC
-    const utcDateTime = `${today}T${utcTime}Z`;  // Combine date and time to form a full date-time string
-    const localTime = moment.utc(utcDateTime).tz(timeZone).format('HH:mm:ss');  // Convert to local time
-
-    if (localTime === "Invalid date") return ""; // Return empty string if the date is invalid
-    return localTime;
-  } catch (error) {
-    return ""; // Return empty string in case of any error during conversion
-  }
-};
-
-const convertUtcTodayName = (utcDateTime, timeZone) => {
-  return moment(utcDateTime).tz(timeZone).format('dddd'); // Format to day name and time
-};
-const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpadateClick ,datafor }) => {
-  const timeZone = getCurrentTimeZone();
+const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const [attendanceDetails, setAttendanceDetails] = useState([]);
-  const formattedDate = () => {
-    const date = new Date(attendanceDate);
-
-    const options = {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    };
-
-    return date.toLocaleDateString('en-GB', options);
-  };
   const [actionDetails, setClaimDetails] = useState([]);
   
   const getClaimDetails = async (id) => {
@@ -73,19 +23,18 @@ const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpa
       
       }
     } catch (error) {
-      
+      console.error(error)
     }
   };
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getClaimDetails(isHistroyId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isHistroyId]);
 
-  const handleupdate = () => {
-    handleUpadateClick(getidAttendance);
-};
   
 const capitalizeFirstLetter = (string) => {
   if (!string) return '';

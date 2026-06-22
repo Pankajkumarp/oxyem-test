@@ -33,14 +33,14 @@ const convertUtcToLocalTime = (
       .tz(timeZone)
       .format("hh:mm A");
   } catch (error) {
+    console.error(error)
     return "";
   }
 };
 const getCurrentTimeZone = () => {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
-export default function AttendanceSnapshot({
-}) {
+export default function AttendanceSnapshot() {
   const timeZone = getCurrentTimeZone();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selected, setSelected] = useState<AttendanceViewOption>(VIEW_OPTIONS[0]);

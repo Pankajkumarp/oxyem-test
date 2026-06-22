@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai";
+import React, { useState } from "react";
 import ReactModal from 'react-modal';
 import { MdClose } from "react-icons/md";
 import DatePicker from "react-datepicker";
@@ -20,12 +19,13 @@ const customStyles = {
   },
 };
 
-export default function LeavePopup({ isOpen, closeModal,onSubmit,pagename  }) {
+export default function LeavePopup({ isOpen, closeModal,onSubmit  }) {
   const [delayreason, setDelayReason] = useState('');
   const [formData, setFormData] = useState({ delayreason: '' });
   const [validationMessage, setValidationMessage] = useState('');
   const [date, setDate] = useState(new Date());
 
+// eslint-disable-next-line react/display-name
 const SmallDateInput = React.forwardRef(
   ({ value, onClick, placeholder }, ref) => (
     <div className="position-relative">
@@ -113,6 +113,7 @@ onSubmit({
     onChange={(date) => setDate(date)}
     dateFormat="dd/MM/yyyy"
     minDate={new Date()}
+    // eslint-disable-next-line react-hooks/static-components
     customInput={<SmallDateInput placeholder="Starting Date" />}
   />
 </div>

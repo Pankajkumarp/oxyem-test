@@ -38,6 +38,7 @@ const AttendanceChart = ({ activeTab }) => {
                                     if (!selectedCategory) return;
 
                                     requestAnimationFrame(() => {
+                                        // eslint-disable-next-line react-hooks/immutability
                                         handleChartClick({ status: selectedCategory });
                                     });
                                 },
@@ -217,11 +218,12 @@ const AttendanceChart = ({ activeTab }) => {
 
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
     useEffect(() => {
         if (activeTab === "All") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchClientData("attendance");
         }
     }, [activeTab]);

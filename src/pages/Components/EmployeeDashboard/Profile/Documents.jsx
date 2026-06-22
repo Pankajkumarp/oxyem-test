@@ -6,7 +6,6 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function Documents({ empId, apiBaseUrl ,showbutton}) {
   const [documents, setDocuments] = useState([{ type: '', files: [] }]);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [errors, setErrors] = useState({ documentName: '' });
   const [activeTab, setActiveTab] = useState('education'); // State to manage active tab
 
   const openEditModal = () => {
@@ -27,11 +26,13 @@ export default function Documents({ empId, apiBaseUrl ,showbutton}) {
         const response = await axiosJWT.post(apiUrl, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
+        if(response){
         closeEditModal();
         fetchInfo();
+        }
       }
     } catch (error) {
-      // console.error("Error occurred during API call:", error);
+      console.error(error)
     }
   };
 
@@ -51,12 +52,13 @@ export default function Documents({ empId, apiBaseUrl ,showbutton}) {
         }
       }
     } catch (error) {
-      // console.error("Error occurred during API call:", error);
+      console.error(error)
     } 
   };
 
   useEffect(() => {
     fetchInfo();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empId]);
 
   const handleTabChange = (tabId) => {

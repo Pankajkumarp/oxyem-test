@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { FaEye } from "react-icons/fa";
 import View from '../../Popup/assetDetail';
 
-export default function SameNameradioComponent({ options, value, name, onChange, label, pagename }) {
+export default function SameNameradioComponent({ options, value, name, onChange, label }) {
   const [selectedValue, setSelectedValue] = useState(value);
 
   const handleChange = (event) => {
@@ -12,9 +11,7 @@ export default function SameNameradioComponent({ options, value, name, onChange,
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openDetailpopup = async () => {
-    setIsModalOpen(true);
-  };
+
   const closeDetailpopup = async () => {
     setIsModalOpen(false);
   };

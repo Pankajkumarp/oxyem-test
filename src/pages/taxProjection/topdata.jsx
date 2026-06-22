@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import Taxdetail from "./taxdetail";
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import BarChart from './BarChart';
@@ -19,8 +19,7 @@ export default function TopData({data, allocationInfo ,heading ,topheader ,fullD
       } else if (key === 'Other Sources') {
         fetchData('other')
         setHeading(key)
-      } else {
-      }
+      } 
   };
 
   const fetchData = async (value) => {
@@ -32,6 +31,7 @@ export default function TopData({data, allocationInfo ,heading ,topheader ,fullD
             setModelOpen(true);
         }
     } catch (error) {
+      console.error(error)
     }
 };
   

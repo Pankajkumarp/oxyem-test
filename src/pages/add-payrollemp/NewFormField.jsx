@@ -1,14 +1,10 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { getFieldByName, updatedSubsection } from '../../common/commonFunctions';
-import axios from "axios";
+import { updatedSubsection } from '../../common/commonFunctions';
 import RadioComponent from '../Components/common/Inputfiled/RadioComponent';
-import moment from 'moment-timezone';
-import { axiosJWT } from '../Auth/AddAuthorization';
-// import Viewallowence  from './view.jsx';
-import { FaRegEye } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-import Select from '../Components/common/SelectComponent/CreateSingleSelectComponent';
 const components = {
   'Text': dynamic(() => import('../Components/common/Inputfiled/TextComponent')),
   'OnlyText': dynamic(() => import('../Components/common/Inputfiled/OnlyTextComponent')),
@@ -48,7 +44,8 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
   const [formData, setFormData] = useState({});
   const [currentFormData, setCurrentFormData] = useState({});
   const [fieldUpdate, setfieldUpdate] = useState([]);
-  const [selectEmpId, setSelectEmpId] = useState("");
+  
+  const selectEmpId = "";
   const extractFields = (fields) => {
     let result = {};
     fields.Subsection.forEach(subsection => {
@@ -150,6 +147,7 @@ useEffect(() => {
     return updated;
   });
  
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [additionalFields]);
 
   const validateFields = () => {
@@ -311,7 +309,7 @@ useEffect(() => {
         return updatedFields; // Return the updated state
       });
     } catch (error) {
-      
+      console.error(error)
     }
   };
    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -465,6 +463,7 @@ useEffect(() => {
                               value={field.name}
                               onChange={(e) => handleFieldChange('earning', index, 'name', e.target.value)}
                               className="form-control mb-2"
+                              // eslint-disable-next-line react/no-unknown-property
                               documentType={'other_allowances'}
                             />
                             {field.error && !field.name && (

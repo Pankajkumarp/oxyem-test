@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { getFieldByName, updatedSubsection } from '../../common/commonFunctions';
-import axios from "axios";
+import { updatedSubsection } from '../../common/commonFunctions';
 import RadioComponent from '../Components/common/Inputfiled/RadioComponent';
-import moment from 'moment-timezone';
 import { FaRegEye } from "react-icons/fa";
-import { axiosJWT } from '../Auth/AddAuthorization';
 import { RiDeleteBinLine } from "react-icons/ri";
 import Viewallowence  from './view.jsx';
 import Select from '../Components/common/SelectComponent/CreateSingleSelectComponent';
@@ -41,16 +39,15 @@ const components = {
 
 const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid, handleGetformvalueClick, pagename, showButton, showleave, getChangessField, tdsAmount, salaryAmount,pageedit }) => {
 
-  const [fields, setFields] = useState(fieldsvalue);
+  const fields = fieldsvalue;
   const [errors, setErrors] = useState({});
-  const [errorres, setErrorres] = useState('');
+  const errorres = '';
   const [submitdata, setSubmitdata] = useState({});
   const [formData, setFormData] = useState({});
  
 
   const [currentFormData, setCurrentFormData] = useState({});
-  const [fieldUpdate, setfieldUpdate] = useState([]);
-  const [selectEmpId, setSelectEmpId] = useState("");
+  const selectEmpId = "";
   const extractFields = (fields) => {
     let result = {};
     fields.Subsection.forEach(subsection => {
@@ -64,6 +61,7 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
 
   useEffect(() => {
     const extractedData = extractFields(fields);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData(extractedData);
   }, [fields]);
 
@@ -188,17 +186,6 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
   const handleChangeAdd = async (fieldName, value) => {};
 
   const handleCancel = () => {
-    const updateAllFields = () => {
-      fields.Subsection.forEach(subsection => {
-        subsection.fields.forEach(field => {
-          field.value = '';
-        });
-      });
-      return fields;
-    };
-
-    const updatedFields = updateAllFields();
-    setfieldUpdate(updatedFields);
     setFormData({});
     setCurrentFormData({});
     setSubmitdata({});
@@ -258,7 +245,7 @@ const NewFormField = ({ fieldsvalue, handleChangeValue, submitformdata, actionid
         return updatedFields; // Return the updated state
       });
     } catch (error) {
-      
+      console.error(error)
     }
   };
  const [isDrawerOpen, setIsDrawerOpen] = useState(false);

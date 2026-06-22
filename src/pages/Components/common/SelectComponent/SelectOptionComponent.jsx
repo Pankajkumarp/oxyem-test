@@ -1,17 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
 import Select from '../SelectOption/SelectComponent';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 
-export default function SelectOptionComponent({ label, name, validations = [], isDisabled, onChange, documentType, data, dependentId, selectedAsset,placeholder }) {
+export default function SelectOptionComponent({ label, name, validations = [], isDisabled, onChange, documentType, dependentId, selectedAsset,placeholder }) {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(selectedAsset);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (documentType) {
-      fetchOptions();
-    }
-  }, [documentType, dependentId]);
+
   useEffect(() => {
     setSelectedOption(selectedAsset);
   }, [selectedAsset]);
@@ -59,9 +56,14 @@ export default function SelectOptionComponent({ label, name, validations = [], i
 
       setOptions(optionsData);
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   };
+    useEffect(() => {
+    if (documentType) {
+      fetchOptions();
+    }
+  }, [documentType, dependentId]);
   useEffect(() => {
     if (dependentId) {
       fetchOptions();

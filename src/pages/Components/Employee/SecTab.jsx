@@ -1,16 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import DocFrom from './DocumentComponent';
 import DocFromcomman from './DocumentComponentcomman';
 import PreviewComponent from './PreviewComponent';
 import dynamic from 'next/dynamic';
 import Details from '../../onboardDashboard/innercomponet/detail.jsx';
-import { FaEdit } from "react-icons/fa";
 const DynamicForm = dynamic(() => import('../CommanForm.jsx'), {
   ssr: false
 });
 import { Tooltip } from 'react-tooltip'
 import SummaryView from '../summary/summaryview.jsx';
-export default function SecTab({ AdduserContent, headingContent, getleavedetail, handlesubmitApiData, getsubmitformdata, getleaveoption, getsubmitformdatapreview, actionid, handleBTPformvalue, pagename, showButton, converttoenable, showleave, getChangessField, handleGetEmpDetail, handleGetproject ,LossOfPayApplicable,getsubmitformdatahitApi,assetid, handleGetfiles, filegetpagename ,applicantDetails, cancelClickAction,applicantid, btpstpvalue ,handelPreviewPdf,loaderSubmitButton ,handleDescriptionDetail,getRewardData ,attachments ,autofillData, isPageType, isFor}) {
+export default function SecTab({ AdduserContent, headingContent, getleavedetail, handlesubmitApiData, getsubmitformdata, getleaveoption, getsubmitformdatapreview, actionid, handleBTPformvalue, pagename, showButton, showleave, getChangessField, handleGetEmpDetail, handleGetproject ,LossOfPayApplicable,getsubmitformdatahitApi,assetid, handleGetfiles, filegetpagename ,applicantDetails, cancelClickAction,applicantid, btpstpvalue ,handelPreviewPdf,loaderSubmitButton ,handleDescriptionDetail,getRewardData ,attachments ,autofillData, isPageType, isFor}) {
   const apiUrl = "";
   const [content, setContent] = useState(AdduserContent); // State to hold the content
   const [activeTab, setActiveTab] = useState(AdduserContent.section[0].SectionName);
@@ -80,6 +80,7 @@ const handleTabClick = (tabLabel) => {
     if (pagename === "onprocessBoarding") {
       const { completeSections, section, status } = AdduserContent;
       if (status === "rejected") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActiveTab(completeSections);
         return;
       }
@@ -147,7 +148,7 @@ const handleTabClick = (tabLabel) => {
 
 
   useEffect(() => {
-    const newArray = convertToArray(sourceArray);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent(AdduserContent)
   }, [AdduserContent]);
 
@@ -215,22 +216,6 @@ const handleTabClick = (tabLabel) => {
     }
   };
 
-  const updateFieldValues = (content, data) => {
-    content.section.forEach((section) => {
-      section.Subsection.forEach((subsection) => {
-        subsection.fields.forEach((field) => {
-          if (data[field.name]) {
-            if (['Location', 'Department', 'Role'].includes(field.type) && typeof data[field.name] === 'object') {
-              field.value = data[field.name].label; // Use the label for these field types
-            } else {
-              field.value = typeof data[field.name] === 'object' ? data[field.name].value : data[field.name];
-            }
-          }
-        });
-      });
-    });
-  };
-
 
   const submitformdata = () => {
     const newArray = convertToArray(sourceArray);
@@ -258,7 +243,7 @@ const handleTabClick = (tabLabel) => {
     handleBTPformvalue(value)
   };
 
-  const handleAssetsformvalueClick = (value ,files) => {
+  const handleAssetsformvalueClick = () => {
     const filteredSections = content.section.filter(section => section.isVisible !== false);
     const currentIndex = filteredSections.findIndex(section => section.SectionName === activeTab);
     const nextIndex = filteredSections.findIndex((section, index) => index > currentIndex && section.isVisible !== false);
@@ -270,14 +255,14 @@ const handleTabClick = (tabLabel) => {
     }
   };
 
-  const handleOnprocessBoarding = (buttonType, buttonvalue, value) => {
+  const handleOnprocessBoarding = (buttonType, buttonvalue) => {
     const newArray = convertToArray(sourceArray);
     if (pagename === "onprocessBoarding") {
       getsubmitformdata(newArray,buttonType,buttonvalue)
     }
   };
 
-  const handelPreviewPdfData = (buttonType, formData) => {
+  const handelPreviewPdfData = (buttonType) => {
     const newArray = convertToArray(sourceArray);
     if (pagename === "addReward") {
       handelPreviewPdf(buttonType ,newArray)

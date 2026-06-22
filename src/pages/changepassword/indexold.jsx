@@ -1,21 +1,18 @@
 import {useRouter} from 'next/router'
 import Head from 'next/head.js';
-import { useParams } from 'next/navigation'
 import { useState } from "react";
 import { useForm, } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import axios from "axios";
-import { usePathname } from 'next/navigation'
 
 import Header from '../Components/Logincomponents/Header';
 import Footer from '../Components/Logincomponents/Footer';
-import { logoContent as logoText,copyRightText as footercr, forgotPassword as fpcontent} from '../../common/content_en';
+import { logoContent as logoText,copyRightText as footercr} from '../../common/content_en';
 export default function Changepassword() {
 	const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
  const webpath = basepath + 'Change-password'
 	const router = useRouter()
-	const FPcontent =  fpcontent;
 	  const logocontent1 =  logoText;
 	  let footertext= footercr;
 	//const [responselogMessage, setverEmail] = useState('');
@@ -33,16 +30,13 @@ export default function Changepassword() {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(validationSchema)
     
   });
   const [responselogMessage, setjoinResponseMessage] = useState('');
-  const [errorjoinMessage, setErrorjoinMessage] = useState('');
   const {query} = router
-	const props={query};
 	
   const onSubmit = async (data) => {
     //reset()
@@ -57,7 +51,7 @@ export default function Changepassword() {
 		})
 
     .catch(error => {
-			setErrorjoinMessage(error.response.data.message)
+			console.error(error)
 		});
 
     }

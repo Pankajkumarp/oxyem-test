@@ -1,18 +1,12 @@
+/* eslint-disable react-hooks/immutability */
 import React, { useState, useEffect } from "react";
-import LeaveList from "../Components/Leave/LeaveListings";
 import Breadcrumbs from "../Components/Breadcrumbs/Breadcrumbsdiscription.jsx";
 import CustomDataTable from "../Components/Datatable/tablewithApi.jsx";
 import Recall from "../Components/Popup/Recallmodal";
-import {
-  reorderColumns,
-  reorderEntries,
-  sortData,
-} from "../../common/commonFunctions";
 import { axiosJWT } from "../Auth/AddAuthorization.jsx";
 import { useRouter } from "next/router";
 import LeaveInsightBanner from "../Components/Leave/LeaveInsightBanner.jsx";
 import dynamic from "next/dynamic";
-import SelectComponent from "../Components/common/SelectOption/SelectComponent.jsx";
 import View from "../Components/Popup/Leaveview";
 import { FaTimes } from "react-icons/fa";
 import { Toaster, toast } from "react-hot-toast";
@@ -29,36 +23,13 @@ import pageTitles from "../../common/pageTitles.js";
 
 export default function Leaveview({ showOnlylist, empId }) {
   const router = useRouter();
-  const [leavelisting, setLeaveListing] = useState([]);
-  const [formcolumn, setFormColumn] = useState([]);
-  const [leavesummary, setLeaveSummary] = useState([]);
-  const [updleavelist, setUpdLeaveList] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
+  const formcolumn = [];
+  const updleavelist = [];
   const [responseData, setResponseData] = useState(null);
-  const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-  const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [toplist, setToplist] = useState({});
 
-  const desiredOrder = [
-    "srno",
-    "id",
-    "leaveType",
-    "fromDate",
-    "toDate",
-    "numberofDays",
-    "leaveReason",
-    "status",
-    "action",
-  ];
-
-  const sortColumns = (columns) => {
-    return columns.sort((a, b) => {
-      return desiredOrder.indexOf(a.name) - desiredOrder.indexOf(b.name);
-    });
-  };
   async function fetchLeaveData() {
-    let responsedata = "";
     try {
       const response = await axiosJWT.get(`${apiUrl}/leave/getStats`, {
         params: { isFor: "self", idEmployee: empId },
@@ -66,7 +37,7 @@ export default function Leaveview({ showOnlylist, empId }) {
       if (response) {
         setToplist(response.data.data || {});
       }
-    } catch (error) {}
+    } catch (error) {console.error(error)}
   }
   const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
   const handleTabClick = (index) => {
@@ -74,15 +45,11 @@ export default function Leaveview({ showOnlylist, empId }) {
   };
   useEffect(() => {
     if (activeTab === 0) {
-      // setSearchfilter({});
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchLeaveData();
     }
   }, [activeTab]);
-  const [isVisible, setIsVisible] = useState(false);
 
-  const handleToggle = () => {
-    setIsVisible(!isVisible);
-  };
   const handleEditClick = (id) => {
     router.push(`/addleave/${id}`);
   };
@@ -106,7 +73,6 @@ export default function Leaveview({ showOnlylist, empId }) {
         status: "recalled",
         leaveReason: data.leavereason,
       };
-      // console.log(recallPostdata)
       const message =
         "You have successfully <strong>Recalled</strong> Your Leave!";
 
@@ -114,7 +80,6 @@ export default function Leaveview({ showOnlylist, empId }) {
         `${apiUrl}/leave/recall`,
         recallPostdata
       );
-      const apiresponse = response.data != "" ? response.data : "";
 
       if (response) {
         setIsModalOpenRe(false);
@@ -207,12 +172,6 @@ export default function Leaveview({ showOnlylist, empId }) {
     }
   };
 
-  const chartCategoryMap = {
-    Birthday: { leaveType: "Birthday" },
-    "Earned Leave": { leaveType: "EarnedLeave" },
-    "Loss of Pay": { leaveType: "LossOfPay" },
-    Maternity: { leaveType: "Maternity" },
-  };
 
   const getMonthInYYYYMM = (category) => {
     // Agar category full month name ho like "July"
@@ -248,46 +207,17 @@ export default function Leaveview({ showOnlylist, empId }) {
     }
   };
 
-  const optionsmonth = [
-    { value: "Jan", label: "January" },
-    { value: "Feb", label: "February" },
-    { value: "Mar", label: "March" },
-    { value: "Apr", label: "April" },
-    { value: "May", label: "May" },
-    { value: "Jun", label: "June" },
-    { value: "Jul", label: "July" },
-    { value: "Aug", label: "August" },
-    { value: "Sep", label: "September" },
-    { value: "Oct", label: "October" },
-    { value: "Nov", label: "November" },
-    { value: "Dec", label: "December" },
-  ];
   // const currentMonth = new Date().toLocaleString('default', { month: 'short' });
   const currentMonth = new Date().toLocaleString("en-US", { month: "short" });
-
-  // console.log(currentMonth,"this is month value")
   const currentYear = new Date().getFullYear().toString();
   const optionsyear = [];
   for (let year = 2000; year <= currentYear; year++) {
     optionsyear.push({ value: year.toString(), label: year.toString() });
   }
 
-  const [setMouth, setMonthValue] = useState(currentMonth); // State to manage active tab index
-  const [setYear, setYearValue] = useState(currentYear); // State to manage active tab index
-  const onChangeMonth = (value) => {
-    if (value !== null) {
-      setMonthValue(value.value); // Update active tab index when a tab is clicked
-    } else {
-      setMonthValue();
-    }
-  };
-  const onChangeYear = (value) => {
-    if (value !== null) {
-      setYearValue(value.value); // Update active tab index when a tab is clicked
-    } else {
-      setYearValue();
-    }
-  };
+  const setMouth = currentMonth; // State to manage active tab index
+  const setYear = currentYear; // State to manage active tab index
+
   const [isannualOpen, setIsAnnualOpen] = useState(false);
   const [anualChartData, setAnualChartData] = useState();
   const [annualTrendData, setAnnualTrendData] = useState();
@@ -329,7 +259,6 @@ export default function Leaveview({ showOnlylist, empId }) {
                       requestAnimationFrame(() => {
                         setSearchfilter(filter);
                         setActiveTab(1);
-                        setActiveTableTab(category);
                         setActiveStatus(category);
                       });
                     },
@@ -373,7 +302,6 @@ export default function Leaveview({ showOnlylist, empId }) {
                       requestAnimationFrame(() => {
                         setSearchfilter({ month: selectedMonth });
                         setActiveTab(1);
-                        setActiveTableTab(category);
                         setActiveStatus(category);
                       });
                     },
@@ -411,7 +339,6 @@ export default function Leaveview({ showOnlylist, empId }) {
                       requestAnimationFrame(() => {
                         setSearchfilter({ currentDate: formattedDate });
                         setActiveTab(1);
-                        setActiveTableTab(category);
                         setActiveStatus(category);
                       });
                     },
@@ -477,11 +404,9 @@ export default function Leaveview({ showOnlylist, empId }) {
 
   const [searchfilter, setSearchfilter] = useState({});
   const [activeStatus, setActiveStatus] = useState(null);
-  const [activeTableTab, setActiveTableTab] = useState("");
 
   const handleShowDataForStatus = (leaveTypeId) => {
     setActiveTab(1);
-    setActiveTableTab(leaveTypeId);
     setActiveStatus(leaveTypeId);
 
     if (leaveTypeId === "clr") {
@@ -490,7 +415,6 @@ export default function Leaveview({ showOnlylist, empId }) {
     } else {
       // Here "leaveTypeId" comes from API like "Birthday", "EarnedLeave", etc.
       setSearchfilter({ leaveType: leaveTypeId });
-      // console.log("this is ", searchfilter)
     }
   };
 

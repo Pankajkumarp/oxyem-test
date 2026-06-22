@@ -17,7 +17,7 @@ export default function User({ userFormdata ,errorMessage ,previousUrl}) {
     const headingContent = 'Create Group';
     const AdduserContent = userFormdata
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/permission/addGroup';
-    const [ErrorMsg, setErrorMsg] = useState('');
+    const ErrorMsg = '';
 
     const [SubmitButtonloader, setSubmitButtonloader] = useState(false);
     const completehandleSubmit = async (value) => {
@@ -65,7 +65,6 @@ export default function User({ userFormdata ,errorMessage ,previousUrl}) {
             if (error.response && error.response.status === 400) {
                 const errors = error.response.data.errors || [];
                 ToastNotification({ message: errors });
-                console.log(errors);
             }
         }
     };
@@ -137,7 +136,7 @@ export async function getServerSideProps(context) {
         userFormdata = response.data.data;
       }
     } catch (error) {
-      
+      console.error(error)
     }
   
     return {

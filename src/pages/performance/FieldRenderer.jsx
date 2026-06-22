@@ -10,7 +10,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { Tooltip } from 'react-tooltip'
 import AutomationIdeaDetailsDrawer from '../Components/Popup/AutomationIdeaDetails';
 
-const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldChange, handleFileChange, handleGoalSubmit, handleCancel, handleNext, buttonArray , onDeleteClick}) => {
+const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldChange, handleFileChange, handleGoalSubmit, onDeleteClick}) => {
     const baseImageUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
     const [fieldValue, setFieldValue] = useState(field);
     const [subinnersectionIndex, setsubInnersectionIndex] = useState(subsectionIndex);
@@ -18,15 +18,13 @@ const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldC
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setFieldValue(field)
-        console.log('field updated:', fieldValue);
         setsubInnersectionIndex(subsectionIndex)
         setsubInnerfieldIndex(fieldIndex)
     }, [field, subsectionIndex, fieldIndex, index]);
 
-    
-    console.log(fieldValue.goalName, 'fieldValuefieldValuefieldValue');
-    const handleChartClick = (filterObject) => {
+    const handleChartClick = () => {
         setIsDrawerOpen(true); 
     };
      const handleClearFilter = () => {
@@ -207,7 +205,7 @@ const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldC
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {fieldValue.filePaths.value.map((file, index) => (
+                                            {fieldValue.filePaths.value.map((file) => (
                                                 <tr className='bottom_table_line' key={file.fileName}>
                                                     <td className='name_ic'>
                                                         <div className='highlight_t_s'>{file.submitDate}</div>
@@ -253,7 +251,7 @@ const FieldRenderer = ({ field, index, subsectionIndex, fieldIndex, handleFieldC
                                 <>
                                     {fieldValue.comments?.changeValue !== "" ? (
                                         <div className="text-end w-100">
-                                            <button type="submit" onClick={(e) => handleGoalSubmit(index, subinnersectionIndex, subinnerfieldIndex)} className="btn btn-performance s-btn-perform">Save</button>
+                                            <button type="submit" onClick={() => handleGoalSubmit(index, subinnersectionIndex, subinnerfieldIndex)} className="btn btn-performance s-btn-perform">Save</button>
                                         </div>
                                     ) : (null)}
                                 </>

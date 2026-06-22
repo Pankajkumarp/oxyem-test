@@ -28,13 +28,8 @@ export default function ProfilePage() {
   const [empId, setEmpId] = useState('');
   const [activeTab, setActiveTab] = useState('profile'); // Default active tab
   const [refressAddressApi, setRefressAddressApi] = useState(false);
-  const [showbutton, setUserStatus] = useState(true);
-
-  const [userName, setUserName] = useState(true);
-
-  
-  
-
+  const showbutton = true;
+  const userName = true;
   useEffect(() => {
     const fetchId = async () => {
       const { id } = router.query;
@@ -52,31 +47,14 @@ export default function ProfilePage() {
 
   const hitAddressApi = (value) => {
     setRefressAddressApi(value);
-  };
-
-  const handelactiveuser = (value) => {
-    setUserStatus(value);
-
-  };
-
-  const getEmpName = (value) => {
-    setUserName(value);
-
-  };
-
-  
-
-  
-  const [section2, setsection2] = useState(true);
+  };  
+  const section2 = true;
   const [section3, setsection3] = useState(false);
   const [section4, setsection4] = useState(false);
 
   useEffect(() => {
     
     const handleScroll = () => {
-        // if (!section2 && window.scrollY > 0) {  // Adjust scroll position as needed
-        //   setsection2(true);   
-        // }
         if (!section3 && window.scrollY > 0) {  // Adjust scroll position as needed
           setsection3(true);
         }
@@ -184,9 +162,9 @@ export default function ProfilePage() {
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
                           <rect x="3" y="5" width="18" height="16" rx="2" />
                           <path d="M16 3V7" />
@@ -214,9 +192,9 @@ export default function ProfilePage() {
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
                           <path d="M6 20V10" />
                           <path d="M12 20V4" />
@@ -242,9 +220,9 @@ export default function ProfilePage() {
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
                           <rect x="3" y="6" width="18" height="14" rx="2" ry="2" />
                           <path d="M7 10H17" />

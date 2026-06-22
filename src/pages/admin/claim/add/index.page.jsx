@@ -13,11 +13,9 @@ export default function AddClaim() {
   const router = useRouter();
   const [content, setContent] = useState([]);
 
-  useEffect(() => {
-    fetchForm();
-  }, []);
 
-  const fetchForm = async () => {
+    useEffect(() => {
+          const fetchForm = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "applyClaimAdmin" } });
@@ -26,11 +24,14 @@ export default function AddClaim() {
         setContent(response.data.data);
       }
     } catch (error) {
-    //   console.error("Error occurred during API call:", error);
+     console.error("Error occurred during API call:", error);
     }
   };
+    fetchForm();
+  }, []);
 
 
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
 
@@ -110,8 +111,11 @@ export default function AddClaim() {
           const apiUrle = process.env.NEXT_PUBLIC_API_BASE_URL;
           const apiUrl = apiUrle + '/claims/uploadDocuments';
           const response = await axiosJWT.post(apiUrl, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+          if(response){
+            /* empty */
+          }
         }
-      } catch (error) { }
+      } catch (error) {console.error(error)}
     }
 
     return (

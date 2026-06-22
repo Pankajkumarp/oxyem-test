@@ -1,13 +1,13 @@
+/* eslint-disable react-hooks/immutability */
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import SecTab from '../Components/Employee/SecTab';
 import { Toaster } from 'react-hot-toast';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { axiosJWT } from '../Auth/AddAuthorization';
 import { fetchWithToken } from '../Auth/fetchWithToken';
 
-export default function onboardingProcess({ onboardForm }) {
+export default function OnboardingProcessId({ onboardForm }) {
     const router = useRouter();
     const [AdduserContent, setAdduserContent] = useState(onboardForm);
     const [applicantDetails, setApplicantDetails] = useState({});
@@ -15,6 +15,7 @@ export default function onboardingProcess({ onboardForm }) {
 
     useEffect(() => {
         if (router.query.id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setApplicantid(router.query.id);
             fetchApplicantDetails(router.query.id);
             fetchOnboardDetails(router.query.id);
@@ -31,7 +32,7 @@ export default function onboardingProcess({ onboardForm }) {
                 setApplicantDetails(response.data.data);
             }
         } catch (error) {
-            
+            console.error(error)
         }
     };
 
@@ -47,7 +48,7 @@ export default function onboardingProcess({ onboardForm }) {
                 updateFormValuesWithDetails(onboardDetails);
             }
         } catch (error) {
-            
+            console.error(error)
         }
     };
 
@@ -88,7 +89,7 @@ export default function onboardingProcess({ onboardForm }) {
                 router.push('/onboardDashboard');
             }
         } catch (error) {
-            
+            console.error(error)
         }
     };
     const cancelClickAction = () => {

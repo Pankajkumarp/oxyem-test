@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import dynamic from 'next/dynamic';
-import { ToastNotification, ToastContainer } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import { useRouter } from 'next/router';
 import TrackingClaim from '../../Components/TrakingClaim/TrakingClaim';
@@ -11,16 +11,12 @@ import ClaimDocumentComponent from '../../Components/Claim/documentdetails';
 import { fetchWithToken } from '../../Auth/fetchWithToken';
 const DynamicForm = dynamic(() => import('../../Components/CommanForm'), { ssr: false });
 
-export default function index({userFormdata}) {
+export default function ClaimID({userFormdata}) {
     const router = useRouter();
     const [claimDetails, setClaimDetails] = useState([]);
     const [content, setContent] = useState(userFormdata);
     const [cid, setCId] = useState('');
-    useEffect(() => {
-          const { id } = router.query;
-          fetchInfo(id);
-          setCId(id)
-      }, [router.query.id]);
+
 
 
 
@@ -71,9 +67,17 @@ export default function index({userFormdata}) {
           console.error(error); 
       }
   };
+      useEffect(() => {
+          const { id } = router.query;
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          fetchInfo(id);
+          setCId(id)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [router.query.id]);
   
 
 
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
         for (let i = 0; i < updatedArray.section.length; i++) {
@@ -92,7 +96,7 @@ export default function index({userFormdata}) {
         setContent(updatedArray);
     };
 
-    const submitaddnlinfo = async (value) => {
+    const submitaddnlinfo = async () => {
         const formattedData = {};
         const formattedData2 = {};
         // Convert the data to the required format
@@ -138,7 +142,7 @@ export default function index({userFormdata}) {
         }
       };
 
-      const submitformdata = async (value) => {
+      const submitformdata = async () => {
         const formattedData = {};
         const formattedData2 = {};
       
@@ -193,10 +197,11 @@ export default function index({userFormdata}) {
         try {
           const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
           const response = await axiosJWT.post(`${apiUrl}/claims/updateStatus`, apipayload);
-          
+          if(response){
           router.push(`/admin/claim`);
-
+          }
       } catch (error) { 
+          console.error(error)
           // Handle the error if any
       }
         } else if (buttonType === 'reject') {
@@ -208,9 +213,12 @@ export default function index({userFormdata}) {
           try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await axiosJWT.post(`${apiUrl}/claims/updateStatus`, apipayload);
+            if(response){
             router.push(`/admin/claim`);
+            }
 
         } catch (error) { 
+          console.error(error)
             // Handle the error if any
         }
         }
@@ -224,9 +232,11 @@ export default function index({userFormdata}) {
           try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await axiosJWT.post(`${apiUrl}/claims/updateStatus`, apipayload);
+            if(response){
             router.push(`/admin/claim`);
-
+            }
         } catch (error) { 
+          console.error(error)
             // Handle the error if any
         }
         }
@@ -264,7 +274,7 @@ export default function index({userFormdata}) {
                                                           <div className="col-md-12 mt-4">
                                                                 <p className='claim-detail-doc-page-title' style={{marginBottom: '0px'}}><strong>Remarks :</strong></p>
                                                                 <ul className="personal-info-header-right claim-detail-doc-page top-details">
-                                                                  <li key={index}>
+                                                                  <li>
                                                                     <div className="title"></div>
                                                                     <div className="text remark">{claimDetails?.remarks}</div>
                                                                   </li>
@@ -276,7 +286,7 @@ export default function index({userFormdata}) {
                                                         <div className="row">
                                                           <div className="col-md-12 mt-4">
                                                                 <ul className="personal-info-header-right top-details">
-                                                                  <li key={index}>
+                                                                  <li>
                                                                     <div className="title">Verified Amount</div>
                                                                     <div className="text">{claimDetails?.currsymbol} {claimDetails?.verifiedAmount}</div>
                                                                   </li>

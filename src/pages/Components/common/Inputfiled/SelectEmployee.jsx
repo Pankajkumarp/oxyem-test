@@ -4,8 +4,7 @@ import DeleteModal from '../../Popup/DeleteModal';
 import CustomDataTable from '../../Datatable/table';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import { FaPlus } from "react-icons/fa";
-export default function SelectEmployee({ type, placeholder, label, value, validations = [], onChange, actionid, pagename }) {
-  const isRequired = validations.some(validation => validation.type === "required");
+export default function SelectEmployee({ actionid, pagename }) {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [rowData, setRowData] = useState([]);
@@ -28,7 +27,6 @@ export default function SelectEmployee({ type, placeholder, label, value, valida
     };
 
     const sortedColumns = response.data.data.formcolumns ? sortColumns(response.data.data.formcolumns) : [];
-    console.log("flitercol", sortedColumns)
     setgetcolumsData(sortedColumns);
     const sortAndFilterAllocationList = (allocationList) => {
       return allocationList.map(row => {
@@ -97,7 +95,9 @@ export default function SelectEmployee({ type, placeholder, label, value, valida
 
   };
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getTableData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionid]);
 
   const handleRemoveRowBySrNo = (srNoValue) => {
@@ -109,7 +109,6 @@ export default function SelectEmployee({ type, placeholder, label, value, valida
   };
   const handleGetvalueClick = (value) => {
     handleRemoveRowBySrNo(value);
-    console.log("arrrrry", rowData)
   };
   const [isModalOpeninput, setIsModalOpeninput] = useState(false);
   const [getId, setGetid] = useState("");
@@ -160,7 +159,7 @@ export default function SelectEmployee({ type, placeholder, label, value, valida
     setIsModalOpeninput(false)
   };
   const [isModalOpeninput1, setIsModalOpeninput1] = useState(false);
-  const onAddClick = (id) => {
+  const onAddClick = () => {
     setIsModalOpeninput1(true);
   };
   const closeModalInputselect1 = () => {

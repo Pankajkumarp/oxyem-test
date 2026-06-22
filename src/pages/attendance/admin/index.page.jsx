@@ -1,10 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
 import { FaTimes } from "react-icons/fa";
-import axios from 'axios';
 import View from '../../Components/Popup/AttendenceHistroy';
 import dynamic from 'next/dynamic';
 import SelectComponent from '../../Components/common/SelectOption/SelectComponent.jsx';
@@ -18,29 +18,13 @@ import { FaUserClock } from "react-icons/fa";
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function Leaveview({ }) {
+export default function Leaveview() {
 
     const router = useRouter();
     const [toplist, setToplist] = useState({});
-    const [Isaddress, setAddress] = useState('');
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [employeeList, setEmployeeList] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
-    useEffect(() => {
-        const fetchLocation = async () => {
-            try {
-                const response = await axios.get('https://ipinfo.io/json');
-                const city = response.data.city;
-                const region = response.data.region;
-                const country = response.data.country;
-                setAddress(`${city}, ${region}, ${country}`);
-            } catch (error) {
-                console.error("Error fetching location", error);
-            }
-        };
-
-        fetchLocation();
-    }, []);
 
     const handleEditClick = (id) => {
         router.push(`/attendance/${id}`);
@@ -92,6 +76,7 @@ export default function Leaveview({ }) {
     }, []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
     }, []);
 
@@ -166,6 +151,7 @@ export default function Leaveview({ }) {
     const [monthlyData, setMonthlyData] = useState();
     const [isLoadingGraph, setIsLoadingGraph] = useState(false);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoadingGraph(true);
         // if (setMouth && setYear) {
         if (setMouth && setYear && activeTab === 0) {
@@ -320,6 +306,7 @@ export default function Leaveview({ }) {
                 getgraphData();
             }, 0);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedEmployee, setMouth, setYear, activeTab]);
 
     const handleUpadateClick = async (id) => {
@@ -397,6 +384,7 @@ export default function Leaveview({ }) {
                     color: '#FF000F',
                 },
             });
+            console.error(error)
             // Handle the error if any
             // console.error("Error occurred:", error);
         }
@@ -421,21 +409,18 @@ export default function Leaveview({ }) {
 
 
     const [activeStatus, setActiveStatus] = useState(null);
-    const [activeTableTabStatus, setActiveTableTabStatus] = useState(null);
 
     const handleShowDataForStatus = (filterKey) => {
         setActiveTab(1); // switch to table tab
-        setActiveTableTabStatus(filterKey);
         setActiveStatus(filterKey);
 
         if (filterKey === "clr") {
             setSearchfilter({});
             setActiveStatus(null);
         } else {
-            let filter = {};
-
             switch (filterKey) {
                 case "leavesOnToday":
+                    // eslint-disable-next-line no-case-declarations
                     const today = new Date().toISOString().split("T")[0];
                     setSearchfilter({ currentDate: today });
                     break;
@@ -451,7 +436,6 @@ export default function Leaveview({ }) {
             }
 
             // setSearchfilter(filter);
-            // console.log("Applied filter:", filter);
         }
     };
     return (
@@ -472,13 +456,13 @@ export default function Leaveview({ }) {
                             <div className="col-12 col-lg-12 col-xl-12">
                                 <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                                     <ul className="nav-tabs nav nav-tabs-bottom justify-content-end oxyem-graph-tab">
-                                        <li class={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick(0)}>
+                                        <li className={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
+                                            <a className={`nav-link`} onClick={() => handleTabClick(0)}>
                                                 <div className="skolrup-profile-tab-link">Dashboard</div>
                                             </a>
                                         </li>
-                                        <li class={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick(1)}>
+                                        <li className={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
+                                            <a className={`nav-link`} onClick={() => handleTabClick(1)}>
                                                 <div className="skolrup-profile-tab-link">Attendance</div>
                                             </a>
                                         </li>
@@ -613,13 +597,13 @@ export default function Leaveview({ }) {
                                                             <SearchFilter searchFilterData={searchFilterData} formType={"searchFilterAttendanceForAdmin"} />
 
                                                             <ul className="nav-tabs nav nav-tabs-bottom oxyem-graph-tab">
-                                                                <li class={`nav-item ${activeTableTab === 0 ? 'active' : ''}`}>
-                                                                    <a class={`nav-link`} onClick={() => handleTableTabClick(0)}>
+                                                                <li className={`nav-item ${activeTableTab === 0 ? 'active' : ''}`}>
+                                                                    <a className={`nav-link`} onClick={() => handleTableTabClick(0)}>
                                                                         <div className="skolrup-profile-tab-link">Pending for Approvals</div>
                                                                     </a>
                                                                 </li>
-                                                                <li class={`nav-item ${activeTableTab === 1 ? 'active' : ''}`}>
-                                                                    <a class={`nav-link`} onClick={() => handleTableTabClick(1)}>
+                                                                <li className={`nav-item ${activeTableTab === 1 ? 'active' : ''}`}>
+                                                                    <a className={`nav-link`} onClick={() => handleTableTabClick(1)}>
                                                                         <div className="skolrup-profile-tab-link">Historical</div>
                                                                     </a>
                                                                 </li>

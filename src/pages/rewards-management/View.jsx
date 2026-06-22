@@ -21,6 +21,7 @@ const AssetHistory = ({ isOpen, closeModal, isHistroyId }) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRewards([]);
     if (isHistroyId) {
       fetchOptions(isHistroyId);
@@ -47,7 +48,7 @@ const AssetHistory = ({ isOpen, closeModal, isHistroyId }) => {
           <hr />
           <div className="modal-body" id="rewards-management">
   {rewards.length > 0 ? (
-    rewards.map((reward, index) => (
+    rewards.map((reward) => (
       <div key={reward.id} className="p-2 rounded-lg bg-blue-100 flex items-center justify-between mb-0 relative">
         <div className="border ml-4 flex-1 reward-profile">
         <span className="top-0 end-0 p-2 reward-management-top-date">
@@ -57,7 +58,7 @@ const AssetHistory = ({ isOpen, closeModal, isHistroyId }) => {
             
             <Profile
               name={reward.employeeName}
-              imageurl={`${baseImageUrl}/${reward.profilePicPath}` || ""}
+              imageurl={`${baseImageUrl}/${reward.profilePicPath}`}
               size={"60"}
               profilelink={`${reward.profilePicPath}` || ""}
               role={reward.roleName}

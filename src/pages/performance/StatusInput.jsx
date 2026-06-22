@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { FaAnglesDown, FaAnglesUp } from "react-icons/fa6";
 export default function StatusInput({ pagename, value, getStautLabel }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedValue, setSelectedValue] = useState(value || null); // Store only a single selected value
   const [showValue, setShowValue] = useState(null);
   const [classValue, setClassValue] = useState(null);
@@ -41,6 +42,7 @@ export default function StatusInput({ pagename, value, getStautLabel }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchStatData();
   }, []);
 
@@ -48,6 +50,7 @@ export default function StatusInput({ pagename, value, getStautLabel }) {
     if (pagename === "initiate") {
       const getName = options.find((option) => option.value === value);
       if (getName) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowValue(getName.label);
         setSelectedValue(value)
         setClassValue(getName.className);
@@ -62,8 +65,8 @@ export default function StatusInput({ pagename, value, getStautLabel }) {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
-  const handleChange = (event) => {
-    const newValue = event.target.value;
+  const handleChange = () => {
+    //const newValue = event.target.value;
     //setSelectedValue(newValue);
     //const selectedOption = options.find((option) => option.value === newValue);
     //if (selectedOption) {

@@ -5,7 +5,7 @@ import MandatorydocumentsTable from './InnerComponent/MandatorydocumentsTable';
 import DocumentTypeComponnet from '../common/SelectComponent/DocumentTypeComponnet';
 import ButtonPrimary from '../common/Buttons/ButtonPrimaryComponent';
 
-export default function DocumentComponent({experience, fields, handleChangess, handlesubmitbyDocumment, documents, setDocuments, errors, setErrors }) {
+export default function DocumentComponent({experience, handleChangess, handlesubmitbyDocumment, documents, setDocuments, errors, setErrors }) {
 
 
   const handleAddDocument = () => {

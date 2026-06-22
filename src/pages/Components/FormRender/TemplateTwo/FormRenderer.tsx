@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,7 +10,7 @@ import { FiInfo } from "react-icons/fi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Tooltip } from "react-tooltip";
 
-export default function FormRenderer({ schema, handeSubmit, sumbitStart, isFor, isPage, handleCancelClick, getAllData, submitHalfForm, InvoiceAllData }: any) {
+export default function FormRenderer({ schema, handeSubmit, sumbitStart, isPage, handleCancelClick, getAllData, submitHalfForm, InvoiceAllData }: any) {
   const {
     register,
     handleSubmit,
@@ -70,43 +73,6 @@ useEffect(() => {
 
 
   const [activeTab, setActiveTab] = useState(0);
-
-
-
-  const isSectionComplete = (section: any) => {
-    const requiredFields: string[] = [];
-
-    section.Subsection.forEach((sub: any) => {
-      sub.fields.forEach((field: any) => {
-        const isRequired =
-          field.required ||
-          field.validations?.some((v: any) => v.type === "required");
-
-        if (isRequired) {
-          requiredFields.push(field.name);
-        }
-      });
-    });
-
-    const values = useWatch({
-      control,
-      name: requiredFields
-    });
-
-    return requiredFields.every((fieldName, index) => {
-      const value = values?.[index];
-
-      const hasValue =
-        value !== undefined &&
-        value !== null &&
-        value !== "" &&
-        !(Array.isArray(value) && value.length === 0);
-
-      const hasError = !!errors[fieldName];
-
-      return hasValue && !hasError;
-    });
-  };
 
   const [collapsedSections, setCollapsedSections] = useState<number[]>([]);
   const getSectionStepByFieldName = (fieldName: string) => {
@@ -265,6 +231,7 @@ useEffect(() => {
         <div className="flex gap-2 mb-3">
           <ul className="nav-tabs nav nav-tabs-bottom nav-justified template-tab">
             {schema.section.map((tab: any, index: number) => (
+              // eslint-disable-next-line react/jsx-key
               <li className="nav-item">
                                 <a className={`nav-link ${activeTab === index ? "active" : ""}`}
                   onClick={async () => {

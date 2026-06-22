@@ -1,9 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import ReactModal from 'react-modal';
 import React, { useState, useEffect } from "react";
-import Select from 'react-select';
 import { MdClose } from "react-icons/md";
-import Profile from '../commancomponents/profile';
-import ButtonPrimary from '../common/Buttons/ButtonPrimaryComponent';
 import SecTab from '../Employee/SecTab';
 import Apialert from '../Errorcomponents/Apierror'
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
@@ -23,7 +21,7 @@ const customStyles = {
 export default function BtpStpForm({ isOpen, closeModal, labelText, dynamicform, handleGetformvalueClick, idclient, btpstpvalue }) {
     const [AdduserContent, setAdduserContent] = useState([]);
     const [showfield, setshowfield] = useState(false);
-    const [showerror, setShowError] = useState("");
+    const showerror = "";
     const [stpbtpvalue, setStpbtpvalue] = useState(btpstpvalue);
     const headingContent = '';
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -31,7 +29,6 @@ export default function BtpStpForm({ isOpen, closeModal, labelText, dynamicform,
 
         const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": dynamicform } })
         setAdduserContent(response.data.data)
-        console.log("Response:", response.data);
     };
 
     const getstpOption = async (value) => {

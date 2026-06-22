@@ -1,60 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import LeaveList from '../Components/Leave/LeaveListings';
+import React, { useState } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi.jsx';
-import Recall from '../Components/Popup/Recallmodal';
-import { reorderColumns, reorderEntries, sortData } from '../../common/commonFunctions';
-import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
 import SelectComponent from '../Components/common/SelectOption/SelectComponent.jsx';
-import View from '../Components/Popup/Leaveview';
-import { FaTimes } from "react-icons/fa";
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-export default function TaxDashboard({ showOnlylist }) {
+export default function TaxDashboard() {
     const router = useRouter();
-    const [leavelisting, setLeaveListing] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
-    const [leavesummary, setLeaveSummary] = useState([]);
-    const [updleavelist, setUpdLeaveList] = useState([]);
-    const [selectedId, setSelectedId] = useState(null);
-    const [responseData, setResponseData] = useState(null);
-    const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const [toplist, setToplist] = useState({});
-
-    const desiredOrder = ["srno", "id", "leaveType", "fromDate", "toDate", "numberofDays", "leaveReason", "status", "action"];
-
-    const sortColumns = (columns) => {
-        return columns.sort((a, b) => {
-            return desiredOrder.indexOf(a.name) - desiredOrder.indexOf(b.name);
-        });
-    };
-
+    const formcolumn  = [];
+    const updleavelist  = [];
+    const responseData  = [];
 
 
     const handleEditClick = (id) => {
         router.push(`/addleave/${id}`);
     };
 
-    const [refreshtable, setRefreshtable] = useState("");
+    const refreshtable = "";
 
-
-
-
-
-    const currentMonth = new Date().toLocaleString('default', { month: 'short' });
     const currentYear = new Date().getFullYear().toString();
     const optionsyear = [];
     for (let year = 2018; year <= currentYear; year++) {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
-
-    const [setMouth, setMonthValue] = useState(currentMonth); // State to manage active tab index
     const [setYear, setYearValue] = useState(currentYear); // State to manage active tab index
 
     const onChangeYear = (value) => {
@@ -64,9 +33,6 @@ export default function TaxDashboard({ showOnlylist }) {
             setYearValue();
         }
     };
-
-    const handleHistoryClick = async (id) => {
-    }
 
     return (
         <>
@@ -89,7 +55,6 @@ export default function TaxDashboard({ showOnlylist }) {
                                                         <div className="row mt-4">
                                                             <div className="col-md-6">
                                                                 <div className="form-group">
-
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-6">
@@ -110,9 +75,7 @@ export default function TaxDashboard({ showOnlylist }) {
                                                             dashboradApi={'/payroll/viewTaxDeductions'}
                                                             onEditClick={handleEditClick}
                                                             responseData={responseData}
-
                                                         />
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -122,11 +85,8 @@ export default function TaxDashboard({ showOnlylist }) {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
-
             <Toaster
                 position="top-right"
                 reverseOrder={false}

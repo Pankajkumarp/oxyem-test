@@ -26,6 +26,7 @@ export default function SearchFilter({searchFilterData ,formType = ''}) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchForm();
   }, [formType]);
 
@@ -52,7 +53,7 @@ export default function SearchFilter({searchFilterData ,formType = ''}) {
     searchFilterData(transformedData);
   };
   
-  const cancelClickAction = (val) => {
+  const cancelClickAction = () => {
   }
   
 

@@ -13,7 +13,6 @@ const EmployeeChart = ({ activeTab }) => {
     const [searchfilter, setSearchfilter] = useState({});
     const [activeStatus, setActiveStatus] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [drawerData, setDrawerData] = useState([]);
     const fetchClientData = async (value) => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -35,6 +34,7 @@ const EmployeeChart = ({ activeTab }) => {
                                     const category = chartContext.w.config.labels?.[config.dataPointIndex];
                                     if (!category) return;
                                     requestAnimationFrame(() => {
+                                        // eslint-disable-next-line react-hooks/immutability
                                         handleChartClick({ gender: category });
                                         //   setSearchfilter({ gender: category });
                                         // //   setActiveTab(1);
@@ -322,12 +322,11 @@ const EmployeeChart = ({ activeTab }) => {
                 setShowGraph(true)
 
             }
-        } catch (error) {
-
-        }
+        } catch (error) {console.error(error)}
     };
     useEffect(() => {
         if (activeTab === "All") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchClientData("employees");
         }
     }, [activeTab]);

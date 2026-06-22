@@ -1,5 +1,6 @@
 import { getValidationRules } from "./validation";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Textarea({ field, register, errors }: any) {
   return (
     <div className={`single-field col-md-${field.col}`}>

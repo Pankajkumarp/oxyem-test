@@ -1,23 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai";
-import ReactModal from 'react-modal';
 import { MdClose } from "react-icons/md";
 import Apialert from '../Errorcomponents/Apierror';
 import Drawer from 'react-modern-drawer'
 
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 export default function LeavePopup({
   open,
   popupdata,
@@ -28,6 +16,7 @@ export default function LeavePopup({
   const [alert, setAlert] = useState({});
 useEffect(() => {
   if (popupdata?.message) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAlert({ show: true, type: 'warning', message: popupdata.message });
   }
 }, [popupdata]);

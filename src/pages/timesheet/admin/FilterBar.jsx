@@ -17,10 +17,12 @@ export default function FilterBar({ GetFilterValue, GetStatusValue }) {
     const [projectManagers, setProjectManagers] = useState([]);
     const [members, setMembers] = useState([]);
     const [status, setStatus] = useState([]);
-    const fetchdateRange = async () => {
-        try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    useEffect(() => {
+            const fetchdateRange = async () => {
+        try {
             const response = await axiosJWT.get(`${apiUrl}/timesheet/getTimeSheetDate`)
 
             if (response?.data) {
@@ -36,10 +38,8 @@ export default function FilterBar({ GetFilterValue, GetStatusValue }) {
             console.error(error);
         }
     };
-    const fetchEmployessByManager = async () => {
+        const fetchEmployessByManager = async () => {
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
             const response = await axiosJWT.get(`${apiUrl}/timesheet/getEmployessByManager`)
 
             if (response?.data?.data) {
@@ -55,9 +55,8 @@ export default function FilterBar({ GetFilterValue, GetStatusValue }) {
             console.error(error);
         }
     };
-    const fetchProjectMangerData = async () => {
+        const fetchProjectMangerData = async () => {
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
             const response = await axiosJWT.get(`${apiUrl}/timesheet/getProjectMangersDropdown`)
 
@@ -76,7 +75,6 @@ export default function FilterBar({ GetFilterValue, GetStatusValue }) {
     };
     const fetchProjectStausData = async () => {
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
             const response = await axiosJWT.get(`${apiUrl}/dropdowns`, {
                 params: {
@@ -98,12 +96,12 @@ export default function FilterBar({ GetFilterValue, GetStatusValue }) {
             console.error(error);
         }
     };
-    useEffect(() => {
         fetchdateRange()
         fetchEmployessByManager();
         fetchProjectMangerData();
         fetchProjectStausData();
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [apiUrl]);
 
     const updateFilter = (key, value) => {
         setFilters((prev) => ({
@@ -167,7 +165,7 @@ export default function FilterBar({ GetFilterValue, GetStatusValue }) {
                         updateFilter("overdueOnly", e.target.checked)
                     }
                 />
-                <label>Overdue Only</label>
+                <label htmlFor="overdueOnly">Overdue Only</label>
             </div>
             <button type="submit" className="btn btn-primary apply-btn">
                 Apply Filters

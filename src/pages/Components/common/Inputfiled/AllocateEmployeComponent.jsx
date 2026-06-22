@@ -5,7 +5,7 @@ import Profile from '../../commancomponents/profile';
 import View from '../../Popup/selectuserAllocate';
 import { IoPersonAddOutline } from "react-icons/io5";
 import { axiosJWT } from '../../../Auth/AddAuthorization';
-export default function AllocateEmployeComponent({ name, type, placeholder, label, value, validations = [], onChange, projectStartDate, projectEndDate }) {
+export default function AllocateEmployeComponent({ name, label, value, validations = [], onChange, projectStartDate, projectEndDate }) {
   const isRequired = validations.some(validation => validation.type === "required");
 
   const [userdetails, setuserdetails] = useState([]);
@@ -40,6 +40,7 @@ export default function AllocateEmployeComponent({ name, type, placeholder, labe
 
   useEffect(() => {
     if (!Array.isArray(value)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setselectuser([]);
       return;
     }

@@ -2,18 +2,18 @@ import React, {useState, useEffect} from 'react';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 
-export default function TextareaComponent({type, placeholder, label, value, validations = [] ,onChange,isDisabled }) {
+export default function TextareaComponent({ placeholder, label, value, validations = [] ,onChange,isDisabled }) {
   const isRequired = validations.some(validation => validation.type === "required");
 
   const [textData, settextData] = useState(value);
   useEffect(() => {
-    // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     settextData(value);
   }, [value]);
   const handleInputChange = (e) => {
     const newValue = e.target.value;    
-    settextData(newValue); // Notify parent component about value change
-    onChange(newValue); // Notify parent component about value change
+    settextData(newValue);
+    onChange(newValue);
 };
   return (
     <>

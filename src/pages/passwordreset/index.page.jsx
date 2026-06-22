@@ -1,11 +1,10 @@
 import Head from 'next/head.js';
-import Header from '../Components/Logincomponents/Header';
 import Footer from '../Components/Logincomponents/Footer';
 import React from 'react';
 import { useState } from "react";
 import axios from "axios";
 import OTP from './resetpwd';
-import { LoginPageContent as enContent ,logoContent as logoText,copyRightText as footercr, forgotPassword as fpcontent} from '../../common/content_en';
+import {logoContent as logoText,copyRightText as footercr, forgotPassword as fpcontent} from '../../common/content_en';
 import dynamic from 'next/dynamic';
 const DynamicForm = dynamic(() => import('../Components/CommanForm.jsx'), {
     ssr: false
@@ -97,7 +96,7 @@ export default function Forgotten() {
         setContent(updatedArray);
     };
 
-	const submitformdata = async (value) => {
+	const submitformdata = async () => {
 		const formattedData = {};
   
 		// Convert the data to the required format
@@ -177,7 +176,7 @@ export default function Forgotten() {
                                                                         fields={section}
                                                                         submitformdata={submitformdata}
                                                                         handleChangeValue={handleChangeValue}
-                                                                        handleChangess={() => handleChangess(index)}
+                                                                        handleChangess={}
                                                                         pagename={'passwordreset'}
                                                                         isModule={content.formType}
                                                                     />

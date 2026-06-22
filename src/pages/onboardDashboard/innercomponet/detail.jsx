@@ -6,12 +6,9 @@ import Finance from './Finance';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
 import SendEmailModal from '../../Components/Popup/SendEmailModal.jsx';
 export default function ClaimDetail({ applicantDetails ,activeTab,applicantid }) {
-    const [isExpanded, setIsExpanded] = useState(true);
+    const isExpanded = true;
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
-    const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
-    };
 
     const handleDownloadClickWithPath = async (path) => {
 
@@ -33,7 +30,7 @@ export default function ClaimDetail({ applicantDetails ,activeTab,applicantid })
             link.click();
     
         } catch (error) {
-            
+            console.error(error)
         }
     };
     
@@ -41,17 +38,14 @@ export default function ClaimDetail({ applicantDetails ,activeTab,applicantid })
       return path.substring(path.lastIndexOf('/') + 1);
     };
 
-    const onViewClick = (id) => { };
-    const onDeleteClick = (id) => { };
-
-    const handleApprrovereq = (id) => {};
-    const handleHistoryClick = (id) => {};
-
-    const onEmailClick = (id) => {
+    const onViewClick = () => { };
+    const onDeleteClick = () => { };
+    const handleApprrovereq = () => {};
+    const handleHistoryClick = () => {};
+    const onEmailClick = () => {
         setIsOpen(true)
     };
-
-    const closeModal = (id) => {
+    const closeModal = () => {
         setIsOpen(false);
     };
 

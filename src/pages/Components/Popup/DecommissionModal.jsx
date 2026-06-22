@@ -4,7 +4,7 @@ import Edit from "../EmployeeDashboard/Edit/Edit";
 
 export default function LeavePopup({ isOpen, closeModal, onSubmit, DecommissionId }) {
   const [formData, setFormData] = useState('');
-  const [error, setError] = useState(null);
+  const error = null;
   const getsubmitformdata = async (value) => { onSubmit(value); };
 
   const fetchBankForm = async () => {
@@ -14,10 +14,11 @@ export default function LeavePopup({ isOpen, closeModal, onSubmit, DecommissionI
       if (response.status === 200 && response.data.data) {
         setFormData(response.data.data);
       }
-    } catch (error) {}
+    } catch (error) {console.error(error)}
   };
   useEffect(() => {
     if(isOpen){
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchBankForm();
     }
   }, [isOpen]);

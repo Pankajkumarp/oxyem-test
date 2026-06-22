@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable react-hooks/refs */
 import React, { useContext, useState, useEffect, useRef, useMemo  } from "react";
-import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import Profile from '../../Components/commancomponents/profile';
 import { SocketContext } from '../../Auth/Socket';
@@ -84,11 +87,12 @@ const Editor = editorRef.current?.Editor;
 }, 1000);
       }
     } catch (error) {
+      console.error(error)
     }
   };
 
   useEffect(() => {
-    socket.on("commentAdded", (id, text) => {
+    socket.on("commentAdded", (id) => {
       const socketid = id.id
       if (socketid === moduleId) {
         getExistingDetails(moduleId);

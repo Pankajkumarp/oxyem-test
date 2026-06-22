@@ -2,45 +2,34 @@ import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../Components/Datatable/tablenew.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
-import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import SelectComponent from '../Components/common/SelectOption/SelectComponent.jsx';
+import Image from 'next/image';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { Toaster } from 'react-hot-toast';
 import TimesheetPopup from '../Components/Popup/employeeTimesheet';
 import Head from 'next/head';
 import { HiClock } from "react-icons/hi";
-export default function timesheetDashboard({ }) {
-    const router = useRouter();
+export default function TimesheetDashboard() {
     const [datacoloum, setDatacoloum] = useState([]);
     const [rowData, setRowData] = useState([]);
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    const handleEditClick = (id) => {
-        router.push(`/attendance/${id}`);
-    };
-
-
-    const fetchData = async () => {
-        try {
-            const response = await axiosJWT.get(`${apiUrl}/timesheet/myTimesheet`);
-            if (response) {
-
-                setDatacoloum(response.data.data.formcolumns);
-                const timesheetData = response.data.data.timesheetData;
-
-                setRowData(timesheetData);
-
-
-            }
-        } catch (error) {
-            console.error("Error fetching data", error);
-        }
-    };
-
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axiosJWT.get(`${apiUrl}/timesheet/myTimesheet`);
+                if (response) {
+                    setDatacoloum(response.data.data.formcolumns);
+                    const timesheetData = response.data.data.timesheetData;
+                    setRowData(timesheetData);
+                }
+            } catch (error) {
+                console.error("Error fetching data", error);
+            }
+        };
         fetchData();
-    }, []);
+    }, [apiUrl]);
 
     const [toplist, setToplist] = useState([]); // State to manage active tab index
     const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
@@ -68,25 +57,25 @@ export default function timesheetDashboard({ }) {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
 
-    const [setMouth, setMonthValue] = useState(currentMonth); // State to manage active tab index
-    const [setYear, setYearValue] = useState(currentYear); // State to manage active tab index
+    const [setMouth, setSetMouth] = useState(currentMonth); // State to manage active tab index
+    const [setYear, setSetYear] = useState(currentYear); // State to manage active tab index
     const onChangeMonth = (value) => {
-        if (value !== null) {
-            setMonthValue(value.value); // Update active tab index when a tab is clicked
+        if (value === null) {
+            setSetMouth();
         } else {
-            setMonthValue();
+            setSetMouth(value.value); // Update active tab index when a tab is clicked
         }
     };
     const onChangeYear = (value) => {
-        if (value !== null) {
-            setYearValue(value.value); // Update active tab index when a tab is clicked
+        if (value === null) {
+            setSetYear();
         } else {
-            setYearValue();
+            setSetYear(value.value); // Update active tab index when a tab is clicked
         }
     };
-    const [ischartopen, setIsChartOpen] = useState(false);
+    const [ischartopen, setIschartopen] = useState(false);
     const [anualChartData, setAnualChartData] = useState();
-    const [monthlyTrendData, setMonthlyTrend] = useState();
+    const [monthlyTrendData, setMonthlyTrendData] = useState();
     const [monthlyData, setMonthlyData] = useState();
     useEffect(() => {
         if (setMouth && setYear) {
@@ -207,7 +196,7 @@ export default function timesheetDashboard({ }) {
                                 },
                             }
                         )
-                        setMonthlyTrend(
+                        setMonthlyTrendData(
                             {
                                 series: [monthlyse.Percentage],
                                 options: {
@@ -259,7 +248,7 @@ export default function timesheetDashboard({ }) {
                             }
                         )
 
-                        setIsChartOpen(true)
+                        setIschartopen(true)
                     }
 
                 } catch (error) {
@@ -292,7 +281,7 @@ export default function timesheetDashboard({ }) {
         }
 
 
-    }, [setMouth, setYear]);
+    }, [apiUrl, setMouth, setYear]);
 
 
 
@@ -302,7 +291,6 @@ export default function timesheetDashboard({ }) {
     const onViewClick = (id) => {
         settimesheetId(id)
         openTimesheetpopup();
-        //router.push(`/employeeTimeSheet/${id}`);
     };
 
     const openTimesheetpopup = async () => {
@@ -312,6 +300,18 @@ export default function timesheetDashboard({ }) {
         setTimeSheetModal(false)
     }
     const closeAfterAction = async () => {
+        const fetchData = () => {
+            try {
+                const response = axiosJWT.get(`${apiUrl}/timesheet/myTimesheet`);
+                if (response) {
+                    setDatacoloum(response.data.data.formcolumns);
+                    const timesheetData = response.data.data.timesheetData;
+                    setRowData(timesheetData);
+                }
+            } catch (error) {
+                console.error("Error fetching data", error);
+            }
+        };
         fetchData();
         setTimeSheetModal(false)
     }
@@ -336,15 +336,15 @@ export default function timesheetDashboard({ }) {
                             <div className="col-12 col-lg-12 col-xl-12">
                                 <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                                     <ul className="nav-tabs nav nav-tabs-bottom justify-content-end oxyem-graph-tab">
-                                        <li class={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick(0)}>
+                                        <li className={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
+                                            <button type="button" className={`nav-link`} onClick={() => handleTabClick(0)}>
                                                 <div className="skolrup-profile-tab-link">Stats</div>
-                                            </a>
+                                            </button>
                                         </li>
-                                        <li class={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick(1)}>
+                                        <li className={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
+                                            <button type="button" className={`nav-link`} onClick={() => handleTabClick(1)}>
                                                 <div className="skolrup-profile-tab-link">Chart</div>
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
                                     <div className="tab-content">
@@ -354,19 +354,34 @@ export default function timesheetDashboard({ }) {
                                                 {toplist && Object.keys(toplist).length > 0 &&
                                                     <div className="oxyem-top-box-design design-only-attendence design-only-timesheetemp">
                                                         <div className="stats-info stats-info-cus">
-                                                            <img src='/assets/img/effort.png' />
+                                                            <Image
+                                                                src="/assets/img/effort.png"
+                                                                alt="Total effort allocated"
+                                                                width={30}
+                                                                height={30}
+                                                            />
                                                             <h4 className='all_attendence'>{toplist.totalEffortAllocated}</h4>
 
                                                             <h6>Total effort allocated</h6>
                                                         </div>
                                                         <div className="stats-info stats-info-cus">
-                                                            <img src='/assets/img/challenge.png' />
+                                                            <Image
+                                                                src="/assets/img/challenge.png"
+                                                                alt="challenge"
+                                                                width={30}
+                                                                height={30}
+                                                            />
                                                             <h4 className='month_attendence'>{toplist.totalEffortLogged}</h4>
 
                                                             <h6>Total effort Logged</h6>
                                                         </div>
                                                         <div className="stats-info stats-info-cus">
-                                                            <img src='/assets/img/percentage.png' />
+                                                            <Image
+                                                                src="/assets/img/percentage.png"
+                                                                alt="Percentage"
+                                                                width={30}
+                                                                height={30}
+                                                            />
                                                             <h4 className='week_attendence'>{toplist.percentage}</h4>
 
                                                             <h6>Percentage</h6>
@@ -401,7 +416,7 @@ export default function timesheetDashboard({ }) {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Annual Effort Chart</h3>
                                                                     </div>
-                                                                    <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
+                                                                    <Chart options={anualChartData?.options} series={anualChartData?.series} type="bar" height={330} />
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-4">
@@ -409,7 +424,7 @@ export default function timesheetDashboard({ }) {
                                                                     <div className='graph-top-head'>
                                                                         <h3>Weekly Attendance Chart</h3>
                                                                     </div>
-                                                                    <Chart options={monthlyData.options} series={monthlyData.series} type="bar" height={330} />
+                                                                    <Chart options={monthlyData?.options} series={monthlyData?.series} type="bar" height={330} />
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-4">
@@ -417,7 +432,7 @@ export default function timesheetDashboard({ }) {
                                                                     <div className='graph-top-head'>
                                                                         <h3>%age of efforts logged</h3>
                                                                     </div>
-                                                                    <Chart options={monthlyTrendData.options} series={monthlyTrendData.series} type="radialBar" height={330} />
+                                                                    <Chart options={monthlyTrendData?.options} series={monthlyTrendData?.series} type="radialBar" height={330} />
                                                                 </div>
                                                             </div>
                                                         </div>

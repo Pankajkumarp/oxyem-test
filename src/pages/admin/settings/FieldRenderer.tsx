@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -17,7 +18,7 @@ const selectStyles = {
     },
     backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
   }),
-  indicatorSeparator: (provided, state) => ({
+  indicatorSeparator: (provided) => ({
     ...provided,
     backgroundColor: 'var(--dropdownhoverbg)',
     fontWeight: 'var(--dropdownfontweight)',
@@ -152,6 +153,7 @@ const toggleSection = (index: number) => {
       );
 
     case "select":
+      // eslint-disable-next-line no-case-declarations
       const options =
         field.options?.map((opt: any) => {
           if (typeof opt === "string") {
@@ -335,6 +337,7 @@ const toggleSection = (index: number) => {
             const file = files?.[0];
             setValue(field.name, file);
           }}
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           onError={(error) => {
             setValue(field.name, null);
           }}
@@ -358,6 +361,7 @@ const toggleSection = (index: number) => {
       );
 
     case "preview":
+      // eslint-disable-next-line no-case-declarations
       const previewSections = buildSectionPreviewData(previewJson);
 
       return (

@@ -1,20 +1,15 @@
 
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react';
-import axios from "axios";
+import React, { useState } from 'react';
 import SecTab from '../Components/Employee/SecTab';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { Toaster } from 'react-hot-toast';
 
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function newJobpost({ payrollForm }) {
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-
+export default function NewJobpost({ payrollForm }) {
     const router = useRouter();
-    const data = router.query.data;
-    const [storeArray, setStoreArray] = useState(payrollForm);
-    const [AdduserContent, setAdduserContent] = useState(payrollForm);
+    const AdduserContent = payrollForm;
     
     const transformFormData = (data) => {
         const transformedData = {};
@@ -41,6 +36,7 @@ export default function newJobpost({ payrollForm }) {
                 }
             } catch (error) {
                 setSubmitButtonLoading(false);
+                console.error(error)
             }
         };
 

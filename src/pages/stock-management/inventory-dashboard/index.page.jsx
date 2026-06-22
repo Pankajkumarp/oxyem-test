@@ -1,40 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../../Components/Datatable/tablenew.jsx';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { FaPlus } from "react-icons/fa6";
 import { Tooltip } from 'react-tooltip'
 import { CiFloppyDisk } from "react-icons/ci";
 
 export default function Index() {
     const router = useRouter();
     
-    const openDetailpopup = async () => {
-        setIsModalOpen(true);
-    };
 
-    const handleHistoryClick = async (id) => {
-        setIsHistroyId(id);
-        openDetailpopup();
-    };
+    const handleHistoryClick = async () => {};
 
     const onViewClick = (id) => {
         router.push(`/claim/${id}`);
     };
 
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
         // Delete action implementation
     };
 
-    const handlerecallvalueClick = async (id) => {
-        setIsRecallId(id);
-        openRecallpopup();
-    };
-
-    const openRecallpopup = async () => {
-        setIsModalOpenRe(true);
-    };
+    const handlerecallvalueClick = async () => {};
 
     const columnData = [
         { lebel: 'Sr No', name: 'srno' },

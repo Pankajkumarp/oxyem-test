@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import { axiosJWT } from "../../Auth/AddAuthorization.jsx";
-import moment from "moment-timezone";
 import Drawer from "react-modern-drawer";
 
 //import styles 👇
 import "react-modern-drawer/dist/index.css";
-
-const getCurrentTimeZone = () => {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
-
 const capitalizeFirstLetter = (string) => {
   if (!string) return "";
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -74,12 +68,14 @@ const TicketHistory = ({ isOpen, closeModal, isHistroyId }) => {
   };
 
     useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchStatuses(); 
   }, []);
   
   // 🔹 Fetch when drawer opens
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getTicketDetails(isHistroyId);
     }
   }, [isOpen, isHistroyId]);

@@ -5,7 +5,6 @@ import { axiosJWT } from '../../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
 import { useRouter } from 'next/router'
 import Head from 'next/head';
-import axios from 'axios';
 import { FaRegCheckCircle } from "react-icons/fa";
 import PricingRender from './pricicngRender.js';
 import { FaTimes } from "react-icons/fa";
@@ -13,7 +12,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 const Notes = dynamic(() => import('../../Components/Popup/Notes'), {
     ssr: false
 });
-export default function opportunity() {  // Default to empty array if not provided
+export default function CreatePricingViewId() {  // Default to empty array if not provided
     const router = useRouter();
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -55,12 +54,13 @@ export default function opportunity() {  // Default to empty array if not provid
                 }
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchOpportunityInfo(id);
         setPricingId(id)
     }, [id]);
@@ -74,6 +74,7 @@ export default function opportunity() {  // Default to empty array if not provid
 
     const handleWonClick = async () => {
         const payload = alldata
+        // eslint-disable-next-line react-hooks/immutability
         payload.status = "Approve";
         const formData = new FormData();
         formData.append('formData', JSON.stringify(payload));
@@ -120,6 +121,7 @@ export default function opportunity() {  // Default to empty array if not provid
     }
     const handleLossClick = async () => {
         const payload = alldata
+        // eslint-disable-next-line react-hooks/immutability
         payload.status = "Reject";
         const formData = new FormData();
         formData.append('formData', JSON.stringify(payload));

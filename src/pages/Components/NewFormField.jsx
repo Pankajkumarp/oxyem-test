@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { getFieldByName, updatedSubsection } from '../../common/commonFunctions';
-import axios from "axios";
 import RadioComponent from './common/Inputfiled/RadioComponent';
 import moment from 'moment-timezone';
 import { axiosJWT } from '../Auth/AddAuthorization';
@@ -50,17 +50,13 @@ const components = {
   'TextSalary': dynamic(() => import('./common/Inputfiled/TextSalaryComponent')),
 };
 
-const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, handleChangeValue, content, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick, pagename, showButton, showleave, getChangessField, tdsAmount, salaryAmount, handleNetsalaryAmt }) => {
+const NewFormField = ({ fieldsvalue, handleChangeValue, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick, pagename, showButton, showleave, getChangessField, salaryAmount, handleNetsalaryAmt }) => {
 
-  const [fields, setFields] = useState(fieldsvalue);
-  const [tds, setTDS] = useState(tdsAmount);
+  const fields = fieldsvalue;
   const [netsalaryAmount, setNetsalaryAmount] = useState(salaryAmount);
-  const [updateAmount, setUpdateAmount] = useState(salaryAmount);
   const [errors, setErrors] = useState({});
   const [errorres, setErrorres] = useState('');
-  const [submitdata, setSubmitdata] = useState({});
   const [formData, setFormData] = useState({});
-  console.log("formData", formData)
   const [currentFormData, setCurrentFormData] = useState({});
   const [fieldUpdate, setfieldUpdate] = useState([]);
   const [selectEmpId, setSelectEmpId] = useState("");
@@ -80,13 +76,10 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
     }
 
   }, [formData]);
-  useEffect(() => {
-    setTDS(tdsAmount)
-  }, [tdsAmount]);
+
 
   useEffect(() => {
     setNetsalaryAmount(salaryAmount)
-    setUpdateAmount(salaryAmount)
   }, [salaryAmount]);
 
   useEffect(() => {
@@ -227,8 +220,6 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
 
   useEffect(() => {
     const hasValidFormData = fieldUpdate !== "" && (isModule === "createEmployee");
-
-    // console.log(hasValidFormData);
     if (hasValidFormData) {
       getFieldByName(fieldUpdate, "firstName")
         .then(firstName => {
@@ -252,13 +243,13 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
                       setfieldUpdate(updatedFields);
                     })
                     .catch(error => {
-                      // console.error("Error generating email:", error);
+                       console.error("Error generating email:", error);
                     });
                 });
             });
         })
         .catch(error => {
-          // console.error("Error retrieving field values:", error);
+           console.error("Error retrieving field values:", error);
         });
     }
   }, [formData.firstName, formData.lastName, formData.middleName, fieldUpdate, isModule]);
@@ -284,11 +275,6 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
       [fieldName]: value,
     }));
 
-    setSubmitdata(prevSubmitdata => ({
-      ...prevSubmitdata,
-      [fieldName]: value,
-    }));
-
     setErrors(prevErrors => ({
       ...prevErrors,
       [fieldName]: '',
@@ -308,80 +294,6 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
     }
   };
 
-  const handleValidation = async () => {
-    const updatedErrors = {};
-    console.log("validatevalue", fields);
-    if (pagename === "edit_allowcation" || pagename === "edit_timeManagement") {
-      fields.Subsection.forEach((subsection) => {
-        subsection.fields.forEach((field) => {
-          const value = field.value;  // Use the value directly from the field object
-          console.log(`Validating field: ${field.name}, value: ${value}`);
-
-          field.validations.forEach((validation) => {
-            if (validation.type === "required" && !value) {
-              updatedErrors[field.name] = validation.message;
-            } else if (validation.type === "min" && value && value.length < validation.length) {
-              updatedErrors[field.name] = validation.message;
-            } else if (validation.type === "max" && value && value.length > validation.length) {
-              updatedErrors[field.name] = validation.message;
-            } else if (validation.type === "domainCheck" && value && !value.endsWith(validation.pattern)) {
-              updatedErrors[field.name] = validation.message;
-            }
-          });
-        });
-      });
-    } else {
-      // Assuming formData is an object that contains the current form values
-      fields.Subsection.forEach((subsection) => {
-        subsection.fields.forEach((field) => {
-          const value = formData[field.name];  // Fetch the current value for the field
-          console.log(`Validating field: ${field.name}, value: ${value}`);
-
-          field.validations.forEach((validation) => {
-            if (validation.type === "required" && !value) {
-              updatedErrors[field.name] = validation.message;
-            } else if (validation.type === "min" && value && value.length < validation.length) {
-              updatedErrors[field.name] = validation.message;
-            } else if (validation.type === "max" && value && value.length > validation.length) {
-              updatedErrors[field.name] = validation.message;
-            } else if (validation.type === "domainCheck" && value && !value.endsWith(validation.pattern)) {
-              updatedErrors[field.name] = validation.message;
-            }
-            else if (validation.type === "textOnly" && value && !/^[a-zA-Z\s]*$/.test(value)) {
-              updatedErrors[field.name] = validation.message;
-            }
-            else if (validation.type === "validDate" && validation.field && validation.pattern === "<") {
-              const startDate = formData[validation.field];
-              const endDate = value;
-              if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-                updatedErrors[field.name] = validation.message;
-              }
-            }
-
-            else if (validation.type === "validShift" && validation.field) {
-              const currentShift = formData[validation.field];
-              const changeShift = value;
-              if (currentShift && changeShift && currentShift.value !== '' && changeShift.value !== '') {
-                if (currentShift.value === changeShift.value) {
-                  updatedErrors[field.name] = validation.message;
-                }
-              }
-            }
-
-          });
-        });
-      });
-
-      // Custom validation for Bank Account Number and Confirm Bank Account Number
-      if (formData.BankAccountNo !== formData.BankConformAccountNo) {
-        updatedErrors.BankConformAccountNo = 'Bank account number does not match';
-      }
-
-    }
-    console.log("Validation errors:", updatedErrors);
-    setErrors(updatedErrors);
-    return updatedErrors;
-  };
 
   // shift management start
   const updateShift = (fields, currentShift) => {
@@ -451,7 +363,6 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
   
     // Round and update the net salary amount
     const roundedAmount = newNetsalary.toFixed(2);
-    setUpdateAmount(parseFloat(roundedAmount));
     handleNetsalaryAmt(parseFloat(roundedAmount));
   }, [additionalFields.earning, additionalFields.deductions, formData.tds, netsalaryAmount]);
   
@@ -497,11 +408,11 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
         }
 
     } catch (error) {
-      // Handle error response
+      console.error(error)
     }
   };
 
-  const handleChangeAdd = async (fieldName, value) => {
+  const handleChangeAdd = async () => {
 
 
   };
@@ -520,13 +431,8 @@ const NewFormField = ({ fieldsvalue, apiurl, handleChangess, Openedsection, hand
     setfieldUpdate(updatedFields);
     setFormData({});
     setCurrentFormData({});
-    setSubmitdata({});
     setErrors({});
   };
-
-
-  console.log("additionalFields", additionalFields)
-
 
   const handleAddField = (position) => {
     setAdditionalFields(prevState => ({

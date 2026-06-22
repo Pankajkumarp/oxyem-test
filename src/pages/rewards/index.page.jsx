@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs'
 import CustomDataTable from '../Components/Datatable/tablewithApi.jsx';
 import View from './history';
-import { FaThumbsUp } from "react-icons/fa6";
 import dynamic from 'next/dynamic';
 import Stats from '../reward-dashboard/Stats.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
@@ -11,8 +9,7 @@ import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function index() {
-    const router = useRouter();
+export default function Reward() {
     const [viewMode, setViewMode] = useState('submitted');
     const [isHistroyId, setHistroyId] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -121,6 +118,7 @@ export default function index() {
 };
 
       useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         chartData();
       }, [activeTab])
 

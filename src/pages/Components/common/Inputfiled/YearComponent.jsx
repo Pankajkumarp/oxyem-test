@@ -6,6 +6,7 @@ export default function YearComponent({ label, isDisabled, validations = [], val
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedOption(value);
   }, [value]);
 
@@ -25,7 +26,7 @@ export default function YearComponent({ label, isDisabled, validations = [], val
         setOptions(optionsData);
       }
       } catch (error) {
-
+        console.error(error)
       }
     };
 

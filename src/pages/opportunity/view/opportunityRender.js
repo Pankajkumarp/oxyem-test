@@ -1,16 +1,15 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 import { format } from "date-fns";
 import { getCountryCode } from "./countryByContinent";
 import DocumentsEvidence from "./DocumentsEvidence";
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import RenderChart from "./RenderChart";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export default function OpportunityView({ data, opportunityId, rolesByUnit, setRolesByUnit, diffInDays }) {
+export default function Renders({ data, opportunityId, rolesByUnit, setRolesByUnit, diffInDays }) {
     const [documentData, setDocumentData] = useState([]);
-    const getUploadList = async (id) => {
+    const getUploadList = async () => {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         try {
             const response = await axiosJWT.get(`${apiUrl}/getDocumentList`, {
@@ -28,6 +27,7 @@ export default function OpportunityView({ data, opportunityId, rolesByUnit, setR
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         getUploadList(opportunityId);
     }, [opportunityId]);
     const [departmentMap, setDepartmentMap] = useState({});
@@ -39,12 +39,10 @@ export default function OpportunityView({ data, opportunityId, rolesByUnit, setR
                 const response = await axiosJWT.get(`${apiUrl}/dropdowns`, {
                     params: { isFor: "departments" }
                 });
-
                 const map = {};
                 response.data.data.forEach(dep => {
                     map[dep.id] = dep.name;
                 });
-
                 setDepartmentMap(map);
             } catch (err) {
                 console.error("Failed to fetch departments", err);
@@ -144,7 +142,6 @@ export default function OpportunityView({ data, opportunityId, rolesByUnit, setR
         );
     };
     const validOtherCosts = (dataOtherCost || []).filter(hasValidOtherCost);
-
     const [openSection, setOpenSection] = useState("effort");
 
     const toggleSection = (section) => {
@@ -210,6 +207,7 @@ export default function OpportunityView({ data, opportunityId, rolesByUnit, setR
             return acc;
         }, {});
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGroupedMap(grouped);
         setShowGraph(true);
     }, [rolesByUnit, dataEffort]);
@@ -249,6 +247,7 @@ export default function OpportunityView({ data, opportunityId, rolesByUnit, setR
             return acc;
         }, {});
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setOtherCostMap(grouped);
         setShowOtherGraph(true);
     }, [dataOtherCost]);
@@ -270,7 +269,7 @@ export default function OpportunityView({ data, opportunityId, rolesByUnit, setR
                     <span className="label">Status:</span>
                     <span className="status-pill">
                         Proposal
-                        <span class="status-bars">
+                        <span className="status-bars">
                             <span></span>
                             <span></span>
                         </span>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { useRouter } from 'next/router';
 import ProfileHeader from '../Components/EmployeeDashboard/Profile/ProfileHeader';
 import StatHeader from '../Components/EmployeeDashboard/Profile/StatHeader';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbsdiscription';
@@ -25,7 +24,6 @@ const Finance = lazy(() => import('../employeeAllowance/DataTable.jsx'));
 const EmployeeAsset = lazy(() => import('../employeeAsset/index.page.jsx'));
 
 export default function ProfilePage() {
-  const router = useRouter();
   const [empId, setEmpId] = useState('');
   const [activeTab, setActiveTab] = useState('profile'); // Default active tab
   const [refressAddressApi, setRefressAddressApi] = useState(false);
@@ -46,7 +44,7 @@ export default function ProfilePage() {
 
 
       } catch (error) {
-        // console.error("Error fetching data", error);
+        console.error("Error fetching data", error);
       }
     };
     fetchData();
@@ -60,7 +58,7 @@ export default function ProfilePage() {
     setRefressAddressApi(value);
   };
 
-  const [section2, setsection2] = useState(true);
+ const section2 = true;
   const [section3, setsection3] = useState(false);
   const [section4, setsection4] = useState(false);
 
@@ -178,9 +176,9 @@ export default function ProfilePage() {
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
                           <rect x="3" y="5" width="18" height="16" rx="2" />
                           <path d="M16 3V7" />
@@ -208,9 +206,9 @@ export default function ProfilePage() {
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
                           <path d="M6 20V10" />
                           <path d="M12 20V4" />
@@ -236,9 +234,9 @@ export default function ProfilePage() {
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
                           <rect x="3" y="6" width="18" height="14" rx="2" ry="2" />
                           <path d="M7 10H17" />

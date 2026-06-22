@@ -3,7 +3,7 @@ import Ticket from './TicketPopup.jsx';
 import html2canvas from 'html2canvas';
 import { RxChatBubble } from "react-icons/rx";
 import { Tooltip } from 'react-tooltip';
-export default function TicketIcon({ userFormdata }) {
+export default function TicketIcon() {
   const [isOpen, setIsOpen] = useState(false);
   const [screenshot, setScreenshot] = useState(null);
  

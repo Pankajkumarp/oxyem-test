@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback  } from "react";
 import { MdClose } from "react-icons/md";
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import { format } from "date-fns";
@@ -11,18 +11,23 @@ import { FaEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 
 
-const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet, mentionUser }) => {
+const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, mentionUser }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const editorRef = useRef(null);
   const editorWrapperRef = useRef(null);
-  const CKEditor = editorRef.current?.CKEditor;
-  const Editor = editorRef.current?.Editor;
+  const [CKEditor, setCKEditor] = useState(null);
+  const [Editor, setEditor] = useState(null);
+
 
   useEffect(() => {
-    editorRef.current = {
-      CKEditor: require("@ckeditor/ckeditor5-react").CKEditor,
-      Editor: require("ckeditor5-custom-build")
+    const loadEditor = async () => {
+      const ckeditorModule = await import("@ckeditor/ckeditor5-react");
+      const editorModule = await import("ckeditor5-custom-build");
+
+      setCKEditor(() => ckeditorModule.CKEditor);
+      setEditor(() => editorModule.default);
     };
+
+    loadEditor();
   }, []);
   const [textData, settextData] = useState("");
   const [useid, setuseid] = useState([]);
@@ -33,12 +38,10 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
     settextData(data);
   };
   const [showButton, setShowButton] = useState(true);
-  const [showEditor, setshowEditor] = useState(false);
-  const [users, setUsers] = useState(mentionUser || []);
-  useEffect(() => {
-    setUsers(mentionUser)
-    setshowEditor(true);
-  }, [mentionUser]);
+ const users = useMemo(() => {
+  return mentionUser || [];
+}, [mentionUser]);
+
   useEffect(() => {
     const updatedData = textData.replace(
       /<span class="mention" data-mention="(@\S+)">@\S+<\/span>/g,
@@ -54,6 +57,7 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
         return match;
       }
     );
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     settextData(updatedData);
   }, [textData, users, useid]);
 
@@ -89,7 +93,7 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
 
     const nameElement = document.createElement('span');
     nameElement.classList.add('custom-item-name');
-    nameElement.textContent = item.label;
+    nameElement.textContent = item.text;
 
     const qualificationElement = document.createElement('div');
     qualificationElement.classList.add('custom-item-qualification');
@@ -145,13 +149,16 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
           marker: "@",
           minimumCharacters: 0,
           feed: (queryText) => {
+            const search = queryText.toLowerCase();
+
             return feedItems
               .filter(item =>
-                item.name.toLowerCase().includes(queryText.toLowerCase())
+                item.name.toLowerCase().includes(search)
               )
               .map(item => ({
                 id: `@${item.id}`,
-                label: item.name,
+                text: item.name,
+                name: item.name,
                 avatar: item.image,
                 qualification: item.qualification,
               }));
@@ -188,28 +195,33 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  const editorKey = users.length;
   const [SubTask, setSubTask] = useState({});
-  console.log("SubTask", SubTask)
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);
     return Number.isNaN(d) ? "" : format(d, "dd MMM yyyy");
   };
-  const getCommentDetails = async (id) => {
-    try {
-      const response = await axiosJWT.get(`${apiUrl}/timesheet/getSubTaskInfoWithComments`, {
+const getCommentDetails = useCallback(async (id) => {
+  try {
+    const response = await axiosJWT.get(
+      `${apiUrl}/timesheet/getSubTaskInfoWithComments`,
+      {
         params: {
           idSubTask: id,
         },
-      });
-      if (response?.data?.data) {
-        setSubTask(response?.data?.data)
       }
-    } catch (error) {
-      console.error("Error occurred while fetching attendance details:", error);
+    );
+
+    if (response?.data?.data) {
+      setSubTask(response?.data?.data);
     }
-  };
+  } catch (error) {
+    console.error(
+      "Error occurred while fetching attendance details:",
+      error
+    );
+  }
+}, [apiUrl]);
   const handleSubmit = async () => {
     if (textData === "") {
       setErrorMessage("comments value is required.");
@@ -242,18 +254,24 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
       }
     } catch (error) {
       setShowButton(true)
+      console.error(error)
     }
   };
   useEffect(() => {
     if (isOpen) {
       if (SubTaskInfo) {
-        getCommentDetails(SubTaskInfo)
+        const fetchData = async () => {
+          await getCommentDetails(SubTaskInfo);
+        };
+
+        fetchData();
+
       }
       document.body.classList.add("hide-body-scroll");
     } else {
       document.body.classList.remove("hide-body-scroll");
     }
-  }, [isOpen, SubTaskInfo]);
+  }, [isOpen, SubTaskInfo, getCommentDetails]);
 
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editTextData, setEditTextData] = useState("");
@@ -276,7 +294,7 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
         getCommentDetails(SubTaskInfo);
         setTimeout(() => getCommentDetails(SubTaskInfo), 1000);
       }
-    } catch (error) { }
+    } catch (error) { console.error(error) }
   };
   const handleImageUpload = async (file) => {
     setShowButton(false)
@@ -312,31 +330,31 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
 
   const isLong = plainText.length > 150;
 
-  const truncatedText = isLong
-    ? plainText.slice(0, 150) + "..."
-    : plainText;
   const editEditorRef = useRef(null);
   const [deleteCommentId, setDeleteCommentId] = useState(null);
   const handleDelete = async () => {
-  if (!deleteCommentId) return;
+    if (!deleteCommentId) return;
 
-  const payload = {
-    id: deleteCommentId,
-    idSubTask: SubTaskInfo,
-    event: "delete"
+    const payload = {
+      id: deleteCommentId,
+      idSubTask: SubTaskInfo,
+      event: "delete"
+    };
+
+    try {
+      await axiosJWT.post(`${apiUrl}/timesheet/addorUpdateComment`, payload);
+
+      setDeleteCommentId(null);
+      getCommentDetails(SubTaskInfo);
+
+      setTimeout(() => getCommentDetails(SubTaskInfo), 1000);
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
   };
-
-  try {
-    await axiosJWT.post(`${apiUrl}/timesheet/addorUpdateComment`, payload);
-
-    setDeleteCommentId(null);
-    getCommentDetails(SubTaskInfo);
-
-    setTimeout(() => getCommentDetails(SubTaskInfo), 1000);
-  } catch (error) {
-    console.error("Delete error:", error);
+  if (!CKEditor || !Editor) {
+    return <div>Loading editor...</div>;
   }
-};
   return (
     <Drawer
       open={isOpen}
@@ -346,28 +364,28 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
       overlayClassName='custom-overlay'
     >
       {deleteCommentId && (
-  <div className="delete-popup">
-    <div className="delete-box">
-      <p>Are you sure you want to delete this comment?</p>
+        <div className="delete-popup">
+          <div className="delete-box">
+            <p>Are you sure you want to delete this comment?</p>
 
-      <div className="delete-actions">
-        <button
-          className="btn-r btn-cancel-r"
-          onClick={() => setDeleteCommentId(null)}
-        >
-          Cancel
-        </button>
+            <div className="delete-actions">
+              <button
+                className="btn-r btn-cancel-r"
+                onClick={() => setDeleteCommentId(null)}
+              >
+                Cancel
+              </button>
 
-        <button
-          className="btn-r btn-primary-r"
-          onClick={handleDelete}
-        >
-          Confirm
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              <button
+                className="btn-r btn-primary-r"
+                onClick={handleDelete}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-body">
@@ -404,7 +422,7 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
                     }}>
                       <span className="subtask-code">{SubTask?.generatedSubTaskCode}</span>
                       <span style={{ fontSize: '.75rem', color: '#64748b', display: 'flex', alignItems: 'center' }}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style={{ width: '14px', height: '14px', marginRight: '5px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '14px', height: '14px', marginRight: '5px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                         {formatDate(SubTask?.startDate)} - {formatDate(SubTask?.endDate)}</span>
                     </p>
                     <p>
@@ -452,10 +470,9 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
                   <div className="section">
                     <h6>Comments & Discussion</h6>
                     <div ref={editorWrapperRef} className={`modal-note-top-section ${editorSize === "large" ? "expand_size_editor" : "expand_size_editor"}`}>
-                      {showEditor ? (
+                      {CKEditor && Editor ? (
                         <div className="">
                           <CKEditor
-                            key={editorKey}
                             editor={Editor}
                             data={textData}
                             config={editorConfig}
@@ -495,7 +512,7 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
                                 <span className="date">{formatDate(comment.date)}</span>
                                 <button
                                   className="edit-comment-btn"
-                                  style={{marginLeft:10}}
+                                  style={{ marginLeft: 10 }}
                                   onClick={() => {
                                     setEditingCommentId(comment.id);
                                     setEditTextData(comment?.description || "");
@@ -514,7 +531,7 @@ const TimesheetCommentWithAdd = ({ isOpen, closeModal, SubTaskInfo, idTimesheet,
                               </div>
                             </div>
 
-                            {editingCommentId === comment.id ? (
+                            {editingCommentId === comment.id && CKEditor && Editor ? (
                               <div className="edit-editor-wrapper" style={{ marginTop: 8 }}>
                                 <CKEditor
                                   key={`edit-${comment.id}`}

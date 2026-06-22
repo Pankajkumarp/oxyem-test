@@ -15,14 +15,16 @@ import { FiInfo } from "react-icons/fi";
 import KanbanBoard from './kanbanBoard';
 
 
-export default function viewDashboard({ }) {
+export default function ViewDashboard() {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const d = new Date(dateStr);
         return isNaN(d) ? "" : format(d, "dd MMM yyyy");
     };
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const [idTimesheet, setIdTimesheet] = useState("");
+        const router = useRouter();
+    const { id } = router.query;
+        const idTimesheet = id;
 const [mentionUser, setMentionUsers] = useState([]);
       useEffect(() => {
         const fetchProfileOptions = async () => {
@@ -42,8 +44,8 @@ const [mentionUser, setMentionUsers] = useState([]);
           }
         };
         fetchProfileOptions();
-      }, [idTimesheet]);
-    const router = useRouter();
+      }, [apiUrl, idTimesheet]);
+
     const [data, setData] = useState([]);
     const [subTaskData, setSubTaskData] = useState({});
     const [loadingSubTask, setLoadingSubTask] = useState({});
@@ -53,14 +55,6 @@ const [mentionUser, setMentionUsers] = useState([]);
     const [totalUsers, settotalUsers] = useState(0);
     const [planHours, setplanHours] = useState(0);
     const [submitHours, setsubmitHours] = useState(0);
-    const getWorkStatus = (taskPercentage, submittedPercentage) => {
-        const planned = Number(taskPercentage);
-        const submitted = Number(submittedPercentage);
-
-        if (submitted === 0) return "Not Started";
-        if (submitted < planned) return "In Progress";
-        return "Completed";
-    };
     const [showChart, setShowChart] = useState(false);
     const getSubTasks = async (idAssignTask, taskCode) => {
         try {
@@ -90,7 +84,11 @@ const [mentionUser, setMentionUsers] = useState([]);
     };
 
 
-    const getProjectValue = async (id) => {
+
+    const [showSubTaskFor, setShowSubTaskFor] = useState(null);
+
+    useEffect(() => {
+            const getProjectValue = async (id) => {
         try {
 
             const response = await axiosJWT.get(`${apiUrl}/timesheet/viewFullTaskInfo`, {
@@ -122,63 +120,29 @@ const [mentionUser, setMentionUsers] = useState([]);
             }
 
         } catch (error) {
-
+         console.error(error)
         }
     }
-    const [openTask, setOpenTask] = useState(null);
-    const [showSubTaskFor, setShowSubTaskFor] = useState(null);
-    const [showAssigneeFor, setShowAssigneeFor] = useState(null);
-
-    const toggleTask = (taskCode) => {
-        setOpenTask(prev => (prev === taskCode ? null : taskCode));
-    };
-
-
-    useEffect(() => {
-        if (viewDetail?.taskList?.length > 0) {
-            setOpenTask(viewDetail.taskList[0].taskCode);
-        }
-    }, [viewDetail]);
-
-    useEffect(() => {
-        const { id } = router.query;
         getProjectValue(id);
-        setIdTimesheet(id)
-    }, [router.query.id]);
+    }, [apiUrl, id]);
 
 
-    const getSubmittedPercentage = (submittedHours, plannedHours) => {
-        const submitted = Number(submittedHours);
-        const planned = Number(plannedHours);
-
-        if (!submitted || !planned || planned <= 0) return 0;
-
-        return Math.min(100, Math.round((submitted / planned) * 100));
-    };
-
-    const getProgressPercentage = (submitted, planned) => {
-        if (!planned || planned <= 0) return 0;
-
-        return Math.min((submitted / planned) * 100, 100);
-    };
     useEffect(() => {
         if (!showSubTaskFor) return;
         if (!viewDetail?.idAssignTask) return;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         getSubTasks(viewDetail.idAssignTask, showSubTaskFor);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [showSubTaskFor, viewDetail?.idAssignTask]);
     useEffect(() => {
         if (viewDetail?.taskList?.length > 0) {
-            const firstTaskCode = viewDetail.taskList[0].taskCode;
-
-            setOpenTask(firstTaskCode);          // expand first task
-            setShowAssigneeFor(firstTaskCode);   // 👈 SHOW ASSIGNEES
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setShowSubTaskFor(null);              // hide sub tasks
         }
     }, [viewDetail]);
 
     const [openSubTask, setOpenSubTask] = useState(null);
-    const [updatingStatus, setUpdatingStatus] = useState({});
     const toggleSubTask = (subTaskCode) => {
         setOpenSubTask(prev =>
             prev === subTaskCode ? null : subTaskCode
@@ -228,26 +192,16 @@ const [mentionUser, setMentionUsers] = useState([]);
             subTaskData[showSubTaskFor]?.length > 0 &&
             !openSubTask
         ) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setOpenSubTask(subTaskData[showSubTaskFor][0].generatedSubTaskCode);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [subTaskData, showSubTaskFor]);
     const safeSubmit = Number(submitHours) || 0;
     const safePlan = Number(planHours) || 0;
 
     const percentage =
         safePlan > 0 ? ((safeSubmit / safePlan) * 100).toFixed(1) : "0.0";
-    const getInitials = (name) => {
-        if (!name) return "";
-
-        const words = name.trim().split(" ");
-
-        if (words.length === 1) {
-            return words[0].substring(0, 2).toUpperCase();
-        }
-
-        return (words[0][0] + words[1][0]).toUpperCase();
-    };
-
     const [activeTab, setActiveTab] = useState("tasks");
     const [openGroups, setOpenGroups] = useState({});
 
@@ -322,6 +276,7 @@ const [mentionUser, setMentionUsers] = useState([]);
         if (data.length > 0) {
             const firstKey = `tg-0`;
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setOpenGroups({
                 [firstKey]: true
             });
@@ -361,9 +316,6 @@ const [mentionUser, setMentionUsers] = useState([]);
 
 const isLong = description.length > 150;
 
-const truncated = isLong
-  ? description.slice(0, 150) + "..."
-  : description;
     return (
         <>
             <style suppressHydrationWarning>{CSS}</style>
@@ -720,7 +672,7 @@ const truncated = isLong
                                             className={`tab-btn ${activeTab === "tasks" ? "active" : ""}`}
                                             onClick={() => setActiveTab("tasks")}
                                         >
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg> Task Assignment Details
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg> Task Assignment Details
                                             <span className="tab-count">
                                                 {viewDetail?.taskList?.length || 0}
                                             </span>
@@ -730,20 +682,20 @@ const truncated = isLong
                                             className={`tab-btn ${activeTab === "Kanban" ? "active" : ""}`}
                                             onClick={() => setActiveTab("Kanban")}
                                         >
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /></svg> Kanban
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /></svg> Kanban
                                         </button>
                                         <button
                                             className={`tab-btn ${activeTab === "gantt" ? "active" : ""}`}
                                             onClick={() => setActiveTab("gantt")}
                                         >
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /></svg> Gantt Chart
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /></svg> Gantt Chart
                                         </button>
 
                                         <button
                                             className={`tab-btn ${activeTab === "summary" ? "active" : ""}`}
                                             onClick={() => setActiveTab("summary")}
                                         >
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg> Productivity Summary
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg> Productivity Summary
                                         </button>
                                     </div>
 
@@ -791,7 +743,7 @@ const truncated = isLong
                                                                     <span className="meta-sep">·</span>
 
                                                                     <span className="meta-chip">
-                                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style={{ width: '11px', height: '11px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '11px', height: '11px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                                                                         {formatDate(task.startDate)} –{" "}
                                                                         {formatDate(task.endDate)}
                                                                     </span>
@@ -802,14 +754,14 @@ const truncated = isLong
                                                                     <span
                                                                         className="sub-tasks-badge"
                                                                         onClick={() => {
-                                                                            setOpenTask(task.taskCode);
+                                                                            
                                                                             setShowSubTaskFor(task.taskCode);
                                                                             getSubTasks(viewDetail.idAssignTask, task.taskCode);
                                                                         }}
                                                                     >
                                                                         Sub-Tasks ▾</span>) : null}
                                                                 <span className={`status-badge status-${task.status}`} style={{ fontSize: '10px', padding: '3px 8px' }}><span className="dot"></span>{task.status}</span>
-                                                                <svg onClick={() => toggleGroup(groupKey)} className={`chevron ${openGroups[groupKey] ? "open" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15" /></svg>
+                                                                <svg onClick={() => toggleGroup(groupKey)} className={`chevron ${openGroups[groupKey] ? "open" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="18 15 12 9 6 15" /></svg>
                                                             </div>
                                                         </div>
                                                         {loadingSubTask[task.taskCode] && (
@@ -878,7 +830,7 @@ const truncated = isLong
                                                                                 <span className="meta-sep">·</span>
 
                                                                                 <span className="meta-chip">
-                                                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style={{ width: '11px', height: '11px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg> {formatDate(subTask.startDate)} –{" "}
+                                                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '11px', height: '11px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg> {formatDate(subTask.startDate)} –{" "}
                                                                                     {formatDate(subTask.endDate)}
                                                                                 </span>
                                                                                 <span style={{
@@ -891,13 +843,13 @@ const truncated = isLong
                                                                             </div>
 
                                                                             <div className="tg-right">
-                                                                                <div class="on-off-toggle"
+                                                                                <div className="on-off-toggle"
                                                                                     onClick={(e) => e.stopPropagation()}
                                                                                     onMouseDown={(e) => e.stopPropagation()}
                                                                                     data-tooltip-content={"Change status"}
                                                                                     data-tooltip-id={`my-tooltip-p`}>
                                                                                     <input
-                                                                                        class="on-off-toggle__input"
+                                                                                        className="on-off-toggle__input"
                                                                                         checked={subTask.status === "closed"}
                                                                                         type="checkbox" id={`tg-${task.taskCode}-${subTask.generatedSubTaskCode}`}
                                                                                         onChange={(e) => {
@@ -911,7 +863,7 @@ const truncated = isLong
                                                                                             );
                                                                                         }}
                                                                                     />
-                                                                                    <label for={`tg-${task.taskCode}-${subTask.generatedSubTaskCode}`} class="on-off-toggle__slider"></label>
+                                                                                    <label htmlFor={`tg-${task.taskCode}-${subTask.generatedSubTaskCode}`} className="on-off-toggle__slider"></label>
                                                                                 </div>
                                                                                 <span
                                                                                     className={`status-badge status-${subTask.status}`}
@@ -920,7 +872,7 @@ const truncated = isLong
                                                                                     <span className="dot"></span>
                                                                                     {subTask.status}
                                                                                 </span>
-                                                                                <svg onClick={() => toggleSubTask(subKey)} style={{ marginRight: '10px' }} className={`chevron ${openSubTask === subKey ? "open" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15" /></svg>
+                                                                                <svg onClick={() => toggleSubTask(subKey)} style={{ marginRight: '10px' }} className={`chevron ${openSubTask === subKey ? "open" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="18 15 12 9 6 15" /></svg>
                                                                             </div>
                                                                         </div>
 
@@ -1341,7 +1293,7 @@ const truncated = isLong
                                                             color: "var(--amber-600)",
                                                         }}
                                                     >
-                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style={{ width: '14px', height: '14px' }}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /></svg> At current pace, <strong>{remaining} hrs</strong> remaining.
+                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '14px', height: '14px' }}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /></svg> At current pace, <strong>{remaining} hrs</strong> remaining.
                                                     </div>
                                                 </div>
 
@@ -1373,7 +1325,7 @@ const truncated = isLong
                                                                 }}
 
                                                             >
-                                                                <div className="emp-avatar" textSizeRatio={3.75}>
+                                                                <div className="emp-avatar">
                                                                     <Avatar name={emp.employeeName} size="32" textSizeRatio={1.5} />
                                                                 </div>
 

@@ -1,5 +1,4 @@
 import ReactModal from 'react-modal';
-import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { FiDownload } from "react-icons/fi";
 

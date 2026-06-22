@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import EmployeeChart from '../Components/Charts/EmployeeChart';
-import AttendanceChart from '../Components/Charts/AttendanceChart';
 import EmpLeaveChart from '../Components/Charts/EmpLeaveChart';
 import EmpClaimChart from '../Components/Charts/EmpClaimChart';
 import EmpProfileChart from '../Components/Charts/EmpProfileChart';
@@ -21,9 +19,9 @@ export default function Employee() {
                 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                 const response = await axiosJWT.get(`${apiUrl}/employees/getLoggedInEmployee`);
                 const EmployeeId = response.data.data.idEmployee;
-                const isActive = response.data.data.isActive;
                 setEmpId(EmployeeId);
             } catch (error) {
+                console.error(error)
             }
         };
         fetchData();

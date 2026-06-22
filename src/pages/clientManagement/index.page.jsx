@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/immutability */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
@@ -14,7 +17,6 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export default function ClientView() {
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const [isrefresh, setRefresh] = useState(true);
   const [opportunityId, setOpportunityId] = useState("");
   const [isModalHistroyOpen, setIsModalHistroyOpen] = useState(false);
   const onViewClick = (id) => {
@@ -24,7 +26,7 @@ export default function ClientView() {
     setOpportunityId(id);
     setIsModalHistroyOpen(true)
   };
-  const closeHistroyClick = (id) => {
+  const closeHistroyClick = () => {
     setIsModalHistroyOpen(false)
   };
   const onEditClick = (id) => {
@@ -100,16 +102,11 @@ export default function ClientView() {
           color: '#FF000F',
         },
       });
-
+      console.error(error)
     }
   }
-  const handleDecommissionreq = async (data) => {
-  };
-
-  const onDeleteClick = (id) => {
-
-  };
-
+  const handleDecommissionreq = async () => {};
+  const onDeleteClick = () => {};
   const optionsmonth = [
     { value: 'Jan', label: 'January' },
     { value: 'Feb', label: 'February' },
@@ -147,7 +144,6 @@ export default function ClientView() {
       setYearValue();
     }
   };
-  const [toplist, setToplist] = useState({});
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index) => {
@@ -190,7 +186,6 @@ useEffect(() => {
                       const category = statusChart.labels[config.dataPointIndex];
                       if (!category) return;
                       requestAnimationFrame(() => {
-                        console.log("Status chart clicked:", category);
                         setSearchfilter({ status: category });
                         setActiveTab(1);
                         setActiveStatus(category);
@@ -300,31 +295,27 @@ useEffect(() => {
         setStatData(response.data.data || {});
       }
     } catch (error) {
-
-
+      console.error(error)
     }
   }
   useEffect(() => {
     if (activeTab === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchInvoiceData()
     }
   }, [activeTab])
 
   const [searchfilter, setSearchfilter] = useState({});
   const [activeStatus, setActiveStatus] = useState(null);
-  const [activeTableTab, setActiveTableTab] = useState("");
 
   const handleShowDataForStatus = (filterKey) => {
-    setActiveTab(1); // switch to table tab
-    setActiveTableTab(filterKey);
+    setActiveTab(1);
     setActiveStatus(filterKey);
 
     if (filterKey === "clr") {
       setSearchfilter({});
       setActiveStatus(null);
     } else {
-      let filter = {};
-
       switch (filterKey) {
         case "Draft":
           setSearchfilter(null);
@@ -491,7 +482,6 @@ useEffect(() => {
                                     </div>
                                   )}</div>
                                   <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                    {isrefresh && (
                                       <CustomDataTable
                                         title={""}
                                         onViewClick={onViewClick}
@@ -505,7 +495,6 @@ useEffect(() => {
                                         searchfilter={searchfilter}
 
                                       />
-                                    )}
                                   </div>
                                 </div>
                               </div>

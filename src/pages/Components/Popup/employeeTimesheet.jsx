@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable react/jsx-key */
+import React, { useState, useEffect } from "react";
 import ReactModal from 'react-modal';
-import Select from 'react-select';
 import { MdClose } from "react-icons/md";
-import Profile from '../commancomponents/profile';
-import { FaPlus } from "react-icons/fa6";
-import { RiDeleteBinLine } from "react-icons/ri";
 import MUIDataTable from "mui-datatables";
 import { useRouter } from 'next/router'
 import { axiosJWT } from '../../Auth/AddAuthorization';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FaTimes } from "react-icons/fa";
 import { FaRegCheckCircle} from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
@@ -182,6 +179,7 @@ export default function SelectUser({ isOpen, closeModal, isfor, timesheetId, clo
 
     useEffect(() => {
         if (timesheetId !== "") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchtabledata(timesheetId, isfor);
             setidTimesheet(timesheetId)
         }
@@ -809,8 +807,6 @@ if (isEditable) {
         viewColumns: false,
         selectableRows: 'none', // Hide checkbox for selecting rows
         setRowProps: (row, dataIndex, rowIndex) => {
-
-            const rowCount = transformedData.length;
             // Define your row coloring logic here
             let backgroundColor = '';
             let className = '';
@@ -870,7 +866,7 @@ if (isEditable) {
                                     />
 
                                     <div className="text-end w-100 oxyem-timesheet-popup-button">
-                                        {sectionButton.map((button, index) => {
+                                        {sectionButton.map((button) => {
                                             if (button.isEnabled) {
                                                 if (button.type === "submit") {
                                                     return <button type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("submit")}>{button.type}</button>;

@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
-import { IoIosLock } from "react-icons/io";
 import { BsShieldLock } from "react-icons/bs";
-const OTPInput = ({ length = 6, apiData, username, getsubmitformdata }) => {
+const OTPInput = ({ length = 6, apiData, getsubmitformdata }) => {
     const apiurl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [otp, setOTP] = useState(Array(length).fill(''));
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const inputRefs = useRef([...Array(length)].map(() => React.createRef()));
-    const [getapidata, setGetApiData] = useState(apiData);
+    const getapidata = apiData;
 
     const handleInputChange = (index, value) => {
         // Ensure only one character is entered in each field
@@ -57,11 +56,13 @@ const OTPInput = ({ length = 6, apiData, username, getsubmitformdata }) => {
         // Check if all fields are filled after paste
         const isAllFilled = newOTP.every(val => val !== '');
         setIsSubmitDisabled(!isAllFilled);
+        // eslint-disable-next-line react-hooks/immutability
         handleSubmit();
     };
 
     useEffect(() => {
         const isAllFilled = otp.every(val => val !== '');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsSubmitDisabled(!isAllFilled);
     }, [otp]);
 

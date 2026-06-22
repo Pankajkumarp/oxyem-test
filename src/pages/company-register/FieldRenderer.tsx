@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CheckbokwithInput from "./CheckbokwithInput";
 import Select from "react-select";
 import Files from "react-files";
@@ -49,6 +50,7 @@ export default function FieldRenderer({ field, value, setValue, errors }: any) {
             );
 
         case "select":
+            // eslint-disable-next-line no-case-declarations
             const options = field.options?.map((opt: any) => {
                 if (typeof opt === 'string') {
                     return { label: opt, value: opt }; // fallback if it's a string
@@ -145,6 +147,7 @@ export default function FieldRenderer({ field, value, setValue, errors }: any) {
                         const file = files?.[0];
                         setValue(field.name, file);
                     }}
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     onError={(error) => {
                         setValue(field.name, null);
                     }}

@@ -10,6 +10,7 @@ const BarChart = ({ mygraphvalue }) => {
 
   useEffect(() => {
     if (mygraphvalue?.data && mygraphvalue?.value) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCategories(mygraphvalue.data);
       setValues(mygraphvalue.value.map(val => parseFloat(val))); // Convert string values to numbers
     }

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from "react";
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 import Files from 'react-files'
@@ -33,7 +34,9 @@ const UploadFileDetail = ({ documentId, documentFor }) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getUploadList(documentId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentId]);
 
   const handleFileChange = async (files) => {

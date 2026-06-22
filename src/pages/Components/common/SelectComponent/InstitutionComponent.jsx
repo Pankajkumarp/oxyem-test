@@ -5,13 +5,11 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function InstitutionComponent({ label, validations = [] , value, onChange }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
-  const [error, setError] = useState(null);
   
   useEffect(() => {
     const fetchOptions = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        // const response = await axios.get(`${apiUrl}/dropdowns`, { params: { isFor: 'roles' } });
 
         const response = await axiosJWT.get(`${apiUrl}/dropdowns`, { 
           params: { isFor: 'institution' } 
@@ -24,8 +22,7 @@ export default function InstitutionComponent({ label, validations = [] , value, 
         
         setOptions(optionsData);
       } catch (error) {
-        console.error('Error fetching options:', error);
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 

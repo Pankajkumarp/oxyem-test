@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import LabelNormal from '../Label/LabelNormal';
 import LabelMandatory from '../Label/LabelMandatory';
 
-export default function NumberComponent({type, placeholder, isDisabled, label, value, validations = [] ,onChange,otherAttributes ,labelShow }) {
+export default function NumberComponent({ placeholder, isDisabled, label, value, validations = [] ,onChange,otherAttributes ,labelShow }) {
   const isRequired = validations.some(validation => validation.type === "required");
   const [textData, settextData] = useState(value);
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     settextData(value);
   }, [value]);
 const handleInputChange = (e) => {

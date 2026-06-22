@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function EmptyInfoBlock({
   title,
   description,
@@ -9,17 +7,6 @@ export default function EmptyInfoBlock({
 }) {
   return (
     <div className="text-center py-3">
-      {/* Image */}
-      {/* {imageSrc && (
-        <div className="d-flex justify-content-center mb-3">
-          <Image
-            src={imageSrc}
-            // alt={title}
-            width={80}
-            height={80}
-          />
-        </div>
-      )} */}
       {icon && <div className="relative">{icon}</div>}
 
       {/* Title */}

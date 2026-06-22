@@ -1,15 +1,17 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/AttendanceRegularization/index.tsx
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import AttendanceSnapshot from "../AttendanceSnapshot";
 import styles from "./AttendanceRegularization.module.css";
 import FormRenderer from "../../../../Components/FormRender/TemplateOne/FormRenderer";
 import QuickInfo from "./QuickInfo";
 import { axiosJWT } from "../../../../Auth/AddAuthorization";
 import { useRouter } from 'next/router';
-import { Toaster, toast } from 'react-hot-toast';
-import { ToastContainer, ToastNotification } from "../../../../Components/EmployeeDashboard/Alert/ToastNotification";
+import { toast } from 'react-hot-toast';
+import { ToastContainer } from "../../../../Components/EmployeeDashboard/Alert/ToastNotification";
 import { FaRegCheckCircle, FaTimes } from "react-icons/fa";
 import { SocketContext } from '../../../../Auth/Socket';
 
@@ -40,7 +42,7 @@ export default function AttendanceRegularization({ formShow, formData }) {
           SectionName: "AttendanceDetails",
           fields: Object.entries(values)
             .filter(
-              ([_, value]) =>
+              ([ value]) =>
                 value !== "" &&
                 value !== null
             )
@@ -150,7 +152,6 @@ export default function AttendanceRegularization({ formShow, formData }) {
   const handleCancel = () => {
     router.push(`/attendance/admin`);
   };
-  const [selectedEmp, setSelectedEmp] = useState(null);
   const [empInfoData, setEmpInfoData] = useState(null);
 
   const getEmpData = async (value) => {
@@ -160,7 +161,6 @@ export default function AttendanceRegularization({ formShow, formData }) {
         const response = await axiosJWT.get(`${apiUrl}/attendance/getEmployeeAttendanceSummary`, { params: { idEmployee: value } });
         if (response.status === 200 && response.data.data) {
           const fetchedData = response.data.data;
-          console.log(fetchedData, "fetchedData")
           setEmpInfoData(fetchedData);
         }
       }
@@ -170,7 +170,6 @@ export default function AttendanceRegularization({ formShow, formData }) {
     }
   };
   const onClickGetEmployeeId = (employeeID) => {
-    setSelectedEmp(employeeID);
     if (employeeID) {
       getEmpData(employeeID)
     }

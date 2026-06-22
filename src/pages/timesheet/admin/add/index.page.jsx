@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Select from 'react-select';
 import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import AssignUserPopup from './AssignUserPopup';
@@ -25,6 +25,7 @@ import { countWorkingDays } from "../../../Components/Hooks/countWorkingDays";
 import { FiPlusCircle, FiEdit } from "react-icons/fi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import DescriptionDrawer from './DescriptionDrawer';
+import Image from 'next/image'
 const DynamicForm = dynamic(() => import('../../../Components/CommanForm.jsx'), {
   ssr: false
 });
@@ -40,15 +41,13 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
   const [formvalue, setFormvalue] = useState(userFormdata);
   const showButton = "";
   const pagename = "timeManagement";
-  const [fields, setfields] = useState(formvalue.section[1].Subsection[0].fields);
-  useEffect(() => {
-    setfields(formvalue.section[1].Subsection[0].fields)
+  const fields = useMemo(() => {
+    return formvalue.section[1].Subsection[0].fields;
   }, [formvalue]);
   const formbuttons = formvalue.section[1].buttons;
   const formfinalbuttons = formvalue.section[2].buttons;
   const [activeTab, setActiveTab] = useState(formvalue.section[0].SectionName);
   const [isTabclick, setisTabclick] = useState(false);
-  const [tableSection, settableSection] = useState("hide");
 
   const handleTabClick = (tab) => {
     if (isTabclick === true) {
@@ -81,7 +80,9 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
     const newTaskOptionsR = taskOptions.filter(option =>
       !data.some(task => task.taskCode === option.value)
     );
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShoowTaskOptions(newTaskOptionsR)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -125,7 +126,6 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
     fetchOptions();
   }, []);
   const [previousformvalue, setPreviousformvalue] = useState({});
-  const syncedPrimaryRef = useRef(new Set());
   const prevAssignedRef = useRef({})
   const buildEmployeeTasksPayload = (data, idEmployee) => {
     return data
@@ -199,6 +199,7 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
         invalidUsers
       };
     } catch (err) {
+      console.error(err)
       return {
         isValid: false,
         invalidUsers: [],
@@ -567,24 +568,24 @@ export default function TableWithField({ userFormdata }) {  // Default to empty 
     }
     setActiveTab("Review Timeline");
   }
-const normalizedData = data.map((row) => {
-  const updatedRow = { ...row };
+  const normalizedData = data.map((row) => {
+    const updatedRow = { ...row };
 
-  const selectedOption = taskOptions.find(
-    opt => opt.value === row.taskCode
-  );
+    const selectedOption = taskOptions.find(
+      opt => opt.value === row.taskCode
+    );
 
-  const parentTaskName = selectedOption?.label || "";
-  updatedRow.taskCode = row.taskCode;
-  if (Array.isArray(row.subTasks)) {
-    updatedRow.subTasks = row.subTasks.map((sub, index) => ({
-      ...sub,
-      taskCode: `${parentTaskName}-${String(index + 1).padStart(2, "0")}`
-    }));
-  }
+    const parentTaskName = selectedOption?.label || "";
+    updatedRow.taskCode = row.taskCode;
+    if (Array.isArray(row.subTasks)) {
+      updatedRow.subTasks = row.subTasks.map((sub, index) => ({
+        ...sub,
+        taskCode: `${parentTaskName}-${String(index + 1).padStart(2, "0")}`
+      }));
+    }
 
-  return updatedRow;
-});
+    return updatedRow;
+  });
   const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
   const handleSubmit = async () => {
     const fieldErrors = validateFields(fields);
@@ -656,7 +657,15 @@ const normalizedData = data.map((row) => {
       const errormessage = 'Error connecting to the backend. Please try after Sometime.';
       toast.success(({ id }) => (
         <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-          <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+          <Image
+            src="/assets/img/wrong.png"
+            alt="Wrong Icon"
+            width={30}
+            height={30}
+            style={{
+              marginRight: '10px'
+            }}
+          />
           <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
           <button
             onClick={() => toast.dismiss(id)}
@@ -683,7 +692,7 @@ const normalizedData = data.map((row) => {
       console.error('Error:', error);
     }
   };
-const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
+  const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
   const handleDraftSubmit = async () => {
     const fieldErrors = validateFields(fields);
     if (Object.keys(fieldErrors).length > 0) {
@@ -753,7 +762,15 @@ const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
       const errormessage = 'Error connecting to the backend. Please try after Sometime.';
       toast.success(({ id }) => (
         <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-          <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+          <Image
+            src="/assets/img/wrong.png"
+            alt="Wrong Icon"
+            width={30}
+            height={30}
+            style={{
+              marginRight: '10px'
+            }}
+          />
           <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
           <button
             onClick={() => toast.dismiss(id)}
@@ -823,7 +840,9 @@ const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
 
   const handleChangess = (currentIndex) => {
     const nextIndex = currentIndex + 1;
+    // eslint-disable-next-line no-undef
     if (nextIndex < content.section.length) {
+      // eslint-disable-next-line no-undef
       setActiveTab(content.section[nextIndex].SectionName);
     }
   };
@@ -883,7 +902,6 @@ const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
 
     setActiveTab("Allocate Effort");
     setisTabclick(true);
-    settableSection("show");
   };
   const removeError = (key) => {
     setSectionErrors((prevErrors) => {
@@ -897,18 +915,18 @@ const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskTemplateConfig, settaskTemplateConfig] = useState([]);
-  const fetchApiText = async () => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "taskTemplateConfig" } });
-      if (response?.data?.data?.section) {
-        settaskTemplateConfig(response.data.data.section)
-      }
-    } catch (err) {
-      ;
-    }
-  };
   useEffect(() => {
+    const fetchApiText = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "taskTemplateConfig" } });
+        if (response?.data?.data?.section) {
+          settaskTemplateConfig(response.data.data.section)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    };
     fetchApiText();
   }, []);
   const openTemplatePopup = async () => {
@@ -954,6 +972,7 @@ const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
     return date instanceof Date && !isNaN(date);
   };
 
+  const taskprogress = 100
   const convertToGanttTasks = (data) => {
     return data
       .map((task, index) => {
@@ -969,7 +988,7 @@ const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
           name: task.taskName || "Untitled Task",
           start,
           end,
-          progress: 100 || 0,
+          progress: taskprogress || 0,
           type: "task",
           status: "open",
           styles: {
@@ -981,13 +1000,13 @@ const [DraftButtonLoading, setDraftButtonLoading] = useState(false);
       })
       .filter(Boolean);
   };
-const [expandedRows, setExpandedRows] = useState({});
-const toggleRow = (rowIndex) => {
-  setExpandedRows(prev => ({
-    ...prev,
-    [rowIndex]: !prev[rowIndex]
-  }));
-};
+  const [expandedRows, setExpandedRows] = useState({});
+  const toggleRow = (rowIndex) => {
+    setExpandedRows(prev => ({
+      ...prev,
+      [rowIndex]: !prev[rowIndex]
+    }));
+  };
 
   const tasks = convertToGanttTasks(data);
   const removeRowFromTable = (rowIndex) => {
@@ -1049,23 +1068,23 @@ const toggleRow = (rowIndex) => {
         return false;
     }
   };
-const [isDescOpen, setIsDescOpen] = useState(false);
-const [selectedRow, setSelectedRow] = useState(null);
-const [selectedSub, setSelectedSub] = useState(null);
-const [descValue, setDescValue] = useState("");
-const openDescription = (rowIndex, subIndex = null, existingValue = "") => {
-  setSelectedRow(rowIndex);
-  setSelectedSub(subIndex);
-  setDescValue(existingValue || "");
-  setIsDescOpen(true);
-};
-const handleSaveDescription = (value) => {
-  if (selectedSub !== null) {
-    handleSubTaskChange(selectedRow, selectedSub, "description", value);
-  } else {
-    handleDataChange(selectedRow, "description", value);
-  }
-};
+  const [isDescOpen, setIsDescOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedSub, setSelectedSub] = useState(null);
+  const [descValue, setDescValue] = useState("");
+  const openDescription = (rowIndex, subIndex = null, existingValue = "") => {
+    setSelectedRow(rowIndex);
+    setSelectedSub(subIndex);
+    setDescValue(existingValue || "");
+    setIsDescOpen(true);
+  };
+  const handleSaveDescription = (value) => {
+    if (selectedSub !== null) {
+      handleSubTaskChange(selectedRow, selectedSub, "description", value);
+    } else {
+      handleDataChange(selectedRow, "description", value);
+    }
+  };
   const remaining = Math.max(0, 100 - totalCount);
 
   const renderCell = (
@@ -1164,13 +1183,13 @@ const handleSaveDescription = (value) => {
 
       case "Tasklist":
         if (isSubTask) {
-  const parentTaskCode = data[rowIndex]?.taskCode;
-  const selected = taskOptions.find(o => o.value === parentTaskCode);
+          const parentTaskCode = data[rowIndex]?.taskCode;
+          const selected = taskOptions.find(o => o.value === parentTaskCode);
 
-  const displayValue = `${selected?.label || parentTaskCode || ""}-${String(subIndex + 1).padStart(2, "0")}`;
+          const displayValue = `${selected?.label || parentTaskCode || ""}-${String(subIndex + 1).padStart(2, "0")}`;
 
-  return <span className="value-form">{displayValue}</span>;
-}
+          return <span className="value-form">{displayValue}</span>;
+        }
         return (
           <Select
             value={taskOptions.find(o => o.value === value)}
@@ -1223,7 +1242,7 @@ const handleSaveDescription = (value) => {
           <AssignUserPopup
             value={value || []}
             projectid={previousformvalue.idProject}
-            isFor={isSubTask ? "hide":""}
+            isFor={isSubTask ? "hide" : ""}
             onChange={(val, meta) => {
               if (isSubTask) {
                 handleSubTaskChange(rowIndex, subIndex, field.name, val, meta);
@@ -1278,116 +1297,117 @@ const handleSaveDescription = (value) => {
       })
     );
   };
-const handleSubTaskChange = async (parentIndex, subIndex, field, value, meta = {}) => {
-  setData(prev =>
-    prev.map((row, i) => {
-      if (i !== parentIndex) return row;
+  const handleSubTaskChange = async (parentIndex, subIndex, field, value) => {
+    setData(prev =>
+      prev.map((row, i) => {
+        if (i !== parentIndex) return row;
 
-      let updatedSubTasks = row.subTasks.map((st, s) =>
-        s === subIndex ? { ...st, [field]: value } : st
-      );
+        let updatedSubTasks = row.subTasks.map((st, s) =>
+          s === subIndex ? { ...st, [field]: value } : st
+        );
 
-      let updatedRow = { ...row, subTasks: updatedSubTasks };
+        let updatedRow = { ...row, subTasks: updatedSubTasks };
 
-      /* ================================
-         🔥 NEW LOGIC: Sync subtask users to parent
-      ================================= */
+        /* ================================
+           🔥 NEW LOGIC: Sync subtask users to parent
+        ================================= */
 
-      if (field === "assignedTo") {
-        const subUsers = Array.isArray(value) ? value : [];
-        const parentUsers = Array.isArray(row.assignedTo)
-          ? [...row.assignedTo]
-          : [];
+        if (field === "assignedTo") {
+          const subUsers = Array.isArray(value) ? value : [];
+          const parentUsers = Array.isArray(row.assignedTo)
+            ? [...row.assignedTo]
+            : [];
 
-        subUsers.forEach(subUser => {
-          const alreadyExists = parentUsers.some(
-            parentUser => parentUser.idEmployee === subUser.idEmployee
-          );
+          subUsers.forEach(subUser => {
+            const alreadyExists = parentUsers.some(
+              parentUser => parentUser.idEmployee === subUser.idEmployee
+            );
 
-          if (!alreadyExists) {
-            parentUsers.push({
-              ...subUser,
-              isPrimary: false
-            });
-          }
-        });
+            if (!alreadyExists) {
+              parentUsers.push({
+                ...subUser,
+                isPrimary: false
+              });
+            }
+          });
 
-        updatedRow.assignedTo = parentUsers;
+          updatedRow.assignedTo = parentUsers;
+        }
+
+        return updatedRow;
+      })
+    );
+
+    /* ================================
+       🔹 Clear subtask error (your existing logic)
+    ================================= */
+
+    setErrors(prev => {
+      if (!prev[parentIndex]?.subTasks?.[subIndex]?.[field]) {
+        return prev;
       }
 
-      return updatedRow;
-    })
-  );
+      const updated = { ...prev };
+      updated[parentIndex] = { ...updated[parentIndex] };
+      updated[parentIndex].subTasks = {
+        ...updated[parentIndex].subTasks
+      };
 
-  /* ================================
-     🔹 Clear subtask error (your existing logic)
-  ================================= */
+      delete updated[parentIndex].subTasks[subIndex][field];
 
-  setErrors(prev => {
-    if (!prev[parentIndex]?.subTasks?.[subIndex]?.[field]) {
-      return prev;
-    }
-
-    const updated = { ...prev };
-    updated[parentIndex] = { ...updated[parentIndex] };
-    updated[parentIndex].subTasks = {
-      ...updated[parentIndex].subTasks
-    };
-
-    delete updated[parentIndex].subTasks[subIndex][field];
-
-    if (Object.keys(updated[parentIndex].subTasks[subIndex]).length === 0) {
-      delete updated[parentIndex].subTasks[subIndex];
-    }
-
-    if (Object.keys(updated[parentIndex].subTasks).length === 0) {
-      delete updated[parentIndex].subTasks;
-    }
-
-    if (Object.keys(updated[parentIndex]).length === 0) {
-      delete updated[parentIndex];
-    }
-
-    return updated;
-  });
-};
-useEffect(() => {
-  if (!errors || Object.keys(errors).length === 0) return;
-
-  setExpandedRows(prev => {
-    const updated = { ...prev };
-
-    Object.keys(errors).forEach(rowIndex => {
-      const rowErrors = errors[rowIndex];
-
-      // Parent row error
-      if (
-        rowErrors &&
-        Object.keys(rowErrors).some(
-          key => key !== "subTasks"
-        )
-      ) {
-        updated[rowIndex] = true;
+      if (Object.keys(updated[parentIndex].subTasks[subIndex]).length === 0) {
+        delete updated[parentIndex].subTasks[subIndex];
       }
 
-      // Subtask error
-      if (rowErrors?.subTasks) {
-        updated[rowIndex] = true;
+      if (Object.keys(updated[parentIndex].subTasks).length === 0) {
+        delete updated[parentIndex].subTasks;
       }
+
+      if (Object.keys(updated[parentIndex]).length === 0) {
+        delete updated[parentIndex];
+      }
+
+      return updated;
     });
+  };
+  useEffect(() => {
+    if (!errors || Object.keys(errors).length === 0) return;
 
-    return updated;
-  });
-}, [errors]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setExpandedRows(prev => {
+      const updated = { ...prev };
+
+      Object.keys(errors).forEach(rowIndex => {
+        const rowErrors = errors[rowIndex];
+
+        // Parent row error
+        if (
+          rowErrors &&
+          Object.keys(rowErrors).some(
+            key => key !== "subTasks"
+          )
+        ) {
+          updated[rowIndex] = true;
+        }
+
+        // Subtask error
+        if (rowErrors?.subTasks) {
+          updated[rowIndex] = true;
+        }
+      });
+
+      return updated;
+    });
+  }, [errors]);
 
   return (
     <>
-    <DescriptionDrawer
-  isOpen={isDescOpen}
-  closeModal={() => setIsDescOpen(false)}
-  initialValue={descValue}
-  onSave={handleSaveDescription}
-/>
+      <DescriptionDrawer
+        isOpen={isDescOpen}
+        closeModal={() => setIsDescOpen(false)}
+        initialValue={descValue}
+        onSave={handleSaveDescription}
+      />
       <Head>
         <title>Plan the Work | Oxytal</title>
         <meta name="description" content={"Plan work, allocate capacity, and control effort tracking from the start."} />
@@ -1450,6 +1470,13 @@ useEffect(() => {
                                       {submitErrors}
                                     </div>
                                   )}
+                                  {/*{globalErrorsRef.current.length > 0 && (
+                                    <div className="alert alert-danger mb-3 mt-4">
+                                      {globalErrorsRef.current.map((err, idx) => (
+                                        <div key={idx} className='c-error-task'>{err}</div>
+                                      ))}
+                                    </div>
+                                  )}*/}
                                   {formvalue.section.map((section, index) => (
                                     activeTab === section.SectionName && (
                                       <div key={index} className={`tab-pane ${activeTab === section.SectionName ? 'active' : ''}`}>
@@ -1509,14 +1536,7 @@ useEffect(() => {
                                                 </div>
                                               </div>
 
-                                              {globalErrorsRef.current.length > 0 && (
-                                                <div className="alert alert-danger mb-3 mt-4">
-                                                  {globalErrorsRef.current.map((err, idx) => (
-                                                    <div key={idx} className='c-error-task'>{err}</div>
-                                                  ))}
-                                                </div>
-                                              )}
-                                              <div class="table-responsive table-responsive-timesheet-form">
+                                              <div className="table-responsive table-responsive-timesheet-form">
                                                 <table className="table oxyem-custom-table">
                                                   <thead>
                                                     <tr>
@@ -1575,54 +1595,54 @@ useEffect(() => {
                                                               />
                                                             )}
                                                             {row.subTasks?.length > 0 && (
-  <span onClick={() => toggleRow(rowIndex)} className="mx-2 cursor-pointer">
-    {expandedRows[rowIndex] ? <FaChevronDown /> : <FaChevronUp />}
-  </span>
-)}
+                                                              <span onClick={() => toggleRow(rowIndex)} className="mx-2 cursor-pointer">
+                                                                {expandedRows[rowIndex] ? <FaChevronDown /> : <FaChevronUp />}
+                                                              </span>
+                                                            )}
                                                           </td>
                                                         </tr>
 
                                                         {/* ================== SUBTASK ROWS ================== */}
                                                         {expandedRows[rowIndex] &&
-  row.subTasks?.map((subTask, subIndex) => (
-    <tr
-      key={`sub-${rowIndex}-${subIndex}`}
-      className={
-        errors[rowIndex]?.subTasks?.[subIndex] &&
-        Object.values(errors[rowIndex].subTasks[subIndex]).some(Boolean)
-          ? `subtask-row subtask-${subIndex} error-row`
-          : `subtask-row subtask-${subIndex}`
-      }
-    >
-      {fields
-        .filter(field => field.name !== "status")
-        .map(field => (
-          <td key={field.name}>
-            {renderCell(
-              field,
-              subTask,
-              rowIndex,
-              subIndex,
-              true
-            )}
-            {errors[rowIndex]?.subTasks?.[subIndex]?.[field.name] && (
-              <div className="error">
-                {errors[rowIndex].subTasks[subIndex][field.name]}
-              </div>
-            )}
-          </td>
-        ))}
+                                                          row.subTasks?.map((subTask, subIndex) => (
+                                                            <tr
+                                                              key={`sub-${rowIndex}-${subIndex}`}
+                                                              className={
+                                                                errors[rowIndex]?.subTasks?.[subIndex] &&
+                                                                  Object.values(errors[rowIndex].subTasks[subIndex]).some(Boolean)
+                                                                  ? `subtask-row subtask-${subIndex} error-row`
+                                                                  : `subtask-row subtask-${subIndex}`
+                                                              }
+                                                            >
+                                                              {fields
+                                                                .filter(field => field.name !== "status")
+                                                                .map(field => (
+                                                                  <td key={field.name}>
+                                                                    {renderCell(
+                                                                      field,
+                                                                      subTask,
+                                                                      rowIndex,
+                                                                      subIndex,
+                                                                      true
+                                                                    )}
+                                                                    {errors[rowIndex]?.subTasks?.[subIndex]?.[field.name] && (
+                                                                      <div className="error">
+                                                                        {errors[rowIndex].subTasks[subIndex][field.name]}
+                                                                      </div>
+                                                                    )}
+                                                                  </td>
+                                                                ))}
 
-      <td className="text-nowrap table-btn-all-add td-sub-btn">
-        <FaTrash
-          className="text-danger cursor-pointer"
-          onClick={() =>
-            removeSubTask(rowIndex, subIndex)
-          }
-        />
-      </td>
-    </tr>
-  ))}
+                                                              <td className="text-nowrap table-btn-all-add td-sub-btn">
+                                                                <FaTrash
+                                                                  className="text-danger cursor-pointer"
+                                                                  onClick={() =>
+                                                                    removeSubTask(rowIndex, subIndex)
+                                                                  }
+                                                                />
+                                                              </td>
+                                                            </tr>
+                                                          ))}
 
                                                       </React.Fragment>
                                                     ))}
@@ -1632,7 +1652,7 @@ useEffect(() => {
                                               </div>
                                               <div className="justify-content-end d-flex w-100 mt-4">
                                                 {formbuttons.map((btn, index) => (
-                                                  <>
+                                                  <React.Fragment key={index}>
                                                     {btn.buttontype === "submit" ? (
                                                       <button className={`btn ${btn.class}`} key={index} onClick={handleNextSubmit}>{btn.label}</button>
                                                     ) : (
@@ -1644,7 +1664,7 @@ useEffect(() => {
                                                         )}
                                                       </>
                                                     )}
-                                                  </>
+                                                  </React.Fragment>
                                                 ))}
                                               </div>
                                             </div>
@@ -1707,7 +1727,7 @@ useEffect(() => {
                                             )}
                                             <div className="justify-content-end d-flex w-100 mt-4">
                                               {formfinalbuttons.map((btn, index) => (
-                                                <>
+                                                <React.Fragment key={index}>
                                                   {btn.buttontype === "submit" ? (
                                                     <button className={`btn ${btn.class}`} key={index} onClick={handleSubmit} disabled={SubmitButtonLoading}>
                                                       {SubmitButtonLoading ? (
@@ -1727,19 +1747,19 @@ useEffect(() => {
                                                       ) : (
                                                         <button className={`btn ${btn.class}`} key={index} onClick={handleDraftSubmit} disabled={DraftButtonLoading}>
                                                           {DraftButtonLoading ? (
-                                                        <div className="spinner">
-                                                          <div className="bounce1"></div>
-                                                          <div className="bounce2"></div>
-                                                          <div className="bounce3"></div>
-                                                        </div>
-                                                      ) : (
-                                                        <>{btn.label}</>
-                                                      )}
+                                                            <div className="spinner">
+                                                              <div className="bounce1"></div>
+                                                              <div className="bounce2"></div>
+                                                              <div className="bounce3"></div>
+                                                            </div>
+                                                          ) : (
+                                                            <>{btn.label}</>
+                                                          )}
                                                         </button>
                                                       )}
                                                     </>
                                                   )}
-                                                </>
+                                                </React.Fragment>
                                               ))}
                                             </div>
                                           </>

@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import EmpRewards from './EmpRewards';
 import CheckinCheckout from '../Attendance/CheckinCheckout';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 const EmpProfileChart = ({getProfileDataMain}) => {
   const [upcomingHolidays, setUpcomingHolidays] = useState([]);
   const [upcomingLeave, setUpcomingLeave] = useState([]);
@@ -19,7 +17,7 @@ const EmpProfileChart = ({getProfileDataMain}) => {
               setUpcomingLeave(response2.data.data || []);
               setUpcomingHolidays(responsedata || []);
           } catch (error) {
-              // console.log(error);
+               console.error(error);
           }
       };
       fetchData();

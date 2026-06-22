@@ -3,12 +3,13 @@ import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 import Rating from 'react-rating';
 import { FaRegStar, FaStar } from 'react-icons/fa';
-export default function StarRatingComponent({ type, readonly, isDisabled, placeholder, label, value, validations = [], onChange }) {
+export default function StarRatingComponent({ readonly,  label, value, validations = [], onChange }) {
   const isRequired = validations.some(validation => validation.type === "required");
 
   const [rating, setRating] = useState(value);
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRating(value);
 
   }, [value]);

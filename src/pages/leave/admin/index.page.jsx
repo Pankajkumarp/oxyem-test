@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/immutability */
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
-import { reorderColumns, reorderEntries, sortData } from '../../../common/commonFunctions';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
@@ -16,66 +16,35 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles.js';
 
-export default function Leaveview({ }) {
+export default function Leaveview() {
     const router = useRouter();
-    const [leavelisting, setLeaveListing] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
-    const [leavesummary, setLeaveSummary] = useState([]);
-    const [updleavelist, setUpdLeaveList] = useState([]);
-    const [selectedId, setSelectedId] = useState(null);
+    const formcolumn = [];
+    const updleavelist = [];
     const [responseData, setResponseData] = useState(null);
-    const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [toplist, setToplist] = useState({});
     const [employeeList, setEmployeeList] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
-
-    const desiredOrder = ["srno", "id", "employeeName", "leaveType", "fromDate", "toDate", "numberofDays", "leaveReason", "status", "action"];
-
-    const sortColumns = (columns) => {
-        return columns.sort((a, b) => {
-            return desiredOrder.indexOf(a.name) - desiredOrder.indexOf(b.name);
-        });
-    };
-    const sortAndFilterAllocationList = (allocationList) => {
-        return allocationList.map(row => {
-            return row.filter(item => item.name !== 'idProject')
-                .sort((a, b) => {
-                    return desiredOrder.indexOf(a.name) - desiredOrder.indexOf(b.name);
-                });
-        });
-    };
-
     const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
     const handleTabClick = (index) => {
         setActiveTab(index); // Update active tab index when a tab is clicked
     };
     async function fetchLeaveData() {
-
-        let responsedata = ""
         try {
             const response = await axiosJWT.get(`${apiUrl}/leave/getStats`, { params: { "isFor": "admin" } })
             if (response) {
                 setToplist(response.data.data || {});
             }
-        } catch (error) {
-
-
-        }
+        } catch (error) {console.error(error)}
     }
 
     useEffect(() => {
         if (activeTab === 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchLeaveData()
         }
     }, [activeTab])
 
-    const [isVisible, setIsVisible] = useState(false);
-
-    const handleToggle = () => {
-        setIsVisible(!isVisible);
-    };
     const handleEditClick = (id) => {
         router.push(`/addleave/${id}`);
     };
@@ -96,12 +65,8 @@ export default function Leaveview({ }) {
                 "status": "recalled",
                 "leaveReason": data.leavereason
             }
-            // console.log(recallPostdata)
             const message = 'You have successfully <strong>Recalled</strong> Your Leave!';
-            const errormessage = 'Error connecting to the backend. Please try after Sometime.';
             const response = await axiosJWT.post(`${apiUrl}/leave/recall`, recallPostdata)
-            const apiresponse = response.data != "" ? response.data : "";
-            // console.log(apiresponse)
             if (response) {
                 setIsModalOpenRe(false)
                 fetchLeaveData();
@@ -133,6 +98,7 @@ export default function Leaveview({ }) {
                 });
             }
         } catch (error) {
+        const errormessage = 'Error connecting to the backend. Please try after Sometime.';
             toast.success(({ id }) => (
                 <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
                     <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
@@ -200,13 +166,6 @@ export default function Leaveview({ }) {
         fetchOptions();
     }, []);
 
-    const chartCategoryMap = {
-        "Birthday": { leaveType: "Birthday" },
-        "Earned Leave": { leaveType: "EarnedLeave" },
-        "Loss of Pay": { leaveType: "LossOfPay" },
-        "Maternity": { leaveType: "Maternity" },
-    };
-
     const getMonthInYYYYMM = (category) => {
         // Agar category full month name ho like "July"
         const date = new Date(category + " 1, 2025"); // fix year or use dynamic
@@ -270,9 +229,7 @@ export default function Leaveview({ }) {
     const [setYear, setYearValue] = useState(currentYear); // State to manage active tab index
     const onChangeMonth = (value) => {
         if (value !== null) {
-            // console.log(value)
             setMonthValue(value.value); // Update active tab index when a tab is clicked
-            // console.log(setMouth,"onchange")
         } else {
             setMonthValue();
         }
@@ -288,7 +245,6 @@ export default function Leaveview({ }) {
     const [mounthChartData, setMounthChartData] = useState();
     const [annualTrendData, setAnnualTrendData] = useState();
     const [monthlyTrendData, setMonthlyTrendData] = useState();
-    // console.log(setMouth,"this si what month looks like")
     useEffect(() => {
         if (setMouth && setYear) {
             const getgraphData = async () => {
@@ -323,7 +279,6 @@ export default function Leaveview({ }) {
                                                 const filter = getFilterFromChartCategory(category);
                                                 setSearchfilter(filter);
                                                 setActiveTab(1);
-                                                setActiveTableTab(category);
                                                 setActiveStatus(category);
                                             });
                                         },
@@ -365,7 +320,6 @@ export default function Leaveview({ }) {
                                             requestAnimationFrame(() => {
                                                 setSearchfilter({ month: selectedMonth });
                                                 setActiveTab(1);
-                                                setActiveTableTab(category);
                                                 setActiveStatus(category);
                                             });
                                         },
@@ -401,7 +355,6 @@ export default function Leaveview({ }) {
                                             requestAnimationFrame(() => {
                                                 setSearchfilter({ currentDate: formattedDate });
                                                 setActiveTab(1);
-                                                setActiveTableTab(category);
                                                 setActiveStatus(category);
                                             });
                                         },
@@ -545,24 +498,20 @@ export default function Leaveview({ }) {
 
     const [searchfilter, setSearchfilter] = useState({});
     const [activeStatus, setActiveStatus] = useState(null);
-    const [activeTableTab, setActiveTableTab] = useState("");
 
     const handleShowDataForStatus = (filterKey) => {
         setActiveTab(1); // switch to table tab
-        setActiveTableTab(filterKey);
         setActiveStatus(filterKey);
 
         if (filterKey === "clr") {
             setSearchfilter({});
             setActiveStatus(null);
         } else {
-            let filter = {};
-
             switch (filterKey) {
                 case "leavesOnToday":
-                    const today = new Date().toISOString().split("T")[0];
+                    { const today = new Date().toISOString().split("T")[0];
                     setSearchfilter({ currentDate: today });
-                    break;
+                    break; }
                 case "submitted":
                     setSearchfilter({ status: "submitted" });
                     break;
@@ -576,9 +525,6 @@ export default function Leaveview({ }) {
                     // filter = { special: "monthTotal" }; 
                     break;
             }
-
-            // setSearchfilter(filter);
-            // console.log("Applied filter:", filter);
         }
     };
 
@@ -603,13 +549,13 @@ export default function Leaveview({ }) {
                             <div className="col-12 col-lg-12 col-xl-12">
                                 <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                                     <ul className="nav-tabs nav nav-tabs-bottom justify-content-end oxyem-graph-tab">
-                                        <li class={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick(0)}>
+                                        <li className={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
+                                            <a className={`nav-link`} onClick={() => handleTabClick(0)}>
                                                 <div className="skolrup-profile-tab-link">Summary Overview</div>
                                             </a>
                                         </li>
-                                        <li class={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick(1)}>
+                                        <li className={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
+                                            <a className={`nav-link`} onClick={() => handleTabClick(1)}>
                                                 <div className="skolrup-profile-tab-link">Detailed Records</div>
                                             </a>
                                         </li>

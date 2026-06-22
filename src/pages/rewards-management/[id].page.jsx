@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import SecTab from '../Components/Employee/SecTab';
 import { Toaster } from 'react-hot-toast';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
@@ -9,9 +8,9 @@ import Preview from './Preview';
 import RealTimePreview from './RealTimePreview';
 import { fetchWithToken } from '../Auth/fetchWithToken';
 
-export default function onboardingProcess({ onboardForm }) {
+export default function OnboardingProcess({ onboardForm }) {
     const router = useRouter();
-    const [AdduserContent, setAdduserContent] = useState(onboardForm);
+    const AdduserContent =onboardForm;
     
     const [id, setId] = useState(null);
     const [title, setTitle] = useState("");
@@ -31,6 +30,7 @@ export default function onboardingProcess({ onboardForm }) {
         if (!router.isReady) return; // Wait until the router is ready
 
         if (router.query.id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setId(router.query.id);
         }
         if (router.query.title){
@@ -45,7 +45,7 @@ export default function onboardingProcess({ onboardForm }) {
         if (!router.query.title && !router.query.path) {
             router.push('/rewards-management');
         }
-    }, [router.isReady, router.query.id, router.query.title, router.query.path]);
+    }, [router.isReady, router.query.id, router.query.title, router.query.path, router]);
 
 const transformFormData = (data ,isFor) => {
     const transformedData = {};
@@ -82,7 +82,7 @@ const transformFormData = (data ,isFor) => {
                 setLoaderSubmitButton(false);
             }
         } catch (error) {
-            
+            console.error(error)
         }
     };
 
@@ -115,6 +115,7 @@ const transformFormData = (data ,isFor) => {
         }
         
     } catch (error) {
+        console.error(error)
     }
     }
     };

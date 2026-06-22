@@ -1,23 +1,18 @@
 
-import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import SecTab from '../Components/Employee/AssetTab.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
-import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import Head from 'next/head';
 import CustomDataTable from '../Components/Datatable/tablewithReport.jsx';
-import { TiExport } from "react-icons/ti";
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function reports({ payrollForm }) {
-    const router = useRouter();
+export default function Reports({ payrollForm }) {
     const [AdduserContent, setAdduserContent] = useState(payrollForm);
     const [enterField, setEnterField] = useState({});
-    const [getValue, setGetValue] = useState({});
     const [reportTableType, setReportTableType] = useState("");
     const [reportTypeName, setReportTypeName] = useState("");
-    const getsubmitformdata = async (value, myFile) => {
+    const getsubmitformdata = async () => {
         const filteredValues = AdduserContent.section[0].Subsection[0].fields.reduce((acc, field) => {
             if (field.isVisible) {
                 acc[field.name] = field.value?.value || field.value;
@@ -26,7 +21,7 @@ export default function reports({ payrollForm }) {
         }, {});
         const report  = {...filteredValues };
         let filteredReport = Object.fromEntries(
-            Object.entries(report).filter(([key, value]) => value !== "")
+            Object.entries(report).filter(([ value]) => value !== "")
         );
         setEnterField(filteredReport)
         setReportTableType("reportType")
@@ -44,7 +39,7 @@ export default function reports({ payrollForm }) {
             }, {});
             const report  = {...filteredValues };
             let exportReport = Object.fromEntries(
-                Object.entries(report).filter(([key, value]) => value !== "")
+                Object.entries(report).filter(([ value]) => value !== "")
             );
             let response = await axiosJWT.get(`${apiUrl}/reports?isFor=export`, {
                 params: {
@@ -77,13 +72,6 @@ export default function reports({ payrollForm }) {
                 }
             });
         });
-        const filteredResult = Object.entries(result).reduce((acc, [key, value]) => {
-            if (value) {
-                acc[key] = value;
-            }
-            return acc;
-        }, {});
-        setGetValue(filteredResult);
         const reportType = result.reportType;
         setReportTypeName(reportType)
         const updatedSections = AdduserContent.section.map(section => {

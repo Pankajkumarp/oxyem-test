@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/immutability */
 import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
@@ -15,7 +17,6 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export default function InvoiceView() {
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const [isrefresh, setRefresh] = useState(true);
   const [opportunityId, setOpportunityId] = useState("");
   const [isModalHistroyOpen, setIsModalHistroyOpen] = useState(false);
   const onViewClick = (id) => {
@@ -26,7 +27,7 @@ export default function InvoiceView() {
     setOpportunityId(id);
     setIsModalHistroyOpen(true)
   };
-  const closeHistroyClick = (id) => {
+  const closeHistroyClick = () => {
     setIsModalHistroyOpen(false)
   };
   const onEditClick = (id) => {
@@ -75,7 +76,7 @@ export default function InvoiceView() {
         onSuccess("clear");
       }
 
-    } catch (error) {
+    } catch (error) {  
       toast.success(({ id }) => (
         <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
           <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
@@ -102,13 +103,13 @@ export default function InvoiceView() {
           color: '#FF000F',
         },
       });
-
+      console.error(error)
     }
   }
-  const handleDecommissionreq = async (data) => {
+  const handleDecommissionreq = async () => {
   };
 
-  const onDeleteClick = (id) => {
+  const onDeleteClick = () => {
 
   };
 
@@ -149,7 +150,6 @@ export default function InvoiceView() {
       setYearValue();
     }
   };
-  const [toplist, setToplist] = useState({});
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index) => {
@@ -287,8 +287,7 @@ useEffect(() => {
         setStatData(response.data.data || {});
       }
     } catch (error) {
-
-
+      console.error(error)
     }
   }
   useEffect(() => {
@@ -304,7 +303,7 @@ useEffect(() => {
     setIsMailModalOpen(true)
   };
 
-  const closeMailPopupClick = (id) => {
+  const closeMailPopupClick = () => {
     setIsMailModalOpen(false)
   };
 
@@ -323,19 +322,16 @@ useEffect(() => {
       const [searchfilter, setSearchfilter] = useState({});
   
       const [activeStatus, setActiveStatus] = useState(null);
-      const [activeTableTabStatus, setActiveTableTabStatus] = useState(null);
   
       const handleShowDataForStatus = (filterKey) => {
-          setActiveTab(1); // switch to table tab
-          setActiveTableTabStatus(filterKey);
+          setActiveTab(1); 
           setActiveStatus(filterKey);
   
           if (filterKey === "clr") {
               setSearchfilter({});
               setActiveStatus(null);
           } else {
-              let filter = {};
-  
+
               switch (filterKey) {
                   case "generated":
                       setSearchfilter({ status: "generated" });
@@ -352,7 +348,6 @@ useEffect(() => {
               }
   
               // setSearchfilter(filter);
-              // console.log("Applied filter:", filter);
           }
       };
   return (
@@ -368,13 +363,13 @@ useEffect(() => {
               <div className="col-12 col-lg-12 col-xl-12">
                 <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
                   <ul className="nav-tabs nav nav-tabs-bottom justify-content-end oxyem-graph-tab">
-                    <li class={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
-                      <a class={`nav-link`} onClick={() => handleTabClick(0)}>
+                    <li className={`nav-item ${activeTab === 0 ? 'active' : ''}`}>
+                      <a className={`nav-link`} onClick={() => handleTabClick(0)}>
                         <div className="skolrup-profile-tab-link">Summary Overview</div>
                       </a>
                     </li>
-                    <li class={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
-                      <a class={`nav-link`} onClick={() => handleTabClick(1)}>
+                    <li className={`nav-item ${activeTab === 1 ? 'active' : ''}`}>
+                      <a className={`nav-link`} onClick={() => handleTabClick(1)}>
                         <div className="skolrup-profile-tab-link">Detailed Records</div>
                       </a>
                     </li>
@@ -534,7 +529,6 @@ useEffect(() => {
                                                                         </div>
                                                                     )}</div>
                           <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                            {isrefresh && (
                               <CustomDataTable
                                 title={""}
                                 onViewClick={onViewClick}
@@ -549,7 +543,6 @@ useEffect(() => {
                                                                         searchfilter={searchfilter}
 
                               />
-                            )}
                           </div>
                         </div>
                       </div>

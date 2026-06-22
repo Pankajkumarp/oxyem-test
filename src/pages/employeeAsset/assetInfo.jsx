@@ -39,6 +39,7 @@ export default function AssetInfo({ isOpen, closeModal, isHistroyId }) {
 
     useEffect(() => {
         if (isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             getDetails(isHistroyId);
             document.body.classList.add("hide-body-scroll");
         } else {

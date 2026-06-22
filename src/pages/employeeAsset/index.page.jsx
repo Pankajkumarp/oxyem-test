@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../Components/Datatable/tablewithApi';
 import { useRouter } from 'next/router';
-import HistroyView from '../Components/Popup/assetHistroy';
-import ViewPopup from '../Components/Popup/assetDetail';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import View from './history';
 import Info from './assetInfo';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 
-export default function employeeAsset({ showOnlylist, isFor }) {
+export default function EmployeeAsset({ showOnlylist, isFor }) {
     const router = useRouter();
 
     const [isModalOpenview, setIsModalOpenview] = useState(false);
@@ -39,10 +37,10 @@ export default function employeeAsset({ showOnlylist, isFor }) {
     const closeDetailpopup = async () => {
         setIsModalOpen(false)
     }
-    const onEditClick = (id) => {
+    const onEditClick = () => {
 
     };
-    const handleApprrovereq = (id) => {
+    const handleApprrovereq = () => {
 
     };
 
@@ -50,12 +48,10 @@ export default function employeeAsset({ showOnlylist, isFor }) {
 
     const fetchAssetStats = async () => {
         try {
-            console.log("Fetching asset stats for employee...");
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             // 🔹 Later replace dummy with real API call
             const response = await axiosJWT.get(`${apiUrl}/asset/allocationstats`, { params: { "isFor": "employee" }});
             const responsedata = response.data.data || {};
-            console.log("Asset stats fetched:", responsedata);
             // ✅ Dummy stats data (based on your provided table)
             // const responsedata = {
             //     totalHardware: 1,
@@ -71,24 +67,20 @@ export default function employeeAsset({ showOnlylist, isFor }) {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchAssetStats();
     }, []);
 
     const [searchfilter, setSearchfilter] = useState({});
     const [activeStatus, setActiveStatus] = useState(null);
-    const [activeTableTab, setActiveTableTab] = useState("");
 
     const handleShowDataForStatus = (filterKey) => {
-        setActiveTab(1); // switch to table tab
-        setActiveTableTab(filterKey);
         setActiveStatus(filterKey);
 
         if (filterKey === "clr") {
             setSearchfilter({});
             setActiveStatus(null);
         } else {
-            let filter = {};
-
             switch (filterKey) {
                 case "Active":
                     setSearchfilter({ status: "allocated" });

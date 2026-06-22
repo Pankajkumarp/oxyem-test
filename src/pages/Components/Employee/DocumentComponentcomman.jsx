@@ -1,27 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import FileComponent from '../common/Inputfiled/FileComponent';
-import ButtonSecondary from '../common/Buttons/ButtonSecondaryComponent';
 import { IoMdRemoveCircleOutline, IoMdAdd } from "react-icons/io";
-import MandatorydocumentsTable from './InnerComponent/MandatorydocumentsTable';
 import DocumentTypeComponnet from '../common/SelectComponent/DocumentTypeComponnet';
-import ButtonPrimary from '../common/Buttons/ButtonPrimaryComponent';
 import Buttonsubmit from '../common/Buttons/CommanButtonsubmit';
 
-import dynamic from 'next/dynamic';
-
-const components = {
-  'Text': dynamic(() => import('../common/Inputfiled/TextComponent')),
-  'File': dynamic(() => import('../common/Inputfiled/FileComponent')),
-  'Button': dynamic(() => import('../common/Buttons/ButtonComponent')),
-};
-
-export default function DocumentComponent({ fields, handleChangess, onSubmit, handlesubmitbyDocumment,loaderSubmitButton }) {
-
-  console.log("fjjjjjjjjfields", fields.Subsection[0].fields[0].value)
+export default function DocumentComponent({ fields, handlesubmitbyDocumment,loaderSubmitButton }) {
   const [documents, setDocuments] = useState([{ type: '', files: [] }]);
 
   useEffect(() => {
     if (fields.Subsection[0].fields[0].value !== "") {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDocuments(fields.Subsection[0].fields[0].value)
     }
   }, [fields]);
@@ -160,7 +148,8 @@ export default function DocumentComponent({ fields, handleChangess, onSubmit, ha
                 ) : 
 
           <div className="float-end">
-            {fields.buttons.map((btnsection, subsectionIndex) => (
+            {fields.buttons.map((btnsection) => (
+              // eslint-disable-next-line react/jsx-key
               <Buttonsubmit label={btnsection.value} customclass={btnsection.class} handleSubmit={handleSubmit}/>
             ))}
           </div>

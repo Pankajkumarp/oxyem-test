@@ -1,22 +1,19 @@
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from 'js-cookie';
-
 import Profile from '../../../commancomponents/profile';
-import { IoSettingsOutline } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
-import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io"
 import { useRouter } from 'next/router'
 import { axiosJWT } from '../../../../Auth/AddAuthorization';
 import { FaRegUser, FaTasks } from "react-icons/fa";
 import CryptoJS from 'crypto-js';
 import { useMsal } from "@azure/msal-react";
-function Profiledetail({  }) {
+function Profiledetail() {
 
 const router = useRouter();
 const [profileData, setProfileData] = useState('');
 useEffect(() => {
-  const fetchProfileOptions = async (value) => {
+  const fetchProfileOptions = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/employees/getLoggedInEmployee`)
@@ -37,13 +34,14 @@ useEffect(() => {
 }, []);
 
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(prevState => !prevState);
   };
   const inputRef = useRef();
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
         window.addEventListener('mousedown', handleClickOutside);
         return () => {
             window.removeEventListener('mousedown', handleClickOutside);
@@ -90,12 +88,6 @@ useEffect(() => {
     }
 	}
   };
-    function truncateName(name) {
-    if (name && name.length > 16) {
-      return name.substring(0, 16) + '..';
-    }
-    return name || ''; // Return an empty string if name is undefined or null
-  }
   return (
       <ul className="nav oxyem-profile-menu" ref={inputRef}>
         <li className="nav-item dropdown noti-dropdown ">

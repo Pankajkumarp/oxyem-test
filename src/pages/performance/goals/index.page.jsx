@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { FaPlus } from "react-icons/fa6";
@@ -10,7 +9,7 @@ import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import GoalHistroy from '../../Components/Popup/goalHistroy';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-export default function index() {
+export default function Goal() {
   useEffect(() => {
     const mainElement = document.querySelector('body');
     if (mainElement) {
@@ -22,16 +21,12 @@ export default function index() {
       }
     };
   }, []);
-  const router = useRouter();
 
-  const onDeleteClick = (id) => {
-    // console.log(id)
-  };
+  const onDeleteClick = () => {};
   const [listShow, setIslistShow] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [goalNameId, setGoalNameId] = useState("");
   const [clickType, setClickType] = useState("");
-  const [isStatData, isSetStatData] = useState({});
   const onEditClick = (id) => {
     setGoalNameId(id)
     setClickType("edit")
@@ -55,7 +50,7 @@ export default function index() {
     setGoalNameId(id)
     setIsHistoryModalOpen(true)
   };
-  const onCloseHistoryClick = (id) => {
+  const onCloseHistoryClick = () => {
     setIsHistoryModalOpen(false)
   };
 
@@ -218,9 +213,11 @@ export default function index() {
         setShowGraph(true)
       }
     } catch (error) {
+      console.error(error)
     }
   };
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchStatData()
   }, []);
   

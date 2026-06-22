@@ -1,11 +1,11 @@
 // components/AttendanceForm/index.tsx
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import styles from "./AttendanceForm.module.css";
 import {
-  CalendarIcon, ClockIcon, CheckIcon, CheckCircleIcon,
-  SaveIcon, UploadCloudIcon, InfoIcon, XIcon, ChevronDownIcon,
+  CalendarIcon, ClockIcon, CheckIcon,
+  SaveIcon, InfoIcon, XIcon, ChevronDownIcon,
 } from "../icons";
 
 const MAX_REMARKS = 250;
@@ -37,8 +37,6 @@ interface AttendanceFormProps {
 }
 
 export default function AttendanceForm({ onSubmit, onCancel, onSaveDraft }: AttendanceFormProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
 
   const [form, setForm] = useState<AttendanceFormData>({
     employee: "Sandeep Bawalia (E0012)",
@@ -56,6 +54,7 @@ export default function AttendanceForm({ onSubmit, onCancel, onSaveDraft }: Atte
     try {
       const parse = (t: string) => {
         const [time, period] = t.split(" ");
+        // eslint-disable-next-line prefer-const
         let [h, m] = time.split(":").map(Number);
         if (period === "PM" && h !== 12) h += 12;
         if (period === "AM" && h === 12) h = 0;

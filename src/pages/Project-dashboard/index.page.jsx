@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import ProjectList from '../Components/List/ProjectListadmin.jsx';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
-export default function Leaveview({ }) {
+export default function Leaveview() {
 
     return (
         <>

@@ -10,49 +10,6 @@ export default function Page() {
   const router = useRouter();
   const [groupedResponses, setGroupedResponses] = useState({});
   const { id } = router.query;
-
-  // useEffect(() => {
-  //   if (id) {
-  //     async function fetchData() {
-  //       const { data } = await axiosJWT.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feedback/feedbackResponse`, {
-  //         params: { idShare: id },
-  //       });
-
-  //       if (data?.data?.length > 0) {
-  //         const grouped = {};
-
-  //         data.data.forEach((response) => {
-  //           response.fields.forEach((field) => {
-  //             const fieldId = field.id;
-
-  //             if (!grouped[fieldId]) {
-  //               grouped[fieldId] = {
-  //                 label: field.label,
-  //                 type: field.type,
-  //                 responses: [],
-  //               };
-  //             }
-
-  //             grouped[fieldId].responses.push({
-  //               value: field.value,
-  //               userId: response.idUserResponse,
-  //               date: response.CreatedDate,
-  //             });
-  //           });
-  //         });
-
-  //         setGroupedResponses(grouped);
-  //       }else{
-  //          const { data } = await axiosJWT.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/feedback/myFeedbackForm`, {
-  //             params: { idShare: id },
-  //           });
-  //       }
-  //     }
-
-  //     fetchData();
-  //   }
-  // }, [id]);
-
   useEffect(() => {
   if (id) {
     async function fetchData() {
@@ -126,10 +83,6 @@ export default function Page() {
           });
 
           setGroupedResponses(grouped);
-
-          // If you want to store additional info like title
-          setFormTitle(form.formData.title);
-          setIdFeedbackForm(form.idFeedbackForm);
         }
       } catch (error) {
         console.error("Error fetching myFeedbackForm:", error);

@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable react-hooks/refs */
 import React, { useState, useEffect, useRef } from 'react';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 
 
-const MyEditor = ({ type, readonly, isDisabled, placeholder, label, value, validations = [], onChange }) => {
+const MyEditor = ({ placeholder, label, value, validations = [], onChange }) => {
 
 	  const editorRef = useRef(null);
     const CKEditor = editorRef.current?.CKEditor;

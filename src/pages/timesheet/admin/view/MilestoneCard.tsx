@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Avatar from 'react-avatar';
 
-export default function MilestoneCard({ milestone, isDragging, onOpenModal }: any) {
+export default function MilestoneCard({ milestone, isDragging, onOpenModal }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging: sorting } = useSortable({ id: milestone.id });
 const title = milestone.title || "";
 
@@ -64,8 +64,8 @@ const isLongTitle = title.length > 65;
           {milestone.isBlocked && " — Blocked"}
         </span>
         <div className="d-flex custom-a-box-g" style={{ marginLeft: 8 }}>
-          {milestone.assignees.map((a: any, i: number) => (
-            <Avatar name={a.initials} size="20" textSizeRatio={2} round src={a.ProfilePic} />
+          {milestone.assignees.map((a, i) => (
+            <Avatar key={i} name={a.initials} size="20" textSizeRatio={2} round src={a.ProfilePic} />
           ))}
         </div>
       </div>

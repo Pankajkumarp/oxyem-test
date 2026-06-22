@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { Tooltip } from 'react-tooltip'
 import { Toaster, toast } from 'react-hot-toast';
 import { axiosJWT } from '../../Auth/AddAuthorization';
-import { ToastNotification, ToastContainer } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import { FaTimes } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import SelectComponent from '../../Components/common/SelectOption/SelectComponent.jsx';
@@ -13,10 +13,8 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function Index() {
     const router = useRouter();
-    const [isrefresh, setRefresh] = useState(true);
-    const openDetailpopup = async () => {
-        setIsModalOpen(true);
-    };
+    const [isrefresh, setRefreshForm] = useState(true);
+    const openDetailpopup = async () => {};
         const [statusbar, setStatusBar] = useState();
             const [monthwiseBar, setMonthwiseBar] = useState();
             const [departmentwiseBar, setDepartmentwiseBar] = useState();
@@ -24,8 +22,7 @@ export default function Index() {
 const [listheader, setListHeaders] = useState([]);
   const [status, setStatus] = useState();
       const [ischartopen, setIsChartOpen] = useState(false);
-    const handleHistoryClick = async (id) => {
-        setIsHistroyId(id);
+    const handleHistoryClick = async () => {
         openDetailpopup();
     };
 const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
@@ -39,17 +36,8 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
         router.push(`/eSeparation/view/${id}`);
     };
 
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
         // Delete action implementation
-    };
-
-    const handlerecallvalueClick = async (id) => {
-        setIsRecallId(id);
-        openRecallpopup();
-    };
-
-    const openRecallpopup = async () => {
-        setIsModalOpenRe(true);
     };
 	
 	const onhandleConfirmClick = async (value) => {
@@ -102,10 +90,9 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
             });
                 const responsedata = response.data.data || {};
                const listheader = responsedata || {};
-                console.log(listheader);
                setListHeaders(listheader);
              } catch (error) {
-    
+               console.error(error)
             }
         };
  const optionsmonth = [
@@ -166,9 +153,7 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
                      const statuschart = response.data.data.statuswise;
                     const monthwisechart = response.data.data.monthwise;
                     const departmentwisechart = response.data.data.departmentwise;
-                    console.log(statuschart)
                               
-
                     // Set up pie chart data for pricing
                     setStatusBar({
                         series: statuschart.data,
@@ -249,8 +234,7 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
                     setIsChartOpen(true);
 
                 } catch (error) {
-                    // Handle error
-
+                   console.error(error)
                 }
             };
 
@@ -259,6 +243,7 @@ const [activeTab, setActiveTab] = useState(0); // State to manage active tab ind
     }, [setMouth, setYear, activeTab]);
 //////////////////////////////////
  useEffect(() => {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           fetchData();
           // chartData();
       }, []);

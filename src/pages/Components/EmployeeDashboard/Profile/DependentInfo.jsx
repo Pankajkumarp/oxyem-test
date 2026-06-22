@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -8,7 +9,7 @@ import DeleteModal from '../Alert/Delete';
 import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
 import { MdFamilyRestroom } from "react-icons/md";
 
-export default function DependentInfo({ empId, apiBaseUrl ,showbutton }) {
+export default function DependentInfo({ empId, apiBaseUrl }) {
     const [dependentInfo, setDependentInfo] = useState([]);
     const [formColumns, setFormColumns] = useState([]);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -66,14 +67,17 @@ export default function DependentInfo({ empId, apiBaseUrl ,showbutton }) {
         } catch (error) {
             setFormColumns([]);
             setDependentInfo([]);
+            console.error(error)
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchDependentInfo();
     }, [empId]);
 
     useEffect(() => {
         if (EditDependentData.length > 0) {
+            // eslint-disable-next-line react-hooks/immutability
             populateFormData();
         }
     }, [EditDependentData]);
@@ -106,7 +110,7 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
         setIsDeleteOpen(false);
     };
 
-    const deleteEmergencyContact = async (value) => {
+    const deleteEmergencyContact = async () => {
         try {
             const response = await axiosJWT.delete(`${apiBaseUrl}/dependentInfo`, {
                 data: { 

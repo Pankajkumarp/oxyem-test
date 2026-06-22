@@ -3,19 +3,17 @@ import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaRegCheckSquare } from "react-icons/fa";
 import View from '../../Components/Popup/AssignmemberHistroy';
 import FilterBar from './FilterBar';
-import dynamic from 'next/dynamic';
-import { MdNotStarted } from "react-icons/md";
 import { Toaster, toast } from 'react-hot-toast';
 import Head from 'next/head';
-import { MdTaskAlt, MdArrowForwardIos } from "react-icons/md";
+import { MdTaskAlt, MdArrowForwardIos, MdNotStarted } from "react-icons/md";
 import { RiProgress3Line } from "react-icons/ri";
 import { CgCalendarDue } from "react-icons/cg";
-import { FaRegCheckSquare } from "react-icons/fa";
 import { CiNoWaitingSign } from "react-icons/ci";
-export default function adminDashboard({ }) {
+import Image from 'next/image'
+export default function AdminDashboard() {
 
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -23,25 +21,17 @@ export default function adminDashboard({ }) {
     const handleEditClick = (id) => {
         router.push(`/timesheet/admin/${id}`);
     };
-    const [isModalViewOpen, setIsModalViewOpen] = useState(false);
-    const [isAssignViewMemId, setIsAssignViewId] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAssignMemId, setIsAssignId] = useState("");
+    const [isAssignMemId, setIsAssignMemId] = useState("");
     const onViewClick = async (id) => {
         router.push(`/timesheet/admin/view/${id}`);
     }
     const handleViewAssignReq = async (id) => {
-        setIsAssignId(id)
+        setIsAssignMemId(id)
         openAssignpopup()
     }
     const openAssignpopup = async () => {
         setIsModalOpen(true)
-    }
-    const openAssignViewpopup = async () => {
-        setIsModalViewOpen(true)
-    }
-    const closeAssignViewpopup = async () => {
-        setIsModalViewOpen(false)
     }
     const closeAssignpopup = async () => {
         setIsModalOpen(false)
@@ -65,7 +55,15 @@ export default function adminDashboard({ }) {
                 onSuccess("clear");
                 toast.success(({ id }) => (
                     <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                        <img src='/assets/img/proposal-icon.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+                        <Image
+                            src="/assets/img/proposal-icon.png"
+                            alt="Icon"
+                            width={30}
+                            height={30}
+                            style={{
+                                marginRight: '10px'
+                            }}
+                        />
                         <span dangerouslySetInnerHTML={{ __html: message }}></span>
                         <button
                             onClick={() => toast.dismiss(id)}
@@ -89,14 +87,20 @@ export default function adminDashboard({ }) {
                         color: '#4caf50',
                     },
                 });
-
-                fetchData();
             }
 
         } catch (error) {
             toast.success(({ id }) => (
                 <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                    <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+                    <Image
+                        src="/assets/img/wrong.png"
+                        alt="Wrong Icon"
+                        width={30}
+                        height={30}
+                        style={{
+                            marginRight: '10px'
+                        }}
+                    />
                     <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
                     <button
                         onClick={() => toast.dismiss(id)}
@@ -131,7 +135,7 @@ export default function adminDashboard({ }) {
     const handleTabClick = (index) => {
         setActiveTab(index); // Update active tab index when a tab is clicked
     };
-    const [pickstatus, setPickStatus] = useState("All");
+    const [pickstatus, setPickstatus] = useState("All");
     const [filterValue, setFilterValue] = useState({});
     const GetFilterValue = (value) => {
         if (value.status === "completed") {
@@ -140,12 +144,12 @@ export default function adminDashboard({ }) {
         if (value.status === "overdue") {
             setActiveTab("needAttention")
         }
-        setPickStatus(value.status)
+        setPickstatus(value.status)
         setFilterValue(value)
     };
-    const [STATUS_API, setStatus] = useState([]);
+    const [statutsApi, setStatutsApi] = useState([]);
     const GetStatusValue = (value) => {
-        setStatus(value)
+        setStatutsApi(value)
     };
 
     const getStatusIcon = (statusId) => {
@@ -170,24 +174,25 @@ export default function adminDashboard({ }) {
         }
     };
     const [statData, setStatData] = useState("");
-    const fetchApiText = async () => {
+
+    useEffect(() => {
+            const fetchApiText = async () => {
         let cleanedtabParamsInObj = {};
         if (filterValue && typeof filterValue === 'object') {
             cleanedtabParamsInObj = Object.fromEntries(
-                Object.entries(filterValue).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+                Object.entries(filterValue).filter(([ v]) => v !== '' && v !== null && v !== undefined)
             );
         }
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const response = await axiosJWT.get(`${apiUrl}/timesheet/getAdminChart`, { params: {"isStatusFor":activeTab, ...cleanedtabParamsInObj } });
+            const response = await axiosJWT.get(`${apiUrl}/timesheet/getAdminChart`, { params: { "isStatusFor": activeTab, ...cleanedtabParamsInObj } });
             if (response) {
                 setStatData(response.data.data)
             }
         } catch (err) {
-            ;
+            console.error(err)
         }
     };
-    useEffect(() => {
         fetchApiText();
 
     }, [filterValue, activeTab]);
@@ -229,10 +234,10 @@ export default function adminDashboard({ }) {
                                     <div className="center-part">
                                         <div className="card-body">
                                             <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border">
-                                                <div class="row g-3">
-                                                    <div class="col-md-6 col-lg-6 col-xxl-3">
-                                                        <div class="oxyem-stat-card oxyem-stat-success">
-                                                            <div class="d-flex justify-content-between">
+                                                <div className="row g-3">
+                                                    <div className="col-md-6 col-lg-6 col-xxl-3">
+                                                        <div className="oxyem-stat-card oxyem-stat-success">
+                                                            <div className="d-flex justify-content-between">
                                                                 <h6>Allocated Effort</h6>
                                                             </div>
                                                             <div className='d-flex align-items-end my-2'>
@@ -251,15 +256,15 @@ export default function adminDashboard({ }) {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 col-lg-6 col-xxl-3">
-                                                        <div class="oxyem-stat-card oxyem-stat-warning">
-                                                            <div class="d-flex justify-content-between">
+                                                    <div className="col-md-6 col-lg-6 col-xxl-3">
+                                                        <div className="oxyem-stat-card oxyem-stat-warning">
+                                                            <div className="d-flex justify-content-between">
                                                                 <h6>Logged Effort</h6>
                                                             </div>
                                                             <div className='d-flex align-items-center my-2'>
                                                                 <h2>{Math.trunc(statData?.effortsLogged?.totalEffortsLogged ?? 0)} <small>hrs</small></h2>
-                                                               
-                                                               <p
+
+                                                                <p
                                                                     className={`mb-0 ${directionLogged === "DOWN" ? "text-danger" : "text-success"
                                                                         }`}
                                                                 >
@@ -272,24 +277,24 @@ export default function adminDashboard({ }) {
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-6 col-lg-6 col-xxl-3">
-                                                        <div class="oxyem-stat-card oxyem-stat-danger">
-                                                            <div class="d-flex justify-content-between">
+                                                    <div className="col-md-6 col-lg-6 col-xxl-3">
+                                                        <div className="oxyem-stat-card oxyem-stat-danger">
+                                                            <div className="d-flex justify-content-between">
                                                                 <h6>Utilization</h6>
-                                                                <span class="badge bg-danger">!</span>
+                                                                <span className="badge bg-danger">!</span>
                                                             </div>
                                                             <div className='d-flex align-items-center my-2'>
                                                                 <h2>{Math.trunc(statData?.utilization?.utilization ?? 0)}%</h2>
-                                                                <p class="mb-0 text-danger">
+                                                                <p className="mb-0 text-danger">
                                                                     ⚠ Action Needed!
                                                                 </p>
                                                             </div>
                                                             <small>Below target {statData?.utilization?.target || 0}%</small>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 col-lg-6 col-xxl-3">
-                                                        <div class="oxyem-stat-card oxyem-stat-orange">
-                                                            <div class="d-flex justify-content-between">
+                                                    <div className="col-md-6 col-lg-6 col-xxl-3">
+                                                        <div className="oxyem-stat-card oxyem-stat-orange">
+                                                            <div className="d-flex justify-content-between">
                                                                 <h6>Overdue Tasks</h6>
                                                             </div>
                                                             <h2>{statData?.overdueTasks || 0} <small>Tasks</small></h2>
@@ -302,20 +307,20 @@ export default function adminDashboard({ }) {
                                 </div>
                                 <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec oxyem-timesheet-dashboard-table">
                                     <ul className="nav-tabs nav nav-tabs-bottom justify-content-start oxyem-graph-tab">
-                                        <li class={`nav-item ${activeTab === "needAttention" ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick("needAttention")}>
+                                        <li className={`nav-item ${activeTab === "needAttention" ? 'active' : ''}`}>
+                                            <button className={`nav-link`} onClick={() => handleTabClick("needAttention")}>
                                                 <div className="skolrup-profile-tab-link">Needs Attention</div>
-                                            </a>
+                                            </button>
                                         </li>
-                                        <li class={`nav-item ${activeTab === "allTask" ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick("allTask")}>
+                                        <li className={`nav-item ${activeTab === "allTask" ? 'active' : ''}`}>
+                                            <button className={`nav-link`} onClick={() => handleTabClick("allTask")}>
                                                 <div className="skolrup-profile-tab-link"> All Tasks</div>
-                                            </a>
+                                            </button>
                                         </li>
-                                        <li class={`nav-item ${activeTab === "completed" ? 'active' : ''}`}>
-                                            <a class={`nav-link`} onClick={() => handleTabClick("completed")}>
+                                        <li className={`nav-item ${activeTab === "completed" ? 'active' : ''}`}>
+                                            <button className={`nav-link`} onClick={() => handleTabClick("completed")}>
                                                 <div className="skolrup-profile-tab-link"> Completed</div>
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
                                     <div className="tab-content">
@@ -378,49 +383,49 @@ export default function adminDashboard({ }) {
                                     <div className="center-part">
                                         <div className="card-body">
                                             <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border">
-                                                <div class="attention-card">
-                                                    <div class="card-header-oxyem d-flex justify-content-between align-items-center bg-white">
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <span class="badge bg-danger">{Math.trunc(statData?.utilization?.action ?? 0)}</span>
+                                                <div className="attention-card">
+                                                    <div className="card-header-oxyem d-flex justify-content-between align-items-center bg-white">
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <span className="badge bg-danger">{Math.trunc(statData?.utilization?.action ?? 0)}</span>
                                                             <strong>Needs Attention</strong>
                                                         </div>
                                                     </div>
 
-                                                    <div class="card-body-oxyem">
-                                                        <div class="attention-row">
+                                                    <div className="card-body-oxyem">
+                                                        <div className="attention-row">
                                                             <div>
-                                                                <span class="text-danger fw-bold">{statData?.overdueTasks || 0}</span> Overdue Tasks
+                                                                <span className="text-danger fw-bold">{statData?.overdueTasks || 0}</span> Overdue Tasks
                                                             </div>
                                                         </div>
-                                                        <div class="attention-row">
+                                                        <div className="attention-row">
                                                             <div className='attention-row-flex'>
-                                                                <span class="text-primary fw-bold"></span> Task Logging {Math.trunc(statData?.effortsLogged?.totalEffortsLogged ?? 0)} Hours
+                                                                <span className="text-primary fw-bold"></span> Task Logging {Math.trunc(statData?.effortsLogged?.totalEffortsLogged ?? 0)} Hours
                                                             </div>
                                                         </div>
 
                                                         <hr />
 
-                                                        <div class="d-flex justify-content-between align-items-center">
+                                                        <div className="d-flex justify-content-between align-items-center">
                                                             <div className='attention-row-flex-bottom'>
-                                                                <h6 class="mb-1">Team Utilization</h6>
+                                                                <h6 className="mb-1">Team Utilization</h6>
                                                                 <div className='d-flex justify-content-between align-items-center'>
-                                                                    <div class="oxyem-progress-ring-container">
-                                                                        <h2 class="mb-0">{Math.trunc(statData?.utilization?.utilization ?? 0)}%</h2>
-                                                                        <small class="text-muted">(Below Target)</small>
-                                                                        <div class="mt-2 text-danger small">
+                                                                    <div className="oxyem-progress-ring-container">
+                                                                        <h2 className="mb-0">{Math.trunc(statData?.utilization?.utilization ?? 0)}%</h2>
+                                                                        <small className="text-muted">(Below Target)</small>
+                                                                        <div className="mt-2 text-danger small">
                                                                             Utilized – <span>{Math.trunc(statData?.utilization?.target ?? 0)}%</span>
                                                                         </div>
                                                                     </div>
-                                                                   <div
-  className="oxyem-progress-ring"
-  style={{
-    "--value": Math.trunc(statData?.utilization?.utilization ?? 0),
-  }}
->
-  <span>
-    {Math.trunc(statData?.utilization?.utilization ?? 0)}%
-  </span>
-</div>
+                                                                    <div
+                                                                        className="oxyem-progress-ring"
+                                                                        style={{
+                                                                            "--value": Math.trunc(statData?.utilization?.utilization ?? 0),
+                                                                        }}
+                                                                    >
+                                                                        <span>
+                                                                            {Math.trunc(statData?.utilization?.utilization ?? 0)}%
+                                                                        </span>
+                                                                    </div>
 
                                                                 </div>
                                                             </div>
@@ -435,14 +440,14 @@ export default function adminDashboard({ }) {
                                     <div className="center-part">
                                         <div className="card-body">
                                             <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border">
-                                                <div class="status-wrapper-oxyem">
-                                                    <div class="status-header-oxyem">
-                                                        <i class="bi bi-sliders"></i>
+                                                <div className="status-wrapper-oxyem">
+                                                    <div className="status-header-oxyem">
+                                                        <i className="bi bi-sliders"></i>
                                                         <span>Quick Filter</span>
-                                                        <i class="bi bi-chevron-down ms-auto"></i>
+                                                        <i className="bi bi-chevron-down ms-auto"></i>
                                                     </div>
-                                                    <div class="status-list">
-                                                        {STATUS_API.filter(s => s.id !== "ALL").map((item) => (
+                                                    <div className="status-list">
+                                                        {statutsApi.filter(s => s.id !== "ALL").map((item) => (
                                                             <div
                                                                 key={item.id}
                                                                 className={`status-item ${item.id === "overdue" ? "status-danger" : ""

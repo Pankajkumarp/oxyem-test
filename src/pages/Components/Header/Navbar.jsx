@@ -9,11 +9,11 @@ import Notification from './Headercompnents/Notification.jsx';
 import Combinemenu from './Headercompnents/combinemenu.jsx';
 import { useRouter } from 'next/router';
 import CheckinCheckout from '../Attendance/CheckinCheckout.jsx';
-import { FaRegSmile, FaTasks, FaTimes } from "react-icons/fa";
+import { FaTasks, FaTimes } from "react-icons/fa";
 import { FaBars } from "react-icons/fa6";
 import Sidebar from '../Sidebar/Sidebar.jsx';
 import {SocketContext } from '../../Auth/Socket.jsx';
-import { Toaster, toast } from 'react-hot-toast';
+import {  toast } from 'react-hot-toast';
 import Profile from '../commancomponents/profile.jsx';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { BiSolidLike } from "react-icons/bi";
@@ -28,7 +28,6 @@ export default function Navbar() {
   const router = useRouter();
   const [isMobileView, setIsMobileView] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
-  const [timeUpdated, setTimeUpdated] = useState(new Date());
   const toggleMobileNav = () => {
     setShowMobileNav(!showMobileNav);
   };
@@ -51,6 +50,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowMobileNav(false);
   }, [router.pathname]);
 
@@ -66,7 +66,6 @@ export default function Navbar() {
   
           if (loggedInUser?.idDepartment === msg.idDepartment) {
             const notificationTime = new Date();
-            setTimeUpdated(notificationTime)
             const id =  loggedInUser?.idDepartment;
             toast.success(({id}) => (
               <>
@@ -76,6 +75,7 @@ export default function Navbar() {
                 alignItems: "flex-start",
                 borderRadius: "12px",
                 maxWidth: "350px",
+                // eslint-disable-next-line no-dupe-keys
                 borderRadius: "5px",
               }}>
                 
@@ -125,7 +125,7 @@ export default function Navbar() {
             });
           }
         } catch (error) {
-          // console.error("Error fetching logged-in user:", error);
+          console.error(error)
         }
       } else {
         console.error("Invalid message format received:", msg);
@@ -139,14 +139,6 @@ export default function Navbar() {
     };
   }, [socket]);
   
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeUpdated(new Date());
-    }, 10000);
-    
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div>

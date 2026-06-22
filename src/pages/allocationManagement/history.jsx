@@ -28,6 +28,7 @@ const AssetHistory = ({ isOpen, closeModal, isHistroyId }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
       document.body.classList.add("hide-body-scroll");
     } else {
@@ -35,6 +36,7 @@ const AssetHistory = ({ isOpen, closeModal, isHistroyId }) => {
       setStatus('');
       document.body.classList.remove("hide-body-scroll");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isHistroyId]);
 
   return (

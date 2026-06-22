@@ -5,7 +5,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import MilestoneCard from "./MilestoneCard";
 import TimesheetCommentAdd from "./timesheetCommentwithadd.jsx";
 
-export default function KanbanColumn({ column, milestones, idTimesheet, mentionUser }: any) {
+export default function KanbanColumn({ column, milestones, mentionUser }) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
       const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function KanbanColumn({ column, milestones, idTimesheet, mentionU
       }
   return (
     <>
-    <TimesheetCommentAdd isOpen={isModalOpen} closeModal={closeCommentModal} SubTaskInfo={isSubTaskValue} idTimesheet={idTimesheet} mentionUser={mentionUser}/>
+    <TimesheetCommentAdd isOpen={isModalOpen} closeModal={closeCommentModal} SubTaskInfo={isSubTaskValue} mentionUser={mentionUser}/>
     <div className="col-time-custom" style={{ minWidth: 225, maxWidth: 320, flex: 1 }}>
       {/* Column header */}
       <div className="d-flex align-items-center justify-content-between mb-2 px-1">
@@ -41,9 +41,9 @@ export default function KanbanColumn({ column, milestones, idTimesheet, mentionU
         backgroundColor: isOver ? "rgba(13,31,60,0.6)" : "transparent",
         transition: "all 0.15s",
       }}>
-        <SortableContext items={milestones.map((m: any) => m.id)} strategy={verticalListSortingStrategy}>
-          {milestones.map((milestone: any) => (
-            <MilestoneCard key={milestone.id} milestone={milestone} onOpenModal={openCommentModal}/>
+        <SortableContext items={milestones.map((m) => m.id)} strategy={verticalListSortingStrategy}>
+          {milestones.map((milestone) => (
+            <MilestoneCard key={milestone.id} milestone={milestone} onOpenModal={openCommentModal} isDragging={undefined}/>
           ))}
         </SortableContext>
 

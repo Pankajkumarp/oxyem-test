@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef  } from 'react';
 
-export default function statusRadioComponent({ options, value = [], name, onChange, label,placeholder, validations }) {
+export default function StatusRadioComponent({ options, value = [], name, onChange, label,placeholder }) {
   const [selectedValues, setSelectedValues] = useState(value);
   const [showValues, setshowValues] = useState(value);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedValues(value);
     const selectedOption = options.find((option) => option.value === value);
     if (selectedOption) {
       setshowValues(selectedOption.name);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -57,7 +59,7 @@ export default function statusRadioComponent({ options, value = [], name, onChan
                 checked={selectedValues.includes(option.value)}
                 onChange={handleChange}
               />
-              <label for={`check-${option.className}`}></label>
+              <label htmlFor={`check-${option.className}`}></label>
               <span
                 className="form-check-label"
                 htmlFor={`check-${option.className}`}

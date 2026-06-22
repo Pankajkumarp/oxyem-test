@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { Toaster, toast } from 'react-hot-toast';
 import moment from 'moment-timezone';
 import SecTab from '../Components/Employee/SecTab';
-import { FaRegClock, FaTimes, FaRegCheckCircle} from "react-icons/fa";
+import { FaTimes, FaRegCheckCircle} from "react-icons/fa";
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function updateProjection({ updateProjectionData }) {
+export default function UpdateProjection({ updateProjectionData }) {
     const [FormInputData, setFormInputData] = useState(updateProjectionData);
-    const [financialTable, setFinancialTable] = useState({});
-
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [errorMessage, setErrorMessage] = useState("");
     const [showButton, setshowButton] = useState(false);
@@ -94,7 +91,6 @@ export default function updateProjection({ updateProjectionData }) {
                 const finalProjection = response.data.data.finalProjection;
 
                 if (finalProjection && Object.keys(finalProjection).length > 0) {
-                    setFinancialTable(finalProjection);
                     setErrorMessage("");
                     const updatedFormData = mergeFormWithResponse(FormInputData.section, finalProjection);
                     setFormInputData(prevState => ({
@@ -154,7 +150,6 @@ export default function updateProjection({ updateProjectionData }) {
                 const finalProjection = response.data.data.finalProjection;
 
                 if (finalProjection && Object.keys(finalProjection).length > 0) {
-                    setFinancialTable(finalProjection);
                     setErrorMessage("");
                     const updatedFormData = mergeFormWithResponse(FormInputData.section, finalProjection);
                     setFormInputData(prevState => ({

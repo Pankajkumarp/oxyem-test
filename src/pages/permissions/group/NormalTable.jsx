@@ -48,6 +48,7 @@ export default function NormalTable({ selectedIds, setSelectedIds, apiPath }) {
 
     // 🔹 TRIGGER API
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
     }, [currentPage, rowsPerPage, sortConfig, search]);
 

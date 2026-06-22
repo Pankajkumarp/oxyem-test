@@ -20,6 +20,7 @@ export default function FieldRenderer({
     endTime,
     isPage,
     idEmployee
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) {
     const commonProps = { field, register, errors };
     switch (field.type) {

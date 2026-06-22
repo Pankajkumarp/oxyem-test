@@ -2,23 +2,19 @@ import React, { useEffect, useState } from "react";
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../../Components/Datatable/tablewithApi';
 import { axiosJWT } from "../../Auth/AddAuthorization.jsx";
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import OpportunityHistroy from '../../Components/Popup/pricingHistroy';
 import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles.js';
-import SearchFilter from '../../Components/SearchFilter/SearchFilter.jsx';
 import dynamic from "next/dynamic";
 import SelectComponent from '../../Components/common/SelectOption/SelectComponent.jsx';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export default function pricingView() {
+export default function CreatePricingView() {
   const router = useRouter();
-  const [isrefresh, setRefresh] = useState(true);
   const [opportunityId, setOpportunityId] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showGraph, setShowGraph] = useState(false);
   const [listheader, setListHeaders] = useState([]);
   const [status, setStatus] = useState();
   const [ischartopen, setIsChartOpen] = useState(false);
@@ -52,18 +48,18 @@ export default function pricingView() {
     setOpportunityId(id);
     setIsModalHistroyOpen(true)
   };
-  const closeHistroyClick = (id) => {
+  const closeHistroyClick = () => {
     setIsModalHistroyOpen(false)
   };
   const onEditClick = (id) => {
     router.push(`/createPricing/${id}`);
   };
-  const handleApprrovereq = (id) => { };
+  const handleApprrovereq = () => { };
 
-  const handleDecommissionreq = async (data) => {
+  const handleDecommissionreq = async () => {
   };
 
-  const onDeleteClick = (id) => {
+  const onDeleteClick = () => {
 
   };
   const statusDisplayMap = {
@@ -72,21 +68,15 @@ export default function pricingView() {
     open: "Open",
     // Add more as needed
   };
-  const [searchfilter, setSearchfilter] = useState({});
-  const searchFilterData = async (value) => {
-    console.log("value", value)
-    setSearchfilter(value);
-  }
   const fetchData = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axiosJWT.get(`${apiUrl}/opportunity/pricestats`);
       const responsedata = response.data.data || {};
       const listheader = responsedata || {};
-      console.log(listheader);
       setListHeaders(listheader);
     } catch (error) {
-
+      console.error(error)
     }
   };
   const optionsmonth = [
@@ -155,9 +145,6 @@ export default function pricingView() {
           const clientcountchart = response.data.data.clientcount;
           const opptunitycountchart = response.data.data.opptunitycount;
           const monthlysumchart = response.data.data.monthlysum;
-          console.log(clientcountchart)
-
-
           // Set up pie chart data for pricing
           setStatusBar({
             series: statuschart.data,
@@ -323,8 +310,7 @@ export default function pricingView() {
           setIsChartOpen(true);
 
         } catch (error) {
-          // Handle error
-
+          console.error(error)
         }
       };
 
@@ -332,6 +318,7 @@ export default function pricingView() {
     }
   }, [setMouth, setYear, activeTab]);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
     // chartData();
   }, []);
@@ -554,7 +541,7 @@ export default function pricingView() {
                               )}
                               <div className="card-body oxyem-mobile-card-body">
                                 <div className="col-12 col-md-12 col-xl-12 col-sm-12 mx-auto card border" id="sk-create-page">
-                                  {isrefresh && (
+
                                     <CustomDataTable
                                       title={""}
                                       onViewClick={onViewClick}
@@ -568,7 +555,6 @@ export default function pricingView() {
                                       status={status}
                                       searchfilter={status}
                                     />
-                                  )}
                                 </div>
                               </div>
                             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoDownloadOutline } from "react-icons/io5";
 import { axiosJWT } from "../../Auth/AddAuthorization.jsx";
 import DocumentsEvidence from "../../claim/admin/DocumentsEvidence";
@@ -6,26 +6,21 @@ import DocumentsEvidence from "../../claim/admin/DocumentsEvidence";
 
 export default function ClientDetailView({ clientinfodata, pricingDocument }) {
   if (!clientinfodata) return null;
-    console.log(clientinfodata,"in client info")
   const { businessType, clientId, clientName, emailAddress } = clientinfodata;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [businessTypeName, setBusinessTypeName] = useState("");
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 useEffect(() => {
   if (!businessType) return;
-  console.log("useEffect triggered with businessType:", businessType);
   const fetchBusinessType = async () => {
-  console.log("1234")
-
     try {
-  console.log("12345")
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
       const response = await axiosJWT.get(`${apiUrl}/dropdowns`, {
         params: {
           isFor: "businessType",
         },
       });
-console.log(response,"thisssssssss")
       const list = response.data?.data || [];
       const match = list.find((item) => item.id === businessType);
       if (match) {

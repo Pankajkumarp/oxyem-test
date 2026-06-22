@@ -1,7 +1,6 @@
 
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react';
-import axios from "axios";
+import React, { useState } from 'react';
 import SecTab from '../Components/Employee/AssetTab.jsx';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
@@ -9,10 +8,9 @@ import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
-export default function addAssets({ payrollForm }) {
+export default function AddAssets({ payrollForm }) {
     const router = useRouter();
-    const [AdduserContent, setAdduserContent] = useState(payrollForm);
-    
+    const AdduserContent = payrollForm;    
     const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
     const getsubmitformdata = async (value ,myFile) => {
         setSubmitButtonLoading(true);
@@ -69,7 +67,7 @@ export default function addAssets({ payrollForm }) {
                       formData.append('file', file);
                     });
                   } else {
-                    console.error('fileData is not an array:', fileData);
+                    console.error('fileData is not an array:', myFile);
                   }
     
                 const response = await axiosJWT.post(apiUrl, formData, {
@@ -86,9 +84,6 @@ export default function addAssets({ payrollForm }) {
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                const errors = error.response.data.errors || [];
-                const errorMessage = errors.map(err => err.msg).join('.</br>') || 'Failed to submit the form. Please try again later.';
-                
                 ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
             } else {
                 // ToastNotification({ message: 'Failed to submit the form. Please try again later.' });

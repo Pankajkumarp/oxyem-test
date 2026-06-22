@@ -43,14 +43,16 @@ export default function AddressInfo({ empId, apiBaseUrl ,refressAddressApi }) {
                 }
             }
         } catch (error) {
-            
+             console.error(error)
         }
     };
 
     useEffect(() => {
         if (empId || refressAddressApi) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchInfo();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [empId, refressAddressApi]);
 
     const formResidential = {
@@ -411,6 +413,7 @@ const populateFormData2 = () => {
         } catch (error) {
             setSubmitButtonLoading(false);
             setError("Something went wrong");
+            console.error(error)
         }
     };
 

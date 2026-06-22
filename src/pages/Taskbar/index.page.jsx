@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import Profile from '../Components/commancomponents/profile';
-import { FaCheck } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
-import { IoEyeSharp } from "react-icons/io5";
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Task from './Task'; // Adjust the import path if necessary
 import { AnimatePresence } from 'framer-motion';
@@ -49,6 +46,7 @@ export default function Taskbar() {
                 const EmployeeId = response.data.data.idEmployee;
                 setEmpId(EmployeeId);
             } catch (error) {
+                console.error(error)
             }
         };
         fetchData();
@@ -72,7 +70,7 @@ async function fetchLeaveData() {
                     setleaveavg(leaveavg);
                 }
     } catch (error) {
-        // console.error('Error fetching leave data:', error);
+        console.error(error)
     }
 }
 
@@ -90,7 +88,7 @@ async function fetchMyTaskData() {
         }
 
     } catch (error) {
-        // console.error('Error fetching my task data:', error);
+        console.error(error)
     }
 }
 // Function to fetch My Task history data
@@ -107,7 +105,7 @@ async function fetchMyTaskHistoryData() {
         }
 
     } catch (error) {
-        // console.error('Error fetching my task data:', error);
+        console.error(error)
     }
 }
 // Function to fetch Allocation data
@@ -127,7 +125,7 @@ async function fetchAllocationData() {
             setallocationavg(allocationavg);
         }
     } catch (error) {
-        // console.error('Error fetching allocation data:', error);
+        console.error(error)
     }
 }
 
@@ -151,12 +149,13 @@ async function fetchAttendanceData() {
             setattheadiline(attheadiline);
         }
     } catch (error) {
-        // console.error('Error fetching attendance data:', error);
+        console.error(error)
     }
 }
 
     useEffect(() => {
         // Fetch Leave and My Task data on page load
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchLeaveData();
         fetchMyTaskData();
         fetchMyTaskHistoryData();
@@ -205,26 +204,6 @@ async function fetchAttendanceData() {
         }
     };
 
-    // const apipayload ={
-    //     "action": type,
-    //     "idAttendance": id,
-    //     "rejectReason":data
-    // }
-    // const response = await axiosJWT.post(`${apiUrl}/attendance/updateStatus`, apipayload);
-
-
-    const approvestaus = (status) => {
-        switch (status) {
-            case 'Approve':
-                return <FaCheck />; // Icon for present
-            case 'Reject':
-                return <IoClose />; // Icon for absent
-            case 'View':
-                return <IoEyeSharp />; // Icon for absent
-            default:
-                return null; // No icon for other statuses
-        }
-    };
 
     const [isCollapsedleave, setIsCollapsedLeave] = useState(false); // State to manage collapse
 
@@ -270,7 +249,7 @@ async function fetchAttendanceData() {
                     });
                 }
             } catch (error) {
-                // console.error("Error updating status:", error);
+              console.error(error)
             }
         } else if (taskData.actionFor === "attendance") {
            const apipayload = {
@@ -469,7 +448,7 @@ async function fetchAttendanceData() {
                                                                             <tr key={rowIndex}>
                                                                                 <td className='task_bar_profile'>
                                                                                     <Profile name={row.employee} imageurl={row.profilePicture || ""} size={"28"} 
-                                                                                    profilelink={`/employeeDashboard/${row.idEmployee}` || ""}
+                                                                                    profilelink={`/employeeDashboard/${row.idEmployee}`}
                                                                                     />
                                                                                     <span onClick={() => openProfile(row)} className='pr_text'>{row.employee}</span>
                                                                                 </td>
@@ -517,7 +496,7 @@ async function fetchAttendanceData() {
                                                                             <tr key={rowIndex}>
                                                                                 <td className='task_bar_profile'>
                                                                                     <Profile name={row.employee} imageurl={row.profilePicture || ""} size={"28"} 
-                                                                                    profilelink={`/employeeDashboard/${row.idEmployee}` || ""}
+                                                                                    profilelink={`/employeeDashboard/${row.idEmployee}`}
                                                                                     />
                                                                                     <span onClick={() => openProfile(row)} className='pr_text'>{row.employee}</span>
                                                                                 </td>

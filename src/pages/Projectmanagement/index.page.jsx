@@ -4,7 +4,7 @@ import SecTab from '../Components/Employee/SecTab';
 import { axiosJWT } from '../Auth/AddAuthorization';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
@@ -44,7 +44,6 @@ export default function Projectmanagement({ userFormdata }) {
       "feature": newArray.feature,
       "section": sendData
     }
-    console.log("apipayload", apipayload)
     try {
       const response = await axiosJWT.post(`${apiUrl}/project`, apipayload);
       // Handle the response if needed

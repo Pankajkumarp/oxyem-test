@@ -5,7 +5,6 @@ import { axiosJWT } from '../../../Auth/AddAuthorization';
 export default function SubjectComponent({ label, validations = [] , value, onChange }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
-  const [error, setError] = useState(null);
   
   useEffect(() => {
     const fetchOptions = async () => {
@@ -24,8 +23,7 @@ export default function SubjectComponent({ label, validations = [] , value, onCh
         
         setOptions(optionsData);
       } catch (error) {
-        console.error('Error fetching options:', error);
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
 

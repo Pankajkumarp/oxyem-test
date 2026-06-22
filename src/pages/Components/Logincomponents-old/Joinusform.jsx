@@ -4,14 +4,12 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router'
-import axios from "axios";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { PayloadProtector } from "@/pages/Auth/PayloadProtector";
 
 export default function Joinusform() {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const router = useRouter()
-  const [firstname, setFirstName] = useState("");
   const EMAIL_REGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validationSchema = Yup.object().shape({
     firstname: Yup.string().required('First Name is required'),
@@ -37,6 +35,7 @@ export default function Joinusform() {
         "  Must Contain One Number Character"
       )
       .matches(
+        // eslint-disable-next-line no-useless-escape
         /^(?=.*[!@#\$%\^&\*])/,
         "  Must Contain  One Special Case Character"
       ),
@@ -59,7 +58,6 @@ export default function Joinusform() {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(validationSchema)
@@ -68,8 +66,6 @@ export default function Joinusform() {
   const [errorres, setErrorres] = useState('');
    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const onSubmit = async (data) => {
-
-    console.log("Execute recaptcha not yet availableaa");
 
     if (!executeRecaptcha) {
       console.log("Execute recaptcha not yet available");
@@ -83,18 +79,19 @@ export default function Joinusform() {
     //reset()
     PayloadProtector.post(`${apiUrl}/account`, data)
     .then(response => {
+      if(response){
       const data = "An email has been sent to your registered email address for verification. Please verify your email account before login."
       router.push({
         pathname: '/Log-in',	
         query: { data: data },		
       }, '/Log-in');
+    }
     })
 
     .catch(error => {
       const data = error.response.data;
       setErrorres(data.message);
-  
-      //console.log(data.message)
+
       setTimeout(() => {
         setErrorres('');
       }, 20000);
@@ -119,7 +116,6 @@ export default function Joinusform() {
                 <input
                   name="firstname"
                   type="text"
-                  onChange={(e) => setFirstName(e.target.value)}
 
 
                   {...register('firstname')}

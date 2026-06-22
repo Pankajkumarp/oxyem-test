@@ -1,21 +1,19 @@
+/* eslint-disable @next/next/no-img-element */
 
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import SecTab from '../Components/Employee/NewFormSecTab';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
 import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
 import { FaRegCheckCircle} from "react-icons/fa";
-export default function addPayroll({ payrollForm }) {
-    const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
+export default function AddPayroll({ payrollForm }) {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const router = useRouter();
-    const data = router.query.data;
     const [showForm, setshowForm] = useState(false);
     const [AdduserContent, setAdduserContent] = useState([]);
     const [tdsAmount, setTdsAmount] = useState("");
@@ -39,6 +37,7 @@ export default function addPayroll({ payrollForm }) {
 
         // Update the content
         subsection.fields = fields;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAdduserContent(updatedContent);
         setshowForm(true)
     }, [payrollForm]);
@@ -66,7 +65,6 @@ export default function addPayroll({ payrollForm }) {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         try {
             const response = await axiosJWT.post(`${apiUrl}/payroll/generateSalaryDetails`, Payload)
-            const apiresponse = response.data != "" ? response.data : "";
             const message = 'You have successfully add <strong>Payroll </strong> !';
             const errormessage = 'Error connecting to the backend. Please try after Sometime.';
             if (response) {
@@ -133,8 +131,7 @@ export default function addPayroll({ payrollForm }) {
                 });
             }
         } catch (error) {
-            //const errormessage = error.response.data.errors
-            // Handle network error or other exceptions
+            console.error(error)
         }
     };
 
@@ -241,10 +238,10 @@ export default function addPayroll({ payrollForm }) {
             };
             getgraphData();
         }
-    }, [userdetail.idEmployee, userdetail.applicableFrom]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userdetail.idEmployee, userdetail.applicableFrom, apiUrl]);
 
     const handleNetsalaryAmt = async (value) => {
-        console.log("dvalue", value)
         const updatedContent = { ...AdduserContent };
         if (userdetail.idEmployee) {
             updatedContent.section.forEach(section => {

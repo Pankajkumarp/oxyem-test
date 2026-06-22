@@ -6,7 +6,7 @@ import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
 import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
 import { MdAccountBalance } from "react-icons/md";
 
-export default function BankInfo({ empId, apiBaseUrl, Formdata ,showbutton}) {
+export default function BankInfo({ empId, apiBaseUrl ,showbutton}) {
   const [bankInfo, setBankInfo] = useState([]);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [openSection, setOpenSection] = useState(0); // Default to first section open
@@ -44,8 +44,10 @@ export default function BankInfo({ empId, apiBaseUrl, Formdata ,showbutton}) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchBankInfo();
     
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empId]);
 
   const openEditModal = () => {
@@ -82,6 +84,7 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
     } catch (error) {
       setSubmitButtonLoading(false);
       setError("Something went wrong");
+      console.error(error)
     }
   };
 
@@ -143,7 +146,7 @@ icon={<MdAccountBalance size={48} color="#004D95" />}
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "BankInformation" } });
   let Formdata = response.data.data;

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../../../Components/Breadcrumbs/Breadcrumbsdiscription';
 import CustomDataTable from '../../../Components/Datatable/tablenew.jsx';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
-import { useRouter } from 'next/router';
 import { FaTimes } from "react-icons/fa";
 import View from '../../../Components/Popup/AttendenceHistroy';
 import ViewAssign from '../../../Components/Popup/AssignmemberHistroy';
@@ -10,30 +9,20 @@ import TimesheetPopup from '../../../Components/Popup/employeeTimesheet';
 import { Toaster, toast } from 'react-hot-toast';
 import Head from 'next/head';
 import { MdHourglassTop } from "react-icons/md";
-export default function adminDashboard({ }) {
-    const router = useRouter();
+export default function AdminDashboard() {
     const [datacoloum, setDatacoloum] = useState([]);
     const [rowData, setRowData] = useState([]);
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    const handleEditClick = (id) => {
-        //router.push(`/attendance/${id}`);
-    };
+    const handleEditClick = () => { };
 
     const fetchData = async () => {
         try {
             const response = await axiosJWT.get(`${apiUrl}/timesheet/getPendingTimesheetDtls`);
             if (response) {
-
                 setDatacoloum(response.data.data.formcolumns);
-                //setRowData(columneeData);
                 const timesheetData = response.data.data.timesheetData;
-
-
-
                 setRowData(timesheetData);
-
-
             }
         } catch (error) {
             console.error("Error fetching data", error);
@@ -41,14 +30,17 @@ export default function adminDashboard({ }) {
     };
 
     useEffect(() => {
-        fetchData();
+        const fetchDataValue = async () => {
+            await fetchData();
+        };
+        fetchDataValue();
     }, []);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHistroyId, setIsHistroyId] = useState("");
     const handleHistoryClick = async (id) => {
-        //setIsHistroyId(id)
-        // openDetailpopup()
+        setIsHistroyId(id)
+        openDetailpopup()
     }
     const openDetailpopup = async () => {
         setIsModalOpen(true)
@@ -134,14 +126,11 @@ export default function adminDashboard({ }) {
             console.error("Error occurred:", error);
         }
     }
-    const [isAssignModalOpen, setIAssignsModalOpen] = useState(false);
-    const [isAssignMemId, setIsAssignId] = useState("");
+    const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+    const isAssignMemId = "";
 
-    const openAssignpopup = async () => {
-        setIAssignsModalOpen(true)
-    }
     const closeAssignpopup = async () => {
-        setIAssignsModalOpen(false)
+        setIsAssignModalOpen(false)
     }
 
     const [isTimeSheetModal, setTimeSheetModal] = useState(false);
@@ -149,7 +138,6 @@ export default function adminDashboard({ }) {
     const onViewClick = (id) => {
         settimesheetId(id)
         openTimesheetpopup();
-        //router.push(`/employeeTimeSheet/${id}`);
     };
 
     const openTimesheetpopup = async () => {

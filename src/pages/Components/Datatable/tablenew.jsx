@@ -1,51 +1,31 @@
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router';
 import MUIDataTable from "mui-datatables";
-import { FaEdit } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { SlActionUndo } from "react-icons/sl";
-import { FaWindowMinimize } from "react-icons/fa";
 import Recall from '../Popup/Recallmodal';
 import Profile from '../commancomponents/profile';
-import axios from "axios";
 import { GrTooltip } from "react-icons/gr";
 import { Tooltip } from 'react-tooltip'
 import { FiEdit } from "react-icons/fi";
 import { GoHistory } from "react-icons/go";
 import { IoRefreshSharp } from "react-icons/io5";
 import RejectPopup from '../Popup/Rejectmodal';
-import { MdAssignmentInd } from "react-icons/md";
-import { GoTasklist } from "react-icons/go";
 import { IoIosPeople } from "react-icons/io";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
-import { MdOutlinePending } from "react-icons/md";
 import { IoDownloadOutline } from "react-icons/io5";
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
 import { FaRegCircle } from "react-icons/fa6";
 import DocList from './documentlist';
-import { FaDownload } from "react-icons/fa";
 import { TbSteeringWheel } from "react-icons/tb";
 import { TbSteeringWheelOff } from "react-icons/tb";
-export default function tablenew({ title, data, columnsdata, ismodule, handleGetvalueClick, onEditClick, onSubmitClick, responseData, onDeleteClick, onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick, handleViewAssignReq, pagename }) {
+export default function Tablenew({ title, data, columnsdata, ismodule, onEditClick, onSubmitClick, responseData, onDeleteClick, onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick, handleViewAssignReq, pagename }) {
 
-
-  const router = useRouter();
-  const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-  const [formRecallData, setFormRecallData] = useState({});
-  const [idLeave, setIdLeave] = useState("");
-  const [recallmessage, setRecallMessage] = useState('');
   const [respdata, setRespdata] = useState("");
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [recallmessageType, setRecallMessageType] = useState('');
-  const [validationError, setValidationError] = useState('');
+  const validationError = '';
   const transformedData = data.map(item => item.map(subItem => subItem.value));
-  const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 
   const [selectedIds, setSelectedIds] = useState([]);
@@ -66,7 +46,7 @@ export default function tablenew({ title, data, columnsdata, ismodule, handleGet
       selectedIds,
       purpose,
       data,
-      (successMessage) => {
+      () => {
         // Handle success message
         setSelectedIds([])
       }
@@ -79,7 +59,7 @@ export default function tablenew({ title, data, columnsdata, ismodule, handleGet
       selectedIds,
       purpose,
       data,
-      (successMessage) => {
+      () => {
         // Handle success message
         setSelectedIds([])
       }
@@ -97,14 +77,17 @@ export default function tablenew({ title, data, columnsdata, ismodule, handleGet
 
   useEffect(() => {
     if (responseData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRespdata(responseData)
       setMessageType(respdata.type)
       setMessage(respdata.message)
       if (messageType == "success" && responseData.popup == "recall") {
+        // eslint-disable-next-line react-hooks/immutability
         setisModalOpenrecall(false);
 
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData]);
   const options = {
     responsive: "standard",
@@ -144,11 +127,9 @@ export default function tablenew({ title, data, columnsdata, ismodule, handleGet
         className
       };
     },
-    onChangePage(currentPage) {
-      //console.log({currentPage});
+    onChangePage() {
     },
-    onChangeRowsPerPage(numberOfRows) {
-      // console.log({numberOfRows});
+    onChangeRowsPerPage() {
     },
 	onDownload: (buildHead, buildBody, columns, data) => {
       const excludedColumnNames = ['Id', 'Action', 'id', 'action', 'idAssignTask', 'Assigned Members'];
@@ -171,13 +152,6 @@ export default function tablenew({ title, data, columnsdata, ismodule, handleGet
     print: pagename !== 'filter', // Conditionally show/hide print option
     viewColumns: pagename !== 'filter', // Conditionally show/hide viewColumns option
   };
-  const config = {
-    headers: {
-      'Authorization': token
-    }
-  };
-
-
 
   const renderActionButtons = (value, tableMeta, updateValue) => {
     if (!Array.isArray(value)) {
@@ -333,7 +307,7 @@ export default function tablenew({ title, data, columnsdata, ismodule, handleGet
       </div>
     );
   };
-const renderStatus = (value, section) => {
+const renderStatus = (value) => {
     if (pagename === "basketofallow") {
       let icon;
       switch (value) {
@@ -358,13 +332,13 @@ const renderStatus = (value, section) => {
       return <span className={`oxyem-mark-${value}`}>{value}</span>;
     }
   };
-  const renderDoc = (value, tableMeta, updateValue) => {
+  const renderDoc = (value) => {
     return <Link className={`oxyem-mark-doc-img`} download href={value} data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"Download"}>  <IoDownloadOutline style={{ cursor: 'pointer' }} size={20} color='#FA7E12' onClick={() => handleDownloadClick(value)} /></Link>;
   };
-  const renderwithiconStatus = (value, tableMeta, updateValue) => {
+  const renderwithiconStatus = (value, tableMeta) => {
     return <span className={`oxyem-mark-${value}`} onClick={() => handleRowClick(tableMeta.rowData)} data-tooltip-id="my-tooltip-datatable" data-tooltip-content={"View Slip"}>  <FaRegEye /> {value}</span>;
   };
-  const renderassignedMembers = (value, tableMeta, updateValue) => {
+  const renderassignedMembers = (value, tableMeta) => {
     return (
       <>
         <button className='oxyem-mark-assignmem' onClick={() => handleassignedMemClick(tableMeta.rowData)}>
@@ -373,7 +347,7 @@ const renderStatus = (value, section) => {
       </>
     );
   };
-  const rendertaskInformation = (value, tableMeta, updateValue) => {
+  const rendertaskInformation = (value, tableMeta) => {
     return (
       <>
         <button className='oxyem-mark-assignmem' onClick={() => handleRowClick(tableMeta.rowData)}>
@@ -382,7 +356,7 @@ const renderStatus = (value, section) => {
       </>
     );
   };
-  const rendercustomProfile = (value, tableMeta, updateValue) => {
+  const rendercustomProfile = (value, tableMeta) => {
     const rowIndex = tableMeta.rowIndex;
     const profileData = data[rowIndex].find(item => item.name === 'Name' || item.name === 'idEmployee');
 
@@ -396,7 +370,7 @@ const renderStatus = (value, section) => {
     );
   };
 
-  const rendercustomProfileUserList = (value, tableMeta, updateValue) => {
+  const rendercustomProfileUserList = (value, tableMeta) => {
     const rowIndex = tableMeta.rowIndex;
     const profileData = data[rowIndex].find(item => item.name === 'empName');
 
@@ -453,7 +427,7 @@ const renderStatus = (value, section) => {
                         : column.name === 'payslip'
                         ? (value, tableMeta, updateValue) => renderwithiconStatus(value, tableMeta, updateValue)
                         :
-                        column.name === 'documents' ? (value, tableMeta, updateValue) => (
+                        column.name === 'documents' ? (value) => (
                             <IoDownloadOutline  style={{ cursor: 'pointer' }} size={20} color='#FA7E12' onClick={() => handleDownloadClick(value)}  /> 
                         )
                         : null
@@ -485,7 +459,7 @@ const handleDownloadClick = (documents) => {
   }
 };
 
-  const handleRowClick = (data, value, updatedvalue) => {
+  const handleRowClick = (data) => {
     let id = data[1]
     if (ismodule === "leave") {
       onHistoryClick(id)
@@ -494,26 +468,26 @@ const handleDownloadClick = (documents) => {
     }
 
   };
-  const handleassignedMemClick = (data, value, updatedvalue) => {
+  const handleassignedMemClick = (data) => {
     let id = data[1]
     handleViewAssignReq(id)
 
   };
 
 
-  const handleRowEditClick = async (data, value, updatedvalue) => {
+  const handleRowEditClick = async (data) => {
     let id = data[1]
     onEditClick(id)
 
   };
 
-  const handleRowHistoryClick = async (data, value, updatedvalue) => {
+  const handleRowHistoryClick = async (data) => {
     let id = data[1]
     onHistoryClick(id)
 
   };
 
-  const handleRowDeleteClick = async (data, value, updatedvalue) => {
+  const handleRowDeleteClick = async (data) => {
     let id = data[1]
     let name = data[2]
     onDeleteClick(id, name)
@@ -523,11 +497,9 @@ const handleDownloadClick = (documents) => {
   const [isModalOpenrecall, setisModalOpenrecall] = useState(false);
 
 
-  const handleRowrecallClick = (data, value) => {
+  const handleRowrecallClick = (data) => {
     let id = data[1]
     handlerecallvalueClick(id)
-    setIdLeave(value);
-
   };
   const closeModalrecallModal = () => {
     setisModalOpenrecall(false);

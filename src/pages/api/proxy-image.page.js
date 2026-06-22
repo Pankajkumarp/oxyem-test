@@ -21,6 +21,7 @@ export default async function handler(req, res) {
             base64: `data:${mimeType};base64,${base64}`
         });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
         return res.status(500).json({ error: 'Failed to fetch image' });
     }

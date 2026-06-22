@@ -7,7 +7,6 @@ export default function RadioComponent({ value, name, onChange, label, pagename,
   const [selectedValue, setSelectedValue] = useState(value);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [initialDepartmentValue, setInitialDepartmentValue] = useState('');
-  const [error, setError] = useState(null);
   const [hasData, setHasData] = useState(false);
   const [viewData, setViewData] = useState(null);
 
@@ -32,7 +31,6 @@ export default function RadioComponent({ value, name, onChange, label, pagename,
         const response = await axiosJWT.get(`${apiUrl}/asset/assetAllocationInfo`, {
           params: { typeOfAsset: departmentValue, idEmployee }
         });
-        console.log(response);
         if (response.status === 200 && Object.keys(response.data).length > 0) {
           setViewData(response.data.data);
           setHasData(true);
@@ -42,7 +40,7 @@ export default function RadioComponent({ value, name, onChange, label, pagename,
           setSelectedValue(false); // Set value to false if data is empty
         }
       } catch (error) {
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
         setHasData(false);
         setSelectedValue(false); // Set value to false if there's an error
       }
@@ -82,6 +80,7 @@ export default function RadioComponent({ value, name, onChange, label, pagename,
         const idEmployee = getIdEmployeeValue();
 
         if (initialDepartmentValue === '' || departmentValue !== initialDepartmentValue) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setInitialDepartmentValue(departmentValue);
           fetchOptions(departmentValue, idEmployee);
         }
@@ -90,7 +89,7 @@ export default function RadioComponent({ value, name, onChange, label, pagename,
         setHasData(false);
       }
     } catch (error) {
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
       setHasData(false);
       setSelectedValue(false);
     }

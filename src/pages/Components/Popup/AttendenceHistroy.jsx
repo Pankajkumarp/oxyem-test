@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
 import { FaRegClock } from "react-icons/fa";
 import { MdOutlineLocationOn } from "react-icons/md";
@@ -9,17 +8,6 @@ import Drawer from 'react-modern-drawer'
 
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
-const customStyles = {
-  content: {
-    background: '#fff',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 const getCurrentTimeZone = () => {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
@@ -36,6 +24,7 @@ const convertUtcToLocalTime = (utcTime, timeZone) => {
     if (localTime === "Invalid date") return ""; // Return empty string if the date is invalid
     return localTime;
   } catch (error) {
+    console.error(error)
     return ""; // Return empty string in case of any error during conversion
   }
 };
@@ -95,6 +84,7 @@ const AttendenceHistroy = ({ isOpen, closeModal, isHistroyId, section, handleUpa
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(isHistroyId);
     }
   }, [isOpen, isHistroyId]);

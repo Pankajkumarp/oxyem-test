@@ -3,18 +3,12 @@ import dynamic from 'next/dynamic';
 
 const DynamicForm = dynamic(() => import('../Components/CommanForm'), { ssr: false });
 
-export default function EmployeeSection({ AdduserContent, headingContent, submitformdata, getleavedetail, getleaveoption, getsubmitformdatapreview, handeldocfiles ,loaderSubmitButton}) {
+export default function EmployeeSection({ AdduserContent, headingContent, getleavedetail, getleaveoption, getsubmitformdatapreview, loaderSubmitButton}) {
   const apiUrl = "";
   const [content, setContent] = useState(AdduserContent);
   const [activeTab, setActiveTab] = useState(AdduserContent.section[0].SectionName);
   const hasMultipleSections = Array.isArray(content.section) && content.section.length > 1;
-  const [myfiles, setMyfiles] = useState('');
   const [experience, setExperience] = useState(true); // Default experience state
-
-  // Static variable to store "Prior Work Experience" section
-  const staticWorkExperienceSection = AdduserContent.section.find(section => section.name === 'WorkExperience');
-
-  const sectionname = AdduserContent.section[0].name;
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -60,7 +54,7 @@ export default function EmployeeSection({ AdduserContent, headingContent, submit
   };
 
   useEffect(() => {
-    const newArray = convertToArray(sourceArray);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent(AdduserContent);
   }, [AdduserContent]);
 

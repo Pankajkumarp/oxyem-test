@@ -8,7 +8,7 @@ import Avatar from 'react-avatar';
 import 'react-modern-drawer/dist/index.css'
 
 
-const timesheetComment = ({ isOpen, closeModal, SubTaskInfo }) => {
+const TimesheetComment = ({ isOpen, closeModal, SubTaskInfo }) => {
   const [SubTask, setSubTask] = useState({});
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const formatDate = (dateStr) => {
@@ -33,12 +33,14 @@ const timesheetComment = ({ isOpen, closeModal, SubTaskInfo }) => {
   useEffect(() => {
     if (isOpen) {
       if (SubTaskInfo?.idSubTask) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         getCommentDetails(SubTaskInfo?.idSubTask)
       }
       document.body.classList.add("hide-body-scroll");
     } else {
       document.body.classList.remove("hide-body-scroll");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, SubTaskInfo?.idSubTask]);
   return (
     <Drawer
@@ -69,7 +71,7 @@ const timesheetComment = ({ isOpen, closeModal, SubTaskInfo }) => {
                     }}>
                       <span className="subtask-code">{SubTask?.generatedSubTaskCode}</span>
                       <span style={{ fontSize: '.75rem', color:'#64748b', display:'flex', alignItems:'center' }}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style={{ width: '14px', height: '14px', marginRight: '5px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '14px', height: '14px', marginRight: '5px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                         {formatDate(SubTask?.startDate)} - {formatDate(SubTask?.endDate)}</span>
                     </p>
                     <p>
@@ -170,4 +172,4 @@ p.no-comments {
   );
 };
 
-export default timesheetComment;
+export default TimesheetComment;

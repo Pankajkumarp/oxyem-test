@@ -2,28 +2,14 @@ import React, { useState, useEffect } from 'react';
 import SelectRole from '../SelectOption/MultiSelect';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 
-const colourStyles = {
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    return {
-      ...styles,
-      backgroundColor: isFocused ? "#0056A1" : null,
-      color: isFocused ? "#fff" : "#333333",
-    };
-  }
-};
-
 export default function SelectComponent({ label, validations = [] , value, onChange, showImage ,documentType ,selectedAsset,isDisabled }) {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(value);
-  // useEffect(() => {
-  //   setSelectedOption(value);
-  // }, [value]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedOption(selectedAsset);
   }, [selectedAsset]);
-
-  const [error, setError] = useState(null);
   
   useEffect(() => {
     const fetchOptions = async () => {
@@ -47,8 +33,7 @@ export default function SelectComponent({ label, validations = [] , value, onCha
 
         setOptions(optionsData);
       } catch (error) {
-        console.error('Error fetching options:', error);
-        setError(error.message || 'Failed to fetch options');
+        console.error(error)
       }
     };
   

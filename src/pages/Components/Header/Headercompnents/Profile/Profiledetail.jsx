@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Cookies from 'js-cookie';
 
 import Profile from '../../../commancomponents/profile';
-import { IoSettingsOutline } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io"
 import { useRouter } from 'next/router'
@@ -11,12 +10,12 @@ import { axiosJWT } from '../../../../Auth/AddAuthorization';
 import { FaRegUser } from "react-icons/fa";
 import CryptoJS from 'crypto-js';
 import { useMsal } from "@azure/msal-react";
-function Profiledetail({ }) {
+function Profiledetail() {
 
   const router = useRouter();
   const [profileData, setProfileData] = useState('');
   useEffect(() => {
-    const fetchProfileOptions = async (value) => {
+    const fetchProfileOptions = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         const response = await axiosJWT.get(`${apiUrl}/employees/getLoggedInEmployee`)
@@ -44,6 +43,7 @@ function Profiledetail({ }) {
   };
   const inputRef = useRef();
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     window.addEventListener('mousedown', handleClickOutside);
     return () => {
       window.removeEventListener('mousedown', handleClickOutside);

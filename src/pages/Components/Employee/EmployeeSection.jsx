@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 const DynamicForm = dynamic(() => import('../CommanForm.jsx'), { ssr: false });
 
-export default function EmployeeSection({ AdduserContent, headingContent, submitformdata, getleavedetail, getleaveoption, getsubmitformdatapreview, handeldocfiles ,loaderSubmitButton }) {
+export default function EmployeeSection({ AdduserContent, headingContent, submitformdata, getleavedetail, getleaveoption, getsubmitformdatapreview ,loaderSubmitButton }) {
   const apiUrl = "";
   const [content, setContent] = useState(AdduserContent);
   const [activeTab, setActiveTab] = useState(AdduserContent.section[0].SectionName);
@@ -19,9 +19,6 @@ export default function EmployeeSection({ AdduserContent, headingContent, submit
 const [currentStep, setCurrentStep] = useState(0); // 0 means first tab
 const router = useRouter();
 const isUserPage = router.pathname.includes('/user');
-
-  // Static variable to store "Prior Work Experience" section
-  const staticWorkExperienceSection = AdduserContent.section.find(section => section.name === 'WorkExperience');
 
   const sectionname = AdduserContent.section[0].name;
 
@@ -69,7 +66,7 @@ const isUserPage = router.pathname.includes('/user');
   };
 
   useEffect(() => {
-    const newArray = convertToArray(sourceArray);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent(AdduserContent);
   }, [AdduserContent]);
 

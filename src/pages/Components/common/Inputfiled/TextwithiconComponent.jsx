@@ -5,7 +5,7 @@ import Profile from '../../commancomponents/profile';
 import View from '../../Popup/selectuser';
 import { IoPersonAddOutline } from "react-icons/io5";
 import { axiosJWT } from '../../../Auth/AddAuthorization';
-export default function TextwithiconComponent({ name, type, placeholder, label, value, validations = [], onChange }) {
+export default function TextwithiconComponent({ name, label, value, validations = [], onChange }) {
   const isRequired = validations.some(validation => validation.type === "required");
   
   const [userdetails, setuserdetails] = useState([]);
@@ -42,12 +42,14 @@ export default function TextwithiconComponent({ name, type, placeholder, label, 
 
     useEffect(() => {
         if (!Array.isArray(value)) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setselectuser([]);
             return;
         }
         const selectedOptions = value.map(val => userdetails.find(option => option.id === val)).filter(Boolean);
 
     setselectuser(selectedOptions)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
   const enterfields = () => {
@@ -81,7 +83,8 @@ export default function TextwithiconComponent({ name, type, placeholder, label, 
         <div className='col-md-12'>
           <div className="oxyem-project-members">
             <ul className="oxyem-team-members">
-              {selectuser.slice(0, 4).map((detail, index) => (
+              {selectuser.slice(0, 4).map((detail) => (
+                // eslint-disable-next-line react/jsx-key
                 <li> <Profile name={detail.userName} imageurl={detail.imageUrl} size={"30"} profilelink={detail.profilelink} /></li>
               ))}
               {selectuser.length > 4 && (

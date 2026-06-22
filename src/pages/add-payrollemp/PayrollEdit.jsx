@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosJWT } from "../Auth/AddAuthorization";
-import { FaCheckCircle, FaClock, FaHistory, FaLock, FaMoneyBillWave, FaInfoCircle, FaEdit } from "react-icons/fa";
+import { FaMoneyBillWave} from "react-icons/fa";
 import dynamic from "next/dynamic";
 import Profile from "../Components/commancomponents/profile";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -20,10 +20,6 @@ const MounthPicker = dynamic(
     () => import("../Components/common/Inputfiled/MonthDateComponent"),
     { ssr: false }
 );
-const SelectOption = dynamic(
-    () => import("../Components/common/SelectComponent/SelectOptionComponent"),
-    { ssr: false }
-);
 const NumberField = dynamic(
     () => import("../Components/common/Inputfiled/NumberComponent"),
     { ssr: false }
@@ -38,9 +34,6 @@ export default function PayrollEdit({ allData }) {
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const [errorMessage, seterrorMessage] = useState("");
-    const currentYear = new Date().getFullYear();
-    const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
-    const currentMonthYear = `${currentYear}-${currentMonth}`
     const [content, setContent] = useState(null);
     const [previewData, setPreviewData] = useState({});
     const [currency, setcurrency] = useState("");
@@ -51,7 +44,7 @@ export default function PayrollEdit({ allData }) {
     const [showData, setShowData] = useState(false);
     const [idSalary, setIdSalary] = useState(allData?.idSalary);
     const [isWithoutActualTax, setIsWithoutActualTax] = useState(false);
-    const [salaryInfo, setSalaryInfo] = useState(allData?.salaryInfo);
+    const salaryInfo = allData?.salaryInfo;
 
     const formatMonthYear = (value) => {
         if (!value) return "";
@@ -145,13 +138,15 @@ export default function PayrollEdit({ allData }) {
                         setContent(prev => mergeSalaryValues(prev, responseData));
                         setShowData(true)
                     }
-                } catch (error) { }
+                } catch (error) {console.error(error) }
             };
             getPrefilledData();
         }
-    }, [idEmployee?.value, applicableFrom]);
+    }, [idEmployee.value, applicableFrom, apiUrl]);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
         fetchForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onChange = async (value) => {
@@ -207,6 +202,7 @@ export default function PayrollEdit({ allData }) {
                 setDraftDeductions({});
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const onClose = async () => { seterrorMessage("") }
@@ -257,13 +253,6 @@ export default function PayrollEdit({ allData }) {
     };
     const basicSalary = sumFields(payrollGroups.basic, earningsFields);
     const fixedAllowances = sumFields(payrollGroups.allowances, earningsFields);
-    const daHRA = sumFields(payrollGroups.daHRA, earningsFields);
-    const specialAllowance = sumFields(payrollGroups.specialAllowance, earningsFields);
-    const medicalAllowances = sumFields(payrollGroups.medicalAllowances, earningsFields);
-    const conveyanceAllowance = sumFields(payrollGroups.conveyanceAllowance, earningsFields);
-    const projectAllowances = sumFields(payrollGroups.projectAllowances, earningsFields);
-    const lop = sumFields(payrollGroups.lop, deductionsFields);
-    const tds = sumFields(payrollGroups.tds, deductionsFields);
 
     // 🔥 dynamic allowances
     const dynamicAllowances = Object.keys(extraFields)
@@ -280,12 +269,6 @@ export default function PayrollEdit({ allData }) {
 
     const totalEarnings = basicSalary + fixedAllowances + dynamicAllowances;
     const totalDeductions = employerContribution + otherDeductions + dynamicDeductions;
-
-    const ctc = totalEarnings + employerContribution;
-
-
-
-
     const initializedRef = React.useRef(false);
 
     useEffect(() => {
@@ -319,7 +302,7 @@ export default function PayrollEdit({ allData }) {
 
         initializedRef.current = true;   // ✅ mark initialized
 
-    }, [content]);
+    }, [allData?.deductionOtherAllowance?.length, allData?.otherAllowance?.length, content]);
 
 
     const buildPayrollPayload = () => {
@@ -413,7 +396,7 @@ export default function PayrollEdit({ allData }) {
                 });
             }
         } catch (error) {
-            toast.error('Error connecting to the backend. Please try after Sometime.');
+            console.error(error)
         }
     };
     const [draftErrors, setDraftErrors] = useState({});
@@ -449,24 +432,6 @@ export default function PayrollEdit({ allData }) {
         return isValid;
     };
 
-    const hasValidExtraFields = (fields) => {
-        if (!fields) return false;
-
-        return Object.values(fields).some(rows =>
-            rows.some(row =>
-                row &&
-                row.description &&
-                row.description.value &&   // selected option
-                row.amount &&
-                Number(row.amount) > 0
-            )
-        );
-    };
-
-    const recalculatePayroll = () => {
-        const payload = buildPayrollPayload();
-        submitformdata(payload);
-    };
     const addRow = (name, type) => {
         if (type === "earnings") {
             setDraftEarnings(prev => ({
@@ -493,7 +458,7 @@ export default function PayrollEdit({ allData }) {
 
         // 🔥 remove error for this field only
         setDraftErrors(prev => {
-            if (!prev[name] || !prev[name][index]) return prev;
+            if (!prev[name]?.[index]) return prev;
 
             const newErrors = { ...prev };
 
@@ -651,12 +616,12 @@ export default function PayrollEdit({ allData }) {
             [name]: (prev[name] || []).filter((_, i) => i !== index)
         }));
     };
-    const [isModalOpen, SetIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const openPreviewpopup = async () => {
-        SetIsModalOpen(true)
+        setIsModalOpen(true)
     }
     const closepopup = async () => {
-        SetIsModalOpen(false)
+        setIsModalOpen(false)
     }
 
     const [openTdsDrawer, setOpenTdsDrawer] = useState(false);
@@ -739,7 +704,8 @@ export default function PayrollEdit({ allData }) {
                 ToastNotification({ message: response.data.message });
                 router.push('/payrollManagement');
             }
-        } catch (err) {
+        } catch (error) {
+            console.error(error)
         }
     };
     const handleSubmitPayroll = async () => {
@@ -756,7 +722,8 @@ export default function PayrollEdit({ allData }) {
                 ToastNotification({ message: response.data.message });
                 router.push('/payrollManagement');
             }
-        } catch (err) {
+        } catch (error) {
+            console.error(error)
         }
     };
 
@@ -768,7 +735,7 @@ export default function PayrollEdit({ allData }) {
             <div className="row g-4">
                 <div className="col-xl-8">
                     <div className="card main-card border-0 shadow-sm">
-                        {errorMessage !== "" ? (<div className="row p-4 pb-0"><div className="alert alert-danger alert-dismissible fade show mb-0" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button></div></div>) : (null)}
+                        {errorMessage === "" ? (null) : (<div className="row p-4 pb-0"><div className="alert alert-danger alert-dismissible fade show mb-0" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button></div></div>)}
                         <div className="row p-4 top-field-i">
                             <div className="col-md-6 top-field-add">
                                 <Employee onChange={onChange} documentType={"temporary"} showImage="yes" label="Name" selectedAsset={idEmployee?.value} isDisabled={true} />
@@ -853,7 +820,7 @@ export default function PayrollEdit({ allData }) {
                                         {earningsFields.map((field, i) => {
                                             if (field.type === "TextwithAdd") {
                                                 return (
-                                                    <div className="col-12" key={i}>
+                                                    <div className="col-12" key={field.label}>
                                                         {/* LABEL */}
                                                         <div className="fw-semibold mb-3 d-flex align-items-center gap-2">
                                                             {field.label}
@@ -865,7 +832,7 @@ export default function PayrollEdit({ allData }) {
                                                             </span>
                                                         </div>
                                                         {(draftEarnings[field.name] || []).map((row, idx) => (
-                                                            <div className="row g-2 mt-2 mb-2" key={`draft-${idx}`}>
+                                                            <div className="row g-2 mt-2 mb-2" key={`draft-${row.description}`}>
                                                                 <div className="col-md-8 top-field-add">
                                                                     <TextField
                                                                         label="Description"
@@ -950,7 +917,7 @@ export default function PayrollEdit({ allData }) {
                                             // ===== TEXT WITH ADD (OTHER DEDUCTION) =====
                                             if (field.type === "TextwithAdd") {
                                                 return (
-                                                    <div className="col-12" key={i}>
+                                                    <div className="col-12" key={field.name}>
                                                         <div className="fw-semibold mb-3 d-flex align-items-center gap-2">
                                                             {field.label}
                                                             <span

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -159,7 +160,6 @@ export default function StepForm({formFieldData}) {
             setFormErrors(errors);
             return;
         }
-        console.log("Form Submitted", formData);
     };
 
 

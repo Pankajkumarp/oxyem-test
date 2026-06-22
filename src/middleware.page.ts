@@ -7,6 +7,7 @@ const non_logged_in_accessible_pages = [
   "/home"
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const logged_in_accessible_pages = [
   "/",
   "/user",
@@ -98,6 +99,7 @@ export function middleware(request: NextRequest) {
     );
 
     if (is_non_logged_in_accessible_pages || is_accessible_for_all_pages) {
+      /* empty */
     } else {
           return NextResponse.redirect(new URL("/login", request.url));
 

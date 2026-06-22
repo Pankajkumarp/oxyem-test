@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import SelectRole from '../SelectOption/CreateSingleSelect';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
 
-export default function appraisalTypeComponent({ label, validations = [] , value, onChange }) {
+export default function AppraisalTypeComponent({ label, validations = [] , value, onChange }) {
   const [options, setOptions] = useState([]);
   const [selectedSubject, setSelectedOption] = useState(value);
-  const [error, setError] = useState(null);
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedOption(value);
   }, [value]);
   useEffect(() => {
@@ -28,7 +28,6 @@ export default function appraisalTypeComponent({ label, validations = [] , value
         setOptions(optionsData);
       } catch (error) {
         console.error('Error fetching options:', error);
-        setError(error.message || 'Failed to fetch options');
       }
     };
 

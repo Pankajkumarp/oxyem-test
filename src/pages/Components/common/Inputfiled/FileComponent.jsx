@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import LabelMandatory from '../Label/LabelMandatory';
 import LabelNormal from '../Label/LabelNormal';
 
-export default function FileComponent({ type, placeholder, label, validations = [], onChange, files }) {
+export default function FileComponent({ label, validations = [], onChange, files }) {
   const isRequired = validations.some(validation => validation.type === "required");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const fileInputRef = useRef(null);
@@ -10,6 +10,7 @@ export default function FileComponent({ type, placeholder, label, validations = 
 
   useEffect(() => {
     if (files) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedFiles(files);
     }
   }, [files]);
@@ -59,6 +60,7 @@ export default function FileComponent({ type, placeholder, label, validations = 
       dropArea.removeEventListener('dragover', handleDragOver);
       dropArea.removeEventListener('drop', handleDrop);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFileChange = (event) => {

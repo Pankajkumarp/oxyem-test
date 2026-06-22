@@ -4,9 +4,9 @@ import { axiosJWT } from '../Auth/AddAuthorization';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbsdiscription';
 import Head from 'next/head';
 import pageTitles from '../../common/pageTitles.js';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import PayrollEdit from './PayrollEdit.jsx';
-export default function EditPolicy({ userFormdata, forNonEmpFormdata }) {
+export default function EditPolicy() {
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [allData, setAllData] = useState(null);
@@ -14,6 +14,7 @@ export default function EditPolicy({ userFormdata, forNonEmpFormdata }) {
 
   useEffect(() => {
     const { id } = router.query;
+    // eslint-disable-next-line react-hooks/immutability
     fetchInfo(id)
   }, [router.query.id]);
 
@@ -30,7 +31,7 @@ export default function EditPolicy({ userFormdata, forNonEmpFormdata }) {
         }
       }
     } catch (error) {
-
+       console.error(error)
     }
   };
 

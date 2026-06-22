@@ -11,7 +11,7 @@ export default function Sidebar() {
 	const [menuMainText, setmenuMainText] = useState("");
 	const [mainMenuItem, setmainMenuItem] = useState([]);
 	const [showmenu, setshowMenu] = useState(false);
-	const fetchsubMainOptions = async (value) => {
+	const fetchsubMainOptions = async () => {
 		setshowMenu(false)
 		try {
 			const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -29,7 +29,6 @@ export default function Sidebar() {
 				}
 				const maintext = responseid.data.data[0].menuName
 				setmenuMainText(maintext)
-				const menuitem = responseid.data.data[0].children
 				const transformMenuItem = (item) => ({
 					id: item.id,
 					title: item.menuName,
@@ -63,7 +62,6 @@ export default function Sidebar() {
 				const maintext = responseid.data.data[0].menuName;
 				sessionStorage.setItem('sidebarData', JSON.stringify(responseid.data.data));
 				setmenuMainText(maintext);
-				const menuitem = responseid.data.data[0].children;
 				const transformMenuItem = (item) => ({
 					id: item.id,
 					title: item.menuName,
@@ -82,6 +80,7 @@ export default function Sidebar() {
 		}
 	};
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setmenuMainText("");
 		const secretKey = process.env.NEXT_PUBLIC_ENCRYPT_DECRYPTING;
 

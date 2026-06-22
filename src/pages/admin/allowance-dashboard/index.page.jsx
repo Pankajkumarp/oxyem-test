@@ -1,18 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import CustomDataTable from '../../Components/Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
-import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
+import { toast } from 'react-hot-toast';
+import { FaTimes } from "react-icons/fa";
 import View from '../../Components/Popup/AttendenceHistroy.jsx';
 import Head from 'next/head';
 import pageTitles from '../../../common/pageTitles.js';
-export default function index() {
+export default function AllowanceDashboard() {
 
     const router = useRouter();
-    const [updleavelist, setUpdUserList] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
+    const updleavelist = [];
+    const formcolumn = [];
     const [listheader, setListHeaders] = useState([]);
 
 
@@ -20,7 +22,7 @@ export default function index() {
     const [isHistroyId, setIsHistroyId] = useState("");
     
 
-    const [activeTab, setActiveTab] = useState(0); // State to manage active tab index
+    const activeTab = 0; // State to manage active tab index
     const openDetailpopup = async () => {
         setIsModalOpen(true)
     }
@@ -35,7 +37,6 @@ export default function index() {
         return
     }
     
-    
         const fetchData = async () => {
             try {
                 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -44,10 +45,11 @@ export default function index() {
                 const listheader = responsedata.listheader || {};
                 setListHeaders(listheader);
             } catch (error) {
+                console.error(error)
             }
         };
-
     useEffect(() => {
+
         fetchData();
     }, []);
     
@@ -56,9 +58,7 @@ export default function index() {
         router.push(`/employeeDashboard/${id}`);
     };
 
-    const onDeleteClick = (id) => {
-        
-    };
+    const onDeleteClick = () => {};
 
     const handleApprrovereq = async (id, type, data, onSuccess) => {
         const apipayload ={
@@ -66,8 +66,6 @@ export default function index() {
             "idAttendance": id,
             "rejectReason":data
         }
-
-        // console.log(onSuccess);
         const message = type === 'approved' 
         ? 'You have successfully <strong>Approved</strong>!'
         : 'You have successfully <strong>Rejected</strong>!';
@@ -135,6 +133,7 @@ export default function index() {
                     color: '#FF000F',
                 },
             });
+            console.error(error)
             // Handle the error if any
             
         }

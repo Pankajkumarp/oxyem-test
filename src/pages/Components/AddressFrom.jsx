@@ -37,9 +37,9 @@ const components = {
   'CreateSingleSelect': dynamic(() => import('./common/SelectComponent/CreateSingleSelectComponent')),
 };
 
-const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChangeValue, content, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick }) => {
+const CommanForm = ({ fields, handleChangess, handleChangeValue, getleavedetail, submitformdata, getleaveoption, isModule, actionid, handleGetformvalueClick }) => {
   const [errors, setErrors] = useState({});
-  const [errorres, setErrorres] = useState('');
+  const errorres = '';
   const [submitdata, setSubmitdata] = useState({});
   const [formData, setFormData] = useState({});
   const [currentFormData, setCurrentFormData] = useState({});
@@ -57,6 +57,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
 
   useEffect(() => {
     const extractedData = extractFields(fields);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData(extractedData);
   }, [fields]);
 
@@ -69,6 +70,7 @@ const CommanForm = ({ fields, apiurl, handleChangess, Openedsection, handleChang
               return getFieldByName(fieldUpdate, "toDate")
                 .then(toDate => {
                   return getFieldByName(fieldUpdate, "idEmployee")
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     .then(idEmployee => {
                       if (leaveType && fromDate && toDate) {
                         const getvalue = {

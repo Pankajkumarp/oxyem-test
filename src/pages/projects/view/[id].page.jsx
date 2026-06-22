@@ -1,13 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import SecTab from "../../Components/Employee/SecTab";
 import { axiosJWT } from "../../Auth/AddAuthorization.jsx";
 import Breadcrumbs from "../../Components/Breadcrumbs/Breadcrumbs";
 import { useRouter } from "next/router";
 import CompletionBar from "../../Components/CompletionBar.jsx";
-import { FaEdit } from "react-icons/fa";
-import { fetchWithToken } from "../../Auth/fetchWithToken.jsx";
-import { BiComment } from "react-icons/bi";
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FaTimes } from "react-icons/fa";
 import ImportantNotifications from "../../Components/Notifications/ProjectNotifications.jsx"
 import Profile from "../../Components/commancomponents/profile.jsx";
@@ -26,12 +24,11 @@ const Notes = dynamic(
 );
 import { IoArrowBackOutline } from "react-icons/io5";
 
-export default function Projectview({ userFormdata }) {
+export default function Projectview() {
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [getID, setGetID] = useState("");
   const [opportunityId, setOpportunityId] = useState("");
-  const [totalsum, settotalsum] = useState();
   const [projectDetail, setProjectDetail] = useState({});
   const [isApproveOpen, setIsApproveOpen] = useState(false);
 const [approveId, setApproveId] = useState(null);
@@ -40,7 +37,6 @@ const [approveId, setApproveId] = useState(null);
       const [isdelayId, setIsDelayId] = useState("");
     const [isModalOpenDe, setIsModalOpenDe] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-  const { id } = router.query;
   const getProjectValue = async (id) => {
     try {
       const response = await axiosJWT.get(
@@ -53,26 +49,23 @@ const [approveId, setApproveId] = useState(null);
       );
       if (response) {
         const apiResponse = response.data.data;
-        console.log(apiResponse);
         setProjectDetail(apiResponse.projectDetail);
         setTeamMembers(apiResponse.teamMembers);
       }
-    } catch (error) {}
+    } catch (error) {console.error(error)}
   };
-  
+  const { id } = router.query;
   useEffect(() => {
-    const { id } = router.query; // Extract the "id" parameter from the query object
+ // Extract the "id" parameter from the query object
     setGetID(id);
     getProjectValue(id);
-  }, [router.query.id]);
+  }, [id]);
   const handleApproveClick = (id) => {
   setApproveId(id);
   setIsApproveOpen(true);
 };
 
  const handlerdelayvalueClick = async (id) => {
-      console.log("Delay clicked milestone ID:", id);
-
         setIsDelayId(id)
         openDelaypopup()
     }
@@ -182,7 +175,6 @@ const [approveId, setApproveId] = useState(null);
 
  const handleSubmitData = async (data) => {
 const message = 'Milestone delayed updated!';
-console.log(data);
   const formattedDate = data.date
     ? data.date.toISOString().split("T")[0]
     : null;
@@ -194,8 +186,6 @@ console.log(data);
     reason: data.delayreason,
     projectId: getID
   };
-
-  console.log("Delay Payload:", delayPostdata);
 try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await axiosJWT.post(`${apiUrl}/opportunity/updateMilestones`, delayPostdata)
@@ -232,11 +222,6 @@ try {
                 });
             }
         } catch (error) {
-            
-  console.log("Delay API error:", error);
-  console.log("Response:", error?.response);
-  console.log("Message:", error?.message);
-
             const errormessagel = 'Error connecting to the backend. Please try after Sometime.';
             toast.success(({ id }) => (
                 <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
@@ -264,8 +249,7 @@ try {
                     color: '#FF000F',
                 },
             });
-            let resparr = { type: "danger", message: error.message, popup: "recall" }
-            // setResponseData(resparr)
+            console.error(error)
         }
 
     };
@@ -347,7 +331,6 @@ try {
     setTotalCount(count);
   };
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-  const [isHistroyId, setIsHistroyId] = useState("");
   const openNotesModal = async () => {
     setIsNotesModalOpen(true);
   };
@@ -370,7 +353,6 @@ try {
       console.error("Error occurred while fetching attendance details:", error);
     }
   };
-console.log("Notes props:", { isNotesModalOpen });
 
   useEffect(() => {
     const { id } = router.query;
@@ -735,7 +717,7 @@ console.log("Notes props:", { isNotesModalOpen });
                                             </tr>
                                           </thead>
                                           <tbody>
-                                            {documentData.map((file, index) => (
+                                            {documentData.map((file) => (
                                               <tr
                                                 className="bottom_table_line"
                                                 key={file.Id}

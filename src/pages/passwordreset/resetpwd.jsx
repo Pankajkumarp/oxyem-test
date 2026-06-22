@@ -9,7 +9,7 @@ const DynamicForm = dynamic(() => import('../Components/CommanForm.jsx'), {
     ssr: false
 });
 
-import { LoginPageContent as enContent ,logoContent as logoText,copyRightText as footercr, forgotPassword as fpcontent} from '../../common/content_en';
+import {logoContent as logoText} from '../../common/content_en';
 export default function OTP(props) {
 
 	const router = useRouter()
@@ -90,7 +90,7 @@ const handleChangeValue = (fieldName, value) => {
 	setContent(updatedArray);
 };
 
-const submitformdata = async (value) => {
+const submitformdata = async () => {
 	const formattedData = {};
 	const formattedData2 = {};
 	// Convert the data to the required format
@@ -169,7 +169,7 @@ const submitformdata = async (value) => {
                                                                         fields={section}
                                                                         submitformdata={submitformdata}
                                                                         handleChangeValue={handleChangeValue}
-                                                                        handleChangess={() => handleChangess(index)}
+                                                                        handleChangess={}
                                                                         pagename={'passwordreset'}
                                                                         isModule={content.formType}
                                                                     />

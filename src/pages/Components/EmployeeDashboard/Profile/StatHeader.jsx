@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import styles from './ProfileHeader.module.css';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
@@ -23,7 +24,9 @@ export default function StatHeader({ empId }) {
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchStatInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [empId]);
     return (
         <div className="row mb-3 mt-3">

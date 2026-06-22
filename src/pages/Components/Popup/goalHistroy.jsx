@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import { MdClose } from "react-icons/md";
-import { FaRegClock } from "react-icons/fa";
-import { MdOutlineLocationOn } from "react-icons/md";
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
-import moment from 'moment-timezone';
 import Drawer from 'react-modern-drawer'
-import Profile from '../commancomponents/profile';
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
 
-const goalHistroy = ({ isOpen, closeModal, goalNameId }) => {
+const GoalHistroy = ({ isOpen, closeModal, goalNameId }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [performanceValue, setPerformanceValue] = useState([]);
@@ -36,6 +31,7 @@ const goalHistroy = ({ isOpen, closeModal, goalNameId }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       getAttendanceDetails(goalNameId);
       document.body.classList.add("hide-body-scroll");
     } else {
@@ -99,4 +95,4 @@ const goalHistroy = ({ isOpen, closeModal, goalNameId }) => {
   );
 };
 
-export default goalHistroy;
+export default GoalHistroy;

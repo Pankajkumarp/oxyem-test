@@ -18,6 +18,7 @@ export default function User({userFormdata}) {
 
     const [content, setContent] = useState(initialContent);
 
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
 
@@ -44,7 +45,7 @@ export default function User({userFormdata}) {
 
   
 const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
-    const submitformdata = async (value) => {
+    const submitformdata = async () => {
       const formattedData = {};
 setSubmitButtonLoading(true);
       // Convert the data to the required format

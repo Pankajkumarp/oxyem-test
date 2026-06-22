@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaAnglesLeft, FaAnglesRight, FaAngleRight, FaAngleLeft } from "react-icons/fa6";
@@ -9,7 +11,6 @@ const RoleAssignment = ({ documentType, onChange, value, availableOption }) => {
   const [selectedItemIds, setSelectedItemIds] = useState([]);
   const [availableSearchTerm, setAvailableSearchTerm] = useState('');
   const [assignedSearchTerm, setAssignedSearchTerm] = useState('');
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (Array.isArray(value)) {
@@ -24,6 +25,7 @@ const RoleAssignment = ({ documentType, onChange, value, availableOption }) => {
       setAvailableItems(availableOption);
     } else {
       setAvailableItems([]);
+      // eslint-disable-next-line react-hooks/immutability
       fetchOptions();
     }
   }, [availableOption]);
@@ -41,8 +43,7 @@ const RoleAssignment = ({ documentType, onChange, value, availableOption }) => {
       }));
       setAvailableItems(optionsData);
     } catch (error) {
-      console.error('Error fetching options:', error);
-      setError(error.message || 'Failed to fetch options');
+      console.error(error)
     }
   };
 

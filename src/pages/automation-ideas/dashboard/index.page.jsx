@@ -28,9 +28,7 @@ export default function Index() {
   const onViewClick = (id) => {
     router.push(`/automation-ideas/view/${id}`);
   };
-  const onDeleteClick = (id) => {
-    // Delete action implementation
-  };
+  const onDeleteClick = () => {};
   const closeDetailpopup = async () => {
     setIsModalOpen(false)
   }
@@ -39,6 +37,7 @@ export default function Index() {
   }
   // 📊 Chart States
   const [isIdeaChartOpen, setIsIdeaChartOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchfilter, setSearchfilter] = useState({});
   const [activeStatus, setActiveStatus] = useState(null);
   const [ideaTypeBarChartData, setIdeaTypeBarChartData] = useState();
@@ -201,7 +200,6 @@ export default function Index() {
       setSearchfilter({});
       setActiveStatus(null);
     } else {
-      let filter = {};
       switch (filterKey) {
         case "All":
           setSearchfilter({});

@@ -1,15 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { axiosJWT } from '../Auth/AddAuthorization.jsx';
 import { useRouter } from 'next/router';
 import CustomDataTable from '../Components/Datatable/tablewithApi.jsx';
-import { Toaster, toast } from 'react-hot-toast';
 import View from '../Components/Popup/BasketofAllowance';
 import Topdata from './topdata.jsx';
 
 export default function DataTable({ empID, section }) {
   const router = useRouter();
-  const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-  const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [salaryStructue, setSalaryStructue] = useState([]);
   const [allocationInfo, setallocationInfo] = useState([]);
@@ -51,7 +49,7 @@ export default function DataTable({ empID, section }) {
         
       }
     } catch (error) {
-      
+      console.error(error)
     } finally {
       setLoading(false);
     }

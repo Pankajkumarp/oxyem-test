@@ -21,28 +21,10 @@ const iconMap = {
     weeklyOff: <FaCalendarAlt />,
 };
 
-const convertUtcToLocalTime = (
-    utcDateTime: string,
-    timeZone: string
-) => {
-    if (!utcDateTime) return null;
-
-    try {
-        return moment
-            .utc(utcDateTime)
-            .tz(timeZone)
-            .toDate();
-    } catch (error) {
-        return null;
-    }
-};
-const getCurrentTimeZone = () => {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
 export default function QuickInfo({ empInfoData }) {
-    const timeZone = getCurrentTimeZone();
     const [quickInfoData, setQuickInfoData] = useState(null);
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setQuickInfoData(empInfoData)
     }, [empInfoData]);
     return (
@@ -102,7 +84,7 @@ export default function QuickInfo({ empInfoData }) {
                     <div className={`${styles.sectionCard} mt-3`}>
                         <h6 className={styles.sectionTitle}>
                             <FaClipboardList className="me-2" />
-                            Today's Attendance
+                            Today&apos;s Attendance
                         </h6>
 
                         <div className="row g-3 text-center">

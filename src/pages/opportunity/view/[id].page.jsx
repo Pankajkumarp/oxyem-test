@@ -18,7 +18,7 @@ const Notes = dynamic(() => import('../../Components/Popup/Notes'), {
     ssr: false
 });
 
-export default function opportunity() {
+export default function OpportunityViewId() {
 
     const router = useRouter();
     const [showPopup, setShowPopup] = useState(false);
@@ -62,12 +62,13 @@ export default function opportunity() {
                 }
             }
         } catch (error) {
-
+            console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchOpportunityInfo(id);
         setOpportunityId(id)
     }, [id]);

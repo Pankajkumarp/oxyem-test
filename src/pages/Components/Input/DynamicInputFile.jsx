@@ -1,5 +1,4 @@
 // components/DynamicInput.js
-import { useState } from 'react';
 
 const DynamicInput = ({inputType,label,  name,classname, onChange , labelclass,htmlFor, value, onBlur}) => {
     

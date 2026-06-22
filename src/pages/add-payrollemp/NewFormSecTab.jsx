@@ -6,14 +6,13 @@ const DynamicForm = dynamic(() => import('./NewFormField.jsx'), {
 });
 import { Tooltip } from 'react-tooltip';
 
-export default function NewFormSecTab({ AdduserContent, headingContent, getleavedetail, handlesubmitApiData, getsubmitformdata, getleaveoption, getsubmitformdatapreview, actionid, handleBTPformvalue, pagename, showButton, converttoenable, showleave, getChangessField, tdsAmount, salaryAmount, previewData ,tdsoveridevalue ,pageedit }) {
+export default function NewFormSecTab({ AdduserContent, headingContent, getleavedetail, getsubmitformdata, getleaveoption, getsubmitformdatapreview, actionid, handleBTPformvalue, pagename, showButton, showleave, getChangessField, tdsAmount, salaryAmount, previewData ,tdsoveridevalue ,pageedit }) {
   const apiUrl = "";
   const [content, setContent] = useState(AdduserContent);
   const [activeTab, setActiveTab] = useState(AdduserContent.section[0].SectionName);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false); // New state to track form submission
   const hasMultipleSections = Array.isArray(content.section) && content.section.length > 1;
 
-  const sectionname = AdduserContent.section[0].name;
 
   const handleTabClick = (tab) => {
     if (tab !== 'Preview' || isFormSubmitted) { // Prevent switching to the preview tab if not submitted
@@ -58,6 +57,7 @@ export default function NewFormSecTab({ AdduserContent, headingContent, getleave
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent(AdduserContent);
   }, [AdduserContent]);
 
@@ -110,6 +110,7 @@ export default function NewFormSecTab({ AdduserContent, headingContent, getleave
     try {
         updateFormData(value);
     } catch (error) {
+      console.error(error)
     }
 };
 
@@ -142,7 +143,6 @@ const updateFormData = (data) => {
 };
 
   const submitformdata = (value, currentIndex) => {
-    console.log(value);
     const newArray = convertToArray(AdduserContent);
     handelUpdateFormData(value);
     getsubmitformdata(newArray, value);

@@ -1,37 +1,23 @@
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react'
 import MUIDataTable from "mui-datatables";
-import { FaEdit } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { SlActionUndo } from "react-icons/sl";
-import { FaWindowMinimize } from "react-icons/fa";
 import Recall from '../Popup/Recallmodal';
 import Profile from '../commancomponents/profile';
-import axios from "axios";
 import { GrTooltip } from "react-icons/gr";
 import { Tooltip } from 'react-tooltip'
 import { FiEdit } from "react-icons/fi";
 import { GoHistory } from "react-icons/go";
 import { IoRefreshSharp } from "react-icons/io5";
 import RejectPopup from '../Popup/Rejectmodal';
-export default function table({ title, data, columnsdata, ismodule, handleGetvalueClick, onEditClick, onSubmitClick, responseData, onDeleteClick ,onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick }) {
+export default function Table({ title, data, columnsdata, ismodule, onEditClick, onSubmitClick, responseData, onDeleteClick ,onViewClick, onHistoryClick, handleApprrovereq, handlerecallvalueClick }) {
   
-  
-  const router = useRouter();
-  const basepath = process.env.NEXT_PUBLIC_WEBSITE_BASE_URL;
-  const [formRecallData, setFormRecallData] = useState({});
-  const [idLeave, setIdLeave] = useState("");
-  const [recallmessage, setRecallMessage] = useState('');
   const [respdata, setRespdata] = useState("");
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [recallmessageType, setRecallMessageType] = useState('');
-  const [validationError, setValidationError] = useState('');
+  const validationError = '';
   const transformedData = data.map(item => item.map(subItem => subItem.value));
-  const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   
   
    const [selectedIds, setSelectedIds] = useState([]);
@@ -52,7 +38,7 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
       selectedIds, 
       purpose, 
       data,
-      (successMessage) => {
+      () => {
           // Handle success message
           setSelectedIds([])
       }
@@ -65,7 +51,7 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
       selectedIds, 
       purpose, 
 	  data,
-      (successMessage) => {
+      () => {
           // Handle success message
           setSelectedIds([])
       }
@@ -83,14 +69,17 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
 
   useEffect(() => {
     if (responseData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRespdata(responseData)
       setMessageType(respdata.type)
       setMessage(respdata.message)
       if (messageType == "success" && responseData.popup == "recall") {
+        // eslint-disable-next-line react-hooks/immutability
         setisModalOpenrecall(false);
 
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData]);
   const options = {
     responsive: "standard",
@@ -132,11 +121,9 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
         className
       };
     },
-    onChangePage(currentPage) {
-      //console.log({currentPage});
+    onChangePage() {
     },
-    onChangeRowsPerPage(numberOfRows) {
-      // console.log({numberOfRows});
+    onChangeRowsPerPage() {
     },
     onDownload: (buildHead, buildBody, columns, data) => {
       // Columns to exclude
@@ -153,115 +140,7 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
       return buildHead(filteredColumns) + buildBody(filteredData);
     },
   };
-  const config = {
-    headers: {
-      'Authorization': token
-    }
-  };
 
-
-  const renderMark = (value) => {
-    if (value === "Active") {
-      return <span className='oxyem-mark-active'>{value}</span>;
-    } else if (value === "InActive") {
-      return <span className='oxyem-mark-inactive'>{value}</span>;
-    } else if (value === "submitted") {
-      return <span className='oxyem-mark-pending'>{value}</span>;
-    } else {
-      return null;
-    }
-  };
-  const renderTooltipText = (value) => {
-    const maxLength = 35;
-    const truncatedValue = value.length > maxLength ? value.substring(0, maxLength) + '...' : value;
-
-    return (
-      <div className='oxyem-tooltip-text'>
-        {value}
-
-        <Tooltip id="my-tooltip-table-text" type='dark' effect='solid' style={{ width: '40%', zIndex: '999' }} />
-      </div>
-    );
-  };
-  const renderButtonEdit = (value, tableMeta, updateValue) => {
-    return (
-      <>
-        <button className='oxyem-without-btn oxyem-mark-edit' onClick={() => handleRowEditClick(tableMeta.rowData, value, updateValue)}>
-          <FaEdit />
-        </button>
-      </>
-    );
-  };
-  const renderButtonView = (value, tableMeta, updateValue) => {
-
-    return (
-      <>
-        <button className='oxyem-without-btn oxyem-mark-view' onClick={() => handleRowClick(tableMeta.rowData)}>
-          <FaRegEye />
-        </button>
-      </>
-    );
-  };
-
-  const renderButtonrecall = (value, tableMeta, updateValue) => {
-    return (
-      <>
-        <button className='oxyem-without-btn oxyem-mark-recall' onClick={() => handleRowrecallClick(tableMeta.rowData, value)}>
-          <SlActionUndo />
-        </button>
-      </>
-    );
-  };
-  const renderButton = (value, tableMeta, updateValue) => {
-    return (
-      <>
-        <button className='oxyem-without-btn oxyem-mark-edit' onClick={() => handleRowClick(tableMeta.rowData)}>
-          <FaEdit />
-        </button>
-        <button className='oxyem-without-btn oxyem-mark-view' onClick={() => handleRowClick(tableMeta.rowData)}>
-          <FaRegEye />
-        </button>
-        <button className='oxyem-without-btn oxyem-mark-delete' onClick={() => handleRowClick(tableMeta.rowData)}>
-          <RiDeleteBinLine />
-        </button>
-      </>
-    );
-  };
-  const renderDropdata = (value, tableMeta, updateValue) => {
-    return (
-      <>
-        <span className='oxyem-without-btn oxyem-mark-delete' onClick={() => handleRowDropClick(tableMeta, value, updateValue)}>
-          <RiDeleteBinLine />
-        </span>
-      </>
-    );
-  };
-  const renderButtonDelete = (value, tableMeta, updateValue) => {
-    return (
-      <>
-        <button className='oxyem-without-btn oxyem-mark-delete' onClick={() => handleRowClick(tableMeta.rowData)}>
-          <RiDeleteBinLine />
-        </button>
-      </>
-    );
-  };
-  const handleRowDropClick = (value, tableMeta, updateValue) => {
-    const rowIndex = value.rowIndex;
-
-    if (rowIndex >= 0 && rowIndex < data.length) {
-      const rowData = data[rowIndex];
-      const profileData = rowData.find(item => item.name === 'SrNo.');
-
-      if (profileData) {
-        handleGetvalueClick(profileData.value)
-
-      } else {
-        // console.log("No 'SrNo.' field found in the row data");
-      }
-    } else {
-      // console.log("Invalid row index");
-    }
-  };
   const renderActionButtons = (value, tableMeta, updateValue) => {
     if (!Array.isArray(value)) {
       return null;
@@ -313,7 +192,7 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
   const renderStatus = (value) => {
     return <span className={`oxyem-mark-${value}`}>{value}</span>;
   };
-  const rendercustomProfile = (value, tableMeta, updateValue) => {
+  const rendercustomProfile = (value, tableMeta) => {
     const rowIndex = tableMeta.rowIndex;
     const profileData = data[rowIndex].find(item => item.name === 'Name' || item.name === 'idEmployee' || item.name === 'projectName');
     
@@ -327,7 +206,7 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
     );
   };
 
-  const rendercustomProfileUserList = (value, tableMeta, updateValue) => {
+  const rendercustomProfileUserList = (value, tableMeta) => {
     const rowIndex = tableMeta.rowIndex;
     const profileData = data[rowIndex].find(item => item.name === 'empName');
   
@@ -378,7 +257,7 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
     }
   }));
   
-  const handleRowClick = (data, value, updatedvalue) => {
+  const handleRowClick = (data) => {
     let id = data[1] 
     if(ismodule === "leave"){
       onHistoryClick(id)
@@ -389,19 +268,19 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
   };
 
 
-  const handleRowEditClick = async (data, value, updatedvalue) => {
+  const handleRowEditClick = async (data) => {
     let id = data[1]
     onEditClick(id)
 
   };
 
-  const handleRowHistoryClick = async (data, value, updatedvalue) => {
+  const handleRowHistoryClick = async (data) => {
     let id = data[1]
     onHistoryClick(id)
 
   };
 
-  const handleRowDeleteClick = async (data, value, updatedvalue) => {
+  const handleRowDeleteClick = async (data) => {
     let id = data[1]
     let name = data[2]
     onDeleteClick(id, name)
@@ -411,10 +290,9 @@ export default function table({ title, data, columnsdata, ismodule, handleGetval
   const [isModalOpenrecall, setisModalOpenrecall] = useState(false);
 
 
-  const handleRowrecallClick = (data, value) => {
+  const handleRowrecallClick = (data) => {
     let id = data[1]
     handlerecallvalueClick(id)
-    setIdLeave(value);
 
   };
   const closeModalrecallModal = () => {

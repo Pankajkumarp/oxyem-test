@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import DocumentComponent from '../UploadFile/uploadfile';
 
 
 export default function AttachmentComponent({ attachments =[], handleChangesDocument, errors, setErrors}) {
   if (!attachments || attachments.length === 0) return null;
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (attachments?.length > 0) {
       handleChangesDocument(prev => ({

@@ -22,6 +22,7 @@ export default function Holiday({ leaveFormdata, errorMessage, previousUrl }) {
 
   useEffect(() => {
     const { id } = router.query;
+    // eslint-disable-next-line react-hooks/immutability
     fetchInfo(id);
   }, [router.query.id]);
 
@@ -148,7 +149,7 @@ export async function getServerSideProps(context) {
       leaveFormdata = response.data.data;
     }
   } catch (error) {
-
+console.error(error)
   }
 
   return {

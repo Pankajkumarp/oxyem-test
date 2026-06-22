@@ -9,6 +9,7 @@ export default function PasswordComponent({ label, placeholder, isDisabled, page
  const [textData, settextData] = useState(value);
   useEffect(() => {
     // Synchronize internal state with props
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     settextData(value);
   }, [value]);
   const handleInputChange = (e) => {

@@ -62,11 +62,11 @@ export default function VerifyClaimPage({ claimDetails, claimAdmin, claimid, han
 
     let totalClaims = formdata.length;
     let paidCount = 0;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let rejectedCount = 0;
     let pendingCount = 0;
     formdata.forEach(row => {
         const status = getFieldValue(row, 'status')?.toLowerCase();
-        const amountRaw = getFieldValue(row, 'amount');
 
         // Paid
         if (status === 'paid') {
@@ -133,7 +133,7 @@ export default function VerifyClaimPage({ claimDetails, claimAdmin, claimid, han
         }
         handleSubmit(payload)
     };
-    const validateRecallForm = (actionType) => {
+    const validateRecallForm = () => {
         const newErrors = {};
 
         // Comment required for ALL actions
@@ -344,7 +344,7 @@ export default function VerifyClaimPage({ claimDetails, claimAdmin, claimid, han
                                                                             },
                                                                             backgroundColor: state.isFocused ? 'var(--dropdownfocusbgcolor)' : provided.backgroundColor,
                                                                         }),
-                                                                        indicatorSeparator: (provided, state) => ({
+                                                                        indicatorSeparator: (provided) => ({
                                                                             ...provided,
                                                                             backgroundColor: 'var(--dropdownhoverbg)',
                                                                             fontWeight: 'var(--dropdownfontweight)',
@@ -560,17 +560,17 @@ export default function VerifyClaimPage({ claimDetails, claimAdmin, claimid, han
 
                                 <ul className="list-unstyled ps-1">
                                     <li className="mb-2">
-                                        <span className="li-icon">✅</span> <span class="li-text"><b>Submit original, legible receipts </b>showing vendor name, date, and amount.</span>
+                                        <span className="li-icon">✅</span> <span className="li-text"><b>Submit original, legible receipts </b>showing vendor name, date, and amount.</span>
                                     </li>
                                     <li className="mb-2">
-                                        <span className="li-icon">✅</span> <span class="li-text"><b>Claim only eligible expenses </b>as per company policy and approved categories.</span>
+                                        <span className="li-icon">✅</span> <span className="li-text"><b>Claim only eligible expenses </b>as per company policy and approved categories.</span>
                                     </li>
                                     <li className="mb-2">
-                                        <span className="li-icon">✅</span> <span class="li-text"><b>Submit claims within the allowed period </b>from the expense date.</span>
+                                        <span className="li-icon">✅</span> <span className="li-text"><b>Submit claims within the allowed period </b>from the expense date.</span>
                                     </li>
 
                                     <li className="mb-2">
-                                        <span className="li-icon">✅</span> <span class="li-text"><b>Duplicate or split claims are strictly prohibited</b> and will be rejected.</span>
+                                        <span className="li-icon">✅</span> <span className="li-text"><b>Duplicate or split claims are strictly prohibited</b> and will be rejected.</span>
                                     </li>
                                 </ul>
 

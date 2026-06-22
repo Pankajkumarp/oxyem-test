@@ -36,16 +36,19 @@ export default function AssetInfo({ isOpen, closeModal, isHistroyId }) {
                 setActiveTab(tabs[0]?.value || null);
             }
         } catch (error) {
+            console.error(error)
         }
     };
 
     useEffect(() => {
         if (isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             getDetails(isHistroyId);
             document.body.classList.add("hide-body-scroll");
         } else {
             document.body.classList.remove("hide-body-scroll");
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, isHistroyId]);
 
     const handleDownload = async (path) => {
@@ -68,6 +71,7 @@ export default function AssetInfo({ isOpen, closeModal, isHistroyId }) {
             link.click();
     
         } catch (error) {
+            console.error(error)
         }
     };
 

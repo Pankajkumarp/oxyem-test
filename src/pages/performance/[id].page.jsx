@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import Breadcrumbs from '../Components/Breadcrumbs/Breadcrumbs';
 import dynamic from 'next/dynamic';
@@ -6,11 +5,9 @@ import { axiosJWT } from '../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
 import { useRouter } from 'next/router'
 import Head from 'next/head';
-import axios from 'axios';
 import AddPerformance from '../Components/Popup/AddPerformance';
 import FieldRenderer from './FieldRenderer.jsx';
 import StatusComponent from './StatusInput.jsx';
-import { FaCircleChevronUp, FaCircleChevronDown } from "react-icons/fa6";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { Tooltip } from 'react-tooltip'
 import CryptoJS from 'crypto-js';
@@ -26,11 +23,10 @@ import { fetchWithToken } from '../Auth/fetchWithToken.jsx';
 import { FaAward } from 'react-icons/fa';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaRegCheckCircle } from "react-icons/fa";
-export default function opportunity({ userFormdata }) {
+export default function Opportunity({ userFormdata }) {
     const [goalCount, setGoalCount] = useState({});
 
     const [listheader, setListHeaders] = useState([]);
-    const baseImageUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
     const router = useRouter();
     const [formvalue, setFormvalue] = useState(userFormdata);
     const [activeTab, setActiveTab] = useState(formvalue.section[0].SectionName);
@@ -45,11 +41,13 @@ export default function opportunity({ userFormdata }) {
     useEffect(() => {
         const { id } = router.query;
         if (id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setPerformanceId(id);
         }
     }, [router.query.id]);
     useEffect(() => {
         if (!tabArray.includes(activeTab) && activeTab !== null) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTabArray((prevTabArray) => [...prevTabArray, activeTab]);
         }
     }, [activeTab]);
@@ -86,15 +84,13 @@ export default function opportunity({ userFormdata }) {
     };
 
 
-    const handleAddRowData = async (sectionName) => {
+    const handleAddRowData = async () => {
         setIsModalOpen(true)
     };
 
 
-    const [activeMainTab, setActiveMainTab] = useState("active");
-    const handleMainTabClick = (index) => {
-        setActiveMainTab(index);
-    };
+    const activeMainTab = "active";
+
     const [isFormShow, setisFormShow] = useState(false);
     const [statusValue, setstatusValue] = useState("");
     const [formRenderValue, setFormRenderValue] = useState("");
@@ -119,6 +115,7 @@ export default function opportunity({ userFormdata }) {
                 }
             }
         } catch (error) {
+            console.error(error)
         }
     };
     const [userName, setUserName] = useState("");
@@ -128,6 +125,7 @@ export default function opportunity({ userFormdata }) {
         if (encryptedEmployeeNameg) {
             const bytes = CryptoJS.AES.decrypt(encryptedEmployeeNameg, secretKey);
             const decryptedEmployeeName = bytes.toString(CryptoJS.enc.Utf8);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setUserName(decryptedEmployeeName)
         }
     }, []);
@@ -143,10 +141,10 @@ export default function opportunity({ userFormdata }) {
                 const responseData = response.data.data
                 setGoalCount(responseData)
             }
-        } catch (error) {
-        }
+        } catch (error) {console.error(error)}
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchInitiatePerformData();
         fetchGoalUseData()
         const mainElement = document.querySelector('body');
@@ -298,9 +296,11 @@ export default function opportunity({ userFormdata }) {
                 }
             }
         } catch (error) {
+            console.error(error)
         }
     };
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setisFormShowIs(false)
         fetchgoalData(activeTab)
     }, [activeTab]);
@@ -318,7 +318,7 @@ export default function opportunity({ userFormdata }) {
             fetchInitiatePerformData();
         }
     };
-    const handleAddRowDataClose = async (sectionName) => {
+    const handleAddRowDataClose = async () => {
         fetchgoalData(activeTab)
         setIsModalOpen(false)
     };
@@ -379,6 +379,7 @@ export default function opportunity({ userFormdata }) {
                         .Subsection[subsectionIndex]
                         .fields[fieldIndex];
                     if (fieldName === 'filePaths' && field.filePaths) {
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                         field.filePaths.value = [...responseData, ...field.filePaths.value],
                             field.filePaths.loader = "uploaded"
 
@@ -632,12 +633,13 @@ export default function opportunity({ userFormdata }) {
                 setListHeaders(listheader);
             }
         } catch (error) {
-
+           console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData(id);
     }, []);
 

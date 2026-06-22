@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import MUIDataTable from "mui-datatables";
-import Select from 'react-select';
 import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbsdiscription';
-import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization';
 import { Toaster, toast } from 'react-hot-toast';
 import { useRouter } from 'next/router'
-import { FaTimes } from "react-icons/fa";
-import { FaRegCheckCircle} from "react-icons/fa";
+import { FaRegCheckCircle, FaTimes } from "react-icons/fa";
 import { MdPlaylistAddCheck } from "react-icons/md";
 import Head from 'next/head';
-export default function employeeTimeSheet({ userFormdata }) {  // Default to empty array if not provided
+import Image from 'next/image'
+export default function EmployeeTimeSheet() {  // Default to empty array if not provided
   const router = useRouter();
 
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-  const [datevalue, setDatevalue] = useState("");
-  const [dateoption, setDateOptions] = useState([]);
   const [sectionButton, setSectionButton] = useState([]);
-  const [idTimesheet, setidTimesheet] = useState("");
+  const { id } = router.query;
+  const idTimesheet = id;
 
 
 
@@ -28,274 +24,290 @@ export default function employeeTimeSheet({ userFormdata }) {  // Default to emp
 
   const transformedData = fillterData.map(item => item.map(subItem => subItem.value));
 
-  const fetchtabledata = async (value) => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await axiosJWT.get(`${apiUrl}/timesheet/getApprovalViewDtls`, {
-        params: {
-          id: value, 
-		  isFor:"pending",
-        }
-      });
-      if (response) {
-        const data = response.data.data.data;
-        const button = response.data.data.button ?response.data.data.button: [];
-        setSectionButton(button)
-        const tableHeaders = [
-          { name: "idTaskProject", label: "idTaskProject", isfilter: true, issort: false },
-          { name: "idTaskSubmission", label: "idTaskSubmission", isfilter: true, issort: false },
-          { name: "startDate", label: "startDate", isfilter: true, issort: false },
-          { name: "endDate", label: "endDate", isfilter: true, issort: false },
-          { name: "sn", label: "S.N", isfilter: true, issort: true },
-          { name: "projectName", label: "Project Name", isfilter: true, issort: false },
-          { name: "taskName", label: "Task Name", isfilter: false, issort: false },
-          { name: "percentageAllocation", label: "%", isfilter: false, issort: false },
-        ];
 
-        if (data.length > 0) {
-          const firstTask = data[0];
-
-          // Map `taskAssignedDays` from the first task
-          firstTask.taskAssignedDays.forEach(day => {
-            tableHeaders.push({
-              name: day.date,
-              label: day.dateWithWeekName,
-              isfilter: false,
-              issort: false
-            });
-          });
-        }
-
-        // Add remaining headers
-        const additionalHeaders = [
-          { name: "totalEffortsSubmitted", label: "Total Effort", isfilter: true, issort: false },
-          { name: "totalEffortsAllocated", label: "Alloc Effort", isfilter: true, issort: false },
-          { name: "remainEffortsAllocated", label: "Pending Effort", isfilter: true, issort: false }
-        ];
-
-        tableHeaders.push(...additionalHeaders);
-        setFilltercolums(tableHeaders);
-
-        const formattedData = data.map((task, index) => {
-
-          // Calculate total effort
-          const totalEffort = task.taskAssignedDays.reduce((sum, day) => sum + parseFloat(day.effort), 0);
-          const remainingEffort = task.totalEffortsAllocated - totalEffort;
-
-          // Format taskAssignedDays
-          const formattedDays = task.taskAssignedDays.map(day => ({
-            name: day.date,
-            isFreezable: day.isFreezable,
-            maxEffortsCurrentDay: day.maxEffortsCurrentDay,
-            value: day.effort.toString(),
-            type: "taskAssignedDays"
-          }));
-
-          return [
-            { name: "idTaskProject", value: task.idTaskProject },
-            { name: "idTaskSubmission", value: task.idTaskSubmission ? task.idTaskSubmission : "" },
-            { name: "startDate", value: task.startDate },
-            { name: "endDate", value: task.endDate },
-            { name: "sn", value: (index + 1).toString() },
-            { name: "projectName", value: task.projectName },
-            { name: "TaskName", value: task.taskName },
-            { name: "percentageAllocation", value: task.taskPercentage },
-            ...formattedDays,
-            { name: "totalEffortsSubmitted", value: totalEffort.toString() },
-            { name: "totalEffortsAllocated", value: task.totalEffortsAllocated.toString() },
-            { name: "remainEffortsAllocated", value: remainingEffort.toString() }
-          ];
-        });
-
-        const result = [];
-
-        // Get all unique names
-        const names = [...new Set(formattedData.flatMap(item => item.map(innerItem => innerItem.name)))];
-
-        // Calculate the sum for each name
-        names.forEach(name => {
-          const sum = formattedData.flatMap(item => item.filter(innerItem => innerItem.name === name)).reduce((acc, current) => acc + parseFloat(current.value), 0);
-          result.push({ name, value: sum.toString() });
-        });
-
-        const totalresult = names.map(name => {
-          if (name === "idTaskProject" || name === "sn" || name === "projectName" || name === "TaskName" || name === "idTaskSubmission" || name === "startDate" || name === "endDate") {
-            return { name, value: "Total" };
-          } else {
-            const sum = formattedData.flatMap(item => item.filter(innerItem => innerItem.name === name)).reduce((acc, current) => acc + parseFloat(current.value), 0);
-            return { name, value: sum.toString() };
-          }
-        });
-        const mergedResult = [...formattedData, totalresult];
-        
-        setFillterData(mergedResult)
-      }
-    } catch (error) {
-      console.error('Error fetching options:', error);
-    }
-  };
 
 
   useEffect(() => {
-    if (router.query.id) {
-    fetchtabledata(router.query.id);
-    setidTimesheet(router.query.id)
+    if (id) {
+      const fetchtabledata = async (value) => {
+        try {
+          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await axiosJWT.get(`${apiUrl}/timesheet/getApprovalViewDtls`, {
+            params: {
+              id: value,
+              isFor: "pending",
+            }
+          });
+          if (response) {
+            const data = response.data.data.data;
+            const button = response.data.data.button ? response.data.data.button : [];
+            setSectionButton(button)
+            const tableHeaders = [
+              { name: "idTaskProject", label: "idTaskProject", isfilter: true, issort: false },
+              { name: "idTaskSubmission", label: "idTaskSubmission", isfilter: true, issort: false },
+              { name: "startDate", label: "startDate", isfilter: true, issort: false },
+              { name: "endDate", label: "endDate", isfilter: true, issort: false },
+              { name: "sn", label: "S.N", isfilter: true, issort: true },
+              { name: "projectName", label: "Project Name", isfilter: true, issort: false },
+              { name: "taskName", label: "Task Name", isfilter: false, issort: false },
+              { name: "percentageAllocation", label: "%", isfilter: false, issort: false },
+            ];
+
+            if (data.length > 0) {
+              const firstTask = data[0];
+
+              // Map `taskAssignedDays` from the first task
+              firstTask.taskAssignedDays.forEach(day => {
+                tableHeaders.push({
+                  name: day.date,
+                  label: day.dateWithWeekName,
+                  isfilter: false,
+                  issort: false
+                });
+              });
+            }
+
+            // Add remaining headers
+            const additionalHeaders = [
+              { name: "totalEffortsSubmitted", label: "Total Effort", isfilter: true, issort: false },
+              { name: "totalEffortsAllocated", label: "Alloc Effort", isfilter: true, issort: false },
+              { name: "remainEffortsAllocated", label: "Pending Effort", isfilter: true, issort: false }
+            ];
+
+            tableHeaders.push(...additionalHeaders);
+            setFilltercolums(tableHeaders);
+
+            const formattedData = data.map((task, index) => {
+
+              // Calculate total effort
+              const totalEffort = task.taskAssignedDays.reduce((sum, day) => sum + Number.parseFloat(day.effort), 0);
+              const remainingEffort = task.totalEffortsAllocated - totalEffort;
+
+              // Format taskAssignedDays
+              const formattedDays = task.taskAssignedDays.map(day => ({
+                name: day.date,
+                isFreezable: day.isFreezable,
+                maxEffortsCurrentDay: day.maxEffortsCurrentDay,
+                value: day.effort.toString(),
+                type: "taskAssignedDays"
+              }));
+
+              return [
+                { name: "idTaskProject", value: task.idTaskProject },
+                { name: "idTaskSubmission", value: task.idTaskSubmission ? task.idTaskSubmission : "" },
+                { name: "startDate", value: task.startDate },
+                { name: "endDate", value: task.endDate },
+                { name: "sn", value: (index + 1).toString() },
+                { name: "projectName", value: task.projectName },
+                { name: "TaskName", value: task.taskName },
+                { name: "percentageAllocation", value: task.taskPercentage },
+                ...formattedDays,
+                { name: "totalEffortsSubmitted", value: totalEffort.toString() },
+                { name: "totalEffortsAllocated", value: task.totalEffortsAllocated.toString() },
+                { name: "remainEffortsAllocated", value: remainingEffort.toString() }
+              ];
+            });
+
+            const result = [];
+
+            // Get all unique names
+            const names = [...new Set(formattedData.flatMap(item => item.map(innerItem => innerItem.name)))];
+
+            // Calculate the sum for each name
+            names.forEach(name => {
+              const sum = formattedData.flatMap(item => item.filter(innerItem => innerItem.name === name)).reduce((acc, current) => acc + parseFloat(current.value), 0);
+              result.push({ name, value: sum.toString() });
+            });
+
+            const totalresult = names.map(name => {
+              if (name === "idTaskProject" || name === "sn" || name === "projectName" || name === "TaskName" || name === "idTaskSubmission" || name === "startDate" || name === "endDate") {
+                return { name, value: "Total" };
+              } else {
+                const sum = formattedData.flatMap(item => item.filter(innerItem => innerItem.name === name)).reduce((acc, current) => acc + parseFloat(current.value), 0);
+                return { name, value: sum.toString() };
+              }
+            });
+            const mergedResult = [...formattedData, totalresult];
+
+            setFillterData(mergedResult)
+          }
+        } catch (error) {
+          console.error('Error fetching options:', error);
+        }
+      };
+      fetchtabledata(id);
     }
-  }, [router.query.id]);
+  }, [id]);
 
   const handleDataCancel = () => {
     router.push(`/timesheet/approve`);
   };
   const handleDataApprove = async () => {
 
-    const payload= {
-      "status":"approved",
+    const payload = {
+      "status": "approved",
       "idTimesheet": [idTimesheet]
     }
     const message = "You have successfully <strong>Approved</strong> Timesheet!"
     const errormessage = 'Error connecting to the backend. Please try after Sometime.';
     try {
-        const response = await axiosJWT.post(`${apiUrl}/timesheet/approval`, payload);
-        // Handle the response if needed
-        if (response) {
-            toast.success(({ id }) => (
-                <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                    <img src='/assets/img/proposal-icon.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
-                    <span dangerouslySetInnerHTML={{ __html: message }}></span>
-                    <button
-                        onClick={() => toast.dismiss(id)}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            color: '#4caf50',
-                            marginLeft: 'auto',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        <FaTimes />
-                    </button>
-                </div>
-            ), {
-                icon: null, // Disable default icon
-                duration: 7000,
-                style: {
-                    border: '1px solid #4caf50',
-                    padding: '8px',
-                    color: '#4caf50',
-                },
-            });
-            
-           setTimeout(() => {
-					router.push(`/timesheet/approve`);
-			}, 3000);
-        }
-
-    } catch (error) {
-        toast.success(({ id }) => (
-            <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
-                <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
-                <button
-                    onClick={() => toast.dismiss(id)}
-                    style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#FF000F',
-                        marginLeft: 'auto',
-                        cursor: 'pointer'
-                    }}
-                >
-                    <FaTimes />
-                </button>
-            </div>
-        ), {
-            icon: null, // Disable default icon
-            duration: 7000,
-            style: {
-                border: '1px solid #FF000F',
-                padding: '8px',
-                color: '#FF000F',
-            },
-        });
-        // Handle the error if any
-        console.error("Error occurred:", error);
-    }
-}
-const handleDataReject = async () => {
-
-  const payload= {
-    "status":"rejected",
-    "idTimesheet": [idTimesheet]
-  }
-  const message = "You have successfully <strong>Rejected</strong> Timesheet!"
-  const errormessage = 'Error connecting to the backend. Please try after Sometime.';
-  try {
       const response = await axiosJWT.post(`${apiUrl}/timesheet/approval`, payload);
       // Handle the response if needed
       if (response) {
-          toast.success(({ id }) => (
-              <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-                  <img src='/assets/img/proposal-icon.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
-                  <span dangerouslySetInnerHTML={{ __html: message }}></span>
-                  <button
-                      onClick={() => toast.dismiss(id)}
-                      style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#4caf50',
-                          marginLeft: 'auto',
-                          cursor: 'pointer'
-                      }}
-                  >
-                      <FaTimes />
-                  </button>
-              </div>
-          ), {
-              icon: null, // Disable default icon
-              duration: 7000,
-              style: {
-                  border: '1px solid #4caf50',
-                  padding: '8px',
-                  color: '#4caf50',
-              },
-          });
-          
-          setTimeout(() => {
-					router.push(`/timesheet/approve`);
-			}, 3000);
-      }
-
-  } catch (error) {
-      toast.success(({ id }) => (
+        toast.success(({ id }) => (
           <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-              <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
-              <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
-              <button
-                  onClick={() => toast.dismiss(id)}
-                  style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#FF000F',
-                      marginLeft: 'auto',
-                      cursor: 'pointer'
-                  }}
-              >
-                  <FaTimes />
-              </button>
+            <img src='/assets/img/proposal-icon.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+            <span dangerouslySetInnerHTML={{ __html: message }}></span>
+            <button
+              onClick={() => toast.dismiss(id)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#4caf50',
+                marginLeft: 'auto',
+                cursor: 'pointer'
+              }}
+            >
+              <FaTimes />
+            </button>
           </div>
-      ), {
+        ), {
           icon: null, // Disable default icon
           duration: 7000,
           style: {
-              border: '1px solid #FF000F',
-              padding: '8px',
-              color: '#FF000F',
+            border: '1px solid #4caf50',
+            padding: '8px',
+            color: '#4caf50',
           },
+        });
+
+        setTimeout(() => {
+          router.push(`/timesheet/approve`);
+        }, 3000);
+      }
+
+    } catch (error) {
+      toast.success(({ id }) => (
+        <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
+          <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+          <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
+          <button
+            onClick={() => toast.dismiss(id)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#FF000F',
+              marginLeft: 'auto',
+              cursor: 'pointer'
+            }}
+          >
+            <FaTimes />
+          </button>
+        </div>
+      ), {
+        icon: null, // Disable default icon
+        duration: 7000,
+        style: {
+          border: '1px solid #FF000F',
+          padding: '8px',
+          color: '#FF000F',
+        },
       });
       // Handle the error if any
       console.error("Error occurred:", error);
+    }
   }
-}
+  const handleDataReject = async () => {
+
+    const payload = {
+      "status": "rejected",
+      "idTimesheet": [idTimesheet]
+    }
+    const message = "You have successfully <strong>Rejected</strong> Timesheet!"
+    const errormessage = 'Error connecting to the backend. Please try after Sometime.';
+    try {
+      const response = await axiosJWT.post(`${apiUrl}/timesheet/approval`, payload);
+      // Handle the response if needed
+      if (response) {
+        toast.success(({ id }) => (
+          <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
+            <Image
+              src="/assets/img/proposal-icon.png"
+              alt="Proposal Icon"
+              width={30}
+              height={30}
+              style={{
+                marginRight: '10px'
+              }}
+            />
+            <span dangerouslySetInnerHTML={{ __html: message }}></span>
+            <button
+              onClick={() => toast.dismiss(id)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#4caf50',
+                marginLeft: 'auto',
+                cursor: 'pointer'
+              }}
+            >
+              <FaTimes />
+            </button>
+          </div>
+        ), {
+          icon: null, // Disable default icon
+          duration: 7000,
+          style: {
+            border: '1px solid #4caf50',
+            padding: '8px',
+            color: '#4caf50',
+          },
+        });
+
+        setTimeout(() => {
+          router.push(`/timesheet/approve`);
+        }, 3000);
+      }
+
+    } catch (error) {
+      toast.success(({ id }) => (
+        <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
+          <Image
+            src="/assets/img/wrong.png"
+            alt="Wrong Icon"
+            width={30}
+            height={30}
+            style={{
+              marginRight: '10px'
+            }}
+          />
+          <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
+          <button
+            onClick={() => toast.dismiss(id)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#FF000F',
+              marginLeft: 'auto',
+              cursor: 'pointer'
+            }}
+          >
+            <FaTimes />
+          </button>
+        </div>
+      ), {
+        icon: null, // Disable default icon
+        duration: 7000,
+        style: {
+          border: '1px solid #FF000F',
+          padding: '8px',
+          color: '#FF000F',
+        },
+      });
+      // Handle the error if any
+      console.error("Error occurred:", error);
+    }
+  }
   const handleDataSave = async (value) => {
     fillterData.pop();
 
@@ -312,8 +324,8 @@ const handleDataReject = async () => {
         }, {});
 
       otherEntries.submittedEfforts = taskAssignedDays;
-	  otherEntries.status = value;
-      return otherEntries; 
+      otherEntries.status = value;
+      return otherEntries;
     };
 
     const transformedData = fillterData.map(item => transformItem(item));
@@ -327,22 +339,22 @@ const handleDataReject = async () => {
         toast.success(({ id }) => (
           <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
             <FaRegCheckCircle style={{
-							fontSize: '35px',
-							marginRight: '10px',
-							color: '#4caf50'
-						}} />
+              fontSize: '35px',
+              marginRight: '10px',
+              color: '#4caf50'
+            }} />
             <span dangerouslySetInnerHTML={{ __html: message }}></span>
             <button
-            onClick={() => toast.dismiss(id)}
-            style={{
+              onClick={() => toast.dismiss(id)}
+              style={{
                 background: 'none',
-				border: 'none',
-				color: '#4caf50',
-				marginLeft: 'auto',
-				cursor: 'pointer',
-				fontSize: '20px',
-            }}
-          >
+                border: 'none',
+                color: '#4caf50',
+                marginLeft: 'auto',
+                cursor: 'pointer',
+                fontSize: '20px',
+              }}
+            >
               <FaTimes />
             </button>
           </div>
@@ -356,14 +368,22 @@ const handleDataReject = async () => {
           },
         });
         setTimeout(() => {
-          window.location.reload();
+          globalThis.location.reload();
         }, 5000);
       }
     } catch (error) {
       const errormessage = 'Error connecting to the backend. Please try after Sometime.';
       toast.success(({ id }) => (
         <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-          <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+          <Image
+            src="/assets/img/wrong.png"
+            alt="Wrong Icon"
+            width={30}
+            height={30}
+            style={{
+              marginRight: '10px'
+            }}
+          />
           <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
           <button
             onClick={() => toast.dismiss(id)}
@@ -411,7 +431,7 @@ const handleDataReject = async () => {
 
     const transformedData = fillterData.map(item => transformItem(item));
     const idTaskSubmissions = [...new Set(transformedData.map(item => item.idTaskSubmission).filter(id => id))];
-    const payload ={
+    const payload = {
       "timesheetIds": idTaskSubmissions
     }
     try {
@@ -422,22 +442,22 @@ const handleDataReject = async () => {
         toast.success(({ id }) => (
           <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
             <FaRegCheckCircle style={{
-							fontSize: '35px',
-							marginRight: '10px',
-							color: '#4caf50'
-						}} />
+              fontSize: '35px',
+              marginRight: '10px',
+              color: '#4caf50'
+            }} />
             <span dangerouslySetInnerHTML={{ __html: message }}></span>
             <button
-            onClick={() => toast.dismiss(id)}
-            style={{
+              onClick={() => toast.dismiss(id)}
+              style={{
                 background: 'none',
-				border: 'none',
-				color: '#4caf50',
-				marginLeft: 'auto',
-				cursor: 'pointer',
-				fontSize: '20px',
-            }}
-          >
+                border: 'none',
+                color: '#4caf50',
+                marginLeft: 'auto',
+                cursor: 'pointer',
+                fontSize: '20px',
+              }}
+            >
               <FaTimes />
             </button>
           </div>
@@ -451,14 +471,22 @@ const handleDataReject = async () => {
           },
         });
         setTimeout(() => {
-          window.location.reload();
+          globalThis.location.reload();
         }, 5000);
       }
     } catch (error) {
       const errormessage = 'Error connecting to the backend. Please try after Sometime.';
       toast.success(({ id }) => (
         <div style={{ display: 'flex', alignItems: 'center', borderRadius: '0' }}>
-          <img src='/assets/img/wrong.png' style={{ marginRight: '10px', width: '30px' }} alt='icon' />
+          <Image
+                      src="/assets/img/wrong.png"
+                      alt="Wrong Icon"
+                      width={30}
+                      height={30}
+                      style={{
+                        marginRight: '10px'
+                      }}
+                    />
           <span dangerouslySetInnerHTML={{ __html: errormessage }}></span>
           <button
             onClick={() => toast.dismiss(id)}
@@ -564,7 +592,6 @@ const handleDataReject = async () => {
       }
     });
     const mergedResult = [...updatedData, totalresult];
-    console.log("merge", mergedResult)
     // Update the state with the modified data
     setFillterData(mergedResult);
   };
@@ -596,7 +623,6 @@ const handleDataReject = async () => {
       customBodyRender: (value, tableMeta, updateValue) => {
         const rowData = fillterData[tableMeta.rowIndex];
         const field = rowData[tableMeta.columnIndex];
-        console.log("field", field)
         if (field.isFreezable === false) {
           return (
             <>
@@ -605,7 +631,7 @@ const handleDataReject = async () => {
                 className={`form-control timesheet-emp`}
                 value={value || ""}
                 min="0"
-				max="100"
+                max="100"
                 placeholder={field.placeholder}
                 onChange={(e) => {
                   // Ensure the entered value is not negative
@@ -638,11 +664,11 @@ const handleDataReject = async () => {
               />
             </>
           );
-        } else if(field.name === "sn"){
+        } else if (field.name === "sn") {
           return (
             value
           );
-        }else {
+        } else {
           return (
             <div className={`${value < 0 ? 'time_hightlight_test_minus' : 'time_text_value'}`}>{value}</div>
           );
@@ -661,20 +687,16 @@ const handleDataReject = async () => {
     viewColumns: false,
     selectableRows: 'none', // Hide checkbox for selecting rows
     setRowProps: (row, dataIndex, rowIndex) => {
-      
-      const rowCount = transformedData.length;
-      // Define your row coloring logic here
       let backgroundColor = '';
       let className = '';
-      console.log("row", row)
       if (rowIndex % 2 === 0) {
         backgroundColor = 'var(--table-bg-row-color1)';
       } else {
         backgroundColor = 'var(--table-bg-row-color2)';
-      } 
+      }
 
 
-      if (row[0] === 'Total' || row[1] === 'Total' || row[2] === 'Total' || row[3] === 'Total'|| row[4] === 'Total'|| row[5] === 'Total') { // Assuming 'weekendorDay' is at index 7
+      if (row[0] === 'Total' || row[1] === 'Total' || row[2] === 'Total' || row[3] === 'Total' || row[4] === 'Total' || row[5] === 'Total') { // Assuming 'weekendorDay' is at index 7
         className = 'custom_last_row'; // Assign className if condition met
       }
       return {
@@ -689,13 +711,13 @@ const handleDataReject = async () => {
 
   return (
     <>
-     <Head>
-            <title>Log Work Hours | Oxytal</title>
-            <meta name="description" content={"Submit your timesheet by logging daily work hours, project details, and task information for approval."} />
-          </Head>
+      <Head>
+        <title>Log Work Hours | Oxytal</title>
+        <meta name="description" content={"Submit your timesheet by logging daily work hours, project details, and task information for approval."} />
+      </Head>
       <div className="main-wrapper">
         <div
-         className="page-wrapper">
+          className="page-wrapper">
           <div className="content container-fluid">
             <div className="row">
               <div className="col-12 col-lg-12 col-xl-12">
@@ -726,25 +748,25 @@ const handleDataReject = async () => {
                                 <div className="text-end w-100 mt-3">
                                   {sectionButton.map((button, index) => {
                                     if (button.isEnabled) {
-                                      if(button.type === "submit"){
-                                      return <button type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("submit")}>{button.type}</button>;
-                                      }else if(button.type === "save"){
-                                        return <button type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("draft")}>{button.type}</button>;
-                                      }else if(button.type === "cancel"){
-                                        return <button type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
-                                      }else if(button.type === "recall"){
-                                        return <button type="submit" className="btn btn-oxyem btn-recall-btn mx-2" onClick={handleDatarecall}>{button.type}</button>
-                                      }else if(button.type === "Approve"){
-                                        return <button type="submit" className="btn btn-approve mx-2" onClick={handleDataApprove}>{button.type}</button>
-                                      }else if(button.type === "Reject"){
-                                        return <button type="submit" className="btn btn-reject mx-2" onClick={handleDataReject}>{button.type}</button>
-                                      }else{
-                                        return <button type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
+                                      if (button.type === "submit") {
+                                        return <button key={index} type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("submit")}>{button.type}</button>;
+                                      } else if (button.type === "save") {
+                                        return <button key={index} type="submit" className="btn btn btn-primary mx-2" onClick={() => handleDataSave("draft")}>{button.type}</button>;
+                                      } else if (button.type === "cancel") {
+                                        return <button key={index} type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
+                                      } else if (button.type === "recall") {
+                                        return <button key={index} type="submit" className="btn btn-oxyem btn-recall-btn mx-2" onClick={handleDatarecall}>{button.type}</button>
+                                      } else if (button.type === "Approve") {
+                                        return <button key={index} type="submit" className="btn btn-approve mx-2" onClick={handleDataApprove}>{button.type}</button>
+                                      } else if (button.type === "Reject") {
+                                        return <button key={index} type="submit" className="btn btn-reject mx-2" onClick={handleDataReject}>{button.type}</button>
+                                      } else {
+                                        return <button key={index} type="submit" className="btn btn-oxyem mx-2" onClick={handleDataCancel}>{button.type}</button>
                                       }
                                     }
                                     return null;
                                   })}
-                                  
+
                                 </div>
 
 

@@ -88,6 +88,7 @@ export default function AssignUserPopup({ value = [], onChange, projectid, isFor
     // Initialize rows once from existing value
     useEffect(() => {
         if (!value || value.length === 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setRows([{ employee: null, percentage: "", isPrimary: false }]);
             setRowErrors([{ employee: "", percentage: "" }]);
             return;
@@ -137,6 +138,7 @@ export default function AssignUserPopup({ value = [], onChange, projectid, isFor
 
     const handleSave = () => {
         let hasError = false;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const errors = rows.map(row => ({ employee: "", percentage: "" }));
 
         rows.forEach((row, index) => {
@@ -167,7 +169,6 @@ export default function AssignUserPopup({ value = [], onChange, projectid, isFor
         setIsOpen(false);
     };
     const [options, setOptions] = useState([]);
-    const [alloptions, setAllOptions] = useState([]);
     const filterData = () => {
         const convertdata = userdata.slice(0, 12).map(item => ({
             label: item.userName,
@@ -177,16 +178,18 @@ export default function AssignUserPopup({ value = [], onChange, projectid, isFor
             isdisabled: rows.some(row => row.employee?.value === item.id)
         }));
         setOptions(convertdata)
-        setAllOptions(convertdata);
     }
     const handleConvert = async () => {
         filterData();
     }
-    const handleMenuOpen = (data) => {
+    const handleMenuOpen = () => {
         filterData();
     };
     useEffect(() => {
-        filterData();
+        const fetchData = async () => {
+            await filterData();
+        };
+       fetchData();
     }, [userdata, rows, isOpen]);
 
     const Option = ({ innerProps, label, data }) => (
@@ -238,6 +241,7 @@ export default function AssignUserPopup({ value = [], onChange, projectid, isFor
     const [enrichedMembers, setEnrichedMembers] = useState([]);
     useEffect(() => {
         if (!value || value.length === 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setEnrichedMembers([]);
             return;
         }

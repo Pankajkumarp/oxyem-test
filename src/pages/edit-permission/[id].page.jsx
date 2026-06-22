@@ -10,7 +10,6 @@ const DynamicForm = dynamic(() => import('../Components/CommanForm'), {
 
 export default function Index({ userFormdata }) {
   const router = useRouter();
-  const [details, setClaimDetails] = useState({});
   const [cid, setCId] = useState('');
   const [content, setContent] = useState(userFormdata);
   const [content2, setContent2] = useState(userFormdata);
@@ -19,7 +18,9 @@ export default function Index({ userFormdata }) {
   useEffect(() => {
     const { id } = router.query;
     if (id) {
+      // eslint-disable-next-line react-hooks/immutability
       fetchInfo(id);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCId(id);
     }
   }, [router.query.id]);
@@ -33,12 +34,11 @@ export default function Index({ userFormdata }) {
         });
         if (response.status === 200 && response.data.data) {
           const fetchedData = response.data.data;
-          setClaimDetails(fetchedData);
           updateFormWithDetails(fetchedData);
         }
       }
     } catch (error) {
-      
+      console.error(error)
     }
   };
 
@@ -178,7 +178,7 @@ export default function Index({ userFormdata }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, {
     params: { formType: 'permissionManagement' },

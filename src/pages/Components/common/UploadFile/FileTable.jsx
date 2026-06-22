@@ -2,7 +2,7 @@ import React from 'react';
 import { MdDownload } from 'react-icons/md';
 import { axiosJWT } from '../../../Auth/AddAuthorization.jsx';
 
-const FileTable = ({ files = [], baseImageUrl, onDownload }) => {
+const FileTable = ({ files = [], baseImageUrl }) => {
   if (!files || files.length === 0) return null;
 
   const getFileName = (path) => {

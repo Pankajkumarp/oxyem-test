@@ -22,11 +22,11 @@ const Task = ({ task, handleApprove, position ,openModal}) => {
   const approvestaus = (status) => {
     switch (status) {
       case 'Approve':
-        const status = 'approved'
-        return <FaCheck onClick={() => handleApprove(task ,status)}/>;
+        { const status = 'approved'
+        return <FaCheck onClick={() => handleApprove(task ,status)}/>; }
       case 'Reject':
-        const status1 = 'rejected'
-        return <IoClose onClick={() => handleApprove(task ,status1)}/>;
+        { const status1 = 'rejected'
+        return <IoClose onClick={() => handleApprove(task ,status1)}/>; }
       case 'View':
         return <IoEyeSharp onClick={() => openModal(task)} />;
       default:
@@ -62,7 +62,7 @@ const Task = ({ task, handleApprove, position ,openModal}) => {
           <div className="oxyem-cus-select-section">
             <div style={{ borderRadius: '50%', margin: '4px 10px' }}>
               <Profile name={task.name} imageurl="" size="30" 
-              profilelink={`/employeeDashboard/${task.idEmployee}` || ""}
+              profilelink={`/employeeDashboard/${task.idEmployee}`}
               
               />
             </div>

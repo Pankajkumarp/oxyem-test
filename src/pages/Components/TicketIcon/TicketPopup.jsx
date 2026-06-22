@@ -3,18 +3,17 @@ import { MdClose } from "react-icons/md";
 import { axiosJWT } from "../../Auth/AddAuthorization";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
-import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { ToastNotification, ToastContainer } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 const DynamicForm = dynamic(() => import('../CommanForm.jsx'), {
   ssr: false
 });
 
-export default function Ticket({ isOpen, closeModal, screenshot, documentsuploaded }) {
+export default function Ticket({ isOpen, closeModal, screenshot }) {
   const [showSecTab, setshowSecTab] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [content, setContent] = useState([]);
-  const router = useRouter();
+
   const [autofillData, setAutofillData] = useState({
     title: '',
     path: ''
@@ -24,11 +23,13 @@ export default function Ticket({ isOpen, closeModal, screenshot, documentsupload
     if (isOpen) {
       const breadcrumbItems = document.querySelectorAll('.breadcrumb .breadcrumb-item');
     
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const breadcrumbText = Array.from(breadcrumbItems)
       .map(item => item.innerText.trim())
       .join(' > ');
       const pageURL = window.location.href;
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAutofillData({
         // title: breadcrumbText,
         path: pageURL
@@ -36,8 +37,7 @@ export default function Ticket({ isOpen, closeModal, screenshot, documentsupload
     }
   }, [isOpen]);
 
-
-  const headingContent = '';
+  const handleChangess = async () => {}
   const fetchForm = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -53,6 +53,7 @@ export default function Ticket({ isOpen, closeModal, screenshot, documentsupload
   };
   useEffect(() => {
     if(isOpen){
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchForm();
     }
     if (screenshot) {
@@ -64,6 +65,7 @@ export default function Ticket({ isOpen, closeModal, screenshot, documentsupload
         }
       ]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
     const handleChangeValue = (fieldName, value) => {
@@ -155,7 +157,7 @@ export default function Ticket({ isOpen, closeModal, screenshot, documentsupload
     }
   };
 
-  const cancelClickAction = async (value) => {
+  const cancelClickAction = async () => {
     setAutofillData({ title: '', path: '' });
     closeModal();
   };

@@ -13,27 +13,26 @@ export default function AddTicket() {
     const router = useRouter();
     const [content, setContent] = useState([]);
     
-    useEffect(() => {
-        fetchForm();
-    }, []);
 
-    const fetchForm = async () => {
+    useEffect(() => {
+            const fetchForm = async () => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, { params: { "formType": "applyTicket" } });
 
             if (response.status === 200 && response.data.data) {
                 setContent(response.data.data);
-                console.log(response.data.data)
             }
         } catch (error) {
               console.error("Error occurred during API call:", error);
         }
     };
-
+        fetchForm();
+    }, []);
 
     
 
+    const handleChangess = () => {}
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
         for (let i = 0; i < updatedArray.section.length; i++) {
@@ -104,7 +103,6 @@ export default function AddTicket() {
             if (response.status === 200) {
 
                 ToastNotification({ message: response.data.message });
-                const idTicket = response.data.data.idTicket;
                 if (formattedData.idEmployee) {
                     router.push(`/admin/ticket`);
                 } else {

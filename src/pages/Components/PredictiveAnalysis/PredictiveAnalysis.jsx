@@ -4,7 +4,6 @@ import { FaExclamationTriangle, FaInfoCircle, FaCalendarAlt } from "react-icons/
 export default function PredictiveWarning({
   missingDaysCount = 1,
   upcomingNoAttendanceDays = 3,
-  onRegularize,
 }) {
   return (
     <div

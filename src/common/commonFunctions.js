@@ -23,8 +23,7 @@ if (section) {
                 fromdatefield.value = getvalue.fromDate;                  
             }
             const todatefield = subsection.fields.find(fld => fld.name === "toDate");  
-            if(leaveType != "" && leaveType == "Birthday" ){                     
-              //  console.log("check11",getvalue)
+            if(leaveType != "" && leaveType == "Birthday" ){
                 const todatefield = subsection.fields.find(fld => fld.name === "toDate");               
                 if (todatefield ) {
                     todatefield.value = getvalue.fromDate;    
@@ -73,7 +72,6 @@ if (section) {
 }
 }; 
 export const getleaveoptionchange = async(getcurrentformdata,getformdata) => {
-  //console.log(getcurrentformdata);
 let leaveType = ""
 if ( getcurrentformdata.leaveType != undefined  && typeof  getcurrentformdata.leaveType === 'object' && getcurrentformdata.leaveType !== null && !Array.isArray( getcurrentformdata.leaveType)) {
    leaveType = getcurrentformdata.leaveType.value
@@ -93,7 +91,6 @@ return  {leaveType,getformdata,idEmployee}
 
 export const getFieldByName = async(form, fieldName) => {
   let fieldValues = "";
- // console.log("rrrr",form)
   // Iterate through each subsection
   form.forEach(subsection => {
       // Find the field with the given name
@@ -147,6 +144,7 @@ export const transformLabels = (labelsArray) => {
   return labelsArray.reduce((acc, label) => {
     acc[label.name] = label.lebel;
     if(label.name == "idLeave"){
+      // eslint-disable-next-line no-undef
       acc[options] ={ display: 'excluded'};
     }
     return acc;
@@ -270,9 +268,11 @@ export const removeFields = (data, fieldsToRemove, buttonsToRemove) => {
             }
             return msg
           };
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const toLowerCaseObject = (obj) => {
             const newObj = {};
             for (const key in obj) {
+              // eslint-disable-next-line no-prototype-builtins
               if (obj.hasOwnProperty(key)) {
                 newObj[key.toLowerCase()] = obj[key].toLowerCase();
               }

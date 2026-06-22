@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { axiosJWT } from '../Auth/AddAuthorization';
 import EmployeeSection from '../create-group/inner';
-
 import { ToastNotification, ToastContainer } from '../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import { fetchWithToken } from '../Auth/fetchWithToken';
 
 
 
-export default function index({userFormdata}) {
+export default function Menu({userFormdata}) {
     const router = useRouter();
     const [details, setClaimDetails] = useState([]);
     const [cid, setCId] = useState('');
@@ -18,7 +17,9 @@ export default function index({userFormdata}) {
     useEffect(() => {
         const { id, editfor } = router.query;
         if (id) {
+            // eslint-disable-next-line react-hooks/immutability
             fetchInfo(id, editfor);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCId(id);
         }
     }, [router.query.id]);
@@ -40,7 +41,7 @@ export default function index({userFormdata}) {
                 }
             }
         } catch (error) { 
-            
+            console.error(error)
         }
     };
 
@@ -89,8 +90,6 @@ export default function index({userFormdata}) {
                             
                             assignedMenuField.availableOption = []; // Set to an empty array if no permissions are available
                         }
-                    } else {
-                        
                     }
                 }
             }
@@ -127,8 +126,6 @@ export default function index({userFormdata}) {
                             
                             assignedRolesField.availableOption = []; // Set to an empty array if no permissions are available
                         }
-                    } else {
-                        
                     }
                 }
             }
@@ -163,14 +160,10 @@ export default function index({userFormdata}) {
                             
                             assignedMenuField.availableOption = []; // Set to an empty array if no permissions are available
                         }
-                    } else {
-                        
-                    }
+                    } 
                 }
             }
-
-            // End sections
-
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setContent(updatedFormData); // Update the state with the modified form data
         }
     }, [details]); // Effect runs whenever 'details' changes

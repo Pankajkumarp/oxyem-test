@@ -5,7 +5,6 @@ import ProfilePic from "./ProfilePic";
 export default function ActivityItem({
   avatarUrl,
   name,
-  action,
   title,
   subtitle,
   time,

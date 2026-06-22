@@ -1,6 +1,4 @@
-import React from 'react';
-
-export default function CheckboxComponent({ label, value, onChange, validations = [] }) {
+export default function CheckboxComponent({ label, value, onChange }) {
   const handleInputChange = (e) => {
     const newValue = e.target.checked; 
     onChange(newValue); 

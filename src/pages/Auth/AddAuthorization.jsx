@@ -28,7 +28,6 @@ axiosJWT.interceptors.request.use(async (config) => {
 
   // Case 1: access token is present and expired
   if (accessToken && isTokenExpired(accessToken)) {
-    console.log('Access token expired. Attempting to refresh...');
     try {
       const response = await axios.post(`${apiUrl}/users/refreshToken`, {
         rft: refreshToken,
@@ -64,7 +63,6 @@ axiosJWT.interceptors.request.use(async (config) => {
 
   // Case 3: access token missing, refresh token exists
   if (!accessToken && refreshToken) {
-    console.log('Access token missing. Attempting to refresh...');
     try {
       const response = await axios.post(`${apiUrl}/users/refreshToken`, {
         rft: refreshToken,

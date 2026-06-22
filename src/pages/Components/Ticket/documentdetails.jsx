@@ -3,7 +3,7 @@ import { IoDownloadOutline } from 'react-icons/io5';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 
 
-export default function DocumentDetails({ documents, ticketDetails }) {
+export default function DocumentDetails({ documents }) {
   
   const handleDownloadClickWithPath = async (path) => {
 
@@ -27,7 +27,7 @@ export default function DocumentDetails({ documents, ticketDetails }) {
         link.click();
 
     } catch (error) {
-        // console.error('Error downloading the file', error);
+       console.error('Error downloading the file', error);
     }
 };
 

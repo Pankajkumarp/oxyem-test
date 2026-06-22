@@ -62,11 +62,13 @@ const getStatusText = (status) => {
   };
 
   useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   fetchStatuses(); 
 }, []);
 
   useEffect(() => {
     if (ticketId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchTicketHistory(ticketId);
     }
   }, [ticketId]);

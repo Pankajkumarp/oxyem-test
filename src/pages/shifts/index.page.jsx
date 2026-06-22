@@ -12,14 +12,14 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 import SelectComponent from '../Components/common/SelectOption/SelectComponent.jsx';
 
-export default function shifts() {
+export default function Shifts() {
 
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isHistroyId, setIsHistroyId] = useState("");
 
-    const [updleavelist, setUpdUserList] = useState([]);
-    const [formcolumn, setFormColumn] = useState([]);
+    const updleavelist = [];
+    const formcolumn = [];
     const [listheader, setListHeaders] = useState([]);
 
     const [ischartopen, setIsChartOpen] = useState(false);
@@ -59,19 +59,6 @@ export default function shifts() {
 
 
 
-    const fetchData = async () => {
-        try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const response = await axiosJWT.get(`${apiUrl}/empAttendanceShift`, { params: { statsFor: '', isFor: 'stats' } });
-            const responsedata = response.data.data || {};
-            const listheader = responsedata.listheader || {};
-            setListHeaders(listheader);
-
-
-        } catch (error) {
-
-        }
-    };
 
 
 
@@ -96,7 +83,7 @@ export default function shifts() {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
 
-    const [setMouth, setMonthValue] = useState(currentMonth);
+    const [setMouth, setSetMouth] = useState(currentMonth);
     const [setYear, setYearValue] = useState(currentYear);
 
     const onChangeYear = (value) => {
@@ -109,9 +96,9 @@ export default function shifts() {
 
     const onChangeMonth = (value) => {
         if (value !== null) {
-            setMonthValue(value.value); // Update active tab index when a tab is clicked
+            setSetMouth(value.value); // Update active tab index when a tab is clicked
         } else {
-            setMonthValue();
+            setSetMouth();
         }
     };
 
@@ -143,8 +130,6 @@ export default function shifts() {
                     }],
                 },
             });
-
-            // console.log(annualchart);
 
             setAnualChartData({
                 series: [{
@@ -224,7 +209,7 @@ export default function shifts() {
             setIsChartOpen(true);
 
         } catch (error) {
-
+            console.error(error)
         }
     };
 
@@ -232,8 +217,22 @@ export default function shifts() {
 
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+                const response = await axiosJWT.get(`${apiUrl}/empAttendanceShift`, { params: { statsFor: '', isFor: 'stats' } });
+                const responsedata = response.data.data || {};
+                const listheader = responsedata.listheader || {};
+                setListHeaders(listheader);
+            } catch (error) {
+                console.error(error)
+            }
+        };
         fetchData();
-        chartData();
+        const fetchDataChart = async () => {
+            await chartData();
+        };
+        fetchDataChart();
     }, [activeTab]);
 
 
@@ -244,7 +243,7 @@ export default function shifts() {
         router.push(`/employeeDashboard/${id}`);
     };
 
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
 
     };
 
@@ -295,158 +294,153 @@ export default function shifts() {
                                         </li>
                                     </ul>
                                     {activeTab === 0 &&
-                                    <>
-                                        <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
-                                            <div className="">
+                                        <>
+                                            <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                                <div className="">
 
-                                                {listheader && Object.keys(listheader).length > 0 &&
-                                                    <div className="oxyem-top-box-design design-only-attendence claim-top-data-main mx-0 row stats-grid" >
-                                                        {/* <div className="stats-info stats-info-cus shift-heading-box" >
+                                                    {listheader && Object.keys(listheader).length > 0 &&
+                                                        <div className="oxyem-top-box-design design-only-attendence claim-top-data-main mx-0 row stats-grid" >
+                                                            {/* <div className="stats-info stats-info-cus shift-heading-box" >
                                                         <h6>No. of employee applicable in shift</h6>
                                                         <h4 className='month_attendence'>{listheader.applicableEmployee}</h4>
                                                     </div> */}
-                                                        <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                                                            <div
-                                                                className="stats-info stats-info-cus"
-                                                                onClick={() => {
-                                                                    // setStatus("Active");
-                                                                    setActiveTab(1);
-                                                                }}                               >
-                                                                <div className="ox-colored-box-1">
-                                                                    <h4 className="all_attendence">
-                                                                        {listheader.applicableEmployee}
-                                                                    </h4>
-                                                                </div>
-                                                                <div className="ox-box-text">
-                                                                    <h6>No. of employee applicable in shift</h6>
+                                                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                                                <div
+                                                                    className="stats-info stats-info-cus"
+                                                                    onClick={() => {
+                                                                        setActiveTab(1);
+                                                                    }}                               >
+                                                                    <div className="ox-colored-box-1">
+                                                                        <h4 className="all_attendence">
+                                                                            {listheader.applicableEmployee}
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div className="ox-box-text">
+                                                                        <h6>No. of employee applicable in shift</h6>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        {/* <div className="stats-info stats-info-cus shift-heading-box">                                        
+                                                            {/* <div className="stats-info stats-info-cus shift-heading-box">                                        
                                                         <h6>Approved</h6>
                                                         <h4 className='week_attendence'>{listheader.aprvdmonth }</h4>
                                                     </div> */}
-                                                        <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                                                            <div
-                                                                className="stats-info stats-info-cus"
-                                                                onClick={() => {
-                                                                    // setStatus("Active");
-                                                                    setActiveTab(1);
-                                                                }}                               >
-                                                                <div className="ox-colored-box-2">
-                                                                    <h4 className="month_attendence">
-                                                                        {listheader.aprvdmonth}
-                                                                    </h4>
-                                                                </div>
-                                                                <div className="ox-box-text">
-                                                                    <h6>Approved</h6>
+                                                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                                                <div
+                                                                    className="stats-info stats-info-cus"
+                                                                    onClick={() => {
+                                                                        setActiveTab(1);
+                                                                    }}                               >
+                                                                    <div className="ox-colored-box-2">
+                                                                        <h4 className="month_attendence">
+                                                                            {listheader.aprvdmonth}
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div className="ox-box-text">
+                                                                        <h6>Approved</h6>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        {/* <div className="stats-info stats-info-cus shift-heading-box">                                        
+                                                            {/* <div className="stats-info stats-info-cus shift-heading-box">                                        
                                                         <h6>Rejected</h6>
                                                         <h4 className='week_attendence'>{listheader.rejectedmonth }</h4>
                                                     </div> */}
-                                                        <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                                                            <div
-                                                                className="stats-info stats-info-cus"
-                                                                onClick={() => {
-                                                                    // setStatus("Active");
-                                                                    setActiveTab(1);
-                                                                }}                               >
-                                                                <div className="ox-colored-box-3">
-                                                                    <h4 className="notsubmit_attendence">
-                                                                        {listheader.rejectedmonth}
-                                                                    </h4>
-                                                                </div>
-                                                                <div className="ox-box-text">
-                                                                    <h6>Rejected</h6>
+                                                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                                                <div
+                                                                    className="stats-info stats-info-cus"
+                                                                    onClick={() => {
+                                                                        setActiveTab(1);
+                                                                    }}                               >
+                                                                    <div className="ox-colored-box-3">
+                                                                        <h4 className="notsubmit_attendence">
+                                                                            {listheader.rejectedmonth}
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div className="ox-box-text">
+                                                                        <h6>Rejected</h6>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        {/* <div className="stats-info stats-info-cus shift-heading-box">                                
+                                                            {/* <div className="stats-info stats-info-cus shift-heading-box">                                
                                                         <h6>Submitted</h6>
                                                         <h4 className='week_attendence'>{listheader.submittedmonth}</h4>
                                                     </div> */}
-                                                        <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                                                            <div
-                                                                className="stats-info stats-info-cus"
-                                                                onClick={() => {
-                                                                    // setStatus("Active");
-                                                                    setActiveTab(1);
-                                                                }}                               >
-                                                                <div className="ox-colored-box-4">
-                                                                    <h4 className="week_attendence">
-                                                                        {listheader.submittedmonth}
-                                                                    </h4>
-                                                                </div>
-                                                                <div className="ox-box-text">
-                                                                    <h6>Submitted</h6>
+                                                            <div className="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                                                <div
+                                                                    className="stats-info stats-info-cus"
+                                                                    onClick={() => {
+                                                                        setActiveTab(1);
+                                                                    }}                               >
+                                                                    <div className="ox-colored-box-4">
+                                                                        <h4 className="week_attendence">
+                                                                            {listheader.submittedmonth}
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div className="ox-box-text">
+                                                                        <h6>Submitted</h6>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                }
-                                            </div></div>
-                                        <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
-                                            <div className="tab-content">
-                                                {ischartopen ? (
-                                                    <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
-                                                        <div className="">                                                    <div className="row">
-                                                            <div className="col-md-6">
-                                                                <div className="form-group">
-                                                                    <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
+                                                    }
+                                                </div></div>
+                                            <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                                <div className="tab-content">
+                                                    {ischartopen ? (
+                                                        <div className="card flex-fill comman-shadow oxyem-index mb-4 oxyem-main-graph-sec">
+                                                            <div className="">                                                    <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group">
+                                                                        <SelectComponent label={"Filter Data by Year"} placeholder={"Select Year..."} options={optionsyear} onChange={onChangeYear} value={setYear} />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <div className="form-group">
-                                                                    <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-                                                            <div className="row">
-
-                                                                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                    <div className='oxy_chat_box'>
-                                                                        <div className='graph-top-head'>
-                                                                            <h3>Applicable Status</h3>
-                                                                        </div>
-                                                                        {anualChartData.series.length > 0 && (
-                                                                            <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
-                                                                        )}
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group">
+                                                                        <SelectComponent label={"Filter Data by Month"} placeholder={"Select Month..."} options={optionsmonth} onChange={onChangeMonth} value={setMouth} />
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                    <div className='oxy_chat_box'>
-                                                                        <div className='graph-top-head'>
-                                                                            <h3>Allowance Status count</h3>
-                                                                        </div>
-                                                                        <Chart options={monthlyData.options} series={monthlyData.series} type="pie" height={330} />
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                                                                    <div className='oxy_chat_box'>
-                                                                        <div className='graph-top-head'>
-                                                                            <h3>Annual Trend</h3>
-                                                                        </div>
-                                                                        <Chart options={anualChartLineData.options} series={anualChartLineData.series} type="line" height={330} />
-
-                                                                    </div>
-                                                                </div>
                                                             </div>
 
-                                                        </div></div>
-                                                ) : (<></>)}
-                                            </div></div>
-                                    </>
-                                }
-                                {activeTab === 1 &&
-                                    <>
+                                                                <div className="row">
+
+                                                                    <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                        <div className='oxy_chat_box'>
+                                                                            <div className='graph-top-head'>
+                                                                                <h3>Applicable Status</h3>
+                                                                            </div>
+                                                                            {anualChartData.series.length > 0 && (
+                                                                                <Chart options={anualChartData.options} series={anualChartData.series} type="bar" height={330} />
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                        <div className='oxy_chat_box'>
+                                                                            <div className='graph-top-head'>
+                                                                                <h3>Allowance Status count</h3>
+                                                                            </div>
+                                                                            <Chart options={monthlyData?.options} series={monthlyData?.series} type="pie" height={330} />
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                                                                        <div className='oxy_chat_box'>
+                                                                            <div className='graph-top-head'>
+                                                                                <h3>Annual Trend</h3>
+                                                                            </div>
+                                                                            <Chart options={anualChartLineData.options} series={anualChartLineData.series} type="line" height={330} />
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div></div>
+                                                    ) : (<></>)}
+                                                </div></div>
+                                        </>
+                                    }
+                                    {activeTab === 1 &&
                                         <div className="row">
                                             <div className="col-12 col-lg-12 col-xl-12 d-flex">
                                                 <div className="card flex-fill comman-shadow oxyem-index">
@@ -468,8 +462,7 @@ export default function shifts() {
                                                 </div>
                                             </div>
                                         </div>
-                                    </>
-                                }
+                                    }
                                 </div>
                             </div>
                         </div>

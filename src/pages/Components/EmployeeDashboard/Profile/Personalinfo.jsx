@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { GrFormNext } from 'react-icons/gr';
 import { axiosJWT } from '../../../Auth/AddAuthorization';
@@ -7,7 +8,7 @@ import { ToastNotification, ToastContainer } from '../Alert/ToastNotification';
 import { AiOutlineUser } from 'react-icons/ai';
 import EmptyInfoBlock from '../../../Components/EmployeeDashboard/EmptyInfoBlock.jsx';
 
-export default function PersonalInfo({ empId, apiBaseUrl ,showbutton }) {
+export default function PersonalInfo({ empId, apiBaseUrl }) {
     const [visible, setVisible] = useState(true); // Set to true to open section by default
     const [personalInfo, setPersonalInfo] = useState([]);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -56,6 +57,7 @@ export default function PersonalInfo({ empId, apiBaseUrl ,showbutton }) {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchPersonalInfo();
         // if(isEditOpen){
         // fetchPersonalForm();
@@ -63,6 +65,7 @@ export default function PersonalInfo({ empId, apiBaseUrl ,showbutton }) {
     }, [empId]);
 useEffect(() => {
   if (isEditOpen && formData?.section?.length && personalInfo.length) {
+    // eslint-disable-next-line react-hooks/immutability
     populateFormData();
   }
 }, [isEditOpen, formData, personalInfo]);
@@ -130,6 +133,7 @@ const [SubmitButtonLoading, setSubmitButtonLoading] = useState(false);
         } catch (error) {
             setSubmitButtonLoading(false);
             setError("something went wrong");
+            console.error(error)
         }
     };
 

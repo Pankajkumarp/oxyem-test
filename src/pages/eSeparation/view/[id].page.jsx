@@ -3,15 +3,14 @@ import Breadcrumbs from '../../Components/Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization';
-import { ToastNotification, ToastContainer } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
+import { ToastNotification } from '../../../pages/Components/EmployeeDashboard/Alert/ToastNotification';
 import CustomDataTable from '../../Components/Datatable/tablewithApi';
 import axios from 'axios';
-import Head from 'next/head';
 const DynamicForm = dynamic(() => import('../../Components/CommanForm'), { ssr: false });
 const Notes = dynamic(() => import('../../Components/Popup/Notes'), {
     ssr: false
 });
-export default function index({ userFormdata }) {
+export default function EseparetionView({ userFormdata }) {
     const pagename = ""
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -56,12 +55,13 @@ export default function index({ userFormdata }) {
                 }
             }
         } catch (error) {
-
+           console.error(error)
         }
     };
 
     useEffect(() => {
         const { id } = router.query;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIdSeparation(id)
         fetchSeparationInfo(id);
     }, [id]);
@@ -77,7 +77,7 @@ export default function index({ userFormdata }) {
         }
 
     };
-    const [sectionerrors, setSectionErrors] = useState({});
+    const sectionerrors = {};
 
     const handleChangeValue = (fieldName, value) => {
         const updatedArray = JSON.parse(JSON.stringify(content)); // Create a deep copy of the original array
@@ -117,7 +117,7 @@ export default function index({ userFormdata }) {
 
 
 
-        formattedData2["idClaim"] = cid; // Assuming 'cid' is the claim ID
+        formattedData2["idClaim"] = ''; // Assuming 'cid' is the claim ID
         formattedData2["actionFor"] = "addnlinfo";
         formattedData2["status"] = 'infoprovided'; // Defaulting to "verified" if missing
         formattedData2["comment"] = formattedData.comment || "";
@@ -130,7 +130,7 @@ export default function index({ userFormdata }) {
             if (response.status === 200) {
 
                 ToastNotification({ message: response.data.message });
-                const idClaim = cid;
+                const idClaim = '';
                 handeldocfiles(fileData, idClaim);
                 if (formattedData.idEmployee) {
                     router.push(`/admin/claim`);
@@ -157,69 +157,23 @@ export default function index({ userFormdata }) {
                 const apiUrle = process.env.NEXT_PUBLIC_API_BASE_URL;
                 const apiUrl = apiUrle + '/claims/uploadDocuments';
                 const response = await axiosJWT.post(apiUrl, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-            }
-        } catch (error) { }
-    }
-
-    const handleApprrovereqClaim = async (buttonType, formData) => {
-
-        const formattedData = {};
-        const formattedData2 = {};
-        content.section.forEach(section => {
-            section.Subsection.forEach(subsection => {
-                subsection.fields.forEach(field => {
-                    // Skip radio objects
-                    if (field.type === 'ClaimDoc') { return; }
-
-                    if (typeof field.value === 'object' && 'value' in field.value) {
-                        formattedData[field.name] = field.value.value;
-                    } else {
-                        formattedData[field.name] = field.value;
-                    }
-                });
-            });
-        });
-
-        formattedData2["idClaim"] = [cid]; // Assuming 'cid' is the claim ID
-        formattedData2["action"] = "recalled";
-        formattedData2["comment"] = formattedData.comment || "";
-
-        try {
-
-            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const response = await axiosJWT.post(`${apiUrl}/claims/updateStatus`, formattedData2)
-
-            if (response.status === 200) {
-
-                ToastNotification({ message: response.data.message });
-                if (formattedData.idEmployee) {
-                    router.push(`/admin/claim`);
-                } else {
-                    router.push(`/claim`);
+                if(response){
+/* empty */
                 }
             }
-        } catch (error) {
+        } catch (error) {console.error(error) }
+    }
 
-            if (error.response && error.response.status === 400) {
-                const errorMessage = error.response.data.errors || 'Failed to submit the form. Please try again later.';
-                ToastNotification({ message: errorMessage });
-            } else {
-                ToastNotification({ message: 'Failed to submit the form. Please try again later.' });
-            }
-        }
-    };
 
 
 
     const onViewClick = (id) => {
         router.push(`/claim/${id}`);
     };
-    const onDeleteClick = (id) => {
+    const onDeleteClick = () => {
         // Delete action implementation
     };
-    const handleHistoryClick = async (id) => {
 
-    };
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const openNotesModal = async () => {
         setIsNotesModalOpen(true)
@@ -227,11 +181,13 @@ export default function index({ userFormdata }) {
     const closeNotesModal = async () => {
         setIsNotesModalOpen(false)
     }
-    const onHistoryClick = async (id) => {
+    const onHistoryClick = async () => {
     };
-    const onEditClick = (id) => {
+    const onEditClick = () => {
         // router.push(`/opportunity/${id}`);
     };
+    const handleChangess = () => {};
+    const removeError = () => {};
     return (
         <>
             {isNotesModalOpen ? (
@@ -390,7 +346,6 @@ export async function getServerSideProps(context) {
                 Authorization: accessToken,
             },
         });
-        console.log(response.data)
 
         return {
 
@@ -398,6 +353,7 @@ export async function getServerSideProps(context) {
         };
 
     } catch (error) {
+        console.error(error)
         return {
             redirect: {
                 destination: context.req.headers.referer || '/',

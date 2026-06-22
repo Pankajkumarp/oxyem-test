@@ -31,6 +31,7 @@ export default function RealTimePreview({path ,empName ,description}) {
                    setLoginUser(data);
                  }
             } catch (error) {
+                console.error(error)
             }
         };
         fetchData();

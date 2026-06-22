@@ -6,6 +6,7 @@ import { axiosJWT } from '../../../../Auth/AddAuthorization';
 export default function DocumentTable({ activeTab, allData }) {
   const [columns, setColumns] = useState([]);
   const [info, setInfo] = useState([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState(null);
   
   
@@ -45,6 +46,7 @@ export default function DocumentTable({ activeTab, allData }) {
 
     switch (activeTab) {
       case 'education':
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setColumns(formColumns.Education || []);
         setInfo(data.Education || []);
         break;

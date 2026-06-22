@@ -1,13 +1,7 @@
 import ReactModal from 'react-modal';
 import React, { useState, useEffect } from "react";
-import Select from 'react-select';
 import { MdClose } from "react-icons/md";
-import Profile from '../commancomponents/profile';
-import ButtonPrimary from '../common/Buttons/ButtonPrimaryComponent';
 import SecTab from '../Employee/SecTab';
-import Apialert from '../Errorcomponents/Apierror'
-import { Toaster, toast } from 'react-hot-toast';
-import { FaRegClock, FaTimes } from "react-icons/fa";
 import CustomDataTable from '../Datatable/tablewithApi.jsx';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
 const customStyles = {
@@ -27,7 +21,6 @@ const customStyles = {
 
 export default function FillterForm({ isOpen, closeModal,updateForm }) {
     const [AdduserContent, setAdduserContent] = useState([]);
-    const [showerror, setShowError] = useState("");
     const [assetsparms, setAssetsparms] = useState("");
     
     const headingContent = '';
@@ -38,6 +31,7 @@ export default function FillterForm({ isOpen, closeModal,updateForm }) {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         hitapidata();
     }, [isOpen]);
 
@@ -67,9 +61,9 @@ export default function FillterForm({ isOpen, closeModal,updateForm }) {
     };
     
 
-    const handleApprrovereq = (id) => {};
+    const handleApprrovereq = () => {};
 
-    const handleSubmitAllocation = async (idArray, type, data, onSuccess) => {
+    const handleSubmitAllocation = async (idArray) => {
         const id = idArray[0];
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -83,8 +77,7 @@ export default function FillterForm({ isOpen, closeModal,updateForm }) {
             }
 
         } catch (error) {
-        
-            
+            console.error(error)
         }
     }
 

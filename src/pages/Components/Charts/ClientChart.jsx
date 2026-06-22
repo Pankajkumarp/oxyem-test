@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { axiosJWT } from '../../Auth/AddAuthorization.jsx';
@@ -7,7 +8,6 @@ const ClientChart = ({ activeTab }) => {
    const [totalClient, setTotalClient] = useState({});
    const [totalproject, setTotalproject] = useState({});
    const [dealsStat, setDealsStat] = useState({});
-   console.log(dealsStat,"dealsStat")
     const fetchClientData = async (value) => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -106,11 +106,12 @@ const ClientChart = ({ activeTab }) => {
                 setShowGraph(true)
             }
         } catch (error) {
-
+console.error(error)
         }
     };
     useEffect(() => {
         if (activeTab === "Clients") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             fetchClientData("client");
         }
     }, [activeTab]);

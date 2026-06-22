@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from 'react';
-
 const Apierror = ({ message, type, show, onClose, isclose }) => {
   if (!show) return null;
 

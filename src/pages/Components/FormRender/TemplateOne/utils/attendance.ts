@@ -19,7 +19,7 @@ export const convertTimeStringToDate = (
     return null;
   }
 
-  let [, hours, minutes, modifier] = match;
+  const [, hours, minutes, modifier] = match;
 
   let hrs = parseInt(hours, 10);
 
@@ -62,6 +62,7 @@ const convertUtcToLocalTime = (
       .utc(utcDateTime)
       .tz(timeZone)
       .toDate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return null;
   }

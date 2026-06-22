@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { IoWarningOutline } from "react-icons/io5";
-import { PiWarningOctagonThin } from "react-icons/pi";
-
 
 export default function ClaimVerificationPanel() {
 

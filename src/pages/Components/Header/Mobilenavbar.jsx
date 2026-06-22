@@ -1,14 +1,5 @@
 import Link from 'next/link';
-import { useState } from "react";
-// import Modal from '../Popup/Createpost.jsx';
-import { SlHome } from "react-icons/sl";
-import { FaUserFriends, FaDesktop } from "react-icons/fa";
-import { LiaPlusCircleSolid } from "react-icons/lia";
-import { MdOutlineDashboardCustomize, MdGroupAdd } from "react-icons/md";
-import { FaGroupArrowsRotate } from "react-icons/fa6";
 import { useRouter } from 'next/router';
-import { FaBookOpen } from "react-icons/fa";
-import { TbDeviceIpadHorizontalSearch } from "react-icons/tb";
 import { FaUsers } from "react-icons/fa";
 import { BiSolidDoorOpen } from "react-icons/bi";
 import { MdCoPresent } from "react-icons/md";
@@ -16,13 +7,6 @@ import { AiTwotoneProject } from "react-icons/ai";
 import { FaRegCalendarAlt } from "react-icons/fa";
 export default function Mobilenavbar() {
 	const router = useRouter();
-	const [isModalOpen, setIsModalOpen] = useState(false);
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-    const handleClick = () => {
-        setIsModalOpen(true);
-    };
   return (
     <div>
         <nav className="oxyem-mobile-bottom-nav">

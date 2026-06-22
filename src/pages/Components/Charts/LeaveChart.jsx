@@ -52,6 +52,7 @@ const LeaveChart = ({ activeTab }) => {
         if (!category) return;
 
         requestAnimationFrame(() => {
+          // eslint-disable-next-line react-hooks/immutability
           handleChartClick({ month: category }); // or { period: category }
           setActiveStatus(category);
         });
@@ -144,11 +145,12 @@ const LeaveChart = ({ activeTab }) => {
 
       }
     } catch (error) {
-
+       console.error(error)
     }
   };
   useEffect(() => {
     if (activeTab === "All") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchClientData("leaves");
     }
   }, [activeTab]);
@@ -178,7 +180,7 @@ const LeaveChart = ({ activeTab }) => {
               </div>
               {empLeaveDetail && empLeaveDetail.length > 0 ? (
                 <div className='leave_grap_section_box'>
-                  {empLeaveDetail.map((emp, index) => (
+                  {empLeaveDetail.map((emp) => (
                     <div className="leave_grap_inner_box" key={emp.profilePicPath}>
                       <div className='graph_profile_img'>
                         <Profile name={emp.employeeName} imageurl={`${baseImageUrl}/${emp.profilePicPath}`} size={20} />

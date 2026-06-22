@@ -18,11 +18,12 @@ const customStyles = {
     },
 };
 
-export default function jobInfo({ isOpen, closeModal ,isviewId }) {
+export default function JobInfo({ isOpen, closeModal ,isviewId }) {
 const [data, setData] = useState("");
 
     useEffect(() => {
         if (isviewId) {
+            // eslint-disable-next-line react-hooks/immutability
             fetchJobDetails(isviewId);
         }
     }, [isviewId]);
@@ -37,6 +38,7 @@ const [data, setData] = useState("");
                 setData(response.data.data[0]);
             }
         } catch (error) {
+            console.error(error)
         }
     };
 
