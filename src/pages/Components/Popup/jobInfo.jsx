@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactModal from 'react-modal';
-import { MdClose } from "react-icons/md";
-import parse from 'html-react-parser';
+import { MdClose } from "react-icons/md"; 
+import DOMPurify from 'isomorphic-dompurify';
 import { axiosJWT } from "../../Auth/AddAuthorization";
 const customStyles = {
     content: {
@@ -89,7 +89,13 @@ const [data, setData] = useState("");
                             </div>
                             <div className="bottom_section_content">
                                 <h6 className="mt-4">Job Description:</h6>
-                                {data.jobDescription && <p>{parse(data.jobDescription)}</p>}
+                                {data.jobDescription && (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: DOMPurify.sanitize(data.jobDescription),
+      }}
+    />
+  )}
                             </div>
                         </div>
                     </div>

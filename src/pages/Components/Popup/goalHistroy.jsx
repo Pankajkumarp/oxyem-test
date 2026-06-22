@@ -12,7 +12,6 @@ const GoalHistroy = ({ isOpen, closeModal, goalNameId }) => {
   const [performanceValue, setPerformanceValue] = useState([]);
 
   const [StatusType, setStatusType] = useState();
-  console.log("performanceValue", performanceValue)
   const getAttendanceDetails = async (id) => {
     try {
       const response = await axiosJWT.get(`${apiUrl}/performance/goalNamehistory`, {
