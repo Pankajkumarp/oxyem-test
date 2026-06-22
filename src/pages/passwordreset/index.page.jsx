@@ -176,7 +176,6 @@ export default function Forgotten() {
                                                                         fields={section}
                                                                         submitformdata={submitformdata}
                                                                         handleChangeValue={handleChangeValue}
-                                                                        handleChangess={}
                                                                         pagename={'passwordreset'}
                                                                         isModule={content.formType}
                                                                     />
