@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { axiosJWT } from "../Auth/AddAuthorization";
-import {FaMoneyBillWave} from "react-icons/fa";
+import { FaMoneyBillWave } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import Profile from "../Components/commancomponents/profile";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -169,15 +170,15 @@ export default function PayrollNonEmpEdit() {
                         setContent(prev => mergeSalaryValues(prev, responseData));
                         setShowData(true)
                     }
-                } catch (error) { console.error(error) }
+                } catch (error) {console.error(error)}
             };
             getPrefilledData();
         }
-    }, [idEmployee.value, applicableFrom, apiUrl]);
+    }, [idEmployee?.value, applicableFrom]);
+    
     useEffect(() => {
         // eslint-disable-next-line react-hooks/immutability
         fetchForm();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onChange = async (value) => {
@@ -259,6 +260,9 @@ export default function PayrollNonEmpEdit() {
 
     const totalEarnings = basicSalary + fixedAllowances + dynamicAllowances;
     const totalDeductions = employerContribution + otherDeductions + dynamicDeductions;
+
+
+
 
     const initializedRef = React.useRef(false);
 
@@ -405,7 +409,7 @@ export default function PayrollNonEmpEdit() {
 
         // 🔥 remove error for this field only
         setDraftErrors(prev => {
-            if (!prev[name]?.[index]) return prev;
+            if (!prev[name] || !prev[name][index]) return prev;
 
             const newErrors = { ...prev };
 
@@ -584,12 +588,12 @@ const deleteSavedRow = (name, index) => {
             [name]: prev[name].filter((_, i) => i !== index)
         }));
     };
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, SetIsModalOpen] = useState(false);
     const openPreviewpopup = async () => {
-        setIsModalOpen(true)
+        SetIsModalOpen(true)
     }
     const closepopup = async () => {
-        setIsModalOpen(false)
+        SetIsModalOpen(false)
     }
 
     const [openTdsDrawer, setOpenTdsDrawer] = useState(false);
@@ -707,7 +711,7 @@ const deleteSavedRow = (name, index) => {
             <div className="row g-4">
                 <div className="col-xl-8">
                     <div className="card main-card border-0 shadow-sm" style={{minHeight:'76vh'}}>
-                        {errorMessage === "" ? (null) : (<div className="row p-4 pb-0"><div className="alert alert-danger alert-dismissible fade show mb-0" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button></div></div>)}
+                        {errorMessage !== "" ? (<div className="row p-4 pb-0"><div className="alert alert-danger alert-dismissible fade show mb-0" role="alert">{errorMessage}  <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button></div></div>) : (null)}
                         <div className="row p-4 top-field-i">
                             <div className="col-md-6 top-field-add">
                                 <Employee onChange={onChange} documentType={"temporary"} showImage="yes" label="Name" selectedAsset={idEmployee?.value} />
@@ -736,7 +740,7 @@ const deleteSavedRow = (name, index) => {
                                         {earningsFields.map((field, i) => {
                                             if (field.type === "TextwithAdd") {
                                                 return (
-                                                    <div className="col-12" key={field.name}>
+                                                    <div className="col-12" key={i}>
                                                         {/* LABEL */}
                                                         <div className="fw-semibold mb-3 d-flex align-items-center gap-2">
                                                             {field.label}
@@ -748,7 +752,7 @@ const deleteSavedRow = (name, index) => {
                                                             </span>
                                                         </div>
                                                         {(draftEarnings[field.name] || []).map((row, idx) => (
-                                                            <div className="row g-2 mt-2 mb-2" key={`draft-${row.description}`}>
+                                                            <div className="row g-2 mt-2 mb-2" key={`draft-${idx}`}>
                                                                 <div className="col-md-8 top-field-add">
                                                                     <TextField
                                                                         label="Description"

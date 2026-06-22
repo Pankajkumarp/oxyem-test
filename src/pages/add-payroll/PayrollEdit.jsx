@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { axiosJWT } from "../Auth/AddAuthorization";
 import { FaMoneyBillWave } from "react-icons/fa";
@@ -143,13 +144,15 @@ export default function PayrollEdit() {
                         setContent(prev => mergeSalaryValues(prev, responseData));
                         setShowData(true)
                     }
-                } catch (error) {console.error(error) }
+                } catch (error) { console.error(error)}
             };
             getPrefilledData();
         }
-    }, [idEmployee.value, applicableFrom, apiUrl]);
-    
-
+    }, [idEmployee?.value, applicableFrom]);
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/immutability
+        fetchForm();
+    }, []);
 
     const onChange = async (value) => {
         setidEmployee(value)
@@ -157,7 +160,6 @@ export default function PayrollEdit() {
     const onMonthChange = async (value) => {
         setApplicableFrom(value)
     };
-    useEffect(() => {
     const fetchForm = async () => {
         try {
             const response = await axiosJWT.get(`${apiUrl}/getDynamicForm`, {
@@ -168,12 +170,9 @@ export default function PayrollEdit() {
                 setContent(response.data.data);
             }
         } catch (error) {
-            console.error(error);
+            console.error(error)
         }
     };
-
-    fetchForm();
-}, [apiUrl]);
     const onClose = async () => { seterrorMessage("") }
     const earningsFields =
         content?.section?.[0]?.earningfield?.[0]?.fields || [];
@@ -245,6 +244,9 @@ export default function PayrollEdit() {
 
     const totalEarnings = basicSalary + fixedAllowances + dynamicAllowances;
     const totalDeductions = employerContribution + otherDeductions + dynamicDeductions;
+
+
+
 
     const initializedRef = React.useRef(false);
 
@@ -368,7 +370,9 @@ export default function PayrollEdit() {
 
         return Object.values(fields).some(rows =>
             rows.some(row =>
-                row?.description?.value &&   // selected option
+                row &&
+                row.description &&
+                row.description.value &&   // selected option
                 row.amount &&
                 Number(row.amount) > 0
             )
@@ -380,7 +384,6 @@ export default function PayrollEdit() {
         const payload = buildPayrollPayload();
         // eslint-disable-next-line react-hooks/set-state-in-effect
         submitformdata(payload)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [extraFields]);
     const addRow = (name, type) => {
         if (type === "earnings") {
@@ -408,7 +411,7 @@ export default function PayrollEdit() {
 
         // 🔥 remove error for this field only
         setDraftErrors(prev => {
-            if (!prev[name]?.[index]) return prev;
+            if (!prev[name] || !prev[name][index]) return prev;
 
             const newErrors = { ...prev };
 
@@ -466,6 +469,7 @@ export default function PayrollEdit() {
         setDraftDeductions(prev => ({ ...prev, [name]: [] }));
         setDraftErrors(prev => ({ ...prev, [name]: {} }));
     };
+
 
     const netPayable = totalEarnings - totalDeductions;
 
@@ -612,7 +616,6 @@ export default function PayrollEdit() {
                 router.push('/payrollManagement');
             }
         } catch (error) {
-            alert("Error saving draft");
             console.error(error)
         }
     };
@@ -628,7 +631,6 @@ export default function PayrollEdit() {
                 router.push('/payrollManagement');
             }
         } catch (error) {
-            alert("Error saving payroll");
             console.error(error)
         }
     };

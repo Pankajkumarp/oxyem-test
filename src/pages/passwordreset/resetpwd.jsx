@@ -169,7 +169,6 @@ const submitformdata = async () => {
                                                                         fields={section}
                                                                         submitformdata={submitformdata}
                                                                         handleChangeValue={handleChangeValue}
-                                                                        handleChangess={}
                                                                         pagename={'passwordreset'}
                                                                         isModule={content.formType}
                                                                     />

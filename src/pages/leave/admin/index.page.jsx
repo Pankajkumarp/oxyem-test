@@ -216,15 +216,11 @@ export default function Leaveview() {
     ];
     // const currentMonth = new Date().toLocaleString('default', { month: 'short' });
     const currentMonth = new Date().toLocaleString('en-US', { month: 'short' });
-    // console.log(currentMonth,"this is month value")
-
     const currentYear = new Date().getFullYear().toString();
-    // console.log(currentYear)
     const optionsyear = [];
     for (let year = 2020; year <= currentYear; year++) {
         optionsyear.push({ value: year.toString(), label: year.toString() });
     }
-    // console.log(optionsyear,"opyear")
     const [setMouth, setMonthValue] = useState(currentMonth); // State to manage active tab index
     const [setYear, setYearValue] = useState(currentYear); // State to manage active tab index
     const onChangeMonth = (value) => {
