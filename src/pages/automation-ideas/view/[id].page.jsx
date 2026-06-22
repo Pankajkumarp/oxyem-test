@@ -11,7 +11,7 @@ import { fetchWithToken } from '../../Auth/fetchWithToken';
 
 const DynamicForm = dynamic(() => import('../../Components/CommanForm'), { ssr: false });
 
-export default function AutomationView({userFormdata}) {
+export default function AutomationViewId({userFormdata}) {
     const router = useRouter();
     const [claimDetails, setClaimDetails] = useState([]);
     const [cid, setCId] = useState('');
